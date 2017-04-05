@@ -1,0 +1,18 @@
+{
+  "name": "ft-next-syndication-api",
+  "description": "Next Syndication API",
+  "version": "0.0.0",
+  "private": true,
+  "main": "server/app.js",
+  "dependencies": {
+    "forever": "^0.15.3"
+  },
+  "devDependencies": {
+    "@financial-times/n-heroku-tools": "^6.19.2",
+    "haikro": "^2.3.3",
+    "nodemon": "^1.11.0"
+  },
+  "engines": {
+    "node": "6.10.2"
+  }
+}
