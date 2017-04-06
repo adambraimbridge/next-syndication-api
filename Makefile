@@ -2,6 +2,14 @@ include n.Makefile
 
 TEST_APP := "ft-syndication-branch-${CIRCLE_BUILD_NUM}"
 
-# Just getting the app going, bit by bit
-tidy:
+run-local:
+	nht run --local
+
 provision:
+	nht float -d --testapp ${TEST_APP}
+
+tidy:
+	nht destroy ${TEST_APP}
+
+deploy:
+	nht ship
