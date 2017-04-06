@@ -3,8 +3,10 @@
   "description": "Next Syndication API",
   "version": "0.0.0",
   "private": true,
-  "main": "server/app.js",
+  "main": "server/init.js",
   "dependencies": {
+    "@financial-times/n-express": "^19.0.4",
+    "@financial-times/n-logger": "^5.5.3",
     "forever": "^0.15.3"
   },
   "devDependencies": {
