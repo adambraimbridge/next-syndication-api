@@ -6,7 +6,7 @@ run-local:
 	nht run --local
 
 provision:
-	nht float -d --testapp ${TEST_APP}
+	nht float -md --testapp ${TEST_APP}
 
 tidy:
 	nht destroy ${TEST_APP}
