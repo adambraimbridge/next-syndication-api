@@ -1,0 +1,14 @@
+*.env*
+.DS_Store
+.editorconfig
+.eslintrc.js
+.pa11yci.js
+.scss-lint.yml
+/.haikro-cache/
+/.node-version
+/.sass-cache
+/bower_components/
+/coverage/
+/node*
+/npm-debug.log*
+node_modules/
