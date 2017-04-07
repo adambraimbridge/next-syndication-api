@@ -6,10 +6,10 @@ run-local:
 	nht run --local
 
 provision:
-	nht float -md --testapp ${TEST_APP}
+	nht float -md --testapp ${TEST_APP} --skip-gtg
 
 tidy:
 	nht destroy ${TEST_APP}
 
 deploy:
-	nht ship
+	nht ship --skip-gtg
