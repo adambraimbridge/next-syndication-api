@@ -12,4 +12,4 @@ tidy:
 	nht destroy ${TEST_APP}
 
 deploy:
-	nht ship --skip-gtg
+	nht ship
