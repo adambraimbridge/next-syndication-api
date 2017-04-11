@@ -12,7 +12,9 @@
   "devDependencies": {
     "@financial-times/n-heroku-tools": "^6.19.2",
     "@financial-times/next-secrets": "^1.0.0",
+    "eslint": "^3.19.0",
     "haikro": "^2.3.3",
+    "lintspaces-cli": "^0.6.0",
     "nodemon": "^1.11.0",
     "pre-git": "^3.14.0"
   },
