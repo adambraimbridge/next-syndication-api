@@ -3,7 +3,6 @@
 .editorconfig
 .eslintrc.js
 .pa11yci.js
-.scss-lint.yml
 /.haikro-cache/
 /.node-version
 /.sass-cache

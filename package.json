@@ -7,12 +7,16 @@
   "dependencies": {
     "@financial-times/n-express": "^19.0.4",
     "@financial-times/n-logger": "^5.5.3",
+    "@financial-times/session-decoder-js": "^1.0.1",
+    "cookie-parser": "^1.4.3",
     "forever": "^0.15.3"
   },
   "devDependencies": {
     "@financial-times/n-heroku-tools": "^6.19.2",
     "@financial-times/next-secrets": "^1.0.0",
+    "eslint": "^3.19.0",
     "haikro": "^2.3.3",
+    "lintspaces-cli": "^0.6.0",
     "nodemon": "^1.11.0",
     "pre-git": "^3.14.0"
   },
