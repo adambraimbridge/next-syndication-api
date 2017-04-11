@@ -7,6 +7,8 @@
   "dependencies": {
     "@financial-times/n-express": "^19.0.4",
     "@financial-times/n-logger": "^5.5.3",
+    "@financial-times/session-decoder-js": "^1.0.1",
+    "cookie-parser": "^1.4.3",
     "forever": "^0.15.3"
   },
   "devDependencies": {
