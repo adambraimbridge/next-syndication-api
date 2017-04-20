@@ -5,5 +5,4 @@ const app = module.exports = express({
 	withFlags: true
 });
 
-app.get('/user', cookieParser(), require('./controllers/user'));
 app.get('/__gtg', (req, res) => res.sendStatus(200));
