@@ -1,9 +1,6 @@
 machine:
   node:
     version: 6.10.2
-dependencies:
-  cache_directories:
-    - bower_components
 deployment:
   production:
     branch: master
