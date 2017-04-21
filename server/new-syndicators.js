@@ -1,1 +1,1 @@
-module.exports = (process.env.NEW_SYNDICATOR_UUIDS || '').split(',');
+module.exports = (process.env.NEW_SYNDICATION_USERS || '').split(',');
