@@ -14,5 +14,9 @@ module.exports = (req, res, next) => {
 		res.set('Access-Control-Allow-Credentials', true);
 	}
 
-	next();
+	if (isCorsRequest && req.method === 'OPTIONS') {
+		res.send(200);
+	} else {
+		next();
+	}
 };
