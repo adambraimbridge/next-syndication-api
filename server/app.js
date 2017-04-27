@@ -12,6 +12,7 @@ const app = module.exports = express({
 
 const middleware = [
 	cookieParser(),
+	bodyParser.text(),
 	bodyParser.json(),
 	accessControl,
 	cache,
