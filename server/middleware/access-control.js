@@ -19,7 +19,7 @@ module.exports = (req, res, next) => {
 	}
 
 	if (isCorsRequest && req.method === 'OPTIONS') {
-		res.send(200);
+		res.sendStatus(200);
 	} else {
 		next();
 	}
