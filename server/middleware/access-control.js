@@ -14,11 +14,12 @@ module.exports = (req, res, next) => {
 
 	if (isCorsRequest) {
 		res.set('Access-Control-Allow-Origin', requestersOrigin);
+		res.set('Access-Control-Allow-Headers', 'Content-Type');
 		res.set('Access-Control-Allow-Credentials', true);
 	}
 
 	if (isCorsRequest && req.method === 'OPTIONS') {
-		res.send(200);
+		res.sendStatus(200);
 	} else {
 		next();
 	}

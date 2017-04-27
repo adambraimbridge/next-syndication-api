@@ -12,6 +12,7 @@ const app = module.exports = express({
 
 const middleware = [
 	cookieParser(),
+	bodyParser.text(),
 	bodyParser.json(),
 	accessControl,
 	cache,
@@ -19,5 +20,6 @@ const middleware = [
 	checkIfNewSyndicator
 ];
 
+app.options('/generate-download-links', accessControl);
 app.post('/generate-download-links', middleware, require('./controllers/generate-download-links'));
 app.get('/__gtg', (req, res) => res.sendStatus(200));
