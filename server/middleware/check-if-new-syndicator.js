@@ -1,9 +1,10 @@
 const logger = require('@financial-times/n-logger').default;
-const newSyndicators = require('../new-syndicators');
+const grabNewSyndicationUsers = require('../new-syndicators');
 
 module.exports = (req, res, next) => {
 	const flags = res.locals.flags;
-	const isNewSyndicationUser = newSyndicators.includes(res.locals.userUuid) || flags.syndicationNewOverride;
+	const newSyndicationUsers = grabNewSyndicationUsers(flags);
+	const isNewSyndicationUser = newSyndicationUsers.includes(res.locals.userUuid) || flags.syndicationNewOverride;
 
 	logger.info('in check-if-new-syndicator middleware', { isNewSyndicationUser });
 
