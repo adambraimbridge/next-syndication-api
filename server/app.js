@@ -5,7 +5,7 @@ const accessControl = require('./middleware/access-control');
 const cache = require('./middleware/cache');
 const flags = require('./middleware/flags');
 const decodeSession = require('./middleware/decode-session');
-const checkIfNewSyndicator = require('./middleware/check-if-new-syndicator');
+const checkIfNewSyndicationUser = require('./middleware/check-if-new-syndication-user');
 const app = module.exports = express({
 	systemCode: 'next-syndication-api',
 	withFlags: true
@@ -19,7 +19,7 @@ const middleware = [
 	cache,
 	flags,
 	decodeSession,
-	checkIfNewSyndicator
+	checkIfNewSyndicationUser
 ];
 
 app.options('/generate-download-links', accessControl);
