@@ -2,8 +2,8 @@ include n.Makefile
 
 TEST_APP := "ft-syndication-branch-${CIRCLE_BUILD_NUM}"
 
-run-local:
-	nht run --local
+run:
+	nht run --local --https
 
 test: verify
 
