@@ -16,6 +16,7 @@ module.exports = (req, res, next) => {
 		res.set('Access-Control-Allow-Origin', requestersOrigin);
 		res.set('Access-Control-Allow-Headers', 'Content-Type');
 		res.set('Access-Control-Allow-Credentials', true);
+		res.set('Access-Control-Expose-Headers', 'FT-New-Syndication-User');
 	}
 
 	if (isCorsRequest && req.method === 'OPTIONS') {
