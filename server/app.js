@@ -3,6 +3,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const accessControl = require('./middleware/access-control');
 const cache = require('./middleware/cache');
+const flags = require('./middleware/flags');
 const decodeSession = require('./middleware/decode-session');
 const checkIfNewSyndicator = require('./middleware/check-if-new-syndicator');
 const app = module.exports = express({
@@ -16,6 +17,7 @@ const middleware = [
 	bodyParser.json(),
 	accessControl,
 	cache,
+	flags,
 	decodeSession,
 	checkIfNewSyndicator
 ];
