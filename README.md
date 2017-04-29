@@ -1,5 +1,8 @@
 # next-syndication-api
 
+[![CircleCI](https://circleci.com/gh/Financial-Times/next-syndication-api.svg?style=svg)](https://circleci.com/gh/Financial-Times/next-syndication-api)
+[![Coverage Status](https://coveralls.io/repos/github/Financial-Times/next-syndication-api/badge.svg?branch=master)](https://coveralls.io/github/Financial-Times/next-syndication-api?branch=master)
+
 An experimental API to power features of a new syndication system, for syndication customers who have opted into using it.
 
 ## Installation
