@@ -25,24 +25,24 @@ make install
 
 Prerequisites:
 
-	- An FTSession token must passed via cookie. If you’re logged into FT.com and client-side fetching within a *.ft.com subdomain, you won’t need to worry about this
-	- Can only be used on a *.ft.com domain (local.ft.com is fine)
-	- The `syndicationNew` feature flag should be turned on
-	- Also turn on the `syndicationNewOverride` flag if your user UUID isn’t listed in the syndication-api config vars
+- An FTSession token must be passed via cookie. If you’re logged into FT.com and client-side fetching within a *.ft.com subdomain, you won’t need to worry about this
+- Can only be used on a *.ft.com domain (local.ft.com is fine)
+- The `syndicationNew` feature flag should be turned on
+- Also turn on the `syndicationNewOverride` flag if your user UUID isn’t listed in the syndication-api config vars
 
 Example fetch request:
 
 ```
 fetch('[syndication-api root]/generate-download-links', {
-        method: 'POST',
-		credentials: 'include',
-        body: JSON.stringify({
-			content: [
-				{
-					uuid: 'abc123'
-				}
-			]
-		})
+    method: 'POST',
+    credentials: 'include',
+    body: JSON.stringify({
+        content: [
+            {
+                uuid: 'abc123'
+            }
+        ]
+    })
 });
 ```
 
@@ -50,25 +50,25 @@ Returns:
 
 ```
 {
-	content: [
-		{
-			uuid: "abc123",
-			links: [
-				{
-					"format": "docx",
-					"url": "[url for docx download]"
-				},
-				{
-					"format": "html",
-					"url": "[url for html download]"
-				},
-				{
-					"format": "plain",
-					"url": "[url for plain text download]"
-				}
-			]
-		}
-	]
+   content: [
+        {
+            uuid: "abc123",
+            links: [
+                {
+                    "format": "docx",
+                    "url": "[url for docx download]"
+                },
+                {
+                    "format": "html",
+                    "url": "[url for html download]"
+                },
+                {
+                    "format": "plain",
+                    "url": "[url for plain text download]"
+                }
+            ]
+        }
+    ]
 }
 ```
 If you’re not in the list of syndication API users and you’re not overriding with the `syndicationNewOverride` flag, this endpoint will return an empty JSON object.
@@ -85,9 +85,9 @@ Example usage from a fetch response:
 const isNewSyndicationUser = res.headers.get('FT-New-Syndication-User') === 'true';
 
 if (isNewSyndicationUser) {
-	// do new stuff :-)
+    // do new stuff :-)
 } else {
-	// do old stuff :-(
+    // do old stuff :-(
 }
 ```
 
@@ -103,14 +103,14 @@ We store the list of syndication API user UUIDs in a config var called `NEW_SYND
 
 ### Steps to add new syndication API users
 
-	1. Make sure the syndicationNewUsersAwaiting flag is off in production
-	2. Well in advance of the proposed switch-on time, add user UUIDs to the NEW_SYNDICATION_USERS_AWAITING string (comma separated) in config vars, redeploy this app
-	3. Turn on the syndicationNewUsersAwaiting flag when ready to release to the new users (then relax, and follow the clean-up steps)
+1. Make sure the syndicationNewUsersAwaiting flag is off in production
+2. Well in advance of the proposed switch-on time, add user UUIDs to the NEW_SYNDICATION_USERS_AWAITING string (comma separated) in config vars, redeploy this app
+3. Turn on the syndicationNewUsersAwaiting flag when ready to release to the new users (then relax, and follow the clean-up steps)
 
 Cleaning up (please do this)
 
-	1. Move the user UUIDs over from NEW_SYNDICATION_USERS_AWAITING to the NEW_SYNDICATION_USERS string and redeploy this app
-	2. Turn off the syndicationNewUsersAwaiting flag again in production
-	3. Feel good but also a bit frustated by these steps
+1. Move the user UUIDs over from NEW_SYNDICATION_USERS_AWAITING to the NEW_SYNDICATION_USERS string and redeploy this app
+2. Turn off the syndicationNewUsersAwaiting flag again in production
+3. Feel good but also a bit frustated by these steps
 
 (Improvements to this are most welcome and encouraged!)
