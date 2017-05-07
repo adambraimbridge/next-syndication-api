@@ -9,7 +9,7 @@ module.exports = (req, res, next) => {
 	logger.info('in check-if-new-syndication-user middleware', { isNewSyndicationUser });
 
 	if (isNewSyndicationUser) {
-		res.setHeader('FT-New-Syndication-User', 'true');
+		res.set('FT-New-Syndication-User', 'true');
 	}
 
 	res.locals.isNewSyndicationUser = isNewSyndicationUser;
