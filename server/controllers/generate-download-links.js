@@ -3,7 +3,7 @@ const populateDownloadLinks = require('../lib/populate-download-links');
 
 module.exports = (req, res, next) => {
 
-	validateBody(req.body)
+	return validateBody(req.body)
 		.then(body => {
 			const data = {};
 
