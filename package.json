@@ -16,15 +16,25 @@
     "@financial-times/n-heroku-tools": "^6.19.2",
     "@financial-times/secret-squirrel": "^2.0.4",
     "chai": "^3.5.0",
+    "coveralls": "^2.13.1",
     "eslint": "^3.19.0",
     "haikro": "^2.3.3",
     "lintspaces-cli": "^0.6.0",
     "mocha": "^3.3.0",
     "nodemon": "^1.11.0",
+    "nyc": "^10.2.0",
     "pre-git": "^3.14.0",
     "proxyquire": "^1.7.4",
     "sinon": "^1.16.1",
     "sinon-chai": "^2.10.0"
+  },
+  "nyc": {
+    "exclude": [
+	  "server/app.js",
+	  "server/init.js",
+      "coverage",
+      "test"
+    ]
   },
   "engines": {
     "node": "6.10.2"

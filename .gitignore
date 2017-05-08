@@ -1,10 +1,12 @@
 *.env*
+.coveralls.yml
 .DS_Store
 .editorconfig
 .eslintrc.js
 .pa11yci.js
 /.haikro-cache/
 /.node-version
+/.nyc_output/
 /.sass-cache
 /bower_components/
 /coverage/
