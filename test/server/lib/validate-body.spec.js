@@ -21,7 +21,7 @@ describe('Validate body', () => {
 		});
 	});
 
-	afterEach(() => sandbox.restore());;
+	afterEach(() => sandbox.restore());
 
 	it('should return a promise', () => {
 		const promise = validateBody({ content: [] });
@@ -76,5 +76,5 @@ describe('Validate body', () => {
 				.then(done)
 				.catch(done);
 		});
-	})
+	});
 });

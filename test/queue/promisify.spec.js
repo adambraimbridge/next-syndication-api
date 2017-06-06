@@ -28,5 +28,5 @@ describe('queue/promisify', function () {
 		it(`AWS.SQS.prototype.${fn}Async should be a function`, function () {
 			expect(__proto__[`${fn}Async`]).to.be.a('function');
 		});
-	})
+	});
 });
