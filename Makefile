@@ -6,7 +6,7 @@ node_modules/@financial-times/n-gage/index.mk:
 
 APP_NAME := ft-next-syndication-api
 
-TEST_APP := "${APP_NAME}-branch-${CIRCLE_BUILD_NUM}"
+TEST_APP := "${APP_NAME}-${CIRCLE_BUILD_NUM}"
 
 coverage-report:
 	@nyc --all --reporter=lcovonly --reporter=text make unit-test
