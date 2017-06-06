@@ -38,6 +38,7 @@
   },
   "nyc": {
     "exclude": [
+      "queue/index.js",
       "server/app.js",
       "server/init.js",
       "coverage",
