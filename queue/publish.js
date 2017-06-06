@@ -6,7 +6,7 @@ const log = require('@financial-times/n-logger').default;
 
 const AWS = require('aws-sdk');
 
-const formatMessage = require('./formatMessage');
+const formatMessage = require('./format-message');
 
 const sqs = new AWS.SQS({
 	accessKeyId: process.env.AWS_ACCESS_KEY,

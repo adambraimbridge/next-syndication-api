@@ -20,7 +20,9 @@ const validate = ajv.compile(SchemaMessageV1);
 const formatMessage = (event) => {
 	eventId(event);
 
-	event.time = moment().toJSON();
+	if (!event.time) {
+		event.time = moment().toDate();
+	}
 
 	// for now validate only to add default values specified in schema
 	validate(event);
