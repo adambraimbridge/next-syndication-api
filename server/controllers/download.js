@@ -22,8 +22,6 @@ module.exports = (req, res, next) => {
 
 	const stream = new PassThrough();
 
-	const NOW = Date.now();
-
 	fetch(URI, { method: 'HEAD' }).then((uriRes) => {
 		const HEADERS = uriRes.headers.raw();
 
@@ -61,7 +59,7 @@ module.exports = (req, res, next) => {
 			user_id: null      // todo: and we also need this
 		};
 
-		log.info(`DOWNLOAD START`, eventStart);
+		log.info('DOWNLOAD START', eventStart);
 		(async () => await publish({ event: eventStart }))();
 
 		res.set('Content-Disposition', contentDisposition);
@@ -83,14 +81,14 @@ module.exports = (req, res, next) => {
 			if (length < LENGTH) {
 				eventEnd.state = 'interrupted';
 
-				log.info(`DOWNLOAD INTERRUPTED`, eventEnd);
+				log.info('DOWNLOAD INTERRUPTED', eventEnd);
 
 				res.status(400);
 			}
 			else {
 				eventEnd.state = 'complete';
 
-				log.info(`DOWNLOAD COMPLETE`, eventEnd);
+				log.info('DOWNLOAD COMPLETE', eventEnd);
 
 				res.status(200);
 			}

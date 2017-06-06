@@ -25,7 +25,7 @@ const publish = async ({ event, queue_url = DEFAULT_QUEUE_URL, format = formatMe
 			QueueUrl: queue_url
 		});
 
-		log.info(`SyndicationSQSQueuePublishSuccess`, {
+		log.info('SyndicationSQSQueuePublishSuccess', {
 			event,
 			queue_url
 		});
@@ -33,7 +33,7 @@ const publish = async ({ event, queue_url = DEFAULT_QUEUE_URL, format = formatMe
 		return true;
 	}
 	catch (e) {
-		log.error(`SyndicationSQSQueuePublishError`, {
+		log.error('SyndicationSQSQueuePublishError', {
 			err: e.stack,
 			event,
 			queue_url
