@@ -53,5 +53,5 @@ tidy:
 unit-test:
 	@export NEW_SYNDICATION_USERS=testUserUuid1,testUserUuid2; \
 	export NEW_SYNDICATION_USERS_AWAITING=testUserUuid3,testUserUuid4; \
-	mocha test/server/ --recursive -t 10000
+	mocha test/ --recursive -t 10000
 	@$(DONE)
