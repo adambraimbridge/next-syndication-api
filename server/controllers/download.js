@@ -5,7 +5,7 @@ const path = require('path');
 const { PassThrough } = require('stream');
 
 const { default: log } = require('@financial-times/n-logger');
-const fetch = require('node-fetch');
+const fetch = require('n-eager-fetch');
 const mime = require('mime-types');
 const moment = require('moment');
 
