@@ -25,7 +25,7 @@ describe('Cache middleware', () => {
 		};
 	});
 
-	afterEach(() => sandbox.restore());;
+	afterEach(() => sandbox.restore());
 
 	it('sets the expected cache headers (no caching for now)', () => {
 		cacheMiddleware(mocks.req, mocks.res, stubs.next);

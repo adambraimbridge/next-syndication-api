@@ -36,7 +36,7 @@ describe('Access control middleware', () => {
 		});
 	});
 
-	afterEach(() => sandbox.restore());;
+	afterEach(() => sandbox.restore());
 
 	it('valid CORS preflight request from valid origin', () => {
 		mocks.req.method = 'OPTIONS';
