@@ -39,6 +39,7 @@
   "nyc": {
     "exclude": [
       "queue/index.js",
+      "server/controllers/__health.js",
       "server/app.js",
       "server/init.js",
       "coverage",
