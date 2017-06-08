@@ -6,6 +6,7 @@ const sinonChai = require('sinon-chai');
 
 const AWS = require('aws-sdk');
 
+const MessageQueueEvent = require('../../queue/message-queue-event');
 const underTest = require('../../queue/publish');
 
 const { expect } = chai;
@@ -23,57 +24,56 @@ describe('queue/publish', function () {
 		__proto__.sendMessageAsync.restore();
 	});
 
-	it('should use the default `QueueUrl` when ', async function () {
-		let event = {};
+	it('should use the default `QueueUrl` when none is given', async function () {
+		let event = new MessageQueueEvent();
 
-		await underTest({ event });
+		await underTest(event);
 
-		expect(__proto__.sendMessageAsync).to.be.calledWith({
-			MessageBody: JSON.stringify(event),
-			QueueUrl: process.env.SYNDICATION_DOWNLOAD_SQS_URL
-		});
+		expect(__proto__.sendMessageAsync).to.be.calledWith(event.toSQSTransport());
 	});
 
 	it('should allow passing a different `QueueUrl`', async function () {
-		let event = {};
-		let queue_url = 'https://i.dont.exist/queue';
-
-		await underTest({ event, queue_url });
-
-		expect(__proto__.sendMessageAsync).to.be.calledWith({
-			MessageBody: JSON.stringify(event),
-			QueueUrl: queue_url
+		let event = new MessageQueueEvent({
+			queue_url: 'https://i.dont.exist/queue'
 		});
+
+		await underTest(event);
+
+		expect(__proto__.sendMessageAsync).to.be.calledWith(event.toSQSTransport());
 	});
 
 	it('should return true for a successful publish', async function () {
-		let event = {};
+		let event = new MessageQueueEvent();
 
-		let success = await underTest({ event });
+		let success = await underTest(event);
 
 		expect(success).to.be.true;
 	});
 
 	it('should return false for a failed publish', async function () {
-		let event = {};
-		let queue_url = 'https://i.dont.exist/queue';
+		let event = new MessageQueueEvent({
+			queue_url: 'https://i.dont.exist/queue'
+		});
 
-		let success = await underTest({ event, queue_url });
+		let success = await underTest(event);
 
 		expect(success).to.be.false;
 	});
 
-	it('allows passing a custom format queue message function', async function () {
-		let event = {};
-		let queue_url = 'https://i.dont.exist/queue';
+	it('should return false if a MessageQueueEvent is not passed', async function () {
+		let event = {
+			content_id: 'abc',
+			content_uri: 'https://ft.com/content/abc',
+			download_format: 'docx',
+			licence_id: 'foo',
+			state: 'save',
+			time: new Date(),
+			user_id: 'bar'
+		};
 
-		let format = sinon.stub();
+		let success = await underTest(event);
 
-		await underTest({ event, format, queue_url });
-
-		expect(format).to.be.calledOnce;
-
-		expect(format).to.be.calledWith(event);
+		expect(success).to.be.false;
 	});
 
 });

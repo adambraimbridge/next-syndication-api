@@ -1,12 +1,12 @@
 'use strict';
 
+const path = require('path');
+
 require('./promisify');
 
 const log = require('@financial-times/n-logger').default;
 
 const AWS = require('aws-sdk');
-
-const formatMessage = require('./format-message');
 
 const sqs = new AWS.SQS({
 	accessKeyId: process.env.AWS_ACCESS_KEY,
@@ -14,20 +14,18 @@ const sqs = new AWS.SQS({
 	secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
 });
 
-const DEFAULT_QUEUE_URL = process.env.SYNDICATION_DOWNLOAD_SQS_URL;
+const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
-const publish = async ({ event, queue_url = DEFAULT_QUEUE_URL, format = formatMessage }) => {
-	event = format(event);
-
+const publish = async event => {
 	try {
-		await sqs.sendMessageAsync({
-			MessageBody: JSON.stringify(event),
-			QueueUrl: queue_url
-		});
+		if (Object.prototype.toString.call(event) !== '[object MessageQueueEvent]') {
+			throw new TypeError(`${MODULE_ID} expected event type \`[object MessageQueueEvent]\` and received \`${Object.prototype.toString.call(event)}\` instead.`);
+		}
+
+		await sqs.sendMessageAsync(event.toSQSTransport());
 
 		log.info('SyndicationSQSQueuePublishSuccess', {
-			event,
-			queue_url
+			event
 		});
 
 		return true;
@@ -35,8 +33,7 @@ const publish = async ({ event, queue_url = DEFAULT_QUEUE_URL, format = formatMe
 	catch (e) {
 		log.error('SyndicationSQSQueuePublishError', {
 			err: e.stack,
-			event,
-			queue_url
+			event
 		});
 
 		return false;
