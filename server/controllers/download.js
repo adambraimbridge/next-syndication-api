@@ -66,8 +66,7 @@ module.exports = (req, res, next) => {
 
 		res.set('Content-Disposition', contentDisposition);
 
-		let cancelled = false;
-		let cancelDownload = () => cancelled = true;
+		let cancelDownload = () => req.__download_cancelled__ = true;
 		req.on('abort', cancelDownload);
 		req.connection.on('close', cancelDownload);
 
@@ -106,7 +105,7 @@ module.exports = (req, res, next) => {
 		stream.on('end', onend);
 
 		stream.on('data', (chunk) => {
-			if (cancelled === true) {
+			if (req.__download_cancelled__ === true) {
 				uriStream.end();
 
 				return;
