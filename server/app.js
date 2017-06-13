@@ -3,9 +3,10 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const accessControl = require('./middleware/access-control');
 const cache = require('./middleware/cache');
-const flags = require('./middleware/flags');
-const decodeSession = require('./middleware/decode-session');
 const checkIfNewSyndicationUser = require('./middleware/check-if-new-syndication-user');
+const decodeSession = require('./middleware/decode-session');
+const flags = require('./middleware/flags');
+const logRequest = require('./middleware/log-request');
 const app = module.exports = express({
 	systemCode: 'next-syndication-api',
 	withFlags: true
@@ -17,6 +18,7 @@ const middleware = [
 	cookieParser(),
 	bodyParser.text(),
 	bodyParser.json(),
+	logRequest,
 	accessControl,
 	cache,
 	flags,
