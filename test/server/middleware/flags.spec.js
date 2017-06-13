@@ -1,3 +1,7 @@
+'use strict';
+
+const path = require('path');
+
 const sinon = require('sinon');
 const chai = require('chai');
 const sinonChai = require('sinon-chai');
@@ -6,12 +10,14 @@ const flagsMiddleware = require('../../../server/middleware/flags');
 
 chai.use(sinonChai);
 
-describe('Flags middleware', () => {
+const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
+
+describe(MODULE_ID, function () {
 	let sandbox;
 	let mocks;
 	let stubs;
 
-	beforeEach(() => {
+	beforeEach(function () {
 		sandbox = sinon.sandbox.create();
 		mocks = {
 			res: {
@@ -26,9 +32,11 @@ describe('Flags middleware', () => {
 		};
 	});
 
-	afterEach(() => sandbox.restore());;
+	afterEach(function () {
+		sandbox.restore();
+	});
 
-	it('should call next if the syndicationNew flag is on', () => {
+	it('should call next if the syndicationNew flag is on', function () {
 		mocks.res.locals.flags.syndicationNew = true;
 
 		flagsMiddleware(mocks.req, mocks.res, stubs.next);
@@ -37,7 +45,7 @@ describe('Flags middleware', () => {
 		expect(mocks.res.sendStatus).not.to.have.been.called;
 	});
 
-	it('should send a not-found status code if the syndicationNew flag is off', () => {
+	it('should send a not-found status code if the syndicationNew flag is off', function () {
 		mocks.res.locals.flags.syndicationNew = false;
 
 		flagsMiddleware(mocks.req, mocks.res, stubs.next);

@@ -1,13 +1,19 @@
+'use strict';
+
+const path = require('path');
+
 const sinon = require('sinon');
 const expect = require('chai').expect;
 const proxyquire = require('proxyquire');
 
-describe('Validate body', () => {
+const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
+
+describe(MODULE_ID, function () {
 	let sandbox;
 	let stubs;
 	let validateBody;
 
-	beforeEach(() => {
+	beforeEach(function () {
 		sandbox = sinon.sandbox.create();
 		stubs = {
 			logger: {
@@ -21,47 +27,47 @@ describe('Validate body', () => {
 		});
 	});
 
-	afterEach(() => sandbox.restore());;
+	afterEach(() => sandbox.restore());
 
-	it('should return a promise', () => {
+	it('should return a promise', function () {
 		const promise = validateBody({ content: [] });
 
 		expect(promise.constructor === Promise).to.equal(true);
 	});
 
-	context('The promise', () => {
+	context('The promise', function () {
 
-		it('should reject when passed nothing at all', done => {
+		it('should reject when passed nothing at all', function (done) {
 			validateBody()
 				.then(() => done(new Error('Body was unexpectedly deemed valid')))
 				.catch(() => done());
 		});
 
-		it('should reject when passed an empty string', done => {
+		it('should reject when passed an empty string', function (done) {
 			validateBody('')
 				.then(() => done(new Error('Body was unexpectedly deemed valid')))
 				.catch(() => done());
 		});
 
-		it('should reject when passed an object without the minimum required contents', done => {
+		it('should reject when passed an object without the minimum required contents', function (done) {
 			validateBody({ hiya: 'hiya' })
 				.then(() => done(new Error('Body was unexpectedly deemed valid')))
 				.catch(() => done());
 		});
 
-		it('should resolve when passed a string that, when JSON-parsed, contains the minimum required contents', done => {
+		it('should resolve when passed a string that, when JSON-parsed, contains the minimum required contents', function (done) {
 			validateBody('{"content":[]}')
 				.then(() => done())
 				.catch(done);
 		});
 
-		it('should resolve when passed an acceptable object with the minimum required contents', done => {
+		it('should resolve when passed an acceptable object with the minimum required contents', function (done) {
 			validateBody({ 'content': [] })
 				.then(() => done())
 				.catch(done);
 		});
 
-		it('should resolve with the inputted body when valid', done => {
+		it('should resolve with the inputted body when valid', function (done) {
 			const input = {
 				content: [
 					{ uuid: '123' },
@@ -76,5 +82,5 @@ describe('Validate body', () => {
 				.then(done)
 				.catch(done);
 		});
-	})
+	});
 });

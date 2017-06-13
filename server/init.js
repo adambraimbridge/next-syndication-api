@@ -11,3 +11,7 @@ app.listen(port, () => {
 });
 
 module.exports = app;
+
+process.on('unhandledRejection', (reason, promise) => {
+	log.error(reason, promise);
+});

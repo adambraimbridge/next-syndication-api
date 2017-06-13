@@ -13,6 +13,24 @@ cd next-syndication-api
 make install
 ```
 
+### INCASE OF `npm install` ERROR
+
+If you get a `node-pre-gyp` error while `fsevents` is installing, which looks something like this:
+
+```shell
+
+    xcode-select: error: tool 'xcodebuild' requires Xcode, but active developer directory '/Library/Developer/CommandLineTools' is a command line tools instance
+
+```
+
+The run the below command [solution from here](https://stackoverflow.com/questions/17980759/xcode-select-active-developer-directory-error/17980786#answer-17980786):
+
+```shell
+
+    ~ $ sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+
+```
+
 ## Run locally
 
 `make run`. Check the [__gtg](https://local.ft.com:3002/__gtg) endpoint to make sure you’re up and running.

@@ -1,3 +1,7 @@
+'use strict';
+
+const path = require('path');
+
 const sinon = require('sinon');
 const chai = require('chai');
 const sinonChai = require('sinon-chai');
@@ -6,13 +10,15 @@ const proxyquire = require('proxyquire');
 
 chai.use(sinonChai);
 
-describe('checkIfNewSyndicationUser middleware', () => {
+const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
+
+describe(MODULE_ID, function () {
 	let sandbox;
 	let mocks;
 	let stubs;
 	let checkIfNewSyndicationUser;
 
-	beforeEach(() => {
+	beforeEach(function () {
 		sandbox = sinon.sandbox.create();
 		mocks = {
 			req: {},
@@ -41,9 +47,11 @@ describe('checkIfNewSyndicationUser middleware', () => {
 		});
 	});
 
-	afterEach(() => sandbox.restore());;
+	afterEach(function () {
+		sandbox.restore();
+	});
 
-	it('should set an FT-New-Syndication-User header if the user’s uuid is in the user array', () => {
+	it('should set an FT-New-Syndication-User header if the user’s uuid is in the user array', function () {
 		mocks.res.locals.userUuid = 'hiya123';
 
 		checkIfNewSyndicationUser(mocks.req, mocks.res, stubs.next);
@@ -51,7 +59,7 @@ describe('checkIfNewSyndicationUser middleware', () => {
 		expect(mocks.res.set).to.have.been.calledWith('FT-New-Syndication-User', 'true');
 	});
 
-	it('should set res.locals.isNewSyndicationUser as true if the user’s uuid is in the user array', () => {
+	it('should set res.locals.isNewSyndicationUser as true if the user’s uuid is in the user array', function () {
 		mocks.res.locals.userUuid = 'hiya123';
 
 		checkIfNewSyndicationUser(mocks.req, mocks.res, stubs.next);
@@ -59,7 +67,7 @@ describe('checkIfNewSyndicationUser middleware', () => {
 		expect(mocks.res.locals.isNewSyndicationUser).to.equal(true);
 	});
 
-	it('should call next if the user’s uuid is in the user array', () => {
+	it('should call next if the user’s uuid is in the user array', function () {
 		mocks.res.locals.userUuid = 'hiya123';
 
 		checkIfNewSyndicationUser(mocks.req, mocks.res, stubs.next);
@@ -67,7 +75,7 @@ describe('checkIfNewSyndicationUser middleware', () => {
 		expect(stubs.next).to.have.been.called;
 	});
 
-	it('should set res.locals.isNewSyndicationUser as true if the syndicationNewOverride flag is on', () => {
+	it('should set res.locals.isNewSyndicationUser as true if the syndicationNewOverride flag is on', function () {
 		mocks.res.locals.flags.syndicationNewOverride = true;
 
 		checkIfNewSyndicationUser(mocks.req, mocks.res, stubs.next);
@@ -75,7 +83,7 @@ describe('checkIfNewSyndicationUser middleware', () => {
 		expect(mocks.res.locals.isNewSyndicationUser).to.equal(true);
 	});
 
-	it('should set an FT-New-Syndication-User header if the syndicationNewOverride flag is on', () => {
+	it('should set an FT-New-Syndication-User header if the syndicationNewOverride flag is on', function () {
 		mocks.res.locals.flags.syndicationNewOverride = true;
 
 		checkIfNewSyndicationUser(mocks.req, mocks.res, stubs.next);
@@ -83,7 +91,7 @@ describe('checkIfNewSyndicationUser middleware', () => {
 		expect(mocks.res.set).to.have.been.calledWith('FT-New-Syndication-User', 'true');
 	});
 
-	it('should set isNewSyndicationUser to false if the user’s UUID is not in the user array and the syndicationNewOverride flag is off', () => {
+	it('should set isNewSyndicationUser to false if the user’s UUID is not in the user array and the syndicationNewOverride flag is off', function () {
 		mocks.res.locals.userUuid = 'hiya456';
 		mocks.res.locals.flags.syndicationNewOverride = false;
 
@@ -93,7 +101,7 @@ describe('checkIfNewSyndicationUser middleware', () => {
 		expect(mocks.res.locals.isNewSyndicationUser).to.equal(false);
 	});
 
-	it('should still call next if the user’s uuid is not in the user array', () => {
+	it('should still call next if the user’s uuid is not in the user array', function () {
 		mocks.res.locals.userUuid = 'hiya456';
 
 		checkIfNewSyndicationUser(mocks.req, mocks.res, stubs.next);

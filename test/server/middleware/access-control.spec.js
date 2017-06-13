@@ -1,3 +1,7 @@
+'use strict';
+
+const path = require('path');
+
 const sinon = require('sinon');
 const chai = require('chai');
 const sinonChai = require('sinon-chai');
@@ -6,13 +10,15 @@ const proxyquire = require('proxyquire');
 
 chai.use(sinonChai);
 
-describe('Access control middleware', () => {
+const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
+
+describe(MODULE_ID, function () {
 	let sandbox;
 	let mocks;
 	let stubs;
 	let accessControl;
 
-	beforeEach(() => {
+	beforeEach(function () {
 		sandbox = sinon.sandbox.create();
 		mocks = {
 			req: {
@@ -36,9 +42,11 @@ describe('Access control middleware', () => {
 		});
 	});
 
-	afterEach(() => sandbox.restore());;
+	afterEach(function () {
+		sandbox.restore();
+	});
 
-	it('valid CORS preflight request from valid origin', () => {
+	it('valid CORS preflight request from valid origin', function () {
 		mocks.req.method = 'OPTIONS';
 		mocks.req.get.withArgs('origin').returns('thing.ft.com');
 
@@ -53,7 +61,7 @@ describe('Access control middleware', () => {
 		expect(stubs.next).not.to.have.been.called;
 	});
 
-	it('CORS preflight request from invalid origin', () => {
+	it('CORS preflight request from invalid origin', function () {
 		mocks.req.method = 'OPTIONS';
 		mocks.req.get.withArgs('origin').returns('thing.nope.com');
 
@@ -64,7 +72,7 @@ describe('Access control middleware', () => {
 		expect(stubs.next).to.have.been.called;
 	});
 
-	it('CORS GET request from a valid origin', () => {
+	it('CORS GET request from a valid origin', function () {
 		mocks.req.method = 'GET';
 		mocks.req.get.withArgs('origin').returns('thing.ft.com');
 
@@ -79,7 +87,7 @@ describe('Access control middleware', () => {
 		expect(stubs.next).to.have.been.called;
 	});
 
-	it('CORS POST request from a valid origin', () => {
+	it('CORS POST request from a valid origin', function () {
 		mocks.req.method = 'POST';
 		mocks.req.get.withArgs('origin').returns('thing.ft.com');
 
@@ -94,7 +102,7 @@ describe('Access control middleware', () => {
 		expect(stubs.next).to.have.been.called;
 	});
 
-	it('CORS GET request from invalid origin', () => {
+	it('CORS GET request from invalid origin', function () {
 		mocks.req.method = 'GET';
 		mocks.req.get.withArgs('origin').returns('thing.nope.com');
 
@@ -105,7 +113,7 @@ describe('Access control middleware', () => {
 		expect(stubs.next).to.have.been.called;
 	});
 
-	it('CORS POST request from invalid origin', () => {
+	it('CORS POST request from invalid origin', function () {
 		mocks.req.method = 'POST';
 		mocks.req.get.withArgs('origin').returns('thing.nope.com');
 
@@ -116,7 +124,7 @@ describe('Access control middleware', () => {
 		expect(stubs.next).to.have.been.called;
 	});
 
-	it('non-CORS GET request', () => {
+	it('non-CORS GET request', function () {
 		mocks.req.method = 'GET';
 
 		accessControl(mocks.req, mocks.res, stubs.next);
@@ -126,7 +134,7 @@ describe('Access control middleware', () => {
 		expect(stubs.next).to.have.been.called;
 	});
 
-	it('non-CORS POST request', () => {
+	it('non-CORS POST request', function () {
 		mocks.req.method = 'POST';
 
 		accessControl(mocks.req, mocks.res, stubs.next);

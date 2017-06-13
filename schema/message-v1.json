@@ -1,0 +1,61 @@
+{
+    "title": "MessageV1",
+    "type": "object",
+    "properties": {
+        "_id": {
+            "type": "string"
+        },
+        "content_id": {
+            "type": "string"
+        },
+        "contributor_content": {
+            "default": false,
+            "type": "boolean"
+        },
+        "content_uri": {
+            "format": "uri",
+            "type": "string"
+        },
+        "download_format": {
+            "type": "string"
+        },
+        "licence_id": {
+            "type": "string"
+        },
+        "state": {
+            "default": "start",
+            "enum": [
+                "complete",
+                "delete",
+                "interrupted",
+                "save",
+                "start"
+            ],
+            "type": "string"
+        },
+        "time": {
+            "format": "date-time",
+            "type": "string"
+        },
+        "user_id": {
+            "type": "string"
+        },
+        "version": {
+            "enum": [
+                "v1"
+            ],
+            "default": "v1",
+            "type": "string"
+        }
+    },
+    "required": [
+        "_id",
+        "content_id",
+        "content_uri",
+        "licence_id",
+        "state",
+        "time",
+        "user_id",
+        "version"
+    ]
+}

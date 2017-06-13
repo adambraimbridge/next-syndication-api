@@ -1,3 +1,7 @@
+'use strict';
+
+const path = require('path');
+
 const sinon = require('sinon');
 const chai = require('chai');
 const sinonChai = require('sinon-chai');
@@ -6,12 +10,14 @@ const cacheMiddleware = require('../../../server/middleware/cache');
 
 chai.use(sinonChai);
 
-describe('Cache middleware', () => {
+const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
+
+describe(MODULE_ID, function () {
 	let sandbox;
 	let mocks;
 	let stubs;
 
-	beforeEach(() => {
+	beforeEach(function () {
 		sandbox = sinon.sandbox.create();
 		mocks = {
 			req: {},
@@ -25,16 +31,18 @@ describe('Cache middleware', () => {
 		};
 	});
 
-	afterEach(() => sandbox.restore());;
+	afterEach(function () {
+		sandbox.restore();
+	});
 
-	it('sets the expected cache headers (no caching for now)', () => {
+	it('sets the expected cache headers (no caching for now)', function () {
 		cacheMiddleware(mocks.req, mocks.res, stubs.next);
 
 		expect(mocks.res.set).to.have.been.calledWith('Surrogate-Control', mocks.res.FT_NO_CACHE);
 		expect(mocks.res.set).to.have.been.calledWith('Cache-Control', mocks.res.FT_NO_CACHE);
 	});
 
-	it('calls next', () => {
+	it('calls next', function () {
 		cacheMiddleware(mocks.req, mocks.res, stubs.next);
 		expect(stubs.next).to.have.been.called;
 	});

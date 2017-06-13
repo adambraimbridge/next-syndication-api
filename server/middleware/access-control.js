@@ -4,7 +4,7 @@ const inSafeList = requestersOrigin => {
 	const subdomainRegex = /^(https?:\/\/)?((([^.]+)\.)*)ft\.com(:[0-9]{1,4})?$/;
 
 	return subdomainRegex.test(requestersOrigin);
-}
+};
 
 module.exports = (req, res, next) => {
 	const requestersOrigin = req.get('origin');

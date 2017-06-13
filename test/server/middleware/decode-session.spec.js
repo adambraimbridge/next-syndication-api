@@ -1,3 +1,7 @@
+'use strict';
+
+const path = require('path');
+
 const sinon = require('sinon');
 const chai = require('chai');
 const sinonChai = require('sinon-chai');
@@ -6,13 +10,15 @@ const proxyquire = require('proxyquire');
 
 chai.use(sinonChai);
 
-describe('Decode session middleware', () => {
+const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
+
+describe(MODULE_ID, function () {
 	let sandbox;
 	let mocks;
 	let stubs;
 	let decodeSessionMiddleware;
 
-	beforeEach(() => {
+	beforeEach(function () {
 		sandbox = sinon.sandbox.create();
 		mocks = {
 			req: {
@@ -42,9 +48,11 @@ describe('Decode session middleware', () => {
 		});
 	});
 
-	afterEach(() => sandbox.restore());;
+	afterEach(function () {
+		sandbox.restore();
+	});
 
-	it('should send an unauthorised status code if no session token is found', () => {
+	it('should send an unauthorised status code if no session token is found', function () {
 		mocks.req.cookies.FTSession = undefined;
 
 		decodeSessionMiddleware(mocks.req, mocks.res, stubs.next);
@@ -54,7 +62,7 @@ describe('Decode session middleware', () => {
 		expect(stubs.next).not.to.have.been.called;
 	});
 
-	it('should set a user uuid variable on res.locals', () => {
+	it('should set a user uuid variable on res.locals', function () {
 		stubs.decode.returns('abc');
 
 		decodeSessionMiddleware(mocks.req, mocks.res, stubs.next);
@@ -64,7 +72,7 @@ describe('Decode session middleware', () => {
 		expect(stubs.next).to.have.been.called;
 	});
 
-	it('should send an bad request status code if an invalid session token is provided', () => {
+	it('should send an bad request status code if an invalid session token is provided', function () {
 		stubs.decode.throws();
 
 		decodeSessionMiddleware(mocks.req, mocks.res, stubs.next);
