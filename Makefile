@@ -53,5 +53,5 @@ tidy:
 unit-test:
 	@export NEW_SYNDICATION_USERS=testUserUuid1,testUserUuid2; \
 	export NEW_SYNDICATION_USERS_AWAITING=testUserUuid3,testUserUuid4; \
-	mocha test/ --recursive -t 10000
+	node ./node_modules/.bin/mocha --full-trace --harmony --recursive --slow 15000 --sort --timeout 30000 test/
 	@$(DONE)
