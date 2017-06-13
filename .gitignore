@@ -1,7 +1,6 @@
 *.env*
 .coveralls.yml
 .DS_Store
-.editorconfig
 .eslintrc.js
 .pa11yci.js
 /.haikro-cache/
