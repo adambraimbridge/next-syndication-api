@@ -1,5 +1,7 @@
 'use strict';
 
+const path = require('path');
+
 const { expect } = require('chai');
 
 const AJV = require('ajv');
@@ -18,7 +20,9 @@ const ajv = new AJV({
 
 const validate = ajv.compile(SchemaMessageV1);
 
-describe('queue/message-queue-event', function () {
+const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
+
+describe(MODULE_ID, function () {
 
 	describe('new MessageQueueEvent', function () {
 		it('should use the default `QueueUrl` when none is given', function () {

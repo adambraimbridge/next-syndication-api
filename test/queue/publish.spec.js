@@ -1,5 +1,7 @@
 'use strict';
 
+const path = require('path');
+
 const chai = require('chai');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
@@ -15,7 +17,9 @@ chai.use(sinonChai);
 
 const __proto__ = Object.getPrototypeOf(new AWS.SQS({}));
 
-describe('queue/publish', function () {
+const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
+
+describe(MODULE_ID, function () {
 	before(function () {
 		sinon.spy(__proto__, 'sendMessageAsync');
 	});
