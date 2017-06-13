@@ -1,0 +1,12 @@
+root = true
+
+[**{.js,.scss,.html,.mustache,Makefile,.vcl}]
+indent_style = tab
+trim_trailing_whitespace = true
+charset = utf-8
+
+[**{.json}]
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = true
+charset = utf-8
