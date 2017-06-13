@@ -12,6 +12,7 @@
     "aws-sdk": "^2.62.0",
     "body-parser": "^1.17.1",
     "cookie-parser": "^1.4.3",
+    "dotenv": "^4.0.0",
     "forever": "^0.15.3",
     "hat": "^0.0.3",
     "ioredis": "^3.0.0",
@@ -28,6 +29,7 @@
     "haikro": "^2.3.3",
     "lintspaces-cli": "^0.6.0",
     "mocha": "^3.3.0",
+    "node-mocks-http": "^1.6.2",
     "nock": "^9.0.13",
     "nodemon": "^1.11.0",
     "nyc": "^11.0.2",
@@ -40,6 +42,7 @@
     "exclude": [
       "queue/index.js",
       "server/controllers/__health.js",
+      "server/middleware/log-request.js",
       "server/app.js",
       "server/init.js",
       "coverage",
@@ -58,5 +61,6 @@
   },
   "scripts": {
     "commit": "commit-wizard"
-  }
+  },
+  "false": {}
 }
