@@ -16,8 +16,8 @@ const REQUEST_PROPERTIES = [
 module.exports = exports = (req, res, next) => {
 	let msg = REQUEST_PROPERTIES.reduce((acc, prop) => {
 		acc[prop] = Object.prototype.toString.call(req[prop]) === '[object Object]' && IS_PROD
-					? JSON.stringify(req[prop])
-              		: req[prop];
+			? JSON.stringify(req[prop])
+			: req[prop];
 
 		return acc;
 	}, {
@@ -25,7 +25,7 @@ module.exports = exports = (req, res, next) => {
 		'__FLAGS__': IS_PROD ? JSON.stringify(res.locals.flags) : res.locals.flags
 	});
 
-  	log.debug(IS_PROD ? msg : JSON.stringify(msg, null, 4));
+	log.debug(IS_PROD ? msg : JSON.stringify(msg, null, 4));
 
 	next();
 };
