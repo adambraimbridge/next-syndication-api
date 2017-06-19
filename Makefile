@@ -13,8 +13,7 @@ coverage-report:
 	@$(DONE)
 
 deploy:
-	nht configure
-	nht deploy --skip-gtg
+	./node_modules/.bin/nht ship
 
 install:
 # delete the package-lock.json here so all modules can install correctly as
@@ -33,10 +32,10 @@ run-coveralls: coverage-report
 	@$(DONE)
 
 provision:
-	nht float -md --testapp ${TEST_APP} --skip-gtg
+	./node_modules/.bin/nht float --testapp ${TEST_APP}
 
 run:
-	nht run --local --https
+	./node_modules/.bin/nht run --local --https
 
 test: verify
 ifeq ($(CIRCLECI),true)
@@ -46,7 +45,7 @@ else
 endif
 
 tidy:
-	nht destroy ${TEST_APP}
+	# nothing to tidy
 
 unit-test:
 	@export NEW_SYNDICATION_USERS=testUserUuid1,testUserUuid2; \
