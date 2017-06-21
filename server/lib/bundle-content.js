@@ -1,13 +1,12 @@
 'use strict';
 
-const fs = require('fs');
 const path = require('path');
 const { PassThrough } = require('stream');
-const url = require('url');
 
 const { default: log } = require('@financial-times/n-logger');
 
 const archiver = require('archiver');
+const moment = require('moment');
 const fetch = require('n-eager-fetch');
 
 const { DOWNLOAD_ARCHIVE_EXTENSION } = require('config');
@@ -27,7 +26,11 @@ module.exports = exports = (content, req, res, next) => {
 	let archive = archiver(DOWNLOAD_ARCHIVE_EXTENSION);
 
 	archive.on('error', err => {
-		throw err;
+		publishEndEvent(res, 'error');
+
+		log.error(`${MODULE_ID} ArchiveError`, err.stack || err);
+
+		res.status(500).end();
 	});
 	archive.on('end', () => {
 		res.end();
@@ -79,13 +82,18 @@ module.exports = exports = (content, req, res, next) => {
 		let uriStream;
 
 		let onend = () => {
+			let state = 'complete';
+
 			if (length < LENGTH) {
 				res.status(400);
 			}
 			else {
+				state = 'interrupted';
+
 				res.status(200);
 			}
 
+			publishEndEvent(res, state);
 		};
 
 		stream.on('close', onend);
@@ -121,3 +129,11 @@ module.exports = exports = (content, req, res, next) => {
 		});
 	});
 };
+
+function publishEndEvent (res, state) {
+	const event = res.__event.clone();
+	event.state = state;
+	event.time = moment().toJSON();
+
+	(async () => await event.publish())();
+}
