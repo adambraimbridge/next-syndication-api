@@ -6,15 +6,12 @@
             "type": "string"
         },
         "content_id": {
+            "format": "uri",
             "type": "string"
         },
         "contributor_content": {
             "default": false,
             "type": "boolean"
-        },
-        "content_uri": {
-            "format": "uri",
-            "type": "string"
         },
         "download_format": {
             "type": "string"
@@ -27,9 +24,20 @@
             "enum": [
                 "complete",
                 "delete",
+                "error",
                 "interrupted",
                 "save",
                 "start"
+            ],
+            "type": "string"
+        },
+        "syndication_state": {
+            "default": "yes",
+            "enum": [
+                "no",
+                "null",
+                "verify",
+                "yes"
             ],
             "type": "string"
         },
@@ -51,9 +59,9 @@
     "required": [
         "_id",
         "content_id",
-        "content_uri",
         "licence_id",
         "state",
+        "syndication_state",
         "time",
         "user_id",
         "version"

@@ -92,8 +92,7 @@ describe(MODULE_ID, function () {
 
 	it('#clone', function () {
 		let event_data = {
-			content_id: 'abc',
-			content_uri: 'https://ft.com/content/abc',
+			content_id: 'http://www.ft.com/thing/abc',
 			download_format: 'docx',
 			licence_id: 'foo',
 			state: 'save',
@@ -126,8 +125,7 @@ describe(MODULE_ID, function () {
 
 	it('#toJSON', function () {
 		let event_data = {
-			content_id: 'abc',
-			content_uri: 'https://ft.com/content/abc',
+			content_id: 'http://www.ft.com/thing/abc',
 			download_format: 'docx',
 			licence_id: 'foo',
 			state: 'save',
@@ -147,8 +145,7 @@ describe(MODULE_ID, function () {
 
 	it('#toSQSTransport', function () {
 		let event_data = {
-			content_id: 'abc',
-			content_uri: 'https://ft.com/content/abc',
+			content_id: 'http://www.ft.com/thing/abc',
 			download_format: 'docx',
 			licence_id: 'foo',
 			state: 'save',
@@ -176,8 +173,7 @@ describe(MODULE_ID, function () {
 
 		it('pass', function () {
 			let event_data = {
-				content_id: 'abc',
-				content_uri: 'https://ft.com/content/abc',
+				content_id: 'http://www.ft.com/thing/abc',
 				download_format: 'docx',
 				licence_id: 'foo',
 				state: 'save',
