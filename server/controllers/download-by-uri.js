@@ -1,8 +1,8 @@
 'use strict';
 
-const url = require('url');
 const path = require('path');
 const { PassThrough } = require('stream');
+const url = require('url');
 
 const { default: log } = require('@financial-times/n-logger');
 const fetch = require('n-eager-fetch');

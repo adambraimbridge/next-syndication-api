@@ -8,7 +8,7 @@ const { expect } = require('chai');
 const nock = require('nock');
 const httpMocks = require('node-mocks-http');
 
-const underTest = require('../../../server/controllers/download');
+const underTest = require('../../../server/controllers/download-by-uri');
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
