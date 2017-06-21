@@ -58,6 +58,9 @@ module.exports = exports = (content, req, res, next) => {
 			log.error(`${MODULE_ID} TranscriptAppendError => `, e);
 		});
 	}
+	else {
+		transcriptAppended = true;
+	}
 
 	const URI = content.download.binaryUrl;
 
