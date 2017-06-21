@@ -4,6 +4,7 @@ const AJV = require('ajv');
 const hat = require('hat');
 
 const SchemaMessageV1 = require('../schema/message-v1.json');
+const publish = require('./publish');
 
 const ajv = new AJV({
 	allErrors: true,
@@ -106,6 +107,11 @@ module.exports = exports = class MessageQueueEvent {
 
 	stringify (replacer = null, space = null) {
 		return JSON.stringify(this.toJSON(), replacer, space);
+	}
+
+	publish () {
+		return publish(this)
+			.then(success => success);
 	}
 
 	toJSON () {
