@@ -4,13 +4,14 @@ const path = require('path');
 
 const { default: log } = require('@financial-times/n-logger');
 
+const moment = require('moment');
+
 const bundleContent = require('../lib/bundle-content');
 const getContent = require('../lib/get-content');
 const convertArticle = require('../lib/convert-article');
 const prepareDownloadResponse = require('../lib/prepare-download-response');
 
 const MessageQueueEvent = require('../../queue/message-queue-event');
-const publish = require('../../queue/publish');
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
@@ -35,6 +36,19 @@ module.exports = exports = (req, res, next) => {
 				return;
 			}
 
+			res.__content = content;
+			res.__event = new MessageQueueEvent({ event: {
+				content_id: content.id,   // todo: should we resovle this form the URI or send it through in the QS?
+				download_format: content.extension,
+				licence_id: null,                                       // todo: we need this
+				state: 'start',
+				syndication_state: String(content.canBeSyndicated),
+				time: moment().toDate(),
+				user_id: null                                           // todo: and we also need this
+			} });
+
+			(async () => await res.__event.publish())();
+
 			if (DOWNLOAD_AS_ARTICLE[content.contentType]) {
 				if (!content.bodyXML__CLEAN) {
 					res.status(400).end();
@@ -55,6 +69,8 @@ module.exports = exports = (req, res, next) => {
 
 					res.set('content-length', file.length);
 
+					publishEndEvent(res, 'complete');
+
 					res.status(200).send(file);
 
 					next();
@@ -63,6 +79,8 @@ module.exports = exports = (req, res, next) => {
 					cleanup(content);
 
 					log.error(`${MODULE_ID} Error`, content, e);
+
+					publishEndEvent(res, 'error');
 
 					res.status(400).end();
 				});
@@ -86,8 +104,16 @@ const REMOVE_PROPERTIES = [
 	'download'
 ];
 
-function cleanup(content) {
+function cleanup (content) {
 	REMOVE_PROPERTIES.forEach(property => delete content[property]);
 
 	return content;
+}
+
+function publishEndEvent (res, state) {
+	const event = res.__event.clone();
+	event.state = state;
+	event.time = moment().toJSON();
+
+	(async () => await event.publish())();
 }
