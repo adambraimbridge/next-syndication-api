@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('@financial-times/n-express');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -7,6 +9,7 @@ const checkIfNewSyndicationUser = require('./middleware/check-if-new-syndication
 const decodeSession = require('./middleware/decode-session');
 const flags = require('./middleware/flags');
 const logRequest = require('./middleware/log-request');
+
 const app = module.exports = express({
 	systemCode: 'next-syndication-api',
 	withFlags: true
@@ -33,4 +36,5 @@ app.get(`${BASE_URI_PATH}/__gtg`, (req, res) => res.sendStatus(200));
 app.options(`${BASE_URI_PATH}/generate-download-links`, accessControl);
 app.post(`${BASE_URI_PATH}/generate-download-links`, middleware, require('./controllers/generate-download-links'));
 
-app.get(`${BASE_URI_PATH}/download`, middleware, require('./controllers/download'));
+app.get(`${BASE_URI_PATH}/download`, middleware, require('./controllers/download-by-uri'));
+app.get(`${BASE_URI_PATH}/download/:content_id`, middleware, require('./controllers/download-by-content-id'));
