@@ -14,7 +14,7 @@ describe(MODULE_ID, function () {
 		expect(populatedLinks.links).to.be.an('array');
 	});
 
-	context('Link array objects', function () {
+	describe('Link array objects', function () {
 		it('should contain a `format` string', function () {
 			const populatedLinks = populateDownloadLinks({ uuid: '123' });
 

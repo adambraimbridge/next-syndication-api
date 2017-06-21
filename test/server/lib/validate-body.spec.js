@@ -35,7 +35,7 @@ describe(MODULE_ID, function () {
 		expect(promise.constructor === Promise).to.equal(true);
 	});
 
-	context('The promise', function () {
+	describe('The promise', function () {
 
 		it('should reject when passed nothing at all', function (done) {
 			validateBody()
