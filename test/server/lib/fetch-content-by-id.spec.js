@@ -4,7 +4,6 @@ const path = require('path');
 
 const {expect} = require('chai');
 const nock = require('nock');
-//const httpMocks = require('node-mocks-http');
 
 const underTest = require('../../../server/lib/fetch-content-by-id');
 
