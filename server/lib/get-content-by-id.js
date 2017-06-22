@@ -2,7 +2,7 @@
 
 const mime = require('mime-types');
 
-const getArticleXML = require('./get-article-xml');
+const fetchContentById = require('./fetch-content-by-id');
 const formatArticleXML = require('./format-article-xml');
 const getWordCount = require('./get-word-count');
 const decorateArticle = require('./decorate-article');
@@ -18,7 +18,7 @@ const RE_BAD_CHARS = /[^A-Za-z0-9_]/gm;
 const RE_SPACE = /\s/gm;
 
 module.exports = exports = (content_id, format) => {
-    return getArticleXML(content_id)
+    return fetchContentById(content_id)
         .then(content => {
             if (Object.prototype.toString.call(content) !== '[object Object]') {
                 return content;

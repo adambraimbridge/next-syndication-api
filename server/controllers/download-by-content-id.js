@@ -7,7 +7,7 @@ const {default: log} = require('@financial-times/n-logger');
 const moment = require('moment');
 
 const bundleContent = require('../lib/bundle-content');
-const getContent = require('../lib/get-content');
+const getContentById = require('../lib/get-content-by-id');
 const convertArticle = require('../lib/convert-article');
 const prepareDownloadResponse = require('../lib/prepare-download-response');
 
@@ -26,7 +26,7 @@ const DOWNLOAD_AS_ARTICLE = {
 };
 
 module.exports = exports = (req, res, next) => {
-    getContent(req.params.content_id, req.query.format)
+    getContentById(req.params.content_id, req.query.format)
         .then(content => {
             if (Object.prototype.toString.call(content) !== '[object Object]') {
                 log.error(`${MODULE_ID} could not get item by content_id(${req.params.content_id}) => ${content}`);
