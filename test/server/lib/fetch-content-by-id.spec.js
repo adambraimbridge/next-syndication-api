@@ -2,22 +2,31 @@
 
 const path = require('path');
 
-const {expect} = require('chai');
+const { expect } = require('chai');
 const nock = require('nock');
 
 const underTest = require('../../../server/lib/fetch-content-by-id');
 
-const CONFIG = require('config');
+const { BASE_URI_FT_API } = require('config');
 
 const RE_VALID_URI = /^\/content\/([A-Za-z0-9]{8}(?:-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12})$/;
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
 describe(MODULE_ID, function () {
+
+    before(function () {
+        nock.disableNetConnect(BASE_URI_FT_API);
+    });
+
+    after(function () {
+        nock.enableNetConnect(BASE_URI_FT_API);
+    });
+
     describe('success', function () {
 
         beforeEach(function () {
-            nock(CONFIG.BASE_URI_FT_API)
+            nock(BASE_URI_FT_API)
                 .get(uri => RE_VALID_URI.test(uri))
                 .reply(uri => {
                     return [
@@ -67,7 +76,7 @@ describe(MODULE_ID, function () {
 
             describe(`content_id="${contentId}"; status=${httpStatus}`, function () {
                 before(function () {
-                    nock(CONFIG.BASE_URI_FT_API)
+                    nock(BASE_URI_FT_API)
                         .get(uri => RE_VALID_URI.test(uri))
                         .reply(() => {
                             return [
