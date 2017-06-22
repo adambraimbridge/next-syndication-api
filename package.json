@@ -55,7 +55,11 @@
   "config": {
     "pre-git": {
       "pre-commit": [
-        "secret-squirrel"
+        "node_modules/.bin/secret-squirrel",
+        "make verify -j3"
+      ],
+      "pre-push": [
+        "make unit-test"
       ]
     }
   },

@@ -8,6 +8,8 @@ APP_NAME := ft-next-syndication-api
 
 TEST_APP := "${APP_NAME}-${CIRCLE_BUILD_NUM}"
 
+IGNORE_A11Y := true
+
 coverage-report:
 	@nyc --all --reporter=lcovonly --reporter=text make unit-test
 	@$(DONE)
