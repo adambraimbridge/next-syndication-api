@@ -9,11 +9,11 @@ module.exports = exports = content_id => {
     log.debug(`ATTEMPTING TO RETRIEVE ARTICLE: ${ARTICLE_URI}`);
 
     return fetch(ARTICLE_URI, {
-        timeout: process.env.TIMEOUT_ARTICLE_FETCH,
-        headers: {
-            'X-Api-Key': process.env.apikey
-        }
-    })
+            timeout: process.env.TIMEOUT_ARTICLE_FETCH,
+            headers: {
+                'X-Api-Key': process.env.apikey
+            }
+        })
         .then(res => {
             if (res.status === 200) {
                 log.info(`SUCCESSFULLY RETRIEVED ARTICLE: ${ARTICLE_URI}`, res);
