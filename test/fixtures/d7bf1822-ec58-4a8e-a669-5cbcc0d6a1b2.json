@@ -1,0 +1,58 @@
+{
+    "id": "http://www.ft.com/thing/d7bf1822-ec58-4a8e-a669-5cbcc0d6a1b2",
+    "type": "http://www.ft.com/ontology/content/MediaResource",
+    "title": "The Future is Quantum: solution to the world’s problems",
+    "alternativeTitles": { },
+    "standfirst": "Quantum computers  are set to solve problems today's computers cannot",
+    "alternativeStandfirsts": { },
+    "byline": "Made by Alpha Grid.",
+    "description": "As part of a new FT video series, 'Masters of Science' on the men and women whose ideas are shaping our future, computer scientist Jeremy O'Brien looks at how quantum computers will solve problems that conventional computers never could.",
+    "firstPublishedDate": "2017-06-07T10:30:59.301Z",
+    "publishedDate": "2017-06-07T10:30:59.301Z",
+    "requestUrl": "http://api.ft.com/content/d7bf1822-ec58-4a8e-a669-5cbcc0d6a1b2",
+    "brands": [ "http://api.ft.com/things/dbb0bdae-1f0c-11e4-b0cb-b2227cce2b54" ],
+    "mainImage": { "id": "http://api.ft.com/content/de2390cd-46a1-4c58-2914-f5f50e13f766" },
+    "alternativeImages": { },
+    "publishReference": "tid_frz40uwek4",
+    "canBeDistributed": "yes",
+    "transcript": "<p>Computers, as we know them, are already pretty impressive. </p><p>[CELL PHONE RINGS] </p><p>We now carry what would have once been considered a supercomputer in our pockets. But as great as they may seem, there are problems that these traditional computers will simply never solve. </p><p>[CHICKEN CROWS] </p><p>Across artificial intelligence and genomics, as well as in finance and clean energy devices. Even if we turned every silicon atom on our entire planet into a giant supercomputer, we still could never solve these problems. </p><p>But a quantum computer could, because quantum computers operate on entirely different principles. Such a machine will use qubits as its fundamental building blocks. And although researchers around the world have already made machines with up to a dozen qubits, a useful quantum computer will require millions. There is currently only one technology capable of making components at such a scale. Silicon chip manufacturing. </p><p>I'm convinced that the only way we'll see a revolutionary million qubit quantum computer is if we harness the trillions of dollars that we've already invested in the silicon industry. We're using the same state-of-the-art silicon manufacturing tools that brought us the digital revolution to build a quantum computer to solve big problems that would otherwise remain forever unsolved. </p>",
+    "captions": [ { "url": "https://next-media-api.ft.com/captions/14968298368190.vtt", "mediaType": "text/vtt" } ],
+    "dataSource": [
+        {
+            "binaryUrl": "https://next-media-api.ft.com/renditions/14968298368190/0x0.mp3",
+            "mediaType": "audio/mpeg",
+            "duration": 95400,
+            "audioCodec": "mp3"
+        },
+        {
+            "binaryUrl": "https://next-media-api.ft.com/renditions/14968298368190/640x360.mp4",
+            "pixelWidth": 640,
+            "pixelHeight": 360,
+            "mediaType": "video/mp4",
+            "duration": 95423,
+            "videoCodec": "h264",
+            "audioCodec": "aac"
+        },
+        {
+            "binaryUrl": "https://next-media-api.ft.com/renditions/14968298368190/1280x720.mp4",
+            "pixelWidth": 1280,
+            "pixelHeight": 720,
+            "mediaType": "video/mp4",
+            "duration": 95423,
+            "videoCodec": "h264",
+            "audioCodec": "aac"
+        },
+        {
+            "binaryUrl": "https://next-media-api.ft.com/renditions/14968298368190/1920x1080.mp4",
+            "pixelWidth": 1920,
+            "pixelHeight": 1080,
+            "mediaType": "video/mp4",
+            "duration": 95423,
+            "videoCodec": "h264",
+            "audioCodec": "aac"
+        }
+    ],
+    "canBeSyndicated": "yes",
+    "webUrl": "https://www.ft.com/video/d7bf1822-ec58-4a8e-a669-5cbcc0d6a1b2",
+    "transcript__CLEAN": "<body><p>Computers, as we know them, are already pretty impressive. </p><p>[CELL PHONE RINGS] </p><p>We now carry what would have once been considered a supercomputer in our pockets. But as great as they may seem, there are problems that these traditional computers will simply never solve. </p><p>[CHICKEN CROWS] </p><p>Across artificial intelligence and genomics, as well as in finance and clean energy devices. Even if we turned every silicon atom on our entire planet into a giant supercomputer, we still could never solve these problems. </p><p>But a quantum computer could, because quantum computers operate on entirely different principles. Such a machine will use qubits as its fundamental building blocks. And although researchers around the world have already made machines with up to a dozen qubits, a useful quantum computer will require millions. There is currently only one technology capable of making components at such a scale. Silicon chip manufacturing. </p><p>I'm convinced that the only way we'll see a revolutionary million qubit quantum computer is if we harness the trillions of dollars that we've already invested in the silicon industry. We're using the same state-of-the-art silicon manufacturing tools that brought us the digital revolution to build a quantum computer to solve big problems that would otherwise remain forever unsolved. </p></body>"
+}
