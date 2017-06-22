@@ -49,6 +49,7 @@
       "server/controllers/__health.js",
       "server/middleware/log-request.js",
       "server/app.js",
+      "server/env.js",
       "server/init.js",
       "coverage",
       "test"
