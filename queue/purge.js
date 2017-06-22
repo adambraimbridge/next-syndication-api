@@ -6,13 +6,20 @@ const log = require('@financial-times/n-logger').default;
 
 const AWS = require('aws-sdk');
 
+const {
+    AWS_ACCESS_KEY,
+    AWS_REGION = 'eu-west-1',
+    AWS_SECRET_ACCESS_KEY,
+    SYNDICATION_DOWNLOAD_SQS_URL: DEFAULT_QUEUE_URL
+} = require('config');
+
 const sqs = new AWS.SQS({
-    accessKeyId: process.env.AWS_ACCESS_KEY,
-    region: process.env.AWS_REGION || 'eu-west-1',
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+    accessKeyId: AWS_ACCESS_KEY,
+    region: AWS_REGION,
+    secretAccessKey: AWS_SECRET_ACCESS_KEY
 });
 
-const purgeQueue = async (params = {QueueUrl: process.env.SYNDICATION_DOWNLOAD_SQS_URL}) => {
+const purgeQueue = async (params = { QueueUrl: DEFAULT_QUEUE_URL }) => {
     try {
         let data = await sqs.purgeQueueAsync(params);
 

@@ -3,6 +3,8 @@
 const AJV = require('ajv');
 const hat = require('hat');
 
+const { SYNDICATION_DOWNLOAD_SQS_URL: DEFAULT_QUEUE_URL } = require('config');
+
 const SchemaMessageV1 = require('../schema/message-v1.json');
 const publish = require('./publish');
 
@@ -19,8 +21,6 @@ const rack = hat.rack();
 const PROPERTY__id = Symbol('_id');
 const PROPERTY_validate = Symbol('validate');
 const PROPERTY_queue_url = Symbol('queue_url');
-
-const DEFAULT_QUEUE_URL = process.env.SYNDICATION_DOWNLOAD_SQS_URL;
 
 module.exports = exports = class MessageQueueEvent {
     constructor (config = {}) {

@@ -6,6 +6,8 @@ const {expect} = require('chai');
 
 const AJV = require('ajv');
 
+const { SYNDICATION_DOWNLOAD_SQS_URL: DEFAULT_QUEUE_URL } = require('config');
+
 const SchemaMessageV1 = require('../../schema/message-v1.json');
 
 const underTest = require('../../queue/message-queue-event');
@@ -28,7 +30,7 @@ describe(MODULE_ID, function () {
         it('should use the default `QueueUrl` when none is given', function () {
             let event = new underTest();
 
-            expect(event.toSQSTransport()).to.have.property('QueueUrl').and.equal(process.env.SYNDICATION_DOWNLOAD_SQS_URL);
+            expect(event.toSQSTransport()).to.have.property('QueueUrl').and.equal(DEFAULT_QUEUE_URL);
         });
 
         it('should allow you to pass a custom `QueueUrl`', function () {
@@ -157,7 +159,7 @@ describe(MODULE_ID, function () {
 
         expect(event.toSQSTransport()).to.eql({
             MessageBody: event.stringify(),
-            QueueUrl: process.env.SYNDICATION_DOWNLOAD_SQS_URL
+            QueueUrl: DEFAULT_QUEUE_URL
         });
     });
 

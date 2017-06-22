@@ -3,6 +3,9 @@
 const express = require('@financial-times/n-express');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+
+const { BASE_URI_PATH = '/syndication' } = require('config');
+
 const accessControl = require('./middleware/access-control');
 const cache = require('./middleware/cache');
 const checkIfNewSyndicationUser = require('./middleware/check-if-new-syndication-user');
@@ -14,8 +17,6 @@ const app = module.exports = express({
     systemCode: 'next-syndication-api',
     withFlags: true
 });
-
-const BASE_URI_PATH = process.env.BASE_URI_PATH || '/syndication';
 
 const middleware = [
     cookieParser(),

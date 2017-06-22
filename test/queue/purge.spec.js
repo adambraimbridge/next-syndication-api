@@ -8,6 +8,8 @@ const sinonChai = require('sinon-chai');
 
 const AWS = require('aws-sdk');
 
+const { SYNDICATION_DOWNLOAD_SQS_URL: DEFAULT_QUEUE_URL } = require('config');
+
 const underTest = require('../../queue/purge');
 
 const {expect} = chai;
@@ -29,7 +31,7 @@ describe(MODULE_ID, function () {
 
     it('should return true for a successful purge', async function () {
         let success = await underTest({
-            QueueUrl: process.env.SYNDICATION_DOWNLOAD_SQS_URL
+            QueueUrl: DEFAULT_QUEUE_URL
         });
 
         expect(success).to.be.true;
@@ -47,7 +49,7 @@ describe(MODULE_ID, function () {
         await underTest();
 
         expect(__proto__.purgeQueueAsync).to.be.calledWith({
-            QueueUrl: process.env.SYNDICATION_DOWNLOAD_SQS_URL
+            QueueUrl: DEFAULT_QUEUE_URL
         });
     });
 
