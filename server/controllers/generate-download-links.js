@@ -3,16 +3,16 @@ const populateDownloadLinks = require('../lib/populate-download-links');
 
 module.exports = (req, res, next) => {
 
-	return validateBody(req.body)
-		.then(body => {
-			const data = {};
+    return validateBody(req.body)
+        .then(body => {
+            const data = {};
 
-			if (res.locals.isNewSyndicationUser) {
-				data.content = body.content.map(populateDownloadLinks);
-			}
+            if (res.locals.isNewSyndicationUser) {
+                data.content = body.content.map(populateDownloadLinks);
+            }
 
-			return data;
-		})
-		.then(data => res.json(data))
-		.catch(next);
+            return data;
+        })
+        .then(data => res.json(data))
+        .catch(next);
 };
