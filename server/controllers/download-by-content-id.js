@@ -15,11 +15,6 @@ const MessageQueueEvent = require('../../queue/message-queue-event');
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
-// article => b59dff10-3f7e-11e7-9d56-25f963e998b2
-// live blog => 2e999754-c942-3eb8-9fcd-991a3fd5202c
-// video (no transcript) => 80d634ea-fa2b-46b5-886f-1418c6445182
-// video (transcript and captions) => d7bf1822-ec58-4a8e-a669-5cbcc0d6a1b2
-
 const DOWNLOAD_AS_ARTICLE = {
     article: true,
     liveblog: true

@@ -15,9 +15,6 @@ const publish = require('../../queue/publish');
 const RE_ATTACHMENT = /^attachment;\s+filename=.*$/i;
 const RE_SLASH = /\//g;
 
-// WORD DOC => https://local.ft.com:5050/syndication/download?uri=https%3A%2F%2Fft-rss.herokuapp.com%2Fcontent%2Fb59dff10-3f7e-11e7-9d56-25f963e998b2%3Fformat%3Ddocx%26download%3Dtrue
-// VIDEO    => https://local.ft.com:5050/syndication/download?uri=https%3A%2F%2Fnext-media-api.ft.com%2Frenditions%2F14955580012610%2F1920x1080.mp4
-
 module.exports = (req, res, next) => {
     const URI = decodeURIComponent(req.query.uri);
 
