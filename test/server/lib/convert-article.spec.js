@@ -12,7 +12,9 @@ const underTest = require('../../../server/lib/convert-article');
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
-let env = execSync('which env').toString('utf8').trim();
+let node = execSync('which node').toString('utf8').trim();
+
+log.info(`####### WHICH NODE => ${node} #######`);
 
 describe(MODULE_ID, function () {
     const content = require('../../fixtures/b59dff10-3f7e-11e7-9d56-25f963e998b2.json');
