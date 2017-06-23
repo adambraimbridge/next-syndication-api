@@ -45,6 +45,7 @@
   },
   "nyc": {
     "exclude": [
+      "secret-squirrel.js",
       "queue/index.js",
       "server/controllers/__health.js",
       "server/middleware/log-request.js",
