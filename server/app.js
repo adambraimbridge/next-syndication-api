@@ -30,7 +30,6 @@ const middleware = [
     checkIfNewSyndicationUser
 ];
 
-app.get('/__gtg', (req, res) => res.sendStatus(200));
 app.get(`${BASE_URI_PATH}/__gtg`, (req, res) => res.sendStatus(200));
 //app.get(`${BASE_URI_PATH}/__health`, require('./controllers/__health'));
 

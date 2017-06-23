@@ -60,13 +60,15 @@
   },
   "config": {
     "pre-git": {
-      "commit-msg": [],
       "pre-commit": [
-        "node_modules/.bin/secret-squirrel"
+        "node_modules/.bin/secret-squirrel",
+        "make verify -j3"
       ],
       "pre-push": [],
       "post-commit": [],
-      "post-checkout": [],
+      "post-checkout": [
+        "make install-clean"
+      ],
       "post-merge": []
     }
   },

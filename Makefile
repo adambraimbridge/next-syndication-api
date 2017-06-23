@@ -8,13 +8,16 @@ APP_NAME := ft-next-syndication-api
 
 TEST_APP := "${APP_NAME}-${CIRCLE_BUILD_NUM}"
 
+IGNORE_A11Y := true
+
 coverage-report:
 	@rm -rf ./coverage ./nyc_output
 	@nyc --all --reporter=lcovonly --reporter=text make unit-test
 	@$(DONE)
 
 deploy:
-	./node_modules/.bin/nht ship
+	nht configure
+	nht deploy --skip-gtg
 
 install:
 # delete the package-lock.json here so all modules can install correctly as
@@ -34,10 +37,10 @@ run-coveralls: coverage-report
 	@$(DONE)
 
 provision:
-	./node_modules/.bin/nht float --testapp ${TEST_APP}
+	nht float -md --testapp ${TEST_APP} --skip-gtg
 
 run:
-	./node_modules/.bin/nht run --local --https
+	nht run --local --https
 
 test: verify
 ifeq ($(CIRCLECI),true)
@@ -47,7 +50,7 @@ else
 endif
 
 tidy:
-	# nothing to tidy
+	nht destroy ${TEST_APP}
 
 unit-test:
 	@export IGNORE_A11Y=true
