@@ -14,8 +14,6 @@ const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(p
 
 let env = execSync('which env').toString('utf8').trim();
 
-log.info('########' + env + '########');
-log.info('########' + execSync('which node').toString('utf8').trim() + '########');
 describe(MODULE_ID, function () {
     const content = require('../../fixtures/b59dff10-3f7e-11e7-9d56-25f963e998b2.json');
 
