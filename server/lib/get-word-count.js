@@ -11,7 +11,7 @@ module.exports = exports = doc => {
     return textContent.length;
 };
 
-function walk (el, textContent) {
+function walk(el, textContent) {
     Array.from(el.childNodes).forEach(el => {
         if (el.nodeType === 3) {
             textContent.push(el.data);

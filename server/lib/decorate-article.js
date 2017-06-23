@@ -3,13 +3,13 @@
 const fs = require('fs');
 const path = require('path');
 
-const {handlebars} = require('@financial-times/n-handlebars');
+const { handlebars } = require('@financial-times/n-handlebars');
 const moment = require('moment');
-const {DOMParser} = require('xmldom');
+const { DOMParser } = require('xmldom');
 
 const Handlebars = handlebars();
-const HD = Handlebars.compile(fs.readFileSync(path.resolve('./server/views/partial/article_metadata_hd.html.hbs'), 'utf8'), {noEscape: true});
-const FT = Handlebars.compile(fs.readFileSync(path.resolve('./server/views/partial/article_metadata_ft.html.hbs'), 'utf8'), {noEscape: true});
+const HD = Handlebars.compile(fs.readFileSync(path.resolve('./server/views/partial/article_metadata_hd.html.hbs'), 'utf8'), { noEscape: true });
+const FT = Handlebars.compile(fs.readFileSync(path.resolve('./server/views/partial/article_metadata_ft.html.hbs'), 'utf8'), { noEscape: true });
 
 module.exports = exports = (doc, content) => {
     let publishedDate = moment(content.publishedDate);

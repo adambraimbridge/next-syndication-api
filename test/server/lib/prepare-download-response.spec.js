@@ -6,11 +6,11 @@ const chai = require('chai');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 
-const {DOWNLOAD_ARTICLE_EXTENSION_OVERRIDES} = require('config');
+const { DOWNLOAD_ARTICLE_EXTENSION_OVERRIDES } = require('config');
 
 const underTest = require('../../../server/lib/prepare-download-response');
 
-const {expect} = chai;
+const { expect } = chai;
 
 chai.use(sinonChai);
 

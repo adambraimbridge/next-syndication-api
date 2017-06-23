@@ -5,7 +5,7 @@ const decoder = new Decoder(process.env.SESSION_PUBLIC_KEY);
 module.exports = (req, res, next) => {
     const sessionToken = req.cookies.FTSession;
 
-    logger.info('in decode-session middleware', {gotSessionToken: !!sessionToken});
+    logger.info('in decode-session middleware', { gotSessionToken: !!sessionToken });
 
     if (!sessionToken) {
         return res.sendStatus(401);
@@ -14,7 +14,7 @@ module.exports = (req, res, next) => {
     try {
         const userUuid = decoder.decode(sessionToken);
         res.locals.userUuid = userUuid;
-        logger.info('in decode-session middleware', {gotUserUuid: !!userUuid});
+        logger.info('in decode-session middleware', { gotUserUuid: !!userUuid });
 
         next();
     }

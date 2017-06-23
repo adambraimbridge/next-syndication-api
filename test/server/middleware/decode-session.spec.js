@@ -41,7 +41,7 @@ describe(MODULE_ID, function () {
             decode: sandbox.stub(),
             next: sandbox.stub()
         };
-        stubs.sessionDecoderClass.returns({decode: stubs.decode});
+        stubs.sessionDecoderClass.returns({ decode: stubs.decode });
         decodeSessionMiddleware = proxyquire('../../../server/middleware/decode-session', {
             '@financial-times/n-logger': stubs.logger,
             '@financial-times/session-decoder-js': stubs.sessionDecoderClass

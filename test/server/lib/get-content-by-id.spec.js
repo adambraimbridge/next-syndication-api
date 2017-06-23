@@ -2,7 +2,7 @@
 
 const path = require('path');
 
-const {expect} = require('chai');
+const { expect } = require('chai');
 const nock = require('nock');
 
 const mime = require('mime-types');

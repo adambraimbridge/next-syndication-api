@@ -30,7 +30,7 @@ describe(MODULE_ID, function () {
     afterEach(() => sandbox.restore());
 
     it('should return a promise', function () {
-        const promise = validateBody({content: []});
+        const promise = validateBody({ content: [] });
 
         expect(promise.constructor === Promise).to.equal(true);
     });
@@ -50,7 +50,7 @@ describe(MODULE_ID, function () {
         });
 
         it('should reject when passed an object without the minimum required contents', function (done) {
-            validateBody({hiya: 'hiya'})
+            validateBody({ hiya: 'hiya' })
                 .then(() => done(new Error('Body was unexpectedly deemed valid')))
                 .catch(() => done());
         });
@@ -62,7 +62,7 @@ describe(MODULE_ID, function () {
         });
 
         it('should resolve when passed an acceptable object with the minimum required contents', function (done) {
-            validateBody({'content': []})
+            validateBody({ 'content': [] })
                 .then(() => done())
                 .catch(done);
         });
@@ -70,9 +70,9 @@ describe(MODULE_ID, function () {
         it('should resolve with the inputted body when valid', function (done) {
             const input = {
                 content: [
-                    {uuid: '123'},
-                    {uuid: '456'},
-                    {uuid: '789'}
+                    { uuid: '123' },
+                    { uuid: '456' },
+                    { uuid: '789' }
                 ]
             };
             validateBody(input)

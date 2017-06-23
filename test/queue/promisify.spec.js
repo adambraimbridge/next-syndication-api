@@ -2,7 +2,7 @@
 
 const path = require('path');
 
-const {expect} = require('chai');
+const { expect } = require('chai');
 
 const AWS = require('aws-sdk');
 

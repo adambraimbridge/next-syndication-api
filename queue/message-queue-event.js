@@ -23,8 +23,8 @@ const PROPERTY_validate = Symbol('validate');
 const PROPERTY_queue_url = Symbol('queue_url');
 
 module.exports = exports = class MessageQueueEvent {
-    constructor (config = {}) {
-        let {event, schema = SchemaMessageV1, queue_url = DEFAULT_QUEUE_URL} = config;
+    constructor(config = {}) {
+        let { event, schema = SchemaMessageV1, queue_url = DEFAULT_QUEUE_URL } = config;
 
         switch (Object.prototype.toString.call(event)) {
             case '[object MessageQueueEvent]':
@@ -61,19 +61,19 @@ module.exports = exports = class MessageQueueEvent {
         this.validate();
     }
 
-    get [Symbol.toStringTag] () {
+    get [Symbol.toStringTag]() {
         return 'MessageQueueEvent';
     }
 
-    get _id () {
+    get _id() {
         return this.id;
     }
 
-    set _id (id) {
+    set _id(id) {
         return this.id = id;
     }
 
-    get id () {
+    get id() {
         if (!this[PROPERTY__id]) {
             this[PROPERTY__id] = rack();
         }
@@ -81,23 +81,23 @@ module.exports = exports = class MessageQueueEvent {
         return this[PROPERTY__id];
     }
 
-    set id (id) {
+    set id(id) {
         this[PROPERTY__id] = id;
 
         return this[PROPERTY__id];
     }
 
-    get queue_url () {
+    get queue_url() {
         return this[PROPERTY_queue_url];
     }
 
-    set queue_url (queue_url) {
+    set queue_url(queue_url) {
         this[PROPERTY_queue_url] = queue_url;
 
         return this[PROPERTY_queue_url];
     }
 
-    clone () {
+    clone() {
         return new MessageQueueEvent({
             event: this,
             queue_url: this.queue_url,
@@ -105,16 +105,16 @@ module.exports = exports = class MessageQueueEvent {
         });
     }
 
-    stringify (replacer = null, space = null) {
+    stringify(replacer = null, space = null) {
         return JSON.stringify(this.toJSON(), replacer, space);
     }
 
-    publish () {
+    publish() {
         return publish(this)
             .then(success => success);
     }
 
-    toJSON () {
+    toJSON() {
         let json = {};
 
         for (let [key, val] of Object.entries(this.__schema__.properties)) {
@@ -130,14 +130,14 @@ module.exports = exports = class MessageQueueEvent {
         return JSON.parse(JSON.stringify(json));
     }
 
-    toSQSTransport () {
+    toSQSTransport() {
         return {
             MessageBody: this.stringify(),
             QueueUrl: this[PROPERTY_queue_url]
         };
     }
 
-    validate () {
+    validate() {
         return this[PROPERTY_validate](this.toJSON());
     }
 };

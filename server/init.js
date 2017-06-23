@@ -2,7 +2,7 @@
 
 const path = require('path');
 
-const {default: log} = require('@financial-times/n-logger');
+const { default: log } = require('@financial-times/n-logger');
 
 const CONFIG = require('config');
 

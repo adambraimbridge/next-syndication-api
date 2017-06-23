@@ -1,10 +1,10 @@
 'use strict';
 
-const {EventEmitter} = require('events');
+const { EventEmitter } = require('events');
 const fs = require('fs');
 const path = require('path');
 
-const {expect} = require('chai');
+const { expect } = require('chai');
 const nock = require('nock');
 const httpMocks = require('node-mocks-http');
 
@@ -63,7 +63,7 @@ describe(MODULE_ID, function () {
                 'url': '/syndication/download?uri=https%3A%2F%2Fft-rss.herokuapp.com%2Fcontent%2Fb59dff10-3f7e-11e7-9d56-25f963e998b2%3Fformat%3Ddocx%26download%3Dtrue'
             });
 
-            res = httpMocks.createResponse({req});
+            res = httpMocks.createResponse({ req });
         });
 
         after(function () {
@@ -137,7 +137,7 @@ describe(MODULE_ID, function () {
                 'url': '/syndication/download?uri=https%3A%2F%2Fnext-media-api.ft.com%2Frenditions%2F14955580012610%2F1920x1080.mp4'
             });
 
-            res = httpMocks.createResponse({req});
+            res = httpMocks.createResponse({ req });
         });
 
         afterEach(function () {

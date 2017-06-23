@@ -17,7 +17,7 @@ describe(MODULE_ID, function () {
     });
 
     it('should include user UUIDs from an env var list of awaiting users, when the syndicationNewUsersAwaiting flag is on', function () {
-        const userArray = buildUserArray({syndicationNewUsersAwaiting: true});
+        const userArray = buildUserArray({ syndicationNewUsersAwaiting: true });
         expect(userArray).to.deep.equal(['testUserUuid1', 'testUserUuid2', 'testUserUuid3', 'testUserUuid4']);
     });
 
@@ -40,7 +40,7 @@ describe(MODULE_ID, function () {
         });
 
         it('should return only the user UUIDs from an env var list of awaiting users, when no NEW_SYNDICATION_USERS and the syndicationNewUsersAwaiting flag is on', function () {
-            const userArray = buildUserArray({syndicationNewUsersAwaiting: true});
+            const userArray = buildUserArray({ syndicationNewUsersAwaiting: true });
 
             expect(userArray).to.deep.equal(['testUserUuid3', 'testUserUuid4']);
         });
@@ -55,7 +55,7 @@ describe(MODULE_ID, function () {
             });
 
             it('should return an empty array no NEW_SYNDICATION_USERS and no NEW_SYNDICATION_USERS_AWAITING', function () {
-                const userArray = buildUserArray({syndicationNewUsersAwaiting: true});
+                const userArray = buildUserArray({ syndicationNewUsersAwaiting: true });
                 expect(userArray).to.deep.equal([]);
             });
         });

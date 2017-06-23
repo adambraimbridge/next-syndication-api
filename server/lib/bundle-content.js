@@ -1,15 +1,15 @@
 'use strict';
 
 const path = require('path');
-const {PassThrough} = require('stream');
+const { PassThrough } = require('stream');
 
-const {default: log} = require('@financial-times/n-logger');
+const { default: log } = require('@financial-times/n-logger');
 
 const archiver = require('archiver');
 const moment = require('moment');
 const fetch = require('n-eager-fetch');
 
-const {DOWNLOAD_ARCHIVE_EXTENSION} = require('config');
+const { DOWNLOAD_ARCHIVE_EXTENSION } = require('config');
 
 const convertArticle = require('./convert-article');
 
@@ -47,7 +47,7 @@ module.exports = exports = (content, req, res, next) => {
             targetFormat: content.transcriptExtension
         })
             .then(file => {
-                archive.append(file, {name: `${content.fileName}.${content.transcriptExtension}`});
+                archive.append(file, { name: `${content.fileName}.${content.transcriptExtension}` });
 
                 log.info(`${MODULE_ID} TranscriptAppendSuccess => `, content);
 
@@ -67,7 +67,7 @@ module.exports = exports = (content, req, res, next) => {
 
     const URI = content.download.binaryUrl;
 
-    fetch(URI, {method: 'HEAD'}).then((uriRes) => {
+    fetch(URI, { method: 'HEAD' }).then((uriRes) => {
         const stream = new PassThrough();
 
         if (!uriRes.ok) {
@@ -99,7 +99,7 @@ module.exports = exports = (content, req, res, next) => {
         stream.on('close', onend);
         stream.on('end', onend);
 
-        archive.append(stream, {name: `${content.fileName}.${content.download.extension}`});
+        archive.append(stream, { name: `${content.fileName}.${content.download.extension}` });
 
         stream.on('data', (chunk) => {
             if (req.__download_cancelled__ === true) {
@@ -122,7 +122,7 @@ module.exports = exports = (content, req, res, next) => {
 
         Object.keys(headers).forEach(name => headers[name] !== '-' || delete headers[name]);
 
-        fetch(URI, {headers: headers}).then((uriRes) => {
+        fetch(URI, { headers: headers }).then((uriRes) => {
             uriRes.body.pipe(stream);
 
             uriStream = uriRes.body;
@@ -130,7 +130,7 @@ module.exports = exports = (content, req, res, next) => {
     });
 };
 
-function publishEndEvent (res, state) {
+function publishEndEvent(res, state) {
     const event = res.__event.clone();
     event.state = state;
     event.time = moment().toJSON();

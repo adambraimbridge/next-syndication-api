@@ -4,7 +4,7 @@
 
 const path = require('path');
 
-const {expect} = require('chai');
+const { expect } = require('chai');
 
 const underTest = require('../../../server/lib/to-plain-text');
 

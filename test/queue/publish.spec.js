@@ -11,7 +11,7 @@ const AWS = require('aws-sdk');
 const MessageQueueEvent = require('../../queue/message-queue-event');
 const underTest = require('../../queue/publish');
 
-const {expect} = chai;
+const { expect } = chai;
 
 chai.use(sinonChai);
 

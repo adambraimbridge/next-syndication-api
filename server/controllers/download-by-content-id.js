@@ -2,7 +2,7 @@
 
 const path = require('path');
 
-const {default: log} = require('@financial-times/n-logger');
+const { default: log } = require('@financial-times/n-logger');
 
 const moment = require('moment');
 
@@ -106,13 +106,13 @@ const REMOVE_PROPERTIES = [
     'download'
 ];
 
-function cleanup (content) {
+function cleanup(content) {
     REMOVE_PROPERTIES.forEach(property => delete content[property]);
 
     return content;
 }
 
-function publishEndEvent (res, state) {
+function publishEndEvent(res, state) {
     const event = res.__event.clone();
     event.state = state;
     event.time = moment().toJSON();

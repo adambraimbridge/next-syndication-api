@@ -69,7 +69,7 @@ describe(MODULE_ID, function () {
                 before(function () {
                     nock(BASE_URI_FT_API)
                         .get(uri => {
-                            return RE_VALID_URI.test(uri)
+                            return RE_VALID_URI.test(uri);
                         })
                         .replyWithError('Bad Request');
                 });

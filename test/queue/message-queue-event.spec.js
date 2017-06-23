@@ -2,7 +2,7 @@
 
 const path = require('path');
 
-const {expect} = require('chai');
+const { expect } = require('chai');
 
 const AJV = require('ajv');
 
@@ -34,7 +34,7 @@ describe(MODULE_ID, function () {
         });
 
         it('should allow you to pass a custom `QueueUrl`', function () {
-            let event = new underTest({queue_url: 'https://i.dont.exist/queue'});
+            let event = new underTest({ queue_url: 'https://i.dont.exist/queue' });
 
             expect(event.toSQSTransport()).to.have.property('QueueUrl').and.equal('https://i.dont.exist/queue');
         });
@@ -65,7 +65,7 @@ describe(MODULE_ID, function () {
                 user_id: 'bar'
             };
 
-            let event = new underTest({event: event_data});
+            let event = new underTest({ event: event_data });
 
             expect(event).to.have.property('licence_id').and.equal(event_data.licence_id);
             expect(event).to.have.property('time').and.equal(event_data.time.toJSON());
@@ -120,7 +120,7 @@ describe(MODULE_ID, function () {
             user_id: 'bar'
         };
 
-        let event = new underTest({event: event_data});
+        let event = new underTest({ event: event_data });
 
         expect(event.stringify()).to.equal(JSON.stringify(event));
     });
@@ -135,7 +135,7 @@ describe(MODULE_ID, function () {
             user_id: 'bar'
         };
 
-        let event = new underTest({event: event_data});
+        let event = new underTest({ event: event_data });
         let event_json = event.toJSON();
 
         expect(validate(event_json)).to.be.true;
@@ -155,7 +155,7 @@ describe(MODULE_ID, function () {
             user_id: 'bar'
         };
 
-        let event = new underTest({event: event_data});
+        let event = new underTest({ event: event_data });
 
         expect(event.toSQSTransport()).to.eql({
             MessageBody: event.stringify(),
@@ -167,7 +167,7 @@ describe(MODULE_ID, function () {
         it('fail', function () {
             let event_data = {};
 
-            let event = new underTest({event: event_data});
+            let event = new underTest({ event: event_data });
 
             expect(event.validate()).to.be.false;
         });
@@ -182,7 +182,7 @@ describe(MODULE_ID, function () {
                 user_id: 'bar'
             };
 
-            let event = new underTest({event: event_data});
+            let event = new underTest({ event: event_data });
 
             expect(event.validate()).to.be.true;
         });

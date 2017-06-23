@@ -1,15 +1,15 @@
 'use strict';
 
-const {spawn} = require('child_process');
+const { spawn } = require('child_process');
 const path = require('path');
 
-const {default: log} = require('@financial-times/n-logger');
+const { default: log } = require('@financial-times/n-logger');
 
-const {CONVERT_FORMAT_COMMAND} = require('config');
+const { CONVERT_FORMAT_COMMAND } = require('config');
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
-module.exports = exports = ({source, sourceFormat = 'html', targetFormat = 'docx'}) => {
+module.exports = exports = ({ source, sourceFormat = 'html', targetFormat = 'docx' }) => {
     const sourceBuffer = Buffer.from(source, 'utf8');
 
     let args = [
@@ -40,7 +40,7 @@ module.exports = exports = ({source, sourceFormat = 'html', targetFormat = 'docx
 
                 log.error(ERROR);
 
-                reject(ERROR)
+                reject(ERROR);
             }
             else {
                 log.debug(`${MODULE_ID} ${CONVERT_FORMAT_COMMAND} Completion Success`);

@@ -3,7 +3,7 @@
 const log = require('@financial-times/n-logger').default;
 const fetch = require('n-eager-fetch');
 
-const { apikey: API_KEY, BASE_URI_FT_API, TIMEOUT_ARTICLE_FETCH }= require('config');
+const { apikey: API_KEY, BASE_URI_FT_API, TIMEOUT_ARTICLE_FETCH } = require('config');
 
 module.exports = exports = content_id => {
     const ARTICLE_URI = `${BASE_URI_FT_API}/content/${content_id}`;
@@ -11,11 +11,11 @@ module.exports = exports = content_id => {
     log.debug(`ATTEMPTING TO RETRIEVE ARTICLE: ${ARTICLE_URI}`);
 
     return fetch(ARTICLE_URI, {
-            timeout: TIMEOUT_ARTICLE_FETCH,
-            headers: {
-                'X-Api-Key': API_KEY
-            }
-        })
+        timeout: TIMEOUT_ARTICLE_FETCH,
+        headers: {
+            'X-Api-Key': API_KEY
+        }
+    })
         .then(res => {
             if (res.status === 200) {
                 log.info(`SUCCESSFULLY RETRIEVED ARTICLE: ${ARTICLE_URI}`, res);

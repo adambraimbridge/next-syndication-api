@@ -1,10 +1,10 @@
 'use strict';
 
 const path = require('path');
-const {PassThrough} = require('stream');
+const { PassThrough } = require('stream');
 const url = require('url');
 
-const {default: log} = require('@financial-times/n-logger');
+const { default: log } = require('@financial-times/n-logger');
 const fetch = require('n-eager-fetch');
 const mime = require('mime-types');
 const moment = require('moment');
@@ -23,7 +23,7 @@ module.exports = (req, res, next) => {
 
     const stream = new PassThrough();
 
-    fetch(URI, {method: 'HEAD'}).then((uriRes) => {
+    fetch(URI, { method: 'HEAD' }).then((uriRes) => {
         const HEADERS = uriRes.headers.raw();
 
         Object.keys(HEADERS).forEach(name => res.set(name, HEADERS[name][0]));
@@ -124,7 +124,7 @@ module.exports = (req, res, next) => {
 
         Object.keys(headers).forEach(name => headers[name] !== '-' || delete headers[name]);
 
-        fetch(URI, {headers: headers}).then((uriRes) => {
+        fetch(URI, { headers: headers }).then((uriRes) => {
             uriRes.body.pipe(stream);
 
             uriStream = uriRes.body;

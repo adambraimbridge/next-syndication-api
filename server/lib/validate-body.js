@@ -16,7 +16,7 @@ const validateBody = body => {
     catch (e) {
         const err = new Error('Expected a JSON-parseable object containing an array property called `content`');
         err.statusCode = 400;
-        logger.info('in validate-body lib', {err: err.message, body});
+        logger.info('in validate-body lib', { err: err.message, body });
 
         return Promise.reject(err);
     }

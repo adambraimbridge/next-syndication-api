@@ -6,7 +6,7 @@ module.exports = (req, res, next) => {
     const newSyndicationUsers = buildUserArray(flags);
     const isNewSyndicationUser = newSyndicationUsers.includes(res.locals.userUuid) || flags.syndicationNewOverride;
 
-    logger.info('in check-if-new-syndication-user middleware', {isNewSyndicationUser});
+    logger.info('in check-if-new-syndication-user middleware', { isNewSyndicationUser });
 
     if (isNewSyndicationUser) {
         res.set('FT-New-Syndication-User', 'true');
