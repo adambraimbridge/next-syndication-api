@@ -15,7 +15,9 @@ const convertArticle = require('./convert-article');
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
-module.exports = exports = (content, req, res, next) => {
+module.exports = exports = (req, res, next) => {
+    let { __content: content } = res;
+
     let cancelDownload = () => req.__download_cancelled__ = true;
     req.on('abort', cancelDownload);
     req.connection.on('close', cancelDownload);
@@ -42,10 +44,10 @@ module.exports = exports = (content, req, res, next) => {
 
     if (content.transcript) {
         convertArticle({
-            source: content[content.extension === 'plain' ? 'transcript__PLAIN' : 'transcript__CLEAN'],
-            sourceFormat: 'html',
-            targetFormat: content.transcriptExtension
-        })
+                source: content[content.extension === 'plain' ? 'transcript__PLAIN' : 'transcript__CLEAN'],
+                sourceFormat: 'html',
+                targetFormat: content.transcriptExtension
+            })
             .then(file => {
                 archive.append(file, { name: `${content.fileName}.${content.transcriptExtension}` });
 
