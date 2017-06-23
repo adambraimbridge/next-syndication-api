@@ -1,0 +1,18 @@
+#!/usr/bin/env node --harmony
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+
+const ARGV = process.argv.slice(2).reduce((acc, val, i, arr) => {
+    if (val.startsWith('--')) {
+        acc[val.substring(2)] = arr[i + 1];
+    }
+
+    return acc;
+}, {
+    from: 'html',
+    to: 'docx'
+});
+
+fs.createReadStream(path.resolve(`./test/fixtures/article.${ARGV.to}`)).pipe(process.stdout);
