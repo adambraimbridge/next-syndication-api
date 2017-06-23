@@ -43,13 +43,12 @@ describe(MODULE_ID, function () {
             'c7923fba-1d31-39fd-82f0-ba1822ef20d2',
             'd7bf1822-ec58-4a8e-a669-5cbcc0d6a1b2'
         ].forEach(contentId => {
-            it(`should return a JSON representation of the content if it exists for content_id="${contentId}"`, function () {
-                return underTest(contentId)
-                    .then(res => {
-                        expect(res).to.be.an('object');
+            it(`should return a JSON representation of the content if it exists for content_id="${contentId}"`, async function () {
+                const res = await underTest(contentId);
 
-                        expect(res).to.have.property('id').and.to.have.string(contentId);
-                    });
+                expect(res).to.be.an('object');
+
+                expect(res).to.have.property('id').and.to.have.string(contentId);
             });
         });
     });
@@ -74,13 +73,12 @@ describe(MODULE_ID, function () {
                         .replyWithError('Bad Request');
                 });
 
-                it('should return the error if the content does not exist', function () {
-                    return underTest(contentId)
-                        .then(res => {
-                            expect(res).to.be.a('string');
+                it('should return the error if the content does not exist', async function () {
+                    const res = await underTest(contentId)
 
-                            expect(res).to.equal(message);
-                        });
+                    expect(res).to.be.a('string');
+
+                    expect(res).to.equal(message);
                 });
 
             });

@@ -70,8 +70,8 @@ describe(MODULE_ID, function () {
             req = res = null;
         });
 
-        it('should stream the download', function () {
-            return new Promise((resolve) => {
+        it('should stream the download', async function () {
+            await new Promise((resolve) => {
                 underTest(req, res, function () {
                     expect(res._isEndCalled()).to.be.true;
 
@@ -144,8 +144,8 @@ describe(MODULE_ID, function () {
             req = res = null;
         });
 
-        it('should stream the download', function () {
-            return new Promise((resolve) => {
+        it('should stream the download', async function () {
+            await new Promise((resolve) => {
                 underTest(req, res, function () {
                     expect(res._isEndCalled()).to.be.true;
 
@@ -154,8 +154,8 @@ describe(MODULE_ID, function () {
             });
         });
 
-        it('can be interupted', function () {
-            return new Promise((resolve) => {
+        it('can be interupted', async function () {
+            await new Promise((resolve) => {
                 underTest(req, res, function () {
                     expect(req).to.have.property('__download_cancelled__').and.be.true;
 

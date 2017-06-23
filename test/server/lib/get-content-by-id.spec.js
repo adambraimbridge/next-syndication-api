@@ -51,37 +51,33 @@ describe(MODULE_ID, function () {
                 'b59dff10-3f7e-11e7-9d56-25f963e998b2',
                 'c7923fba-1d31-39fd-82f0-ba1822ef20d2'
             ].forEach(contentId => {
-                it(`should return a JSON representation of the content if it exists for content_id="${contentId}"`, function () {
-                    return underTest(contentId)
-                        .then(content => {
-                            expect(content).to.be.an('object');
+                it(`should return a JSON representation of the content if it exists for content_id="${contentId}"`, async function () {
+                    const content = await underTest(contentId);
 
-                            expect(content).to.have.property('id')
-                                .and.to.have.string(contentId);
-                        });
+                    expect(content).to.be.an('object');
+
+                    expect(content).to.have.property('id')
+                        .and.to.have.string(contentId);
                 });
 
-                it(`should have a \`__doc:xmldom.Documnet\` for content_id="${contentId}"`, function () {
-                    return underTest(contentId)
-                        .then(content => {
-                            expect(content.__doc.constructor.name).to.equal('Document');
-                        });
+                it(`should have a \`__doc:xmldom.Documnet\` for content_id="${contentId}"`, async function () {
+                    const content = await underTest(contentId);
+
+                    expect(content.__doc.constructor.name).to.equal('Document');
                 });
 
-                it(`should have a \`__wordCount:Number\` for content_id="${contentId}"`, function () {
-                    return underTest(contentId)
-                        .then(content => {
-                            expect(content).to.have.property('__wordCount')
-                                .and.to.be.a('number');
-                        });
+                it(`should have a \`__wordCount:Number\` for content_id="${contentId}"`, async function () {
+                    const content = await underTest(contentId);
+
+                    expect(content).to.have.property('__wordCount')
+                        .and.to.be.a('number');
                 });
 
-                it(`should have a \`bodyXML__CLEAN:String\` for content_id="${contentId}"`, function () {
-                    return underTest(contentId)
-                        .then(content => {
-                            expect(content).to.have.property('bodyXML__CLEAN')
-                                .and.to.be.a('string');
-                        });
+                it(`should have a \`bodyXML__CLEAN:String\` for content_id="${contentId}"`, async function () {
+                    const content = await underTest(contentId);
+
+                    expect(content).to.have.property('bodyXML__CLEAN')
+                        .and.to.be.a('string');
                 });
 
                 describe(`should have a \`extension:String\` based on the passed format for content_id="${contentId}"`, function () {
@@ -91,26 +87,24 @@ describe(MODULE_ID, function () {
                         'text',
                         'html'
                     ].forEach(format => {
-                        it(`format = ${format}`, function () {
+                        it(`format = ${format}`, async function () {
                             let extension = DOWNLOAD_ARTICLE_FORMATS[format] || 'docx';
 
-                            return underTest(contentId, format)
-                                .then(content => {
-                                    expect(content).to.have.property('extension')
-                                        .and.to.be.a('string')
-                                        .and.equal(extension);
-                                });
+                            const content = await underTest(contentId, format)
+
+                            expect(content).to.have.property('extension')
+                                .and.to.be.a('string')
+                                .and.equal(extension);
                         });
                     });
                 });
 
-                it(`should have a \`fileName:String\` for content_id="${contentId}"`, function () {
-                    return underTest(contentId)
-                        .then(content => {
-                            expect(content).to.have.property('fileName')
-                                .and.to.be.a('string')
-                                .and.to.equal(DOWNLOAD_FILENAME_PREFIX + content.title.replace(RE_SPACE, '_').replace(RE_BAD_CHARS, '').substring(0, 12));
-                        });
+                it(`should have a \`fileName:String\` for content_id="${contentId}"`, async function () {
+                    const content = await underTest(contentId);
+
+                    expect(content).to.have.property('fileName')
+                        .and.to.be.a('string')
+                        .and.to.equal(DOWNLOAD_FILENAME_PREFIX + content.title.replace(RE_SPACE, '_').replace(RE_BAD_CHARS, '').substring(0, 12));
                 });
             });
         });
@@ -120,58 +114,52 @@ describe(MODULE_ID, function () {
                 '80d634ea-fa2b-46b5-886f-1418c6445182',
                 'd7bf1822-ec58-4a8e-a669-5cbcc0d6a1b2'
             ].forEach(contentId => {
-                it(`should return a JSON representation of the content if it exists for content_id="${contentId}"`, function () {
-                    return underTest(contentId)
-                        .then(content => {
-                            expect(content).to.be.an('object');
+                it(`should return a JSON representation of the content if it exists for content_id="${contentId}"`, async function () {
+                    const content = await underTest(contentId);
 
-                            expect(content).to.have.property('id')
-                                .and.to.have.string(contentId);
-                        });
+                    expect(content).to.be.an('object');
+
+                    expect(content).to.have.property('id')
+                        .and.to.have.string(contentId);
                 });
 
-                it(`should have a \`dataSource:Array\` for content_id="${contentId}"`, function () {
-                    return underTest(contentId)
-                        .then(content => {
-                            expect(content).to.have.property('dataSource')
-                                .and.to.be.an('array')
-                                .and.to.have.length.at.least(1);
-                        });
+                it(`should have a \`dataSource:Array\` for content_id="${contentId}"`, async function () {
+                    const content = await underTest(contentId);
+
+                    expect(content).to.have.property('dataSource')
+                        .and.to.be.an('array')
+                        .and.to.have.length.at.least(1);
                 });
 
-                it(`should have a \`extension:String\` which is an Archive format for content_id="${contentId}"`, function () {
-                    return underTest(contentId)
-                        .then(content => {
-                            expect(content).to.have.property('extension')
-                                .and.to.be.a('string')
-                                .and.equal(DOWNLOAD_ARCHIVE_EXTENSION);
-                        });
+                it(`should have a \`extension:String\` which is an Archive format for content_id="${contentId}"`, async function () {
+                    const content = await underTest(contentId);
+
+                    expect(content).to.have.property('extension')
+                        .and.to.be.a('string')
+                        .and.equal(DOWNLOAD_ARCHIVE_EXTENSION);
                 });
 
-                it(`should have a \`download:Object\` which is the final item in the \`dataSource:Array\` for content_id="${contentId}"`, function () {
-                    return underTest(contentId)
-                        .then(content => {
-                            expect(content).to.have.property('download')
-                                .and.to.be.an('object')
-                                .and.equal(content.dataSource[content.dataSource.length - 1]);
-                        });
+                it(`should have a \`download:Object\` which is the final item in the \`dataSource:Array\` for content_id="${contentId}"`, async function () {
+                    const content = await underTest(contentId);
+
+                    expect(content).to.have.property('download')
+                        .and.to.be.an('object')
+                        .and.equal(content.dataSource[content.dataSource.length - 1]);
                 });
 
-                it(`should have a \`download.extension:Object\` based on the \`mediaType\` for content_id="${contentId}"`, function () {
-                    return underTest(contentId)
-                        .then(content => {
-                            expect(content.download).to.have.property('extension')
-                                .and.to.equal(mime.extension(content.download.mediaType));
-                        });
+                it(`should have a \`download.extension:Object\` based on the \`mediaType\` for content_id="${contentId}"`, async function () {
+                    const content = await underTest(contentId);
+
+                    expect(content.download).to.have.property('extension')
+                        .and.to.equal(mime.extension(content.download.mediaType));
                 });
 
-                it(`should have a \`fileName:String\` for content_id="${contentId}"`, function () {
-                    return underTest(contentId)
-                        .then(content => {
-                            expect(content).to.have.property('fileName')
-                                .and.to.be.a('string')
-                                .and.to.equal(DOWNLOAD_FILENAME_PREFIX + content.title.replace(RE_SPACE, '_').replace(RE_BAD_CHARS, '').substring(0, 12));
-                        });
+                it(`should have a \`fileName:String\` for content_id="${contentId}"`, async function () {
+                    const content = await underTest(contentId);
+
+                    expect(content).to.have.property('fileName')
+                        .and.to.be.a('string')
+                        .and.to.equal(DOWNLOAD_FILENAME_PREFIX + content.title.replace(RE_SPACE, '_').replace(RE_BAD_CHARS, '').substring(0, 12));
                 });
             });
         });
@@ -180,27 +168,24 @@ describe(MODULE_ID, function () {
             [
                 'd7bf1822-ec58-4a8e-a669-5cbcc0d6a1b2'
             ].forEach(contentId => {
-                it(`should have a \`__doc:xmldom.Documnet\` for content_id="${contentId}"`, function () {
-                    return underTest(contentId)
-                        .then(content => {
-                            expect(content.__doc.constructor.name).to.equal('Document');
-                        });
+                it(`should have a \`__doc:xmldom.Documnet\` for content_id="${contentId}"`, async function () {
+                    const content = await underTest(contentId);
+
+                    expect(content.__doc.constructor.name).to.equal('Document');
                 });
 
-                it(`should have a \`transcript__CLEAN:String\` property for content_id="${contentId}"`, function () {
-                    return underTest(contentId)
-                        .then(content => {
-                            expect(content).to.have.property('transcript__CLEAN')
-                                .and.to.be.a('string');
-                        });
+                it(`should have a \`transcript__CLEAN:String\` property for content_id="${contentId}"`, async function () {
+                    const content = await underTest(contentId);
+
+                    expect(content).to.have.property('transcript__CLEAN')
+                        .and.to.be.a('string');
                 });
 
-                it(`should have a \`transcript__PLAIN:String\` property for content_id="${contentId}"`, function () {
-                    return underTest(contentId)
-                        .then(content => {
-                            expect(content).to.have.property('transcript__PLAIN')
-                                .and.to.be.a('string');
-                        });
+                it(`should have a \`transcript__PLAIN:String\` property for content_id="${contentId}"`, async function () {
+                    const content = await underTest(contentId);
+
+                    expect(content).to.have.property('transcript__PLAIN')
+                        .and.to.be.a('string');
                 });
 
                 describe(`should have a \`transcriptExtension:String\` based on the passed format for content_id="${contentId}"`, function () {
@@ -210,15 +195,14 @@ describe(MODULE_ID, function () {
                         'text',
                         'html'
                     ].forEach(format => {
-                        it(`format = ${format}`, function () {
+                        it(`format = ${format}`, async function () {
                             let extension = DOWNLOAD_ARTICLE_FORMATS[format] || 'docx';
 
-                            return underTest(contentId, format)
-                                .then(content => {
-                                    expect(content).to.have.property('transcriptExtension')
-                                        .and.to.be.a('string')
-                                        .and.equal(extension);
-                                });
+                            const content = await underTest(contentId, format);
+
+                            expect(content).to.have.property('transcriptExtension')
+                                .and.to.be.a('string')
+                                .and.equal(extension);
                         });
                     });
                 });
@@ -249,13 +233,12 @@ describe(MODULE_ID, function () {
                         });
                 });
 
-                it('should return the error if the content does not exist', function () {
-                    return underTest(contentId)
-                        .then(content => {
-                            expect(content).to.be.a('string');
+                it('should return the error if the content does not exist', async function () {
+                    const content = await underTest(contentId);
 
-                            expect(content).to.equal(message);
-                        });
+                    expect(content).to.be.a('string');
+
+                    expect(content).to.equal(message);
                 });
             });
         });
