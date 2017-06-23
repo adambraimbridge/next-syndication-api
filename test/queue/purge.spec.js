@@ -20,7 +20,7 @@ const __proto__ = Object.getPrototypeOf(new AWS.SQS({}));
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
-describe.only(MODULE_ID, function () {
+describe(MODULE_ID, function () {
     before(function () {
         sinon.spy(__proto__, 'purgeQueueAsync');
     });
@@ -37,19 +37,19 @@ describe.only(MODULE_ID, function () {
         expect(success).to.be.true;
     });
 
-//    it('should be throttled', async function () {
-//        let success = await underTest({
-//            QueueUrl: DEFAULT_QUEUE_URL
-//        });
-//
-//        expect(success).to.be.equal(undefined);
-//
-//        success = await underTest({
-//            QueueUrl: DEFAULT_QUEUE_URL
-//        });
-//
-//        expect(success).to.be.equal(undefined);
-//    });
+    it('should be throttled', async function () {
+        let success = await underTest({
+            QueueUrl: DEFAULT_QUEUE_URL
+        });
+
+        expect(success).to.be.equal(undefined);
+
+        success = await underTest({
+            QueueUrl: DEFAULT_QUEUE_URL
+        });
+
+        expect(success).to.be.equal(undefined);
+    });
 
     it('should return false for a failed purge', async function () {
         let success = await underTest({
