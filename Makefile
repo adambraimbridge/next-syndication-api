@@ -50,6 +50,7 @@ tidy:
 	# nothing to tidy
 
 unit-test:
+	@export IGNORE_A11Y=true
 	@export NEW_SYNDICATION_USERS=testUserUuid1,testUserUuid2; \
 	export NEW_SYNDICATION_USERS_AWAITING=testUserUuid3,testUserUuid4; \
 	export NODE_ENV="test" && \
