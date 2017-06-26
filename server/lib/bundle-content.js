@@ -16,6 +16,8 @@ const convertArticle = require('./convert-article');
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = (req, res, next) => {
+    let headers = cloneRequestHeaders(req);
+
     let { __content: content } = res;
 
     let cancelDownload = () => req.__download_cancelled__ = true;
@@ -69,7 +71,7 @@ module.exports = exports = (req, res, next) => {
 
     const URI = content.download.binaryUrl;
 
-    fetch(URI, { method: 'HEAD' }).then((uriRes) => {
+    fetch(URI, { method: 'HEAD', headers: headers }).then((uriRes) => {
         const stream = new PassThrough();
 
         if (!uriRes.ok) {
@@ -107,6 +109,8 @@ module.exports = exports = (req, res, next) => {
             if (req.__download_cancelled__ === true) {
                 uriStream.end();
 
+                archive.end();
+
                 return;
             }
 
@@ -118,12 +122,6 @@ module.exports = exports = (req, res, next) => {
             length += chunk.length;
         });
 
-        let headers = Object.assign({}, req.headers);
-
-        ['accept', 'host'].forEach(name => delete headers[name]);
-
-        Object.keys(headers).forEach(name => headers[name] !== '-' || delete headers[name]);
-
         fetch(URI, { headers: headers }).then((uriRes) => {
             uriRes.body.pipe(stream);
 
@@ -131,6 +129,16 @@ module.exports = exports = (req, res, next) => {
         });
     });
 };
+
+function cloneRequestHeaders(req) {
+    let headers = JSON.parse(JSON.stringify(req.headers));
+
+    ['accept', 'host'].forEach(name => delete headers[name]);
+
+    Object.keys(headers).forEach(name => headers[name] !== '-' || delete headers[name]);
+
+    return headers;
+}
 
 function publishEndEvent(res, state) {
     const event = res.__event.clone();
