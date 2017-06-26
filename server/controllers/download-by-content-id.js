@@ -53,13 +53,13 @@ module.exports = exports = (req, res, next) => {
                     return;
                 }
 
-                prepareDownloadResponse(content, res);
+                prepareDownloadResponse(res);
 
                 convertArticle({
-                    source: content[content.extension === 'plain' ? 'bodyXML__PLAIN' : 'bodyXML__CLEAN'],
-                    sourceFormat: 'html',
-                    targetFormat: content.extension
-                }).then(file => {
+                        source: content[content.extension === 'plain' ? 'bodyXML__PLAIN' : 'bodyXML__CLEAN'],
+                        sourceFormat: 'html',
+                        targetFormat: content.extension
+                    }).then(file => {
                         cleanup(content);
 
                         log.debug(`${MODULE_ID} Success`, content);
@@ -89,9 +89,9 @@ module.exports = exports = (req, res, next) => {
                     return;
                 }
 
-                prepareDownloadResponse(content, res);
+                prepareDownloadResponse(res);
 
-                bundleContent(content, req, res, next);
+                bundleContent(req, res, next);
             }
         });
 };
