@@ -1,5 +1,6 @@
 'use strict';
 
+const sinon = require('sinon');
 const mocks = require('node-mocks-http');
 //const Request = require('node-mocks-http/lib/mockRequest');
 const Response = require('node-mocks-http/lib/mockResponse');
@@ -36,6 +37,7 @@ exports.createResponse = function createResponse(options) {
 
         return typeof _write === 'function' ? _write.apply(this, args) : this;
     };
+    response.attachment = sinon.spy();
 
     return response;
 };
