@@ -133,7 +133,7 @@ module.exports = exports = class MessageQueueEvent {
     toSQSTransport() {
         return {
             MessageBody: this.stringify(),
-            QueueUrl: this[PROPERTY_queue_url]
+            QueueUrl: this.queue_url
         };
     }
 
