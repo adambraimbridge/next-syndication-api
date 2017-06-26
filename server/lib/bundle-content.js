@@ -123,6 +123,12 @@ module.exports = exports = (req, res, next) => {
         });
 
         fetch(URI, { headers: headers }).then((uriRes) => {
+            if (req.__download_cancelled__ === true) {
+                archive.end();
+
+                return;
+            }
+
             uriRes.body.pipe(stream);
 
             uriStream = uriRes.body;
