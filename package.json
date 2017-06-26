@@ -19,6 +19,7 @@
     "forever": "^0.15.3",
     "hat": "^0.0.3",
     "ioredis": "^3.0.0",
+    "js-yaml": "^3.8.4",
     "mime-types": "^2.1.5",
     "moment": "^2.18.1",
     "n-eager-fetch": "^2.1.3",
