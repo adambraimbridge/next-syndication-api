@@ -12,7 +12,8 @@ const {
     DOWNLOAD_ARCHIVE_EXTENSION,
     DOWNLOAD_ARTICLE_FORMATS,
 //    DOWNLOAD_ARTICLE_EXTENSION_OVERRIDES,
-    DOWNLOAD_FILENAME_PREFIX
+    DOWNLOAD_FILENAME_PREFIX,
+    TEST: { FIXTURES_DIRECTORY }
 } = require('config');
 
 const underTest = require('../../../server/lib/get-content-by-id');
@@ -40,7 +41,7 @@ describe(MODULE_ID, function () {
                 .reply(uri => {
                     return [
                         200,
-                        require(`../../fixtures/${uri.match(RE_VALID_URI)[1]}`),
+                        require(path.resolve(`${FIXTURES_DIRECTORY}/${uri.match(RE_VALID_URI)[1]}`)),
                         {}
                     ];
                 });
