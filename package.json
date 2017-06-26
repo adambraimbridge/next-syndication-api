@@ -29,6 +29,7 @@
     "@financial-times/n-heroku-tools": "^6.27.0",
     "chai": "^4.0.2",
     "coveralls": "^2.13.1",
+    "decompress": "^4.2.0",
     "eslint": "^3.19.0",
     "haikro": "^2.3.3",
     "lintspaces-cli": "^0.6.0",
@@ -40,6 +41,7 @@
     "nyc": "^11.0.2",
     "pre-git": "^3.14.0",
     "proxyquire": "^1.7.4",
+    "shelljs": "^0.7.8",
     "sinon": "^2.3.2",
     "sinon-chai": "^2.10.0"
   },
