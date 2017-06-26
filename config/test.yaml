@@ -1,0 +1,4 @@
+---
+  BASE_URI_FT_API: http://localhost:5050
+
+  CONVERT_FORMAT_COMMAND: "./test/fixtures/pandoc_stub"

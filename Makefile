@@ -11,6 +11,7 @@ TEST_APP := "${APP_NAME}-${CIRCLE_BUILD_NUM}"
 IGNORE_A11Y := true
 
 coverage-report:
+	@rm -rf ./coverage ./nyc_output
 	@nyc --all --reporter=lcovonly --reporter=text make unit-test
 	@$(DONE)
 
@@ -21,6 +22,7 @@ deploy:
 install:
 # delete the package-lock.json here so all modules can install correctly as
 # n-gage installing secret-squirell will cause a package-lock.json to be created
+	rm -rf ./package-lock.json
 	make install-n-gage
 	npm install --no-package-lock
 	rm -rf ./package-lock.json
@@ -35,7 +37,7 @@ run-coveralls: coverage-report
 	@$(DONE)
 
 provision:
-	nht float -md --testapp ${TEST_APP} --skip-gtg
+	nht float --master --no-destroy --skip-gtg --testapp ${TEST_APP}
 
 run:
 	nht run --local --https
@@ -51,7 +53,9 @@ tidy:
 	nht destroy ${TEST_APP}
 
 unit-test:
+	@export IGNORE_A11Y=true
 	@export NEW_SYNDICATION_USERS=testUserUuid1,testUserUuid2; \
 	export NEW_SYNDICATION_USERS_AWAITING=testUserUuid3,testUserUuid4; \
+	export NODE_ENV="test" && \
 	node ./node_modules/.bin/mocha --full-trace --harmony --recursive --slow 15000 --sort --timeout 30000 test/
 	@$(DONE)

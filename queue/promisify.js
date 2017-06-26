@@ -4,23 +4,25 @@ const util = require('util');
 
 const aws = require('aws-sdk');
 
+const { AWS_REGION = 'eu-west-1' } = require('config');
+
 const __proto__ = Object.getPrototypeOf(new aws.SQS({
-	region: process.env.AWS_REGION || 'eu-west-1'
+    region: AWS_REGION
 }));
 
 if (exports.promisified !== true) {
-	[
-		'deleteMessage',
-		'deleteMessageBatch',
-		'getQueueAttributes',
-		'getQueueUrl',
-		'purgeQueue',
-		'receiveMessage',
-		'sendMessage',
-		'sendMessageBatch',
-		'setQueueAttributes'
-	].forEach(fn =>
-		__proto__[`${fn}Async`] = util.promisify(__proto__[fn]));
+    [
+        'deleteMessage',
+        'deleteMessageBatch',
+        'getQueueAttributes',
+        'getQueueUrl',
+        'purgeQueue',
+        'receiveMessage',
+        'sendMessage',
+        'sendMessageBatch',
+        'setQueueAttributes'
+    ].forEach(fn =>
+        __proto__[`${fn}Async`] = util.promisify(__proto__[fn]));
 }
 
 exports.promisified = true;
