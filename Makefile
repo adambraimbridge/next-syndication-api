@@ -37,7 +37,7 @@ run-coveralls: coverage-report
 	@$(DONE)
 
 provision:
-	nht float -md --testapp ${TEST_APP} --skip-gtg
+	nht float --master --no-destroy --skip-gtg --testapp ${TEST_APP}
 
 run:
 	nht run --local --https
