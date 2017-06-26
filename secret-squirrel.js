@@ -3,13 +3,6 @@ module.exports = {
         allow: [
             'server\/views\/partial\/.*?\.hbs',
             'test\/fixtures\/.*'
-//            'server/views/partial/article_metadata_ft.html.hbs',
-//            'server/views/partial/article_metadata_hd.html.hbs',
-//            'test/fixtures/article.docx',
-//            'test/fixtures/article.html',
-//            'test/fixtures/article.plain',
-//            'test/fixtures/pandoc_stub',
-//            'test/fixtures/video-small.mp4'
         ],
         allowOverrides: []
     },
