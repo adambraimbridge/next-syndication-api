@@ -19,15 +19,19 @@ const sqs = new AWS.SQS({
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 const publish = async event => {
+    let transport = null;
+
     try {
         if (Object.prototype.toString.call(event) !== '[object MessageQueueEvent]') {
             throw new TypeError(`${MODULE_ID} expected event type \`[object MessageQueueEvent]\` and received \`${Object.prototype.toString.call(event)}\` instead.`);
         }
 
-        await sqs.sendMessageAsync(event.toSQSTransport());
+        transport = event.toSQSTransport();
+
+        await sqs.sendMessageAsync(transport);
 
         log.info('SyndicationSQSQueuePublishSuccess', {
-            event
+            transport
         });
 
         return true;
@@ -35,7 +39,8 @@ const publish = async event => {
     catch (e) {
         log.error('SyndicationSQSQueuePublishError', {
             err: e.stack,
-            event
+            event,
+            transport
         });
 
         return false;
