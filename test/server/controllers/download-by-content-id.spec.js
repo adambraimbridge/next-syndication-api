@@ -28,8 +28,6 @@ describe(MODULE_ID, function () {
         let res;
 
         before(function () {
-            nock.disableNetConnect(BASE_URI_FT_API);
-
             nock(BASE_URI_FT_API)
                 .get(uri => RE_VALID_URI.test(uri))
                 .reply(uri => {
@@ -75,12 +73,6 @@ describe(MODULE_ID, function () {
             });
         });
 
-        after(function () {
-            nock.enableNetConnect(BASE_URI_FT_API);
-
-            req = res = null;
-        });
-
         it('should stream the download', function (done) {
             underTest(req, res, function () {
                 expect(res._isEndCalled()).to.be.true;
@@ -98,8 +90,6 @@ describe(MODULE_ID, function () {
         let responseHeaders;
 
         beforeEach(function () {
-            nock.disableNetConnect(BASE_URI_FT_API);
-
             nock(BASE_URI_FT_API)
                 .get(uri => RE_VALID_URI.test(uri))
                 .delay(500)
@@ -155,12 +145,6 @@ describe(MODULE_ID, function () {
                 req,
                 writableStream: WritableStream
             });
-        });
-
-        afterEach(function () {
-            nock.enableNetConnect(BASE_URI_FT_API);
-
-            req = res = null;
         });
 
         it('should stream the download', function (done) {
