@@ -4,6 +4,8 @@
 const fs = require('fs');
 const path = require('path');
 
+const { TEST: { FIXTURES_DIRECTORY } } = require('config');
+
 const ARGV = process.argv.slice(2).reduce((acc, val, i, arr) => {
     if (val.startsWith('--')) {
         acc[val.substring(2)] = arr[i + 1];
@@ -15,4 +17,4 @@ const ARGV = process.argv.slice(2).reduce((acc, val, i, arr) => {
     to: 'docx'
 });
 
-fs.createReadStream(path.resolve(`./test/fixtures/article.${ARGV.to}`)).pipe(process.stdout);
+fs.createReadStream(path.resolve(`${FIXTURES_DIRECTORY}/article.${ARGV.to}`)).pipe(process.stdout);

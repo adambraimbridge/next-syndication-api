@@ -5,6 +5,8 @@ const path = require('path');
 
 const { expect } = require('chai');
 
+const { TEST: { FIXTURES_DIRECTORY } } = require('config');
+
 const underTest = require('../../../server/lib/convert-article');
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
@@ -36,7 +38,7 @@ describe(MODULE_ID, function () {
                     targetFormat
                 });
 
-                const actual = fs.readFileSync(path.resolve(`./test/fixtures/article.${targetFormat}`));
+                const actual = fs.readFileSync(path.resolve(`${FIXTURES_DIRECTORY}/article.${targetFormat}`));
 
                 expect(expected.equals(actual)).to.be.true;
             });

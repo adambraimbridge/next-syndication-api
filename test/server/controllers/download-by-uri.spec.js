@@ -8,6 +8,8 @@ const { expect } = require('chai');
 const nock = require('nock');
 const httpMocks = require('node-mocks-http');
 
+const { TEST: { FIXTURES_DIRECTORY } } = require('config');
+
 const underTest = require('../../../server/controllers/download-by-uri');
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
@@ -18,7 +20,7 @@ describe(MODULE_ID, function () {
         let res;
 
         before(function () {
-            let fileName = path.resolve('./test/fixtures/article.docx');
+            let fileName = path.resolve(`${FIXTURES_DIRECTORY}/article.docx`);
 
             let responseHeaders = {
                 'content-length': fs.readFileSync(fileName).length,
@@ -86,7 +88,7 @@ describe(MODULE_ID, function () {
         let res;
 
         beforeEach(function () {
-            let fileName = path.resolve('./test/fixtures/video-small.mp4');
+            let fileName = path.resolve(`${FIXTURES_DIRECTORY}/video-small.mp4`);
 
             let responseHeaders = {
                 'content-length': fs.readFileSync(fileName).length,
