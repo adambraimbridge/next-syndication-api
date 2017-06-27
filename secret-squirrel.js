@@ -1,6 +1,7 @@
 module.exports = {
     files: {
         allow: [
+            '\.pandoc-dpkg\/.*',
             'server\/views\/partial\/.*?\.hbs',
             'test\/fixtures\/.*'
         ],
