@@ -1,7 +1,10 @@
 'use strict';
 
+const { exec } = require('child_process');
 const path = require('path');
 const { PassThrough } = require('stream');
+const util = require('util');
+const url = require('url');
 
 const { default: log } = require('@financial-times/n-logger');
 
@@ -12,6 +15,8 @@ const fetch = require('n-eager-fetch');
 const { DOWNLOAD_ARCHIVE_EXTENSION } = require('config');
 
 const convertArticle = require('./convert-article');
+
+const execAsync = util.promisify(exec);
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
@@ -24,6 +29,7 @@ module.exports = exports = (req, res, next) => {
     req.on('abort', cancelDownload);
     req.connection.on('close', cancelDownload);
 
+    let captionsAppended = false;
     let mediaAppended = false;
     let transcriptAppended = false;
 
@@ -46,27 +52,48 @@ module.exports = exports = (req, res, next) => {
 
     if (content.transcript) {
         convertArticle({
-                source: content[content.extension === 'plain' ? 'transcript__PLAIN' : 'transcript__CLEAN'],
-                sourceFormat: 'html',
-                targetFormat: content.transcriptExtension
-            })
-            .then(file => {
-                archive.append(file, { name: `${content.fileName}.${content.transcriptExtension}` });
+            source: content[content.extension === 'plain' ? 'transcript__PLAIN' : 'transcript__CLEAN'],
+            sourceFormat: 'html',
+            targetFormat: content.transcriptExtension
+        })
+        .then(file => {
+            archive.append(file, { name: `${content.fileName}.${content.transcriptExtension}` });
 
-                log.info(`${MODULE_ID} TranscriptAppendSuccess => `, content);
+            log.info(`${MODULE_ID} TranscriptAppendSuccess => `, content);
 
-                transcriptAppended = true;
+            transcriptAppended = true;
 
-                if (mediaAppended === true && archive._state.finalize !== true && archive._state.finalizing !== true) {
-                    archive.finalize();
-                }
-            })
-            .catch(e => {
-                log.error(`${MODULE_ID} TranscriptAppendError => `, e);
-            });
+            if (captionsAppended === true && mediaAppended === true && archive._state.finalize !== true && archive._state.finalizing !== true) {
+                archive.finalize();
+            }
+        })
+        .catch(e => {
+            log.error(`${MODULE_ID} TranscriptAppendError => `, e);
+        });
     }
     else {
         transcriptAppended = true;
+    }
+
+    if (Array.isArray(content.captions) && content.captions.length) {
+        Promise
+        .all(content.captions.map(({ url: uri }) => execAsync(`curl ${uri}`)))
+        .then(all => {
+            all.forEach(({ stdout }, i) => {
+                let name = path.basename(url.parse(content.captions[i].url).pathname);
+
+                archive.append(stdout, { name });
+            });
+
+            captionsAppended = true;
+
+            if (mediaAppended === true && transcriptAppended === true && archive._state.finalize !== true && archive._state.finalizing !== true) {
+                archive.finalize();
+            }
+        });
+    }
+    else {
+        captionsAppended = true;
     }
 
     const URI = content.download.binaryUrl;
@@ -115,7 +142,8 @@ module.exports = exports = (req, res, next) => {
             }
 
             mediaAppended = true;
-            if (transcriptAppended === true && archive._state.finalize !== true && archive._state.finalizing !== true) {
+
+            if (captionsAppended === true && transcriptAppended === true && archive._state.finalize !== true && archive._state.finalizing !== true) {
                 archive.finalize();
             }
 

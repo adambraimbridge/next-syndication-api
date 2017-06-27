@@ -28,8 +28,8 @@ const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(p
 
 mkdir('-p', path.resolve(TEMP_FILES_DIRECTORY));
 
-describe(MODULE_ID, function () {
-    describe('With a transcript', function () {
+describe.only(MODULE_ID, function () {
+    describe('With a transcript and captions', function () {
         const CONTENT_ID = 'd7bf1822-ec58-4a8e-a669-5cbcc0d6a1b2';
 
         let extractDir;
@@ -133,7 +133,7 @@ describe(MODULE_ID, function () {
         });
 
         it(`extracting the ${DOWNLOAD_ARCHIVE_EXTENSION} file should contain 2 files`, function () {
-            expect(extractedFiles).to.have.length(2);
+            expect(extractedFiles).to.have.length(3);
         });
 
         it(`extracting the ${DOWNLOAD_ARCHIVE_EXTENSION} file should contain a video matching the downloaded resource`, function () {
