@@ -67,6 +67,5 @@
     "commit": "commit-wizard",
     "precommit": "node_modules/.bin/secret-squirrel",
     "prepush": "make verify -j3"
-  },
-  "false": {}
+  }
 }
