@@ -1,7 +1,10 @@
 'use strict';
 
+const { exec } = require('child_process');
 const path = require('path');
 const { PassThrough } = require('stream');
+const util = require('util');
+const url = require('url');
 
 const { default: log } = require('@financial-times/n-logger');
 
@@ -13,143 +16,168 @@ const { DOWNLOAD_ARCHIVE_EXTENSION } = require('config');
 
 const convertArticle = require('./convert-article');
 
+const execAsync = util.promisify(exec);
+
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = (req, res, next) => {
-    let headers = cloneRequestHeaders(req);
+	let headers = cloneRequestHeaders(req);
 
-    let { __content: content } = res;
+	let { __content: content } = res;
 
-    let cancelDownload = () => req.__download_cancelled__ = true;
-    req.on('abort', cancelDownload);
-    req.connection.on('close', cancelDownload);
+	let cancelDownload = () => req.__download_cancelled__ = true;
+	req.on('abort', cancelDownload);
+	req.connection.on('close', cancelDownload);
 
-    let mediaAppended = false;
-    let transcriptAppended = false;
+	let captionsAppended = false;
+	let mediaAppended = false;
+	let transcriptAppended = false;
 
-    let archive = archiver(DOWNLOAD_ARCHIVE_EXTENSION);
+	let archive = archiver(DOWNLOAD_ARCHIVE_EXTENSION);
 
-    archive.on('error', err => {
-        publishEndEvent(res, 'error');
+	archive.on('error', err => {
+		publishEndEvent(res, 'error');
 
-        log.error(`${MODULE_ID} ArchiveError`, err.stack || err);
+		log.error(`${MODULE_ID} ArchiveError`, err.stack || err);
 
-        res.status(500).end();
-    });
-    archive.on('end', () => {
-        res.end();
+		res.status(500).end();
+	});
+	archive.on('end', () => {
+		res.end();
 
-        next();
-    });
+		next();
+	});
 
-    archive.pipe(res);
+	archive.pipe(res);
 
-    if (content.transcript) {
-        convertArticle({
-                source: content[content.extension === 'plain' ? 'transcript__PLAIN' : 'transcript__CLEAN'],
-                sourceFormat: 'html',
-                targetFormat: content.transcriptExtension
-            })
-            .then(file => {
-                archive.append(file, { name: `${content.fileName}.${content.transcriptExtension}` });
+	if (content.transcript) {
+		convertArticle({
+			source: content[content.extension === 'plain' ? 'transcript__PLAIN' : 'transcript__CLEAN'],
+			sourceFormat: 'html',
+			targetFormat: content.transcriptExtension
+		})
+			.then(file => {
+				archive.append(file, { name: `${content.fileName}.${content.transcriptExtension}` });
 
-                log.info(`${MODULE_ID} TranscriptAppendSuccess => `, content);
+				log.info(`${MODULE_ID} TranscriptAppendSuccess => `, content);
 
-                transcriptAppended = true;
+				transcriptAppended = true;
 
-                if (mediaAppended === true && archive._state.finalize !== true && archive._state.finalizing !== true) {
-                    archive.finalize();
-                }
-            })
-            .catch(e => {
-                log.error(`${MODULE_ID} TranscriptAppendError => `, e);
-            });
-    }
-    else {
-        transcriptAppended = true;
-    }
+				if (captionsAppended === true && mediaAppended === true && archive._state.finalize !== true && archive._state.finalizing !== true) {
+					archive.finalize();
+				}
+			})
+			.catch(e => {
+				log.error(`${MODULE_ID} TranscriptAppendError => `, e);
+			});
+	}
+	else {
+		transcriptAppended = true;
+	}
 
-    const URI = content.download.binaryUrl;
+	if (Array.isArray(content.captions) && content.captions.length) {
+		Promise
+			.all(content.captions.map(({ url: uri }) => execAsync(`curl ${uri}`)))
+			.then(all => {
+				all.forEach(({ stdout }, i) => {
+					let name = path.basename(url.parse(content.captions[i].url).pathname);
 
-    fetch(URI, { method: 'HEAD', headers: headers }).then((uriRes) => {
-        const stream = new PassThrough();
+					archive.append(stdout, { name });
+				});
 
-        if (!uriRes.ok) {
-            res.status(uriRes.status).end();
+				captionsAppended = true;
 
-            return next();
-        }
+				if (mediaAppended === true && transcriptAppended === true && archive._state.finalize !== true && archive._state.finalizing !== true) {
+					archive.finalize();
+				}
+			});
+	}
+	else {
+		captionsAppended = true;
+	}
 
-        const LENGTH = parseInt(uriRes.headers.get('content-length'), 10);
+	const URI = content.download.binaryUrl;
 
-        let length = 0;
-        let uriStream;
+	fetch(URI, { method: 'HEAD', headers: headers }).then((uriRes) => {
+		const stream = new PassThrough();
 
-        let onend = () => {
-            let state = 'complete';
+		if (!uriRes.ok) {
+			res.status(uriRes.status).end();
 
-            if (length < LENGTH) {
-                res.status(400);
-            }
-            else {
-                state = 'interrupted';
+			return next();
+		}
 
-                res.status(200);
-            }
+		const LENGTH = parseInt(uriRes.headers.get('content-length'), 10);
 
-            publishEndEvent(res, state);
-        };
+		let length = 0;
+		let uriStream;
 
-        stream.on('close', onend);
-        stream.on('end', onend);
+		let onend = () => {
+			let state = 'complete';
 
-        archive.append(stream, { name: `${content.fileName}.${content.download.extension}` });
+			if (length < LENGTH) {
+				res.status(400);
+			}
+			else {
+				state = 'interrupted';
 
-        stream.on('data', (chunk) => {
-            if (req.__download_cancelled__ === true) {
-                uriStream.end();
+				res.status(200);
+			}
 
-                archive.end();
+			publishEndEvent(res, state);
+		};
 
-                return;
-            }
+		stream.on('close', onend);
+		stream.on('end', onend);
 
-            mediaAppended = true;
-            if (transcriptAppended === true && archive._state.finalize !== true && archive._state.finalizing !== true) {
-                archive.finalize();
-            }
+		archive.append(stream, { name: `${content.fileName}.${content.download.extension}` });
 
-            length += chunk.length;
-        });
+		stream.on('data', (chunk) => {
+			if (req.__download_cancelled__ === true) {
+				uriStream.end();
 
-        fetch(URI, { headers: headers }).then((uriRes) => {
-            if (req.__download_cancelled__ === true) {
-                archive.end();
+				archive.end();
 
-                return;
-            }
+				return;
+			}
 
-            uriRes.body.pipe(stream);
+			mediaAppended = true;
 
-            uriStream = uriRes.body;
-        });
-    });
+			if (captionsAppended === true && transcriptAppended === true && archive._state.finalize !== true && archive._state.finalizing !== true) {
+				archive.finalize();
+			}
+
+			length += chunk.length;
+		});
+
+		fetch(URI, { headers: headers }).then((uriRes) => {
+			if (req.__download_cancelled__ === true) {
+				archive.end();
+
+				return;
+			}
+
+			uriRes.body.pipe(stream);
+
+			uriStream = uriRes.body;
+		});
+	});
 };
 
 function cloneRequestHeaders(req) {
-    let headers = JSON.parse(JSON.stringify(req.headers));
+	let headers = JSON.parse(JSON.stringify(req.headers));
 
-    ['accept', 'host'].forEach(name => delete headers[name]);
+	['accept', 'host'].forEach(name => delete headers[name]);
 
-    Object.keys(headers).forEach(name => headers[name] !== '-' || delete headers[name]);
+	Object.keys(headers).forEach(name => headers[name] !== '-' || delete headers[name]);
 
-    return headers;
+	return headers;
 }
 
 function publishEndEvent(res, state) {
-    const event = res.__event.clone();
-    event.state = state;
-    event.time = moment().toJSON();
+	const event = res.__event.clone();
+	event.state = state;
+	event.time = moment().toJSON();
 
-    (async () => await event.publish())();
+	(async () => await event.publish())();
 }

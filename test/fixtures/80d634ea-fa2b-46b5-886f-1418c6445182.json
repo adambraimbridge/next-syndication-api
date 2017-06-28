@@ -1,54 +1,54 @@
 {
-    "id": "http://www.ft.com/thing/80d634ea-fa2b-46b5-886f-1418c6445182",
-    "type": "http://www.ft.com/ontology/content/MediaResource",
-    "title": "FT View: Brexit rethink required",
-    "alternativeTitles": { },
-    "standfirst": "A good divorce from the EU requires a political reconfiguration in the UK",
-    "alternativeStandfirsts": { },
-    "description": "Rob Armstrong gives the FT view on how Britain needs a political reconfiguration in order to manage Brexit.",
-    "firstPublishedDate": "2017-06-19T12:47:54.753Z",
-    "publishedDate": "2017-06-19T12:47:54.753Z",
-    "requestUrl": "http://api.ft.com/content/80d634ea-fa2b-46b5-886f-1418c6445182",
-    "brands": [ "http://api.ft.com/things/dbb0bdae-1f0c-11e4-b0cb-b2227cce2b54" ],
-    "mainImage": { "id": "http://api.ft.com/content/d0842750-9903-4bf9-2ee7-f3d98afabc1e" },
-    "alternativeImages": { },
-    "publishReference": "tid_cabp5tczdz",
-    "canBeDistributed": "yes",
-    "dataSource": [
-        {
-            "binaryUrl": "https://next-media-api.ft.com/renditions/14978671795010/0x0.mp3",
-            "mediaType": "audio/mpeg",
-            "duration": 146760,
-            "audioCodec": "mp3"
-        },
-        {
-            "binaryUrl": "https://next-media-api.ft.com/renditions/14978671795010/640x360.mp4",
-            "pixelWidth": 640,
-            "pixelHeight": 360,
-            "mediaType": "video/mp4",
-            "duration": 146793,
-            "videoCodec": "h264",
-            "audioCodec": "aac"
-        },
-        {
-            "binaryUrl": "https://next-media-api.ft.com/renditions/14978671795010/1280x720.mp4",
-            "pixelWidth": 1280,
-            "pixelHeight": 720,
-            "mediaType": "video/mp4",
-            "duration": 146793,
-            "videoCodec": "h264",
-            "audioCodec": "aac"
-        },
-        {
-            "binaryUrl": "https://next-media-api.ft.com/renditions/14978671795010/1920x1080.mp4",
-            "pixelWidth": 1920,
-            "pixelHeight": 1080,
-            "mediaType": "video/mp4",
-            "duration": 146793,
-            "videoCodec": "h264",
-            "audioCodec": "aac"
-        }
-    ],
-    "canBeSyndicated": "yes",
-    "webUrl": "https://www.ft.com/video/80d634ea-fa2b-46b5-886f-1418c6445182"
+  "id": "http://www.ft.com/thing/80d634ea-fa2b-46b5-886f-1418c6445182",
+  "type": "http://www.ft.com/ontology/content/MediaResource",
+  "title": "FT View: Brexit rethink required",
+  "alternativeTitles": { },
+  "standfirst": "A good divorce from the EU requires a political reconfiguration in the UK",
+  "alternativeStandfirsts": { },
+  "description": "Rob Armstrong gives the FT view on how Britain needs a political reconfiguration in order to manage Brexit.",
+  "firstPublishedDate": "2017-06-19T12:47:54.753Z",
+  "publishedDate": "2017-06-19T12:47:54.753Z",
+  "requestUrl": "http://api.ft.com/content/80d634ea-fa2b-46b5-886f-1418c6445182",
+  "brands": [ "http://api.ft.com/things/dbb0bdae-1f0c-11e4-b0cb-b2227cce2b54" ],
+  "mainImage": { "id": "http://api.ft.com/content/d0842750-9903-4bf9-2ee7-f3d98afabc1e" },
+  "alternativeImages": { },
+  "publishReference": "tid_cabp5tczdz",
+  "canBeDistributed": "yes",
+  "dataSource": [
+    {
+      "binaryUrl": "https://next-media-api.ft.com/renditions/14978671795010/0x0.mp3",
+      "mediaType": "audio/mpeg",
+      "duration": 146760,
+      "audioCodec": "mp3"
+    },
+    {
+      "binaryUrl": "https://next-media-api.ft.com/renditions/14978671795010/640x360.mp4",
+      "pixelWidth": 640,
+      "pixelHeight": 360,
+      "mediaType": "video/mp4",
+      "duration": 146793,
+      "videoCodec": "h264",
+      "audioCodec": "aac"
+    },
+    {
+      "binaryUrl": "https://next-media-api.ft.com/renditions/14978671795010/1280x720.mp4",
+      "pixelWidth": 1280,
+      "pixelHeight": 720,
+      "mediaType": "video/mp4",
+      "duration": 146793,
+      "videoCodec": "h264",
+      "audioCodec": "aac"
+    },
+    {
+      "binaryUrl": "https://next-media-api.ft.com/renditions/14978671795010/1920x1080.mp4",
+      "pixelWidth": 1920,
+      "pixelHeight": 1080,
+      "mediaType": "video/mp4",
+      "duration": 146793,
+      "videoCodec": "h264",
+      "audioCodec": "aac"
+    }
+  ],
+  "canBeSyndicated": "yes",
+  "webUrl": "https://www.ft.com/video/80d634ea-fa2b-46b5-886f-1418c6445182"
 }

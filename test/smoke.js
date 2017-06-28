@@ -1,5 +1,5 @@
 module.exports = [{
-    urls: {
-        '/__gtg': 200
-    }
+	urls: {
+		'/__gtg': 200
+	}
 }];

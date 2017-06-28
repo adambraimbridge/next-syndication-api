@@ -14,23 +14,23 @@ const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(p
 
 describe(MODULE_ID, function () {
 
-    it('promisified to be true', function () {
-        expect(underTest.promisified).to.be.true;
-    });
+	it('promisified to be true', function () {
+		expect(underTest.promisified).to.be.true;
+	});
 
-    [
-        'deleteMessage',
-        'deleteMessageBatch',
-        'getQueueAttributes',
-        'getQueueUrl',
-        'purgeQueue',
-        'receiveMessage',
-        'sendMessage',
-        'sendMessageBatch',
-        'setQueueAttributes'
-    ].forEach(fn => {
-        it(`AWS.SQS.prototype.${fn}Async should be a function`, function () {
-            expect(__proto__[`${fn}Async`]).to.be.a('function');
-        });
-    });
+	[
+		'deleteMessage',
+		'deleteMessageBatch',
+		'getQueueAttributes',
+		'getQueueUrl',
+		'purgeQueue',
+		'receiveMessage',
+		'sendMessage',
+		'sendMessageBatch',
+		'setQueueAttributes'
+	].forEach(fn => {
+		it(`AWS.SQS.prototype.${fn}Async should be a function`, function () {
+			expect(__proto__[`${fn}Async`]).to.be.a('function');
+		});
+	});
 });
