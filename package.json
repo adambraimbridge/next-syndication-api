@@ -26,7 +26,7 @@
     "xmldom": "^0.1.27"
   },
   "devDependencies": {
-    "@financial-times/n-gage": "^1.8.3",
+    "@financial-times/n-gage": "^1.8.4",
     "@financial-times/n-heroku-tools": "^6.27.0",
     "chai": "^4.0.2",
     "coveralls": "^2.13.1",
@@ -61,11 +61,5 @@
   },
   "engines": {
     "node": ">=8.0.0"
-  },
-  "config": {},
-  "scripts": {
-    "commit": "commit-wizard",
-    "precommit": "node_modules/.bin/secret-squirrel",
-    "prepush": "make verify -j3"
   }
 }
