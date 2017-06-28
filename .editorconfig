@@ -1,18 +1,22 @@
 root = true
 
-[**{.js,.scss,.html,.mustache,.vcl}]
-indent_style = space
-indent_size = 4
-trim_trailing_whitespace = true
-charset = utf-8
+#[**{.js,.scss,.html,.mustache,.vcl}]
+#indent_style = space
+#indent_size = 4
+?insert_final_newline = true
+#trim_trailing_whitespace = true
+#charset = utf-8
 
-[**{Makefile}]
+[**{Makefile,.js,.scss,.html,.mustache,.vcl}]
 indent_style = tab
+indent_size = 4
+insert_final_newline = true
 trim_trailing_whitespace = true
 charset = utf-8
 
-[**{.json}]
+[**{.json,.yaml,.yml}]
 indent_style = space
 indent_size = 2
+insert_final_newline = true
 trim_trailing_whitespace = true
 charset = utf-8
