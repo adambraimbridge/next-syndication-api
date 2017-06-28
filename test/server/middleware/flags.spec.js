@@ -13,44 +13,44 @@ chai.use(sinonChai);
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
 describe(MODULE_ID, function () {
-    let sandbox;
-    let mocks;
-    let stubs;
+	let sandbox;
+	let mocks;
+	let stubs;
 
-    beforeEach(function () {
-        sandbox = sinon.sandbox.create();
-        mocks = {
-            res: {
-                locals: {
-                    flags: {}
-                },
-                sendStatus: sandbox.stub()
-            }
-        };
-        stubs = {
-            next: sandbox.stub()
-        };
-    });
+	beforeEach(function () {
+		sandbox = sinon.sandbox.create();
+		mocks = {
+			res: {
+				locals: {
+					flags: {}
+				},
+				sendStatus: sandbox.stub()
+			}
+		};
+		stubs = {
+			next: sandbox.stub()
+		};
+	});
 
-    afterEach(function () {
-        sandbox.restore();
-    });
+	afterEach(function () {
+		sandbox.restore();
+	});
 
-    it('should call next if the syndicationNew flag is on', function () {
-        mocks.res.locals.flags.syndicationNew = true;
+	it('should call next if the syndicationNew flag is on', function () {
+		mocks.res.locals.flags.syndicationNew = true;
 
-        flagsMiddleware(mocks.req, mocks.res, stubs.next);
+		flagsMiddleware(mocks.req, mocks.res, stubs.next);
 
-        expect(stubs.next).to.have.been.called;
-        expect(mocks.res.sendStatus).not.to.have.been.called;
-    });
+		expect(stubs.next).to.have.been.called;
+		expect(mocks.res.sendStatus).not.to.have.been.called;
+	});
 
-    it('should send a not-found status code if the syndicationNew flag is off', function () {
-        mocks.res.locals.flags.syndicationNew = false;
+	it('should send a not-found status code if the syndicationNew flag is off', function () {
+		mocks.res.locals.flags.syndicationNew = false;
 
-        flagsMiddleware(mocks.req, mocks.res, stubs.next);
+		flagsMiddleware(mocks.req, mocks.res, stubs.next);
 
-        expect(stubs.next).not.to.have.been.called;
-        expect(mocks.res.sendStatus).to.have.been.calledWith(404);
-    });
+		expect(stubs.next).not.to.have.been.called;
+		expect(mocks.res.sendStatus).to.have.been.calledWith(404);
+	});
 });

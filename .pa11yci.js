@@ -1,12 +1,12 @@
 'use strict';
 
-const {default: log} = require('@financial-times/n-logger');
+const { default: log } = require('@financial-times/n-logger');
 
 const viewports = process.env.PA11Y_VIEWPORTS || [
-    {
-        width: 1440,
-        height: 1220
-    }
+	{
+		width: 1440,
+		height: 1220
+	}
 ];
 
 const smoke = require('./test/smoke.js');
@@ -26,19 +26,19 @@ const DEFAULT_FLAGS = 'ads:off,sourcepoint:off,cookieMessage:off';
 
 // Add any global config (inc headers) here
 const config = {
-    defaults: {
-        page: {
-            headers: {
-                'Cookie': DEFAULT_COOKIE,
-                'FT-Flags': DEFAULT_FLAGS
-            }
-        },
-        timeout: 50000,
-        hideElements: 'iframe[src*=google],iframe[src*=proxy]',
-        rules: ['Principle1.Guideline1_3.1_3_1_AAA']
-    },
-    urls: []
-}
+	defaults: {
+		page: {
+			headers: {
+				'Cookie': DEFAULT_COOKIE,
+				'FT-Flags': DEFAULT_FLAGS
+			}
+		},
+		timeout: 50000,
+		hideElements: 'iframe[src*=google],iframe[src*=proxy]',
+		rules: ['Principle1.Guideline1_3.1_3_1_AAA']
+	},
+	urls: []
+};
 
 // What routes returning 200 in smoke.js should we not test?
 // set per-project in PA11Y_ROUTE_EXCEPTIONS in config-vars
@@ -60,64 +60,64 @@ log.info('config.defaults.hideElements:', config.defaults.hideElements);
 config.defaults.page.headers['FT-Next-Backend-Key'] = process.env.FT_NEXT_BACKEND_KEY;
 
 smoke.forEach((smokeConfig) => {
-    for (let [url, expectedStatus] of smokeConfig.urls) {
+	for (let [url, expectedStatus] of smokeConfig.urls) {
 
-        let isException = false;
+		let isException = false;
 
-        exceptions.forEach((path) => {
-            isException = isException || url.indexOf(path) !== -1;
-        });
+		exceptions.forEach((path) => {
+			isException = isException || url.indexOf(path) !== -1;
+		});
 
-        if (expectedStatus !== 200 || url === '/__health' || isException) {
-            continue;
-        }
+		if (expectedStatus !== 200 || url === '/__health' || isException) {
+			continue;
+		}
 
-        const thisUrl = {
-            url: process.env.TEST_URL + url
-        };
+		const thisUrl = {
+			url: process.env.TEST_URL + url
+		};
 
-        if (process.env.TEST_URL.includes('local')) {
-            thisUrl.screenCapture = './pa11y_screenCapture/' + url + '.png';
-        }
+		if (process.env.TEST_URL.includes('local')) {
+			thisUrl.screenCapture = './pa11y_screenCapture/' + url + '.png';
+		}
 
-        // Do we have test-specific headers?
-        if (smokeConfig.headers) {
-            thisUrl.page = {};
+		// Do we have test-specific headers?
+		if (smokeConfig.headers) {
+			thisUrl.page = {};
 
-            // Merge the headers
-            thisUrl.page.headers = Object.assign({}, config.defaults.page.headers, smokeConfig.headers);
+			// Merge the headers
+			thisUrl.page.headers = Object.assign({}, config.defaults.page.headers, smokeConfig.headers);
 
-            // concatenate any test-specific cookies
-            if (smokeConfig.headers.Cookie) {
-                log.info('• merging cookies...');
+			// concatenate any test-specific cookies
+			if (smokeConfig.headers.Cookie) {
+				log.info('• merging cookies...');
 
-                // Keep flags out of the cookie for easier merging
-                if (smokeConfig.headers.Cookie.indexOf('flags') !== -1) {
-                    throw Error('please don\'t set any flags inside the Cookie. Use the \'FT-Flags\' header');
-                }
+				// Keep flags out of the cookie for easier merging
+				if (smokeConfig.headers.Cookie.indexOf('flags') !== -1) {
+					throw Error('please don\'t set any flags inside the Cookie. Use the \'FT-Flags\' header');
+				}
 
-                // Set the concatenated cookies
-                thisUrl.page.headers.Cookie = smokeConfig.headers.Cookie + '; ' + config.defaults.page.headers.Cookie;
-            }
+				// Set the concatenated cookies
+				thisUrl.page.headers.Cookie = smokeConfig.headers.Cookie + '; ' + config.defaults.page.headers.Cookie;
+			}
 
-            // concatenate any test-specific flags
-            if (smokeConfig.headers['FT-Flags']) {
-                log.info('• merging flags...');
+			// concatenate any test-specific flags
+			if (smokeConfig.headers['FT-Flags']) {
+				log.info('• merging flags...');
 
-                // Set the concatenated flags
-                thisUrl.page.headers['FT-Flags'] = smokeConfig.headers['FT-Flags'] + ',' + config.defaults.page.headers['FT-Flags'];
-            }
-        }
+				// Set the concatenated flags
+				thisUrl.page.headers['FT-Flags'] = smokeConfig.headers['FT-Flags'] + ',' + config.defaults.page.headers['FT-Flags'];
+			}
+		}
 
-        urls.push(thisUrl);
-    }
+		urls.push(thisUrl);
+	}
 });
 
 for (let viewport of viewports) {
-    for (let url of urls) {
-        url.viewport = viewport;
-        config.urls.push(url);
-    }
+	for (let url of urls) {
+		url.viewport = viewport;
+		config.urls.push(url);
+	}
 }
 
 module.exports = config;

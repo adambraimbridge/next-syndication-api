@@ -14,20 +14,20 @@ const flags = require('./middleware/flags');
 const logRequest = require('./middleware/log-request');
 
 const app = module.exports = express({
-    systemCode: 'next-syndication-api',
-    withFlags: true
+	systemCode: 'next-syndication-api',
+	withFlags: true
 });
 
 const middleware = [
-    cookieParser(),
-    bodyParser.text(),
-    bodyParser.json(),
-    logRequest,
-    accessControl,
-    cache,
-    flags,
-    decodeSession,
-    checkIfNewSyndicationUser
+	cookieParser(),
+	bodyParser.text(),
+	bodyParser.json(),
+	logRequest,
+	accessControl,
+	cache,
+	flags,
+	decodeSession,
+	checkIfNewSyndicationUser
 ];
 
 app.get(`${BASE_URI_PATH}/__gtg`, (req, res) => res.sendStatus(200));

@@ -7,14 +7,14 @@ const path = require('path');
 const { TEST: { FIXTURES_DIRECTORY } } = require('config');
 
 const ARGV = process.argv.slice(2).reduce((acc, val, i, arr) => {
-    if (val.startsWith('--')) {
-        acc[val.substring(2)] = arr[i + 1];
-    }
+	if (val.startsWith('--')) {
+		acc[val.substring(2)] = arr[i + 1];
+	}
 
-    return acc;
+	return acc;
 }, {
-    from: 'html',
-    to: 'docx'
+	from: 'html',
+	to: 'docx'
 });
 
 fs.createReadStream(path.resolve(`${FIXTURES_DIRECTORY}/article.${ARGV.to}`)).pipe(process.stdout);

@@ -21,163 +21,163 @@ const execAsync = util.promisify(exec);
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = (req, res, next) => {
-    let headers = cloneRequestHeaders(req);
+	let headers = cloneRequestHeaders(req);
 
-    let { __content: content } = res;
+	let { __content: content } = res;
 
-    let cancelDownload = () => req.__download_cancelled__ = true;
-    req.on('abort', cancelDownload);
-    req.connection.on('close', cancelDownload);
+	let cancelDownload = () => req.__download_cancelled__ = true;
+	req.on('abort', cancelDownload);
+	req.connection.on('close', cancelDownload);
 
-    let captionsAppended = false;
-    let mediaAppended = false;
-    let transcriptAppended = false;
+	let captionsAppended = false;
+	let mediaAppended = false;
+	let transcriptAppended = false;
 
-    let archive = archiver(DOWNLOAD_ARCHIVE_EXTENSION);
+	let archive = archiver(DOWNLOAD_ARCHIVE_EXTENSION);
 
-    archive.on('error', err => {
-        publishEndEvent(res, 'error');
+	archive.on('error', err => {
+		publishEndEvent(res, 'error');
 
-        log.error(`${MODULE_ID} ArchiveError`, err.stack || err);
+		log.error(`${MODULE_ID} ArchiveError`, err.stack || err);
 
-        res.status(500).end();
-    });
-    archive.on('end', () => {
-        res.end();
+		res.status(500).end();
+	});
+	archive.on('end', () => {
+		res.end();
 
-        next();
-    });
+		next();
+	});
 
-    archive.pipe(res);
+	archive.pipe(res);
 
-    if (content.transcript) {
-        convertArticle({
-            source: content[content.extension === 'plain' ? 'transcript__PLAIN' : 'transcript__CLEAN'],
-            sourceFormat: 'html',
-            targetFormat: content.transcriptExtension
-        })
-        .then(file => {
-            archive.append(file, { name: `${content.fileName}.${content.transcriptExtension}` });
+	if (content.transcript) {
+		convertArticle({
+			source: content[content.extension === 'plain' ? 'transcript__PLAIN' : 'transcript__CLEAN'],
+			sourceFormat: 'html',
+			targetFormat: content.transcriptExtension
+		})
+			.then(file => {
+				archive.append(file, { name: `${content.fileName}.${content.transcriptExtension}` });
 
-            log.info(`${MODULE_ID} TranscriptAppendSuccess => `, content);
+				log.info(`${MODULE_ID} TranscriptAppendSuccess => `, content);
 
-            transcriptAppended = true;
+				transcriptAppended = true;
 
-            if (captionsAppended === true && mediaAppended === true && archive._state.finalize !== true && archive._state.finalizing !== true) {
-                archive.finalize();
-            }
-        })
-        .catch(e => {
-            log.error(`${MODULE_ID} TranscriptAppendError => `, e);
-        });
-    }
-    else {
-        transcriptAppended = true;
-    }
+				if (captionsAppended === true && mediaAppended === true && archive._state.finalize !== true && archive._state.finalizing !== true) {
+					archive.finalize();
+				}
+			})
+			.catch(e => {
+				log.error(`${MODULE_ID} TranscriptAppendError => `, e);
+			});
+	}
+	else {
+		transcriptAppended = true;
+	}
 
-    if (Array.isArray(content.captions) && content.captions.length) {
-        Promise
-        .all(content.captions.map(({ url: uri }) => execAsync(`curl ${uri}`)))
-        .then(all => {
-            all.forEach(({ stdout }, i) => {
-                let name = path.basename(url.parse(content.captions[i].url).pathname);
+	if (Array.isArray(content.captions) && content.captions.length) {
+		Promise
+			.all(content.captions.map(({ url: uri }) => execAsync(`curl ${uri}`)))
+			.then(all => {
+				all.forEach(({ stdout }, i) => {
+					let name = path.basename(url.parse(content.captions[i].url).pathname);
 
-                archive.append(stdout, { name });
-            });
+					archive.append(stdout, { name });
+				});
 
-            captionsAppended = true;
+				captionsAppended = true;
 
-            if (mediaAppended === true && transcriptAppended === true && archive._state.finalize !== true && archive._state.finalizing !== true) {
-                archive.finalize();
-            }
-        });
-    }
-    else {
-        captionsAppended = true;
-    }
+				if (mediaAppended === true && transcriptAppended === true && archive._state.finalize !== true && archive._state.finalizing !== true) {
+					archive.finalize();
+				}
+			});
+	}
+	else {
+		captionsAppended = true;
+	}
 
-    const URI = content.download.binaryUrl;
+	const URI = content.download.binaryUrl;
 
-    fetch(URI, { method: 'HEAD', headers: headers }).then((uriRes) => {
-        const stream = new PassThrough();
+	fetch(URI, { method: 'HEAD', headers: headers }).then((uriRes) => {
+		const stream = new PassThrough();
 
-        if (!uriRes.ok) {
-            res.status(uriRes.status).end();
+		if (!uriRes.ok) {
+			res.status(uriRes.status).end();
 
-            return next();
-        }
+			return next();
+		}
 
-        const LENGTH = parseInt(uriRes.headers.get('content-length'), 10);
+		const LENGTH = parseInt(uriRes.headers.get('content-length'), 10);
 
-        let length = 0;
-        let uriStream;
+		let length = 0;
+		let uriStream;
 
-        let onend = () => {
-            let state = 'complete';
+		let onend = () => {
+			let state = 'complete';
 
-            if (length < LENGTH) {
-                res.status(400);
-            }
-            else {
-                state = 'interrupted';
+			if (length < LENGTH) {
+				res.status(400);
+			}
+			else {
+				state = 'interrupted';
 
-                res.status(200);
-            }
+				res.status(200);
+			}
 
-            publishEndEvent(res, state);
-        };
+			publishEndEvent(res, state);
+		};
 
-        stream.on('close', onend);
-        stream.on('end', onend);
+		stream.on('close', onend);
+		stream.on('end', onend);
 
-        archive.append(stream, { name: `${content.fileName}.${content.download.extension}` });
+		archive.append(stream, { name: `${content.fileName}.${content.download.extension}` });
 
-        stream.on('data', (chunk) => {
-            if (req.__download_cancelled__ === true) {
-                uriStream.end();
+		stream.on('data', (chunk) => {
+			if (req.__download_cancelled__ === true) {
+				uriStream.end();
 
-                archive.end();
+				archive.end();
 
-                return;
-            }
+				return;
+			}
 
-            mediaAppended = true;
+			mediaAppended = true;
 
-            if (captionsAppended === true && transcriptAppended === true && archive._state.finalize !== true && archive._state.finalizing !== true) {
-                archive.finalize();
-            }
+			if (captionsAppended === true && transcriptAppended === true && archive._state.finalize !== true && archive._state.finalizing !== true) {
+				archive.finalize();
+			}
 
-            length += chunk.length;
-        });
+			length += chunk.length;
+		});
 
-        fetch(URI, { headers: headers }).then((uriRes) => {
-            if (req.__download_cancelled__ === true) {
-                archive.end();
+		fetch(URI, { headers: headers }).then((uriRes) => {
+			if (req.__download_cancelled__ === true) {
+				archive.end();
 
-                return;
-            }
+				return;
+			}
 
-            uriRes.body.pipe(stream);
+			uriRes.body.pipe(stream);
 
-            uriStream = uriRes.body;
-        });
-    });
+			uriStream = uriRes.body;
+		});
+	});
 };
 
 function cloneRequestHeaders(req) {
-    let headers = JSON.parse(JSON.stringify(req.headers));
+	let headers = JSON.parse(JSON.stringify(req.headers));
 
-    ['accept', 'host'].forEach(name => delete headers[name]);
+	['accept', 'host'].forEach(name => delete headers[name]);
 
-    Object.keys(headers).forEach(name => headers[name] !== '-' || delete headers[name]);
+	Object.keys(headers).forEach(name => headers[name] !== '-' || delete headers[name]);
 
-    return headers;
+	return headers;
 }
 
 function publishEndEvent(res, state) {
-    const event = res.__event.clone();
-    event.state = state;
-    event.time = moment().toJSON();
+	const event = res.__event.clone();
+	event.state = state;
+	event.time = moment().toJSON();
 
-    (async () => await event.publish())();
+	(async () => await event.publish())();
 }
