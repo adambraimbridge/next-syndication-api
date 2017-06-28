@@ -63,5 +63,7 @@
     "node": ">=8.0.0"
   },
   "scripts": {
+    "precommit": "node_modules/.bin/secret-squirrel",
+    "prepush": "make verify -j3"
   }
 }
