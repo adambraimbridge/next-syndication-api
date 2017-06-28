@@ -16,7 +16,7 @@ coverage-report:
 	@$(DONE)
 
 deploy:
-	nht configure
+	nht configure --vault
 	nht deploy --skip-gtg
 
 install:
@@ -37,7 +37,7 @@ run-coveralls: coverage-report
 	@$(DONE)
 
 provision:
-	nht float --master --no-destroy --skip-gtg --testapp ${TEST_APP}
+	nht float --master --no-destroy --skip-gtg --testapp ${TEST_APP} --vault
 
 run:
 	nht run --local --https
