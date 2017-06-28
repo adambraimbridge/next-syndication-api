@@ -108,9 +108,10 @@ function cleanup(content) {
 }
 
 function publishEndEvent(res, state) {
-	const event = res.__event.clone();
-	event.state = state;
-	event.time = moment().toJSON();
+	const event = res.__event.clone({
+		state,
+		time: moment().toJSON()
+	});
 
 	(async () => await event.publish())();
 }

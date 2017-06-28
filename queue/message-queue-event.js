@@ -97,12 +97,20 @@ module.exports = exports = class MessageQueueEvent {
 		return this[PROPERTY_queue_url];
 	}
 
-	clone() {
-		return new MessageQueueEvent({
+	clone(overwrites) {
+		let event = new MessageQueueEvent({
 			event: this,
 			queue_url: this.queue_url,
 			schema: this.__schema__
 		});
+
+		if (Object.prototype.toString.call(overwrites) === '[object Object]') {
+			for (let [key, val] of Object.entries(overwrites)) {
+				event[key] = val;
+			}
+		}
+
+		return event;
 	}
 
 	stringify(replacer = null, space = null) {

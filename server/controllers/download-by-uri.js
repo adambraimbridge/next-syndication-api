@@ -10,7 +10,6 @@ const mime = require('mime-types');
 const moment = require('moment');
 
 const MessageQueueEvent = require('../../queue/message-queue-event');
-const publish = require('../../queue/publish');
 
 const RE_ATTACHMENT = /^attachment;\s+filename=.*$/i;
 const RE_SLASH = /\//g;
@@ -61,7 +60,7 @@ module.exports = (req, res, next) => {
 		});
 
 		log.info('DOWNLOAD START', eventStart.toJSON());
-		(async () => await publish(eventStart))();
+		(async () => await eventStart.publish())();
 
 		res.set('Content-Disposition', contentDisposition);
 
@@ -75,27 +74,23 @@ module.exports = (req, res, next) => {
 			// We're cloning `eventStart` as it will have the `_id` property assigned.
 			// We want both events to have the same `_id` so we can match them.
 			// We use `state` to determine uniqueness
-			let eventEnd = eventStart.clone();
-			eventEnd.time = moment().toJSON();
+			let state = 'complete';
+			let status = 200;
+			let time = moment().toJSON();
 
 			if (length < LENGTH) {
-				eventEnd.state = 'interrupted';
+				state = 'interrupted';
 
-				log.info('DOWNLOAD INTERRUPTED', eventEnd.toJSON());
-
-				res.status(400);
-			}
-			else {
-				eventEnd.state = 'complete';
-
-				log.info('DOWNLOAD COMPLETE', eventEnd.toJSON());
-
-				res.status(200);
+				status = 400;
 			}
 
-			(async () => await publish(eventEnd))();
+			let eventEnd = eventStart.clone({ state, time });
 
-			res.end();
+			log.info(`DOWNLOAD ${state.toUpperCase()}`, eventEnd.toJSON());
+
+			(async () => await eventEnd.publish())();
+
+			res.status(status).end();
 
 			next();
 		};

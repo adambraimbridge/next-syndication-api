@@ -114,15 +114,14 @@ module.exports = exports = (req, res, next) => {
 
 		let onend = () => {
 			let state = 'complete';
+			let status = 200;
 
 			if (length < LENGTH) {
-				res.status(400);
-			}
-			else {
 				state = 'interrupted';
-
-				res.status(200);
+				status = 400;
 			}
+
+			res.status(status);
 
 			publishEndEvent(res, state);
 		};
@@ -175,9 +174,10 @@ function cloneRequestHeaders(req) {
 }
 
 function publishEndEvent(res, state) {
-	const event = res.__event.clone();
-	event.state = state;
-	event.time = moment().toJSON();
+	const event = res.__event.clone({
+		state,
+		time: moment().toJSON()
+	});
 
 	(async () => await event.publish())();
 }

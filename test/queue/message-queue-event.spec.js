@@ -92,25 +92,56 @@ describe(MODULE_ID, function () {
 		expect(event).to.have.property('_id').and.equal(event.id);
 	});
 
-	it('#clone', function () {
-		let event_data = {
-			content_id: 'http://www.ft.com/thing/abc',
-			download_format: 'docx',
-			licence_id: 'foo',
-			state: 'save',
-			time: new Date(),
-			user_id: 'bar'
-		};
+	describe('#clone', function () {
+		it('no overwrites', function () {
+			let event_data = {
+				content_id: 'http://www.ft.com/thing/abc',
+				download_format: 'docx',
+				licence_id: 'foo',
+				state: 'save',
+				time: new Date(),
+				user_id: 'bar'
+			};
 
-		let event = new underTest({
-			event: event_data,
-			queue_url: 'https://i.dont.exist/queue'
+			let event = new underTest({
+				event: event_data,
+				queue_url: 'https://i.dont.exist/queue'
+			});
+
+			let event_clone = event.clone();
+
+			expect(event).to.not.equal(event_clone);
+			expect(event.toSQSTransport()).to.eql(event_clone.toSQSTransport());
 		});
 
-		let event_clone = event.clone();
+		it('with overwrites', function () {
+			let event_data = {
+				content_id: 'http://www.ft.com/thing/abc',
+				download_format: 'docx',
+				licence_id: 'foo',
+				state: 'save',
+				time: new Date(),
+				user_id: 'bar'
+			};
 
-		expect(event).to.not.equal(event_clone);
-		expect(event.toSQSTransport()).to.eql(event_clone.toSQSTransport());
+			let event = new underTest({
+				event: event_data,
+				queue_url: 'https://i.dont.exist/queue'
+			});
+
+			let one_min_into_the_future = new Date(Date.now() + (1000 * 60 * 60));
+			let event_clone = event.clone({
+				state: 'complete',
+				time: one_min_into_the_future
+			});
+
+			expect(event).to.not.equal(event_clone);
+
+			expect(Object.assign(event.toJSON(), {
+				state: 'complete',
+				time: one_min_into_the_future.toJSON()
+			})).to.eql(event_clone.toJSON());
+		});
 	});
 
 	it('#stringify', function () {
