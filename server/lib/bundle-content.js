@@ -21,6 +21,8 @@ const execAsync = util.promisify(exec);
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = (req, res, next) => {
+	const START = Date.now();
+
 	let headers = cloneRequestHeaders(req);
 
 	let { __content: content } = res;
@@ -43,6 +45,8 @@ module.exports = exports = (req, res, next) => {
 		res.status(500).end();
 	});
 	archive.on('end', () => {
+		log.debug(`${MODULE_ID} #${content.id} => ${Date.now() - START}ms`);
+
 		res.end();
 
 		next();
@@ -59,7 +63,7 @@ module.exports = exports = (req, res, next) => {
 			.then(file => {
 				archive.append(file, { name: `${content.fileName}.${content.transcriptExtension}` });
 
-				log.info(`${MODULE_ID} TranscriptAppendSuccess => `, content);
+				log.info(`${MODULE_ID} TranscriptAppendSuccess (${Date.now() - START}ms) => `, content);
 
 				transcriptAppended = true;
 
@@ -85,6 +89,8 @@ module.exports = exports = (req, res, next) => {
 					archive.append(stdout, { name });
 				});
 
+				log.info(`${MODULE_ID} CaptionAppendSuccess (${Date.now() - START}ms) => `, content);
+
 				captionsAppended = true;
 
 				if (mediaAppended === true && transcriptAppended === true && archive._state.finalize !== true && archive._state.finalizing !== true) {
@@ -92,7 +98,7 @@ module.exports = exports = (req, res, next) => {
 				}
 			})
 			.catch(e => {
-				log.error(`${MODULE_ID} TranscriptAppendError => `, e.stack);
+				log.error(`${MODULE_ID} CaptionsAppendError => `, e.stack);
 			});
 	}
 	else {
@@ -131,6 +137,8 @@ module.exports = exports = (req, res, next) => {
 
 		stream.on('close', onend);
 		stream.on('end', onend);
+
+		log.debug(`${MODULE_ID} MediaAppendSuccess (${Date.now() - START}ms) => `, content);
 
 		archive.append(stream, { name: `${content.fileName}.${content.download.extension}` });
 

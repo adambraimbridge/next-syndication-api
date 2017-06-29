@@ -21,6 +21,8 @@ const DOWNLOAD_AS_ARTICLE = {
 };
 
 module.exports = exports = (req, res, next) => {
+	const START = Date.now();
+
 	getContentById(req.params.content_id, req.query.format)
 		.then(content => {
 			if (Object.prototype.toString.call(content) !== '[object Object]') {
@@ -60,27 +62,29 @@ module.exports = exports = (req, res, next) => {
 					sourceFormat: 'html',
 					targetFormat: content.extension
 				}).then(file => {
-						cleanup(content);
+					cleanup(content);
 
-						log.debug(`${MODULE_ID} Success`, content);
+					log.debug(`${MODULE_ID} Success`, content);
 
-						res.set('content-length', file.length);
+					res.set('content-length', file.length);
 
-						publishEndEvent(res, 'complete');
+					publishEndEvent(res, 'complete');
 
-						res.status(200).send(file);
+					res.status(200).send(file);
 
-						next();
-					})
-					.catch(e => {
-						cleanup(content);
+					log.debug(`${MODULE_ID} #${content.id} => ${Date.now() - START}ms`);
 
-						log.error(`${MODULE_ID} Error`, content, e);
+					next();
+				})
+				.catch(e => {
+					cleanup(content);
 
-						publishEndEvent(res, 'error');
+					log.error(`${MODULE_ID} Error`, content, e);
 
-						res.status(400).end();
-					});
+					publishEndEvent(res, 'error');
+
+					res.status(400).end();
+				});
 			}
 			else {
 				if (!Array.isArray(content.dataSource) || !content.dataSource.length) {

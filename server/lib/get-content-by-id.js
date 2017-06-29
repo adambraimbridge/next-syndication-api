@@ -1,6 +1,10 @@
 'use strict';
 
+const path = require('path');
+
 const mime = require('mime-types');
+
+const { default: log } = require('@financial-times/n-logger');
 
 const fetchContentById = require('./fetch-content-by-id');
 const formatArticleXML = require('./format-article-xml');
@@ -17,7 +21,11 @@ const {
 const RE_BAD_CHARS = /[^A-Za-z0-9_]/gm;
 const RE_SPACE = /\s/gm;
 
+const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+
 module.exports = exports = (content_id, format) => {
+	const START = Date.now();
+
 	return fetchContentById(content_id)
 		.then(content => {
 			if (Object.prototype.toString.call(content) !== '[object Object]') {
@@ -67,6 +75,8 @@ module.exports = exports = (content_id, format) => {
 			}
 
 			content.fileName = DOWNLOAD_FILENAME_PREFIX + content.title.replace(RE_SPACE, '_').replace(RE_BAD_CHARS, '').substring(0, 12);
+
+			log.debug(`${MODULE_ID} #${content.id} => ${Date.now() - START}ms`);
 
 			return content;
 		});
