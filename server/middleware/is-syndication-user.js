@@ -24,7 +24,7 @@ module.exports = (req, res, next) => {
 		fetch(`${SESSION_URI}${SESSION_PRODUCTS_PATH}`, { headers })
 		.then(sessionRes => {
 			if (!sessionRes.ok) {
-				log.info(`${MODULE_ID}`, { isSyndicationUser: false });
+				log.info(`${MODULE_ID}`, { isSyndicationUser });
 
 				res.sendStatus(401);
 
