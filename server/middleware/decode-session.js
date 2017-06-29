@@ -19,7 +19,9 @@ module.exports = (req, res, next) => {
 
 	try {
 		const userUuid = decoder.decode(sessionToken);
+
 		res.locals.userUuid = userUuid;
+
 		log.info(`${MODULE_ID}`, { gotUserUuid: !!userUuid });
 
 		next();
