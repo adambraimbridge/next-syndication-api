@@ -93,6 +93,11 @@ module.exports = exports = (req, res, next) => {
 
 				bundleContent(req, res, next);
 			}
+		})
+		.catch(error => {
+			log.error(`${MODULE_ID} Error retrieving content_id(${req.params.content_id})`, { error });
+
+			res.sendStatus(500);
 		});
 };
 
