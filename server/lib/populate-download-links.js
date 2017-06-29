@@ -16,4 +16,4 @@ const populateDownloadLinks = content => {
 	};
 };
 
-module.exports = populateDownloadLinks;
+module.exports = exports = populateDownloadLinks;

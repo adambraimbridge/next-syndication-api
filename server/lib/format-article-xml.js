@@ -2,12 +2,17 @@
 
 const { DOMParser } = require('xmldom');
 
+const {
+	FORMAT_ARTICLE_CLEAN_ELEMENTS,
+	FORMAT_ARTICLE_STRIP_ELEMENTS
+} = require('config');
+
 module.exports = exports = xml => {
 	let doc = new DOMParser().parseFromString(xml);
 
-	removeElementsByTagName(doc, 'ft-related', 'script');
+	removeElementsByTagName(doc, ...FORMAT_ARTICLE_STRIP_ELEMENTS);
 	// first sanitize content by striping inline XML elements without deleting the content
-	removeProprietaryXML(doc, 'ft-content', 'ft-concept', 'a');
+	removeProprietaryXML(doc, ...FORMAT_ARTICLE_CLEAN_ELEMENTS);
 	// then remove the remaining top level XML elements with the same tagName
 	removeElementsByTagName(doc, 'ft-content');
 	removeWhiteSpace(doc);
@@ -30,9 +35,11 @@ function removeProprietaryXML(doc, ...tagNames) {
 	tagNames.forEach(tagName => {
 		Array.from(doc.getElementsByTagName(tagName)).forEach(el => {
 			if (el.parentNode.nodeName === 'p') {
-				let text = doc.createTextNode(el.firstChild.data);
+				if (el.firstChild && el.firstChild.data) {
+					let text = doc.createTextNode(el.firstChild.data);
 
-				el.parentNode.insertBefore(text, el);
+					el.parentNode.insertBefore(text, el);
+				}
 
 				el.parentNode.removeChild(el);
 			}

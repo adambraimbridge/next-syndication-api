@@ -1,7 +1,7 @@
 const validateBody = require('../lib/validate-body');
 const populateDownloadLinks = require('../lib/populate-download-links');
 
-module.exports = (req, res, next) => {
+module.exports = exports = (req, res, next) => {
 
 	return validateBody(req.body)
 		.then(body => {

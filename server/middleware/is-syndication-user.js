@@ -13,7 +13,7 @@ const {
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
-module.exports = (req, res, next) => {
+module.exports = exports = (req, res, next) => {
 	const headers = JSON.parse(JSON.stringify(req.headers));
 
 	delete headers.host;
@@ -24,7 +24,7 @@ module.exports = (req, res, next) => {
 		fetch(`${SESSION_URI}${SESSION_PRODUCTS_PATH}`, { headers })
 		.then(sessionRes => {
 			if (!sessionRes.ok) {
-				log.info(`${MODULE_ID}`, { isSyndicationUser: false });
+				log.info(`${MODULE_ID}`, { isSyndicationUser });
 
 				res.sendStatus(401);
 
@@ -35,7 +35,7 @@ module.exports = (req, res, next) => {
 				isSyndicationUser = session.uuid === res.locals.userUuid
 								&& session.products.split(',').includes(SYNDICATION_PRODUCT_CODE);
 
-				log.info(`${MODULE_ID}`, { isSyndicationUser });
+				log.info(`${MODULE_ID}`, { isSyndicationUser, session });
 
 				if (isSyndicationUser !== true) {
 					res.sendStatus(401);
@@ -44,6 +44,7 @@ module.exports = (req, res, next) => {
 				}
 				else {
 					resolve({ isSyndicationUser });
+
 					next();
 				}
 			});

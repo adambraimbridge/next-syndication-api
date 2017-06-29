@@ -34,13 +34,13 @@ module.exports = exports = (req, res, next) => {
 			res.__content = content;
 			res.__event = new MessageQueueEvent({
 				event: {
-					content_id: content.id,   // todo: should we resovle this form the URI or send it through in the QS?
+					content_id: content.id,
 					download_format: content.extension,
-					licence_id: null,                                       // todo: we need this
+					licence_id: res.locals.licence.id,
 					state: 'start',
 					syndication_state: String(content.canBeSyndicated),
 					time: moment().toDate(),
-					user_id: res.locals.userUuid                            // todo: and we also need this
+					user_id: res.locals.userUuid
 				}
 			});
 
@@ -93,6 +93,11 @@ module.exports = exports = (req, res, next) => {
 
 				bundleContent(req, res, next);
 			}
+		})
+		.catch(error => {
+			log.error(`${MODULE_ID} Error retrieving content_id(${req.params.content_id})`, { error });
+
+			res.sendStatus(500);
 		});
 };
 

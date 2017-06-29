@@ -14,7 +14,7 @@ const MessageQueueEvent = require('../../queue/message-queue-event');
 const RE_ATTACHMENT = /^attachment;\s+filename=.*$/i;
 const RE_SLASH = /\//g;
 
-module.exports = (req, res, next) => {
+module.exports = exports = (req, res, next) => {
 	const URI = decodeURIComponent(req.query.uri);
 
 	const stream = new PassThrough();
@@ -49,13 +49,13 @@ module.exports = (req, res, next) => {
 
 		let eventStart = new MessageQueueEvent({
 			event: {
-				content_id: url.parse(URI).pathname.split('/').pop(),   // todo: should we resovle this form the URI or send it through in the QS?
+				content_id: URI,
 				content_uri: URI,
 				download_format: path.extname(filename).substring(1),
-				licence_id: null,                                       // todo: we need this
+				licence_id: res.locals.licence.id,
 				state: 'start',
 				time: moment().toDate(),
-				user_id: res.locals.userUuid                            // todo: and we also need this
+				user_id: res.locals.userUuid
 			}
 		});
 

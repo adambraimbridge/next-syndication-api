@@ -33,6 +33,8 @@ module.exports = {
 			'16e86360-4096-11e7-1cd0-1ef14f87a411',
 			'2e055d50-2453-11e7-18f7-426d3ab9a15f',
 			'6b24d1b8-1ac9-11e7-bcac-6d03d067f81f',
+			'2778b97a-5bc9-11e7-9bc8-8055f264aa8b',
+			'dbe4928a-5bec-11e7-b553-e2df1b0c3220',
 			'fakenews-fa2b-46b5-886f-1418c6445182',
 			'fakenews-3f7e-11e7-9d56-25f963e998b2',
 			'fakenews-1d31-39fd-82f0-ba1822ef20d2',

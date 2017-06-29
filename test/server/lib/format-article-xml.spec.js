@@ -4,6 +4,14 @@ const path = require('path');
 
 const { expect } = require('chai');
 
+const {
+	FORMAT_ARTICLE_CLEAN_ELEMENTS,
+	FORMAT_ARTICLE_STRIP_ELEMENTS,
+	TEST: { FIXTURES_DIRECTORY }
+} = require('config');
+
+const CHECK_NO_ELEMENTS = FORMAT_ARTICLE_CLEAN_ELEMENTS.concat(FORMAT_ARTICLE_STRIP_ELEMENTS);
+
 const underTest = require('../../../server/lib/format-article-xml');
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
@@ -57,7 +65,30 @@ describe(MODULE_ID, function () {
 		expect(underTest(xmlPre).constructor.name).to.equal('Document');
 	});
 
-	it('returns a single line with all <script /> and <ft-*> elements removed and/or stripped', function () {
+	it(`returns a single line with all ${CHECK_NO_ELEMENTS.map(el => `<${el} />`).join(', ')} elements removed and/or stripped`, function () {
 		expect(underTest(xmlPre).toString().trim()).to.equal(xmlPost);
+	});
+
+	[
+		'b59dff10-3f7e-11e7-9d56-25f963e998b2',
+		'c7923fba-1d31-39fd-82f0-ba1822ef20d2',
+		'2778b97a-5bc9-11e7-9bc8-8055f264aa8b',
+		'dbe4928a-5bec-11e7-b553-e2df1b0c3220'
+	].forEach(contentId => {
+		describe(`Testing content#${contentId}`, function() {
+			const content = require(path.resolve(`${FIXTURES_DIRECTORY}/${contentId}.json`));
+
+			const doc = underTest(content.bodyXML);
+
+			it('doc should be an xmldom.dom.Document instance', function () {
+				expect(doc.constructor.name).to.equal('Document');
+			});
+
+			CHECK_NO_ELEMENTS.forEach(tagName => {
+				it(`doc should not contain any <${tagName} /> elements`, function () {
+					expect(doc.getElementsByTagName(tagName)).to.have.property('length').and.to.equal(0);
+				});
+			});
+		});
 	});
 });

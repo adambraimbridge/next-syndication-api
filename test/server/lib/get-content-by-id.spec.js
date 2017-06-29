@@ -50,7 +50,9 @@ describe(MODULE_ID, function () {
 		describe('type: Article', function () {
 			[
 				'b59dff10-3f7e-11e7-9d56-25f963e998b2',
-				'c7923fba-1d31-39fd-82f0-ba1822ef20d2'
+				'c7923fba-1d31-39fd-82f0-ba1822ef20d2',
+				'2778b97a-5bc9-11e7-9bc8-8055f264aa8b',
+				'dbe4928a-5bec-11e7-b553-e2df1b0c3220'
 			].forEach(contentId => {
 				it(`should return a JSON representation of the content if it exists for content_id="${contentId}"`, async function () {
 					const content = await underTest(contentId);
