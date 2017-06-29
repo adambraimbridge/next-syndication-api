@@ -79,6 +79,7 @@ describe(MODULE_ID, function () {
 			});
 
 			res.locals = {
+				licence: { id: 'xyz' },
 				userUuid: 'abc'
 			}
 		});
@@ -161,6 +162,7 @@ describe(MODULE_ID, function () {
 			});
 
 			res.locals = {
+				licence: { id: 'xyz' },
 				userUuid: 'abc'
 			}
 		});

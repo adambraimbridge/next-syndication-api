@@ -76,6 +76,7 @@ describe(MODULE_ID, function () {
 			res = httpMocks.createResponse({ req });
 
 			res.locals = {
+				licence: { id: 'xyz' },
 				userUuid: 'abc'
 			}
 		});
@@ -158,6 +159,7 @@ describe(MODULE_ID, function () {
 			res = httpMocks.createResponse({ req });
 
 			res.locals = {
+				licence: { id: 'xyz' },
 				userUuid: 'abc'
 			}
 		});
