@@ -68,7 +68,7 @@ module.exports = exports = (req, res, next) => {
 				}
 			})
 			.catch(e => {
-				log.error(`${MODULE_ID} TranscriptAppendError => `, e);
+				log.error(`${MODULE_ID} TranscriptAppendError => `, e.stack);
 			});
 	}
 	else {
@@ -90,6 +90,9 @@ module.exports = exports = (req, res, next) => {
 				if (mediaAppended === true && transcriptAppended === true && archive._state.finalize !== true && archive._state.finalizing !== true) {
 					archive.finalize();
 				}
+			})
+			.catch(e => {
+				log.error(`${MODULE_ID} TranscriptAppendError => `, e.stack);
 			});
 	}
 	else {
