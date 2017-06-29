@@ -24,6 +24,8 @@
     plain: txt
   DOWNLOAD_FILENAME_PREFIX: FT_
 
+  LICENCE_ITEMS_ARRAY_PROPERTY: accessLicences
+
   FORMAT_ARTICLE_CLEAN_ELEMENTS:
     - a
     - ft-concept
