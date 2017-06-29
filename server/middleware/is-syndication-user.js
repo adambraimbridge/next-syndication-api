@@ -14,7 +14,7 @@ const {
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = (req, res, next) => {
-	const headers = JSON.parse(JSON.stringify(req.headers));
+	const headers = { cookie: req.headers.cookie }; //JSON.parse(JSON.stringify(req.headers));
 
 	delete headers.host;
 
