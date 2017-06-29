@@ -24,6 +24,16 @@
     plain: txt
   DOWNLOAD_FILENAME_PREFIX: FT_
 
+  FORMAT_ARTICLE_CLEAN_ELEMENTS:
+    - a
+    - ft-concept
+    - ft-content
+  FORMAT_ARTICLE_STRIP_ELEMENTS:
+    - ft-related
+    - img
+    - script
+    - pull-quote
+
   QUEUE_PURGE_THROTTLE_LIMIT_MS: 60000
 
   SESSION_PRODUCTS_PATH: /products
