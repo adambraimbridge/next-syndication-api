@@ -81,6 +81,10 @@ describe(MODULE_ID, function () {
 				writableStream: WritableStream
 			});
 
+			res.locals = {
+				userUuid: 'abc'
+			};
+
 			let content = res.__content = require(path.resolve(`${FIXTURES_DIRECTORY}/${CONTENT_ID}.json`));
 
 			content.download = content.dataSource[content.dataSource.length - 1];
@@ -92,7 +96,8 @@ describe(MODULE_ID, function () {
 				content_id: content.id,
 				download_format: DOWNLOAD_ARCHIVE_EXTENSION,
 				syndication_state: content.canBeSyndicated,
-				time: (new Date()).toJSON()
+				time: (new Date()).toJSON(),
+				user_id: res.locals.userUuid
 			});
 
 			let uri = url.parse(content.dataSource[content.dataSource.length - 1].binaryUrl);
@@ -214,6 +219,10 @@ describe(MODULE_ID, function () {
 				writableStream: WritableStream
 			});
 
+			res.locals = {
+				userUuid: 'abc'
+			};
+
 			let content = res.__content = require(path.resolve(`${FIXTURES_DIRECTORY}/${CONTENT_ID}.json`));
 
 			content.download = content.dataSource[content.dataSource.length - 1];
@@ -225,7 +234,8 @@ describe(MODULE_ID, function () {
 				content_id: content.id,
 				download_format: DOWNLOAD_ARCHIVE_EXTENSION,
 				syndication_state: content.canBeSyndicated,
-				time: (new Date()).toJSON()
+				time: (new Date()).toJSON(),
+				user_id: res.locals.userUuid
 			});
 
 			let uri = url.parse(content.dataSource[content.dataSource.length - 1].binaryUrl);
