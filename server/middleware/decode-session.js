@@ -1,11 +1,17 @@
-const logger = require('@financial-times/n-logger').default;
+'use strict';
+
+const path = require('path');
+
+const { default: log } = require('@financial-times/n-logger');
 const Decoder = require('@financial-times/session-decoder-js');
 const decoder = new Decoder(process.env.SESSION_PUBLIC_KEY);
+
+const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = (req, res, next) => {
 	const sessionToken = req.cookies.FTSession;
 
-	logger.info('in decode-session middleware', { gotSessionToken: !!sessionToken });
+	log.info(`${MODULE_ID}`, { gotSessionToken: !!sessionToken });
 
 	if (!sessionToken) {
 		return res.sendStatus(401);
@@ -14,7 +20,7 @@ module.exports = (req, res, next) => {
 	try {
 		const userUuid = decoder.decode(sessionToken);
 		res.locals.userUuid = userUuid;
-		logger.info('in decode-session middleware', { gotUserUuid: !!userUuid });
+		log.info(`${MODULE_ID}`, { gotUserUuid: !!userUuid });
 
 		next();
 	}

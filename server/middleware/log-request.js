@@ -1,6 +1,6 @@
 'use strict';
 
-const log = require('@financial-times/n-logger').default;
+const { default: log } = require('@financial-times/n-logger');
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 
