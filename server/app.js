@@ -10,6 +10,7 @@ const accessControl = require('./middleware/access-control');
 const cache = require('./middleware/cache');
 const checkIfNewSyndicationUser = require('./middleware/check-if-new-syndication-user');
 const decodeSession = require('./middleware/decode-session');
+const isSyndicationUser = require('./middleware/is-syndication-user');
 const flags = require('./middleware/flags');
 const logRequest = require('./middleware/log-request');
 
@@ -27,6 +28,7 @@ const middleware = [
 	cache,
 	flags,
 	decodeSession,
+	isSyndicationUser,
 	checkIfNewSyndicationUser
 ];
 

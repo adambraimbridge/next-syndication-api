@@ -1,6 +1,6 @@
 'use strict';
 
-const log = require('@financial-times/n-logger').default;
+const { default: log } = require('@financial-times/n-logger');
 const fetch = require('n-eager-fetch');
 
 const {

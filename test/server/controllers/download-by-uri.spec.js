@@ -8,7 +8,11 @@ const { expect } = require('chai');
 const nock = require('nock');
 const httpMocks = require('node-mocks-http');
 
-const { TEST: { FIXTURES_DIRECTORY } } = require('config');
+const {
+	SESSION_PRODUCTS_PATH,
+	SESSION_URI,
+	TEST: { FIXTURES_DIRECTORY }
+} = require('config');
 
 const underTest = require('../../../server/controllers/download-by-uri');
 
@@ -27,6 +31,10 @@ describe(MODULE_ID, function () {
 				'content-disposition': 'attachement; filename=google_deploys_ai_for_go_tournament_in_china_charm_offensive.docx',
 				'content-type': 'text/docx'
 			};
+
+			nock(SESSION_URI)
+				.get(SESSION_PRODUCTS_PATH)
+				.reply(200, { uuid: 'abc', products: 'Tools,S1,P0,P1,P2' }, {});
 
 			nock('https://ft-rss.herokuapp.com')
 				.head('/content/b59dff10-3f7e-11e7-9d56-25f963e998b2?format=docx&download=true')
@@ -66,6 +74,10 @@ describe(MODULE_ID, function () {
 			});
 
 			res = httpMocks.createResponse({ req });
+
+			res.locals = {
+				userUuid: 'abc'
+			}
 		});
 
 		after(function () {
@@ -95,6 +107,10 @@ describe(MODULE_ID, function () {
 				'content-disposition': 'attachement; filename=video-small.mp4',
 				'content-type': 'video/mp4'
 			};
+
+			nock(SESSION_URI)
+				.get(SESSION_PRODUCTS_PATH)
+				.reply(200, { uuid: 'abc', products: 'Tools,S1,P0,P1,P2' }, {});
 
 			nock('https://next-media-api.ft.com')
 				.head('/renditions/14955580012610/1920x1080.mp4')
@@ -140,6 +156,10 @@ describe(MODULE_ID, function () {
 			});
 
 			res = httpMocks.createResponse({ req });
+
+			res.locals = {
+				userUuid: 'abc'
+			}
 		});
 
 		afterEach(function () {

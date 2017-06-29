@@ -55,7 +55,7 @@ module.exports = (req, res, next) => {
 				licence_id: null,                                       // todo: we need this
 				state: 'start',
 				time: moment().toDate(),
-				user_id: null                                           // todo: and we also need this
+				user_id: res.locals.userUuid                            // todo: and we also need this
 			}
 		});
 

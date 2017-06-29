@@ -10,6 +10,8 @@ const nock = require('nock');
 
 const {
 	BASE_URI_FT_API,
+	SESSION_PRODUCTS_PATH,
+	SESSION_URI,
 	TEST: { FIXTURES_DIRECTORY }
 } = require('config');
 
@@ -28,6 +30,10 @@ describe(MODULE_ID, function () {
 		let res;
 
 		before(function () {
+			nock(SESSION_URI)
+				.get(SESSION_PRODUCTS_PATH)
+				.reply(200, { uuid: 'abc', products: 'Tools,S1,P0,P1,P2' }, {});
+
 			nock(BASE_URI_FT_API)
 				.get(uri => RE_VALID_URI.test(uri))
 				.reply(uri => {
@@ -71,6 +77,10 @@ describe(MODULE_ID, function () {
 				req,
 				writableStream: WritableStream
 			});
+
+			res.locals = {
+				userUuid: 'abc'
+			}
 		});
 
 		it('should stream the download', function (done) {
@@ -90,6 +100,10 @@ describe(MODULE_ID, function () {
 		let responseHeaders;
 
 		beforeEach(function () {
+			nock(SESSION_URI)
+				.get(SESSION_PRODUCTS_PATH)
+				.reply(200, { uuid: 'abc', products: 'Tools,S1,P0,P1,P2' }, {});
+
 			nock(BASE_URI_FT_API)
 				.get(uri => RE_VALID_URI.test(uri))
 				.delay(500)
@@ -145,6 +159,10 @@ describe(MODULE_ID, function () {
 				req,
 				writableStream: WritableStream
 			});
+
+			res.locals = {
+				userUuid: 'abc'
+			}
 		});
 
 		it('should stream the download', function (done) {

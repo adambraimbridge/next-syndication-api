@@ -1,4 +1,11 @@
-const logger = require('@financial-times/n-logger').default;
+'use strict';
+
+const path = require('path');
+
+const { default: log } = require('@financial-times/n-logger');
+
+const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+
 const validateBody = body => {
 	try {
 		// Attempt to JSON parse any data received as `text/plain`
@@ -16,7 +23,12 @@ const validateBody = body => {
 	catch (e) {
 		const err = new Error('Expected a JSON-parseable object containing an array property called `content`');
 		err.statusCode = 400;
-		logger.info('in validate-body lib', { err: err.message, body });
+
+		log.info(`${MODULE_ID}`, {
+			actualError: e.stack,
+			err: err,
+			body
+		});
 
 		return Promise.reject(err);
 	}
