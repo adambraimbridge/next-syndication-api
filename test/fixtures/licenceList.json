@@ -1,0 +1,53 @@
+{
+  "accessLicences": [
+    {
+      "id": "abc",
+      "creationDateTime": "2015-11-30T14:53:32.795Z",
+      "products": [ { "code": "P2", "name": "FT.com Premium" } ],
+      "issueReason": "Complimentary Access",
+      "links": [
+        { "rel": "complimentary", "href": "https://financialtimes.my.salesforce.com/abc123", "id": "abc123" }
+      ],
+      "status": "active",
+      "seatLimit": 99999,
+      "ipAccessEnabled": false,
+      "ipAccessAddresses": [ ],
+      "lastUpdatedDateTime": "2017-06-29T03:09:54.415Z",
+      "seatsHref": [ { "rel": "seats", "href": "/licences/abc/seats" } ],
+      "adminsHref": [ { "rel": "administrators", "href": "/licences/abc/administrators" } ],
+      "href": "/licences/abc"
+    },
+    {
+      "id": "def",
+      "creationDateTime": "2016-09-02T10:23:03.706Z",
+      "products": [ { "code": "P1", "name": "FT.com Standard" } ],
+      "issueReason": "Contract Signed",
+      "links": [ { "rel": "contract", "href": "http://not-supported.ft.com", "id": "def456" } ],
+      "status": "active",
+      "seatLimit": 30,
+      "ipAccessEnabled": false,
+      "ipAccessAddresses": [ ],
+      "lastUpdatedDateTime": "2017-06-22T15:09:31.256Z",
+      "seatsHref": [ { "rel": "seats", "href": "/licences/def/seats" } ],
+      "adminsHref": [ { "rel": "administrators", "href": "/licences/def/administrators" } ],
+      "href": "/licences/def"
+    },
+    {
+      "id": "ghi",
+      "creationDateTime": "2015-12-11T15:02:45.673Z",
+      "products": [ { "code": "S1", "name": "Syndication" }, { "code": "P2", "name": "FT.com Premium" } ],
+      "issueReason": "Complimentary Access",
+      "links": [
+        { "rel": "complimentary", "href": "https://financialtimes.my.salesforce.com/ghi789", "id": "ghi789" }
+      ],
+      "status": "active",
+      "seatLimit": 100,
+      "ipAccessEnabled": false,
+      "ipAccessAddresses": [ ],
+      "lastUpdatedDateTime": "2017-06-27T11:41:25.348Z",
+      "seatsHref": [ { "rel": "seats", "href": "/licences/ghi/seats" } ],
+      "adminsHref": [ { "rel": "administrators", "href": "/licences/ghi/administrators" } ],
+      "href": "/licences/ghi"
+    }
+  ]
+}
