@@ -13,7 +13,7 @@ const inSafeList = requestersOrigin => {
 	return subdomainRegex.test(requestersOrigin);
 };
 
-module.exports = (req, res, next) => {
+module.exports = exports = (req, res, next) => {
 	const requestersOrigin = req.get('origin');
 	const isCorsRequest = !!(requestersOrigin && inSafeList(requestersOrigin));
 

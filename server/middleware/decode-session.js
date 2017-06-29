@@ -8,7 +8,7 @@ const decoder = new Decoder(process.env.SESSION_PUBLIC_KEY);
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
-module.exports = (req, res, next) => {
+module.exports = exports = (req, res, next) => {
 	const sessionToken = req.cookies.FTSession;
 
 	log.info(`${MODULE_ID}`, { gotSessionToken: !!sessionToken });

@@ -14,7 +14,7 @@ const MessageQueueEvent = require('../../queue/message-queue-event');
 const RE_ATTACHMENT = /^attachment;\s+filename=.*$/i;
 const RE_SLASH = /\//g;
 
-module.exports = (req, res, next) => {
+module.exports = exports = (req, res, next) => {
 	const URI = decodeURIComponent(req.query.uri);
 
 	const stream = new PassThrough();

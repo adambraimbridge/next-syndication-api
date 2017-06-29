@@ -35,4 +35,4 @@ const validateBody = body => {
 	}
 };
 
-module.exports = validateBody;
+module.exports = exports = validateBody;
