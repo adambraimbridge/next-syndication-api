@@ -35,7 +35,7 @@ module.exports = (req, res, next) => {
 				isSyndicationUser = session.uuid === res.locals.userUuid
 								&& session.products.split(',').includes(SYNDICATION_PRODUCT_CODE);
 
-				log.info(`${MODULE_ID}`, { isSyndicationUser });
+				log.info(`${MODULE_ID}`, { isSyndicationUser, session });
 
 				if (isSyndicationUser !== true) {
 					res.sendStatus(401);
@@ -44,6 +44,7 @@ module.exports = (req, res, next) => {
 				}
 				else {
 					resolve({ isSyndicationUser });
+
 					next();
 				}
 			});
