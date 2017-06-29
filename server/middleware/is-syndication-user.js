@@ -24,11 +24,15 @@ module.exports = exports = (req, res, next) => {
 		fetch(`${SESSION_URI}${SESSION_PRODUCTS_PATH}`, { headers })
 		.then(sessionRes => {
 			if (!sessionRes.ok) {
-				log.info(`${MODULE_ID}`, { isSyndicationUser });
+				sessionRes.text().then(error => {
+					log.info(`${MODULE_ID}`, { isSyndicationUser, error, httpStatus: sessionRes.status });
 
-				res.sendStatus(401);
+					res.sendStatus(401);
 
-				return resolve({ isSyndicationUser });
+					resolve({ isSyndicationUser, error, httpStatus: sessionRes.status });
+				});
+
+				return;
 			}
 
 			sessionRes.json().then(session => {
