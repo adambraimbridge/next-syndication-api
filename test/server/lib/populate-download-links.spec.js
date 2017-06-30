@@ -2,7 +2,7 @@
 
 const path = require('path');
 
-const expect = require('chai').expect;
+const { expect } = require('chai');
 const populateDownloadLinks = require('../../../server/lib/populate-download-links');
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;

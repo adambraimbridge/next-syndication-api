@@ -2,7 +2,7 @@
 
 const path = require('path');
 
-const expect = require('chai').expect;
+const { expect } = require('chai');
 const buildUserArray = require('../../../server/lib/build-user-array');
 
 // User UUIDs are stored in next-config-vars for PII reasons

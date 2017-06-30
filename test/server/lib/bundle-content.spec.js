@@ -8,6 +8,7 @@ const url = require('url');
 
 const { expect } = require('chai');
 const nock = require('nock');
+
 const decompress = require('decompress');
 const { mkdir, rm } = require('shelljs');
 

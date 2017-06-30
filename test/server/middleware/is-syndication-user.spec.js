@@ -5,10 +5,10 @@ const path = require('path');
 const sinon = require('sinon');
 const chai = require('chai');
 const sinonChai = require('sinon-chai');
-const expect = chai.expect;
 const nock = require('nock');
 const proxyquire = require('proxyquire');
 
+const { expect } = chai;
 chai.use(sinonChai);
 
 const {
