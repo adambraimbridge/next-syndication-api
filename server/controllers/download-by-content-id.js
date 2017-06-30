@@ -46,7 +46,7 @@ module.exports = exports = (req, res, next) => {
 				}
 			});
 
-			(async () => await res.__event.publish())();
+			process.nextTick(async () => await res.__event.publish());
 
 			if (DOWNLOAD_AS_ARTICLE[content.contentType]) {
 				if (!content.bodyXML__CLEAN) {
@@ -122,5 +122,5 @@ function publishEndEvent(res, state) {
 		time: moment().toJSON()
 	});
 
-	(async () => await event.publish())();
+	process.nextTick(async () => await event.publish());
 }

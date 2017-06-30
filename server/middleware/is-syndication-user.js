@@ -13,52 +13,45 @@ const {
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
-module.exports = exports = (req, res, next) => {
-	const headers = { cookie: req.headers.cookie }; //JSON.parse(JSON.stringify(req.headers));
+module.exports = exports = async (req, res, next) => {
+	try {
+		const headers = { cookie: req.headers.cookie }; //JSON.parse(JSON.stringify(req.headers));
 
-	delete headers.host;
+		delete headers.host;
 
-	let isSyndicationUser = false;
+		let isSyndicationUser = false;
 
-	return new Promise((resolve, reject) => {
-		fetch(`${SESSION_URI}${SESSION_PRODUCTS_PATH}`, { headers })
-		.then(sessionRes => {
-			if (!sessionRes.ok) {
-				sessionRes.text().then(error => {
-					log.info(`${MODULE_ID}`, { isSyndicationUser, error, httpStatus: sessionRes.status });
+		const sessionRes = await fetch(`${SESSION_URI}${SESSION_PRODUCTS_PATH}`, { headers });
 
-					res.sendStatus(401);
+		if (!sessionRes.ok) {
+			const error = await sessionRes.text();
 
-					resolve({ isSyndicationUser, error, httpStatus: sessionRes.status });
-				});
+			log.info(`${MODULE_ID}`, { isSyndicationUser, error, httpStatus: sessionRes.status });
 
-				return;
-			}
+			res.sendStatus(401);
 
-			sessionRes.json().then(session => {
-				isSyndicationUser = session.uuid === res.locals.userUuid
-								&& session.products.split(',').includes(SYNDICATION_PRODUCT_CODE);
+			return;
+		}
 
-				log.info(`${MODULE_ID}`, { isSyndicationUser, session });
+		const session = await sessionRes.json();
 
-				if (isSyndicationUser !== true) {
-					res.sendStatus(401);
+		isSyndicationUser = session.uuid === res.locals.userUuid
+						&& session.products.split(',').includes(SYNDICATION_PRODUCT_CODE);
 
-					resolve({ isSyndicationUser });
-				}
-				else {
-					resolve({ isSyndicationUser });
+		log.info(`${MODULE_ID}`, { isSyndicationUser, session });
 
-					next();
-				}
-			});
-		})
-		.catch(error => {
-			log.info(`${MODULE_ID}`, { error });
+		if (isSyndicationUser !== true) {
+			res.sendStatus(401);
+		}
+		else {
+			next();
+		}
+	}
+	catch (error) {
+		log.info(`${MODULE_ID}`, { error });
 
-			res.sendStatus(503);
+		res.sendStatus(503);
 
-			reject(error);
-		});
-	});
+		throw error;
+	}
 };

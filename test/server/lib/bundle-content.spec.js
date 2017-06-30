@@ -8,6 +8,7 @@ const url = require('url');
 
 const { expect } = require('chai');
 const nock = require('nock');
+
 const decompress = require('decompress');
 const { mkdir, rm } = require('shelljs');
 
@@ -29,6 +30,10 @@ const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(p
 mkdir('-p', path.resolve(TEMP_FILES_DIRECTORY));
 
 describe(MODULE_ID, function () {
+	after(function() {
+		rm('-rf', path.resolve(TEMP_FILES_DIRECTORY));
+	});
+
 	describe('With a transcript and captions', function () {
 		const CONTENT_ID = 'd7bf1822-ec58-4a8e-a669-5cbcc0d6a1b2';
 

@@ -31,16 +31,22 @@ describe(MODULE_ID, function () {
 				cookies: {
 					FTSession: '123'
 				},
-				headers: {}
+				headers: {
+					cookie: 'FTSession=123'
+				}
 			},
 			res: {
 				locals: {
+					ACCESS_TOKEN: 'abc.123.xyz',
 					userUuid: 'abc'
 				},
 				sendStatus: sandbox.stub()
 			}
 		};
 		stubs = {
+//			fetch: sandbox.stub().returns({
+//				url: `${BASE_URI_FT_API}/authorize#access_token=abc.123.xyz&scope=profile_min`
+//			}),
 			logger: {
 				default: {
 					info: sandbox.stub()
@@ -49,8 +55,9 @@ describe(MODULE_ID, function () {
 			next: sandbox.stub()
 		};
 
-		underTest = proxyquire('../../../server/middleware/get-syndication-licence-for-user', {
-			'@financial-times/n-logger': stubs.logger
+		underTest = proxyquire('../../../server/middleware/get-user-profile', {
+			'@financial-times/n-logger': stubs.logger/*,
+			'n-eager-fetch': stubs.fetch*/
 		});
 	});
 
@@ -58,28 +65,26 @@ describe(MODULE_ID, function () {
 		sandbox.restore();
 	});
 
-	it('should assign the syndication licence to `res.locals.licence`', async function () {
+	it('should assign the returned user profile to `res.locals.user`', async function () {
 		nock(BASE_URI_FT_API)
-			.get(`/licences?userid=${mocks.res.locals.userUuid}`)
+			.get(`/users/${mocks.res.locals.userUuid}/profile`)
 			.reply(() => {
 				return [
 					200,
-					require(path.resolve(`${FIXTURES_DIRECTORY}/licenceList.json`)),
+					require(path.resolve(`${FIXTURES_DIRECTORY}/userProfile.json`)),
 					{}
 				];
 			});
 
+
 		await underTest(mocks.req, mocks.res, stubs.next);
 
-		const { licence } = mocks.res.locals;
+		const { user } = mocks.res.locals;
 
-		expect(licence).to.be.an('object')
-			.and.have.property('products')
-			.and.to.be.an('array')
-			.and.to.deep.include({
-				code: 'S1',
-				name: 'Syndication'
-			});
+		expect(user).to.be.an('object')
+			.and.have.property('email')
+			.and.to.be.a('string')
+			.and.to.equal('christos.constandinou@ft.com');
 	});
 
 });

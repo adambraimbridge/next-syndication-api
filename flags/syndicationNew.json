@@ -1,0 +1,21 @@
+{
+  "name": "syndicationNew",
+  "description": "Enable our own syndication system (if your uuid is in the list)",
+  "owner": "emily.quinn@ft.com",
+  "notificationRecipients": {
+    "slack": {
+      "channels": [
+        "#ft-next-conversion",
+        "#ft-syndikat",
+        "#syndication"
+      ],
+      "users": [
+        "@thurston.tye",
+        "@laura.carvajal",
+        "@christos.constandinou"
+      ]
+    }
+  },
+  "userFacing": true,
+  "expiry": "3 months"
+}

@@ -12,6 +12,8 @@ module.exports = {
 		denyOverrides: [
 			'http(?:s?):\/\/.*',
 			'\/content\/.*',
+			// user UUIDs,
+			'8ef593a8-eef6-448c-8560-9ca8cdca80a5',
 			// content UUIDs
 			'b59dff10-3f7e-11e7-9d56-25f963e998b2',
 			'c7923fba-1d31-39fd-82f0-ba1822ef20d2',

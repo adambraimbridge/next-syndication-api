@@ -23,61 +23,60 @@ const RE_SPACE = /\s/gm;
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
-module.exports = exports = (content_id, format) => {
+module.exports = exports = async (content_id, format) => {
 	const START = Date.now();
 
-	return fetchContentById(content_id)
-		.then(content => {
-			if (Object.prototype.toString.call(content) !== '[object Object]') {
-				return content;
+	const content = await fetchContentById(content_id);
+
+	if (Object.prototype.toString.call(content) !== '[object Object]') {
+		return content;
+	}
+
+	content.contentType = content.type.split('/').pop().toLowerCase();
+
+	if (content.contentType === 'mediaresource') {
+		if (content.transcript) {
+			if (!content.transcript.startsWith('<body>')) {
+				content.transcript = `<body>${content.transcript}</body>`;
 			}
 
-			content.contentType = content.type.split('/').pop().toLowerCase();
+			content.__doc = formatArticleXML(content.transcript);
 
-			if (content.contentType === 'mediaresource') {
-				if (content.transcript) {
-					if (!content.transcript.startsWith('<body>')) {
-						content.transcript = `<body>${content.transcript}</body>`;
-					}
+			content.__doc = decorateArticle(content.__doc, content);
 
-					content.__doc = formatArticleXML(content.transcript);
+			content.transcript__CLEAN = content.__doc.toString();
 
-					content.__doc = decorateArticle(content.__doc, content);
+			content.transcript__PLAIN = toPlainText(content.transcript__CLEAN);
 
-					content.transcript__CLEAN = content.__doc.toString();
+			content.transcriptExtension = DOWNLOAD_ARTICLE_FORMATS[format] || 'docx';
+		}
 
-					content.transcript__PLAIN = toPlainText(content.transcript__CLEAN);
+		content.download = content.dataSource[content.dataSource.length - 1];
+		content.download.extension = mime.extension(content.download.mediaType);
+		content.extension = DOWNLOAD_ARCHIVE_EXTENSION;
+	}
+	else if (content.bodyXML) {
+		content.extension = DOWNLOAD_ARTICLE_FORMATS[format] || 'docx';
 
-					content.transcriptExtension = DOWNLOAD_ARTICLE_FORMATS[format] || 'docx';
-				}
+		content.__doc = formatArticleXML(content.bodyXML);
 
-				content.download = content.dataSource[content.dataSource.length - 1];
-				content.download.extension = mime.extension(content.download.mediaType);
-				content.extension = DOWNLOAD_ARCHIVE_EXTENSION;
-			}
-			else if (content.bodyXML) {
-				content.extension = DOWNLOAD_ARTICLE_FORMATS[format] || 'docx';
+		content.__wordCount = getWordCount(content.__doc);
 
-				content.__doc = formatArticleXML(content.bodyXML);
+		content.__doc = decorateArticle(content.__doc, content);
 
-				content.__wordCount = getWordCount(content.__doc);
+		content.bodyXML__CLEAN = content.__doc.toString();
 
-				content.__doc = decorateArticle(content.__doc, content);
+		if (content.extension === 'plain') {
+			// we need to strip all formatting — leaving only paragraphs — and pass this to pandoc for plain text
+			// otherwise it will uppercase the whole article title and anything bold, as well as leave other weird
+			// formatting in the text file
+			content.bodyXML__PLAIN = toPlainText(content.__doc.toString());
+		}
+	}
 
-				content.bodyXML__CLEAN = content.__doc.toString();
+	content.fileName = DOWNLOAD_FILENAME_PREFIX + content.title.replace(RE_SPACE, '_').replace(RE_BAD_CHARS, '').substring(0, 12);
 
-				if (content.extension === 'plain') {
-					// we need to strip all formatting — leaving only paragraphs — and pass this to pandoc for plain text
-					// otherwise it will uppercase the whole article title and anything bold, as well as leave other weird
-					// formatting in the text file
-					content.bodyXML__PLAIN = toPlainText(content.__doc.toString());
-				}
-			}
+	log.debug(`${MODULE_ID} #${content.id} => ${Date.now() - START}ms`);
 
-			content.fileName = DOWNLOAD_FILENAME_PREFIX + content.title.replace(RE_SPACE, '_').replace(RE_BAD_CHARS, '').substring(0, 12);
-
-			log.debug(`${MODULE_ID} #${content.id} => ${Date.now() - START}ms`);
-
-			return content;
-		});
+	return content;
 };

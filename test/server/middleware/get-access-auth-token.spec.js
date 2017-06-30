@@ -5,15 +5,13 @@ const path = require('path');
 const sinon = require('sinon');
 const chai = require('chai');
 const sinonChai = require('sinon-chai');
-const nock = require('nock');
 const proxyquire = require('proxyquire');
 
 const { expect } = chai;
 chai.use(sinonChai);
 
 const {
-	BASE_URI_FT_API,
-	TEST: { FIXTURES_DIRECTORY }
+	BASE_URI_FT_API
 } = require('config');
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
@@ -41,6 +39,9 @@ describe(MODULE_ID, function () {
 			}
 		};
 		stubs = {
+			fetch: sandbox.stub().returns({
+				url: `${BASE_URI_FT_API}/authorize#access_token=abc.123.xyz&scope=profile_min`
+			}),
 			logger: {
 				default: {
 					info: sandbox.stub()
@@ -49,8 +50,9 @@ describe(MODULE_ID, function () {
 			next: sandbox.stub()
 		};
 
-		underTest = proxyquire('../../../server/middleware/get-syndication-licence-for-user', {
-			'@financial-times/n-logger': stubs.logger
+		underTest = proxyquire('../../../server/middleware/get-access-auth-token', {
+			'@financial-times/n-logger': stubs.logger,
+			'n-eager-fetch': stubs.fetch
 		});
 	});
 
@@ -58,28 +60,13 @@ describe(MODULE_ID, function () {
 		sandbox.restore();
 	});
 
-	it('should assign the syndication licence to `res.locals.licence`', async function () {
-		nock(BASE_URI_FT_API)
-			.get(`/licences?userid=${mocks.res.locals.userUuid}`)
-			.reply(() => {
-				return [
-					200,
-					require(path.resolve(`${FIXTURES_DIRECTORY}/licenceList.json`)),
-					{}
-				];
-			});
-
+	it('should assign the access token to `res.locals.ACCESS_TOKEN`', async function () {
 		await underTest(mocks.req, mocks.res, stubs.next);
 
-		const { licence } = mocks.res.locals;
+		const { ACCESS_TOKEN } = mocks.res.locals;
 
-		expect(licence).to.be.an('object')
-			.and.have.property('products')
-			.and.to.be.an('array')
-			.and.to.deep.include({
-				code: 'S1',
-				name: 'Syndication'
-			});
+		expect(ACCESS_TOKEN).to.be.a('string')
+			.and.to.equal('abc.123.xyz');
 	});
 
 });

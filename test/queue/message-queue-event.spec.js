@@ -2,15 +2,22 @@
 
 const path = require('path');
 
-const { expect } = require('chai');
+const chai = require('chai');
+const sinon = require('sinon');
+const sinonChai = require('sinon-chai');
 
 const AJV = require('ajv');
+const AWS = require('aws-sdk');
 
 const { SYNDICATION_DOWNLOAD_SQS_URL: DEFAULT_QUEUE_URL } = require('config');
 
 const SchemaMessageV1 = require('../../schema/message-v1.json');
 
 const underTest = require('../../queue/message-queue-event');
+
+const { expect } = chai;
+
+chai.use(sinonChai);
 
 const ajv = new AJV({
 	allErrors: true,
@@ -21,6 +28,8 @@ const ajv = new AJV({
 });
 
 const validate = ajv.compile(SchemaMessageV1);
+
+const __proto__ = Object.getPrototypeOf(new AWS.SQS({}));
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
@@ -142,6 +151,26 @@ describe(MODULE_ID, function () {
 				time: one_min_into_the_future.toJSON()
 			})).to.eql(event_clone.toJSON());
 		});
+	});
+
+	it('#publish', async function () {
+		let stub = sinon.stub(__proto__, 'sendMessageAsync').callsFake(transport => transport);
+
+		let event_data = {
+			licence_id: 'foo',
+			time: new Date(),
+			user_id: 'bar'
+		};
+
+		let event = new underTest({ event: event_data });
+
+		let success = await event.publish();
+
+		expect(success).to.be.true;
+
+		expect(__proto__.sendMessageAsync).to.be.calledWith(event.toSQSTransport());
+
+		stub.restore();
 	});
 
 	it('#stringify', function () {

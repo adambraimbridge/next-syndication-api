@@ -20,16 +20,20 @@ const __proto__ = Object.getPrototypeOf(new AWS.SQS({}));
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
-describe(MODULE_ID, function () {
-	before(function () {
-		sinon.spy(__proto__, 'purgeQueueAsync');
-	});
+const sleep = async (ms = 50) => new Promise((resolve) => {
+	setTimeout(() => resolve(), ms);
+});
 
-	after(function () {
-		__proto__.purgeQueueAsync.restore();
+describe(MODULE_ID, function () {
+	let stub;
+
+	afterEach(function () {
+		stub.restore();
 	});
 
 	it('should return true for a successful purge', async function () {
+		stub = sinon.stub(__proto__, 'purgeQueueAsync').callsFake(params => params);
+
 		let success = await underTest({
 			QueueUrl: DEFAULT_QUEUE_URL
 		});
@@ -38,6 +42,8 @@ describe(MODULE_ID, function () {
 	});
 
 	it('should be throttled', async function () {
+		stub = sinon.stub(__proto__, 'purgeQueueAsync').callsFake(params => params);
+
 		let success = await underTest({
 			QueueUrl: DEFAULT_QUEUE_URL
 		});
@@ -52,6 +58,10 @@ describe(MODULE_ID, function () {
 	});
 
 	it('should return false for a failed purge', async function () {
+		await sleep();
+
+		stub = sinon.stub(__proto__, 'purgeQueueAsync').throws(new Error('I do not exist'));
+
 		let success = await underTest({
 			QueueUrl: 'https://i.dont.exist/queue'
 		});
@@ -60,7 +70,13 @@ describe(MODULE_ID, function () {
 	});
 
 	it('should use the default `QueueUrl` when none is given', async function () {
-		await underTest();
+		await sleep();
+
+		stub = sinon.stub(__proto__, 'purgeQueueAsync').callsFake(params => params);
+
+		let success = await underTest();
+
+		expect(success).to.be.true;
 
 		expect(__proto__.purgeQueueAsync).to.be.calledWith({
 			QueueUrl: DEFAULT_QUEUE_URL
@@ -68,9 +84,15 @@ describe(MODULE_ID, function () {
 	});
 
 	it('should allow passing a different `QueueUrl`', async function () {
-		await underTest({
+		await sleep();
+
+		stub = sinon.stub(__proto__, 'purgeQueueAsync').throws(new Error('I do not exist'));
+
+		let success = await underTest({
 			QueueUrl: 'https://i.dont.exist/queue'
 		});
+
+		expect(success).to.be.false;
 
 		expect(__proto__.purgeQueueAsync).to.be.calledWith({
 			QueueUrl: 'https://i.dont.exist/queue'

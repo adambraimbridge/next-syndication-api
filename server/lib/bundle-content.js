@@ -190,5 +190,5 @@ function publishEndEvent(res, state) {
 		time: moment().toJSON()
 	});
 
-	(async () => await event.publish())();
+	process.nextTick(async () => await event.publish());
 }

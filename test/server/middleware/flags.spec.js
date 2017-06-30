@@ -5,9 +5,9 @@ const path = require('path');
 const sinon = require('sinon');
 const chai = require('chai');
 const sinonChai = require('sinon-chai');
-const expect = chai.expect;
 const flagsMiddleware = require('../../../server/middleware/flags');
 
+const { expect } = chai;
 chai.use(sinonChai);
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
