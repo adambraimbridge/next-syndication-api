@@ -1,0 +1,21 @@
+{
+  "name": "syndication",
+  "description": "Shows a tick next to an article that is available for download by syndication customers",
+  "owner": "pooja.naidu@ft.com",
+  "notificationRecipients": {
+    "slack": {
+      "channels": [
+        "#ft-next-conversion",
+        "#ft-syndikat",
+        "#syndication"
+      ],
+      "users": [
+        "@thurston.tye",
+        "@laura.carvajal",
+        "@christos.constandinou"
+      ]
+    }
+  },
+  "userFacing": true,
+  "expiry": "3 months"
+}
