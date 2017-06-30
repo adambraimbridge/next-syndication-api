@@ -57,54 +57,53 @@ describe(MODULE_ID, function () {
 		sandbox.restore();
 	});
 
-//	it('should send an unauthorised status code if the session service returns a 404', function () {
+//	it('should send an unauthorised status code if the session service returns a 404', async function () {
 //		nock(SESSION_URI)
 //			.get(SESSION_PRODUCTS_PATH)
 //			.reply(404, 'Not Found', {});
 //
-//		return underTest(mocks.req, mocks.res, stubs.next).then(() => {
-//			expect(mocks.res.sendStatus).to.have.been.calledWith(401);
+//		await underTest(mocks.req, mocks.res, stubs.next);
 //
-//			expect(stubs.next).not.to.have.been.called;
-//		});
+//		expect(mocks.res.sendStatus).to.have.been.calledWith(401);
 //
+//		expect(stubs.next).not.to.have.been.called;
 //	});
 
-	it(`should send an unauthorised status code if the session service products does NOT contain ${SYNDICATION_PRODUCT_CODE}`, function () {
+	it(`should send an unauthorised status code if the session service products does NOT contain ${SYNDICATION_PRODUCT_CODE}`, async function () {
 		nock(SESSION_URI)
 			.get(SESSION_PRODUCTS_PATH)
 			.reply(200, { uuid: 'abc', products: 'Tools,P0,P1,P2' }, {});
 
-		return underTest(mocks.req, mocks.res, stubs.next).then(() => {
-			expect(mocks.res.sendStatus).to.have.been.calledWith(401);
-			expect(stubs.next).not.to.have.been.called;
-		});
+		await underTest(mocks.req, mocks.res, stubs.next);
+
+		expect(mocks.res.sendStatus).to.have.been.calledWith(401);
+		expect(stubs.next).not.to.have.been.called;
 	});
 
-	it('should send an unauthorised status code if the session service UUID does not match the session UUID', function () {
+	it('should send an unauthorised status code if the session service UUID does not match the session UUID', async function () {
 		mocks.res.locals.userUuid = 'xyz';
 
 		nock(SESSION_URI)
 			.get(SESSION_PRODUCTS_PATH)
 			.reply(200, { uuid: 'abc', products: 'Tools,S1,P0,P1,P2' }, {});
 
-		return underTest(mocks.req, mocks.res, stubs.next).then(() => {
-			expect(mocks.res.sendStatus).to.have.been.calledWith(401);
-			expect(stubs.next).not.to.have.been.called;
-		});
+		await underTest(mocks.req, mocks.res, stubs.next);
+
+		expect(mocks.res.sendStatus).to.have.been.calledWith(401);
+		expect(stubs.next).not.to.have.been.called;
 	});
 
-	it(`should continue on if the session service products does contain ${SYNDICATION_PRODUCT_CODE} and the session service UUID matches the session UUID`, function () {
+	it(`should continue on if the session service products does contain ${SYNDICATION_PRODUCT_CODE} and the session service UUID matches the session UUID`, async function () {
 		mocks.res.locals.userUuid = 'abc';
 
 		nock(SESSION_URI)
 			.get(SESSION_PRODUCTS_PATH)
 			.reply(200, { uuid: 'abc', products: 'Tools,S1,P0,P1,P2' }, {});
 
-		return underTest(mocks.req, mocks.res, stubs.next).then(() => {
-			expect(mocks.res.sendStatus).to.not.have.been.called;
-			expect(stubs.next).to.have.been.called;
-		});
+		await underTest(mocks.req, mocks.res, stubs.next);
+
+		expect(mocks.res.sendStatus).to.not.have.been.called;
+		expect(stubs.next).to.have.been.called;
 	});
 
 });

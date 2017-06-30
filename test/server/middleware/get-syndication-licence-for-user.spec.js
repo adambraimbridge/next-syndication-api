@@ -58,7 +58,7 @@ describe(MODULE_ID, function () {
 		sandbox.restore();
 	});
 
-	it('should assign the syndication licence to `res.locals.licence`', function () {
+	it('should assign the syndication licence to `res.locals.licence`', async function () {
 		nock(BASE_URI_FT_API)
 			.get(`/licences?userid=${mocks.res.locals.userUuid}`)
 			.reply(() => {
@@ -69,15 +69,17 @@ describe(MODULE_ID, function () {
 				];
 			});
 
-		return underTest(mocks.req, mocks.res, stubs.next).then((licence) => {
-			expect(licence).to.be.an('object')
-				.and.have.property('products')
-				.and.to.be.an('array')
-				.and.to.deep.include({
-					code: 'S1',
-					name: 'Syndication'
-				});
-		});
+		await underTest(mocks.req, mocks.res, stubs.next);
+
+		const { licence } = mocks.res.locals;
+
+		expect(licence).to.be.an('object')
+			.and.have.property('products')
+			.and.to.be.an('array')
+			.and.to.deep.include({
+				code: 'S1',
+				name: 'Syndication'
+			});
 	});
 
 });
