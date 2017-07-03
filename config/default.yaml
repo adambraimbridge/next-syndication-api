@@ -42,6 +42,11 @@
     - script
     - pull-quote
 
+  MEDIA_RESOURCE_TYPES:
+    - MediaResource
+    - Podcast
+    - Video
+
   QUEUE_PURGE_THROTTLE_LIMIT_MS: 60000
 
   SESSION_PRODUCTS_PATH: /products
