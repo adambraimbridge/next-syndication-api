@@ -12,6 +12,8 @@ const getWordCount = require('./get-word-count');
 const decorateArticle = require('./decorate-article');
 const toPlainText = require('./to-plain-text');
 
+const isMediaResource = require('../helpers/is-media-resource');
+
 const {
 	DOWNLOAD_ARCHIVE_EXTENSION,
 	DOWNLOAD_ARTICLE_FORMATS,
@@ -34,7 +36,7 @@ module.exports = exports = async (content_id, format) => {
 
 	content.contentType = content.type.split('/').pop().toLowerCase();
 
-	if (content.contentType === 'mediaresource') {
+	if (isMediaResource(content)) {
 		if (content.transcript) {
 			if (!content.transcript.startsWith('<body>')) {
 				content.transcript = `<body>${content.transcript}</body>`;

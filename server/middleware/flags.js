@@ -1,7 +1,11 @@
 'use strict';
 
+const flagIsOn = require('../helpers/flag-is-on');
+
 module.exports = exports = (req, res, next) => {
-	if (res.locals.flags && res.locals.flags.syndicationNew) {
+	let { locals: { flags } } = res;
+
+	if (flags && flagIsOn(flags.syndicationNew)) {
 		next();
 	}
 	else {
