@@ -11,14 +11,11 @@ const getContentById = require('../lib/get-content-by-id');
 const convertArticle = require('../lib/convert-article');
 const prepareDownloadResponse = require('../lib/prepare-download-response');
 
+const isMediaResource = require('../helpers/is-media-resource');
+
 const MessageQueueEvent = require('../../queue/message-queue-event');
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
-
-const DOWNLOAD_AS_ARTICLE = {
-	article: true,
-	liveblog: true
-};
 
 module.exports = exports = (req, res, next) => {
 	const START = Date.now();
@@ -48,7 +45,18 @@ module.exports = exports = (req, res, next) => {
 
 			process.nextTick(async () => await res.__event.publish());
 
-			if (DOWNLOAD_AS_ARTICLE[content.contentType]) {
+			if (isMediaResource(content)) {
+				if (!Array.isArray(content.dataSource) || !content.dataSource.length) {
+					res.status(400).end();
+
+					return;
+				}
+
+				prepareDownloadResponse(res);
+
+				bundleContent(req, res, next);
+			}
+			else {
 				if (!content.bodyXML__CLEAN) {
 					res.status(400).end();
 
@@ -64,7 +72,7 @@ module.exports = exports = (req, res, next) => {
 				}).then(file => {
 					cleanup(content);
 
-					log.debug(`${MODULE_ID} Success`, content);
+					log.debug(`${MODULE_ID} #${content.id} Success`);
 
 					res.set('content-length', file.length);
 
@@ -79,27 +87,16 @@ module.exports = exports = (req, res, next) => {
 				.catch(e => {
 					cleanup(content);
 
-					log.error(`${MODULE_ID} Error`, content, e);
+					log.error(`${MODULE_ID} #${content.id} => Error`, { content, error: e.stack });
 
 					publishEndEvent(res, 'error');
 
 					res.status(400).end();
 				});
 			}
-			else {
-				if (!Array.isArray(content.dataSource) || !content.dataSource.length) {
-					res.status(400).end();
-
-					return;
-				}
-
-				prepareDownloadResponse(res);
-
-				bundleContent(req, res, next);
-			}
 		})
 		.catch(error => {
-			log.error(`${MODULE_ID} Error retrieving content_id(${req.params.content_id})`, { error });
+			log.error(`${MODULE_ID} Error retrieving content_id(${req.params.content_id})`, { error: error.stack });
 
 			res.sendStatus(500);
 		});
