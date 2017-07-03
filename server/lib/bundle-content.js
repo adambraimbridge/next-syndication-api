@@ -40,12 +40,12 @@ module.exports = exports = (req, res, next) => {
 	archive.on('error', err => {
 		publishEndEvent(res, 'error');
 
-		log.error(`${MODULE_ID} ArchiveError`, err.stack || err);
+		log.error(`${MODULE_ID} #${content.id} => ArchiveError`, err.stack || err);
 
 		res.status(500).end();
 	});
 	archive.on('end', () => {
-		log.debug(`${MODULE_ID} #${content.id} => ${Date.now() - START}ms`);
+		log.debug(`${MODULE_ID} #${content.id} => ArchiveEnd ${Date.now() - START}ms`);
 
 		res.end();
 
@@ -63,7 +63,7 @@ module.exports = exports = (req, res, next) => {
 			.then(file => {
 				archive.append(file, { name: `${content.fileName}.${content.transcriptExtension}` });
 
-				log.info(`${MODULE_ID} TranscriptAppendSuccess (${Date.now() - START}ms) => `, content);
+				log.info(`${MODULE_ID} #${content.id} => TranscriptAppendSuccess ${Date.now() - START}ms`);
 
 				transcriptAppended = true;
 
@@ -72,7 +72,7 @@ module.exports = exports = (req, res, next) => {
 				}
 			})
 			.catch(e => {
-				log.error(`${MODULE_ID} TranscriptAppendError => `, e.stack);
+				log.error(`${MODULE_ID} #${content.id} => TranscriptAppendError`, { content, error: e.stack });
 			});
 	}
 	else {
@@ -89,7 +89,7 @@ module.exports = exports = (req, res, next) => {
 					archive.append(stdout, { name });
 				});
 
-				log.info(`${MODULE_ID} CaptionAppendSuccess (${Date.now() - START}ms) => `, content);
+				log.info(`${MODULE_ID} #${content.id} => CaptionAppendSuccess ${Date.now() - START}ms`);
 
 				captionsAppended = true;
 
@@ -98,7 +98,7 @@ module.exports = exports = (req, res, next) => {
 				}
 			})
 			.catch(e => {
-				log.error(`${MODULE_ID} CaptionsAppendError => `, e.stack);
+				log.error(`${MODULE_ID} #${content.id} => CaptionsAppendError`, { content, error: e.stack });
 			});
 	}
 	else {
@@ -138,7 +138,7 @@ module.exports = exports = (req, res, next) => {
 		stream.on('close', onend);
 		stream.on('end', onend);
 
-		log.debug(`${MODULE_ID} MediaAppendSuccess (${Date.now() - START}ms) => `, content);
+		log.debug(`${MODULE_ID} #${content.id} => MediaAppendSuccess ${Date.now() - START}ms`);
 
 		archive.append(stream, { name: `${content.fileName}.${content.download.extension}` });
 
