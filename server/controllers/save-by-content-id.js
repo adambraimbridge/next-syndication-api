@@ -17,7 +17,7 @@ module.exports = exports = async (req, res, next) => {
 		const content = await getContentById(req.params.content_id, req.query.format);
 
 		if (Object.prototype.toString.call(content) !== '[object Object]') {
-			log.error(`${MODULE_ID} could not get item by content_id(${req.params.content_id}) => ${content}`);
+			log.error(`${MODULE_ID} ContentNotFoundError => ${req.params.content_id}`);
 
 			res.sendStatus(404);
 
@@ -37,12 +37,16 @@ module.exports = exports = async (req, res, next) => {
 
 		await res.locals.event.publish();
 
+		log.debug(`${MODULE_ID} ContentFoundSuccess => ${content.id}`);
+
 		res.sendStatus(204);
 
 		next();
 	}
 	catch(error) {
-		log.error(`${MODULE_ID} Error trying to save content_id(${req.params.content_id})`, { error: error.stack });
+		log.error(`${MODULE_ID} ContentNotFoundError => ${req.params.content_id})`, {
+			error: error.stack
+		});
 
 		res.sendStatus(500);
 	}

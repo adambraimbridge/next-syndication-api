@@ -16,10 +16,13 @@ const {
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
+	const URI = `${BASE_URI_FT_API}/licences?userid=${res.locals.userUuid}`;
+	const headers = {
+		[API_KEY_HEADER_NAME]: ALS_API_KEY
+	};
+
 	try {
-		const licenceRes = await fetch(`${BASE_URI_FT_API}/licences?userid=${res.locals.userUuid}`, {
-			headers: { [API_KEY_HEADER_NAME]: ALS_API_KEY }
-		});
+		const licenceRes = await fetch(URI, { headers });
 
 		const licences = await licenceRes.json();
 
@@ -29,20 +32,25 @@ module.exports = exports = async (req, res, next) => {
 						status === 'active' && products.find(({ code }) => code === SYNDICATION_PRODUCT_CODE));
 
 		if (!syndicationLicence) {
-			throw new ReferenceError(`${MODULE_ID} => No Syndication Licence found for user#${res.locals.userUuid}`);
+			throw new ReferenceError(`No Syndication Licence found for user#${res.locals.userUuid} using ${URI}`);
 		}
 
 		res.locals.licence = syndicationLicence;
 
-		log.info(`${MODULE_ID}`, syndicationLicence);
+		log.debug(`${MODULE_ID} LicenceFoundSuccess => ${URI}`, syndicationLicence);
 
 		next();
 	}
-	catch (error) {
-		log.info(`${MODULE_ID}`, { error });
+	catch (err) {
+		log.error(`${MODULE_ID} LicenceFoundError =>`, {
+			error: err.stack,
+			URI,
+			headers,
+			user: res.locals.userUuid
+		});
 
 		res.sendStatus(503);
 
-		throw error;
+		throw err;
 	}
 };

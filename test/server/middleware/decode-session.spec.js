@@ -34,7 +34,11 @@ describe(MODULE_ID, function () {
 		stubs = {
 			logger: {
 				default: {
-					info: sandbox.stub()
+					debug: sandbox.stub(),
+					error: sandbox.stub(),
+					fatal: sandbox.stub(),
+					info: sandbox.stub(),
+					warn: sandbox.stub()
 				}
 			},
 			sessionDecoderClass: sandbox.stub(),

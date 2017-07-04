@@ -11,7 +11,7 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 module.exports = exports = (req, res, next) => {
 	const sessionToken = req.cookies.FTSession;
 
-	log.info(`${MODULE_ID}`, { gotSessionToken: !!sessionToken });
+	log.debug(`${MODULE_ID}`, { gotSessionToken: !!sessionToken });
 
 	if (!sessionToken) {
 		return res.sendStatus(401);
@@ -22,11 +22,15 @@ module.exports = exports = (req, res, next) => {
 
 		res.locals.userUuid = userUuid;
 
-		log.info(`${MODULE_ID}`, { gotUserUuid: !!userUuid });
+		log.debug(`${MODULE_ID} DecodeSessionSuccess`, { gotUserUuid: !!userUuid });
 
 		next();
 	}
 	catch (err) {
+		log.error(`${MODULE_ID} DecodeSessionError`, {
+			error: err.stack
+		});
+
 		// Dodgy session token provided
 		return res.sendStatus(400);
 	}

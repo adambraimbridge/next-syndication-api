@@ -15,9 +15,9 @@ const REQUEST_PROPERTIES = [
 
 module.exports = exports = (req, res, next) => {
 	let msg = REQUEST_PROPERTIES.reduce((acc, prop) => {
-		acc[prop] = Object.prototype.toString.call(req[prop]) === '[object Object]' && IS_PROD
-			? JSON.stringify(req[prop])
-			: req[prop];
+		acc[prop] = IS_PROD && Object.prototype.toString.call(req[prop]) === '[object Object]'
+				? JSON.stringify(req[prop])
+				: req[prop];
 
 		return acc;
 	}, {

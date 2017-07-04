@@ -15,7 +15,7 @@ module.exports = exports = (req, res, next) => {
 	const isNewSyndicationUser = newSyndicationUsers.includes(res.locals.userUuid)
 							|| flagIsOn(flags.syndicationNewOverride);
 
-	log.info(`${MODULE_ID}`, { isNewSyndicationUser });
+	log.debug(`${MODULE_ID}`, { isNewSyndicationUser });
 
 	if (isNewSyndicationUser) {
 		res.set('FT-New-Syndication-User', 'true');

@@ -30,7 +30,7 @@ module.exports = exports = async (content_id, format) => {
 
 	const content = await fetchContentById(content_id);
 
-	if (Object.prototype.toString.call(content) !== '[object Object]') {
+	if (Object.prototype.toString.call(content) !== '[object Object]' || content instanceof Error) {
 		return content;
 	}
 
@@ -78,7 +78,7 @@ module.exports = exports = async (content_id, format) => {
 
 	content.fileName = DOWNLOAD_FILENAME_PREFIX + content.title.replace(RE_SPACE, '_').replace(RE_BAD_CHARS, '').substring(0, 12);
 
-	log.debug(`${MODULE_ID} #${content.id} => ${Date.now() - START}ms`);
+	log.debug(`${MODULE_ID} GetContentSuccess => ${content.id} in ${Date.now() - START}ms`);
 
 	return content;
 };

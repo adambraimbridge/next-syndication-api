@@ -17,7 +17,11 @@ module.exports = exports = (req, res, next) => {
 	const requestersOrigin = req.get('origin');
 	const isCorsRequest = !!(requestersOrigin && inSafeList(requestersOrigin));
 
-	log.info(`${MODULE_ID}`, { requestersOrigin, isCorsRequest, method: req.method });
+	log.info(`${MODULE_ID}`, {
+		requestersOrigin,
+		isCorsRequest,
+		method: req.method
+	});
 
 	if (isCorsRequest) {
 		res.set('Access-Control-Allow-Origin', requestersOrigin);
