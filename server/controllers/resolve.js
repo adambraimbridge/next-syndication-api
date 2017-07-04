@@ -1,7 +1,6 @@
 'use strict';
 
 const path = require('path');
-const url = require('url');
 
 const { default: log } = require('@financial-times/n-logger');
 
