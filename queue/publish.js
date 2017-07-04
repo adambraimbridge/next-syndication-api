@@ -30,15 +30,13 @@ const publish = async event => {
 
 		await sqs.sendMessageAsync(transport);
 
-		log.info('SyndicationSQSQueuePublishSuccess', {
-			transport
-		});
+		log.info(`${MODULE_ID} SyndicationSQSQueuePublishSuccess =>`, { transport });
 
 		return true;
 	}
 	catch (e) {
-		log.error('SyndicationSQSQueuePublishError', {
-			err: e.stack,
+		log.error(`${MODULE_ID} SyndicationSQSQueuePublishError =>`, {
+			error: e.stack,
 			event,
 			transport
 		});

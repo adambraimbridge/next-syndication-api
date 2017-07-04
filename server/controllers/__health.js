@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = (req, res, next) => {
+module.exports = exports = (req, res, next) => {
 	res.send({
 		schemaVersion: 1,
 		name: 'Next FT.com Syndication API',

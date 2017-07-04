@@ -23,7 +23,7 @@ module.exports = exports = (req, res, next) => {
 	getContentById(req.params.content_id, req.query.format)
 		.then(content => {
 			if (Object.prototype.toString.call(content) !== '[object Object]') {
-				log.error(`${MODULE_ID} could not get item by content_id(${req.params.content_id}) => ${content}`);
+				log.error(`${MODULE_ID} ContentNotFoundError => ${req.params.content_id}`);
 
 				res.status(404).end();
 
@@ -72,7 +72,7 @@ module.exports = exports = (req, res, next) => {
 				}).then(file => {
 					cleanup(content);
 
-					log.debug(`${MODULE_ID} #${content.id} Success`);
+					log.debug(`${MODULE_ID} ContentFoundSuccess => ${content.id}`);
 
 					res.set('content-length', file.length);
 
@@ -80,14 +80,17 @@ module.exports = exports = (req, res, next) => {
 
 					res.status(200).send(file);
 
-					log.debug(`${MODULE_ID} #${content.id} => ${Date.now() - START}ms`);
+					log.debug(`${MODULE_ID} ArticleConversionSuccess => ${content.id} in ${Date.now() - START}ms`);
 
 					next();
 				})
 				.catch(e => {
 					cleanup(content);
 
-					log.error(`${MODULE_ID} #${content.id} => Error`, { content, error: e.stack });
+					log.error(`${MODULE_ID} ArticleConversionError => ${content.id}`, {
+						content,
+						error: e.stack
+					});
 
 					publishEndEvent(res, 'error');
 
@@ -96,7 +99,9 @@ module.exports = exports = (req, res, next) => {
 			}
 		})
 		.catch(error => {
-			log.error(`${MODULE_ID} Error retrieving content_id(${req.params.content_id})`, { error: error.stack });
+			log.error(`${MODULE_ID} ContentNotFoundError => ${req.params.content_id})`, {
+				error: error.stack
+			});
 
 			res.sendStatus(500);
 		});

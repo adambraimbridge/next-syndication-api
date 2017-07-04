@@ -2,6 +2,8 @@
 
 require('./promisify');
 
+const path = require('path');
+
 const log = require('@financial-times/n-logger').default;
 
 const AWS = require('aws-sdk');
@@ -21,6 +23,8 @@ const sqs = new AWS.SQS({
 });
 
 const THROTTLE_BY_QUEUE = {};
+
+const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 const purgeQueue = async (params = { QueueUrl: DEFAULT_QUEUE_URL }) => {
 	let { QueueUrl } = params;
@@ -45,15 +49,15 @@ const purgeQueue = async (params = { QueueUrl: DEFAULT_QUEUE_URL }) => {
 	try {
 		let data = await sqs.purgeQueueAsync(params);
 
-		log.info('SyndicationSQSQueuePurgeSuccess', JSON.stringify({ data, params }, null, 4));
+		log.debug(`${MODULE_ID} SyndicationSQSQueuePurgeSuccess =>`, { data, params });
 
 		THROTTLE_BY_QUEUE[QueueUrl] = { now: Date.now() };
 
 		return true;
 	}
 	catch (e) {
-		log.error('SyndicationSQSQueuePurgeError', {
-			err: e.stack,
+		log.error(`${MODULE_ID} SyndicationSQSQueuePurgeError =>`, {
+			error: e.stack,
 			params
 		});
 

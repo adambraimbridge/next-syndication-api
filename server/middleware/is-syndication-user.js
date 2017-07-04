@@ -15,7 +15,7 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 
 module.exports = exports = async (req, res, next) => {
 	try {
-		const headers = { cookie: req.headers.cookie }; //JSON.parse(JSON.stringify(req.headers));
+		const headers = { cookie: req.headers.cookie };
 
 		delete headers.host;
 
@@ -23,35 +23,43 @@ module.exports = exports = async (req, res, next) => {
 
 		const sessionRes = await fetch(`${SESSION_URI}${SESSION_PRODUCTS_PATH}`, { headers });
 
+		if (sessionRes.ok) {
+			const session = await sessionRes.json();
+
+			isSyndicationUser = session.uuid === res.locals.userUuid
+								&& session.products.split(',').includes(SYNDICATION_PRODUCT_CODE);
+
+			if (isSyndicationUser === true) {
+				log.debug(`${MODULE_ID} IsSyndicationUserSuccess`, {
+					isSyndicationUser,
+					session
+				});
+
+				next();
+
+				return;
+			}
+		}
+
 		if (!sessionRes.ok) {
 			const error = await sessionRes.text();
 
-			log.info(`${MODULE_ID}`, { isSyndicationUser, error, httpStatus: sessionRes.status });
-
-			res.sendStatus(401);
-
-			return;
+			log.error(`${MODULE_ID} IsSyndicationUserFail =>`, {
+				isSyndicationUser,
+				error,
+				httpStatus: sessionRes.status
+			});
 		}
 
-		const session = await sessionRes.json();
-
-		isSyndicationUser = session.uuid === res.locals.userUuid
-						&& session.products.split(',').includes(SYNDICATION_PRODUCT_CODE);
-
-		log.info(`${MODULE_ID}`, { isSyndicationUser, session });
-
-		if (isSyndicationUser !== true) {
-			res.sendStatus(401);
-		}
-		else {
-			next();
-		}
+		res.sendStatus(401);
 	}
-	catch (error) {
-		log.info(`${MODULE_ID}`, { error });
+	catch (err) {
+		log.error(`${MODULE_ID} IsSyndicationUserError =>`, {
+			error: err.stack
+		});
 
 		res.sendStatus(503);
 
-		throw error;
+		throw err;
 	}
 };

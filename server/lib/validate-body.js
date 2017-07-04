@@ -21,17 +21,17 @@ const validateBody = body => {
 			throw new Error();
 		}
 	}
-	catch (e) {
-		const err = new Error('Expected a JSON-parseable object containing an array property called `content`');
-		err.statusCode = 400;
+	catch (err) {
+		const error = new Error('Expected a JSON-parseable object containing an array property called `content`');
+		error.statusCode = 400;
 
-		log.info(`${MODULE_ID}`, {
-			actualError: e.stack,
-			err: err,
+		log.info(`${MODULE_ID} ValidateBodyError`, {
+			actualError: err.stack,
+			error: error,
 			body
 		});
 
-		return Promise.reject(err);
+		return Promise.reject(error);
 	}
 };
 

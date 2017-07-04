@@ -40,12 +40,14 @@ module.exports = exports = (req, res, next) => {
 	archive.on('error', err => {
 		publishEndEvent(res, 'error');
 
-		log.error(`${MODULE_ID} #${content.id} => ArchiveError`, err.stack || err);
+		log.error(`${MODULE_ID} ArchiveError => ${content.id}`, {
+			error: err.stack || err
+		});
 
 		res.status(500).end();
 	});
 	archive.on('end', () => {
-		log.debug(`${MODULE_ID} #${content.id} => ArchiveEnd ${Date.now() - START}ms`);
+		log.debug(`${MODULE_ID} ArchiveEnd => ${content.id} in ${Date.now() - START}ms`);
 
 		res.end();
 
@@ -63,7 +65,7 @@ module.exports = exports = (req, res, next) => {
 			.then(file => {
 				archive.append(file, { name: `${content.fileName}.${content.transcriptExtension}` });
 
-				log.info(`${MODULE_ID} #${content.id} => TranscriptAppendSuccess ${Date.now() - START}ms`);
+				log.debug(`${MODULE_ID} TranscriptAppendSuccess => ${content.id} in ${Date.now() - START}ms`);
 
 				transcriptAppended = true;
 
@@ -71,8 +73,11 @@ module.exports = exports = (req, res, next) => {
 					archive.finalize();
 				}
 			})
-			.catch(e => {
-				log.error(`${MODULE_ID} #${content.id} => TranscriptAppendError`, { content, error: e.stack });
+			.catch(err => {
+				log.error(`${MODULE_ID} TranscriptAppendError => ${content.id}`, {
+					error: err.stack || err,
+					content
+				});
 			});
 	}
 	else {
@@ -89,7 +94,7 @@ module.exports = exports = (req, res, next) => {
 					archive.append(stdout, { name });
 				});
 
-				log.info(`${MODULE_ID} #${content.id} => CaptionAppendSuccess ${Date.now() - START}ms`);
+				log.debug(`${MODULE_ID} CaptionAppendSuccess => ${content.id} in ${Date.now() - START}ms`);
 
 				captionsAppended = true;
 
@@ -97,8 +102,11 @@ module.exports = exports = (req, res, next) => {
 					archive.finalize();
 				}
 			})
-			.catch(e => {
-				log.error(`${MODULE_ID} #${content.id} => CaptionsAppendError`, { content, error: e.stack });
+			.catch(err => {
+				log.error(`${MODULE_ID} CaptionsAppendError => ${content.id}`, {
+					error: err.stack || err,
+					content
+				});
 			});
 	}
 	else {
@@ -138,7 +146,7 @@ module.exports = exports = (req, res, next) => {
 		stream.on('close', onend);
 		stream.on('end', onend);
 
-		log.debug(`${MODULE_ID} #${content.id} => MediaAppendSuccess ${Date.now() - START}ms`);
+		log.debug(`${MODULE_ID} MediaAppendSuccess => ${content.id} in ${Date.now() - START}ms`);
 
 		archive.append(stream, { name: `${content.fileName}.${content.download.extension}` });
 

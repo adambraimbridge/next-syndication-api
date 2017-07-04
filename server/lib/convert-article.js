@@ -24,7 +24,9 @@ module.exports = exports = ({ source, sourceFormat = 'html', targetFormat = 'doc
 		let error = '';
 
 		cmd.on('error', err => {
-			log.error(`${MODULE_ID} ${CONVERT_FORMAT_COMMAND} Error`, err.stack);
+			log.error(`${MODULE_ID} ${CONVERT_FORMAT_COMMAND} ConversionError`, {
+				error: err.stack
+			});
 
 			reject(err);
 		});
@@ -36,14 +38,14 @@ module.exports = exports = ({ source, sourceFormat = 'html', targetFormat = 'doc
 
 		cmd.on('close', code => {
 			if (code !== 0) {
-				const ERROR = `${MODULE_ID} ${CONVERT_FORMAT_COMMAND} Completion Error (${code}) => ${error}`;
+				const ERROR = `${MODULE_ID} ${CONVERT_FORMAT_COMMAND} ConversionCompletionError (${code}) => ${error}`;
 
 				log.error(ERROR);
 
-				reject(ERROR);
+				reject(new Error(ERROR));
 			}
 			else {
-				log.debug(`${MODULE_ID} ${CONVERT_FORMAT_COMMAND} Completion Success`);
+				log.debug(`${MODULE_ID} ${CONVERT_FORMAT_COMMAND} ConversionCompletionSuccess`);
 
 				resolve(targetBuffer);
 			}

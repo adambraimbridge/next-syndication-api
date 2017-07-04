@@ -1,5 +1,7 @@
 'use strict';
 
+const path = require('path');
+
 const { default: log } = require('@financial-times/n-logger');
 const fetch = require('n-eager-fetch');
 
@@ -10,10 +12,14 @@ const {
 	TIMEOUT_ARTICLE_FETCH
 } = require('config');
 
+const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+
 module.exports = exports = async content_id => {
+	const START = Date.now();
+
 	const ARTICLE_URI = `${BASE_URI_FT_API}/content/${content_id}`;
 
-	log.debug(`ATTEMPTING TO RETRIEVE ARTICLE: ${ARTICLE_URI}`);
+	log.debug(`${MODULE_ID} ATTEMPTING TO RETRIEVE ARTICLE => ${ARTICLE_URI}`);
 
 	try {
 		const res = await fetch(ARTICLE_URI, {
@@ -24,22 +30,24 @@ module.exports = exports = async content_id => {
 		});
 
 		if (res.status === 200) {
-			log.info(`SUCCESSFULLY RETRIEVED ARTICLE: ${ARTICLE_URI}`, res);
+			log.debug(`${MODULE_ID} ArticleRetrieveSuccess => ${ARTICLE_URI} in ${Date.now() - START}ms`, { res });
 
 			return await res.json();
 		}
 
 		if (res.status > 399) {
-			log.error(`RETRIEVE ARTICLE ERROR: ${ARTICLE_URI}`, res);
+			log.error(`${MODULE_ID} ArticleRetrieveFail => ${ARTICLE_URI} in ${Date.now() - START}ms`, { res });
 		}
 		else {
-			log.warn(`RETRIEVE ARTICLE WARNING: ${ARTICLE_URI}`, res);
+			log.warn(`${MODULE_ID} ArticleRetrieveWarning => ${ARTICLE_URI} in ${Date.now() - START}ms`, { res });
 		}
 
 		return await res.text();
 	}
 	catch (err) {
-		log.error(`ERROR TRYING TO RETRIEVE ARTICLE: ${ARTICLE_URI}`, err.stack);
+		log.error(`${MODULE_ID} ArticleRetrieveError => ${ARTICLE_URI} in ${Date.now() - START}ms`, {
+			error: err.stack
+		});
 
 		throw err;
 	}
