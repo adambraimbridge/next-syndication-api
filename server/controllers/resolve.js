@@ -5,9 +5,10 @@ const url = require('url');
 
 const { default: log } = require('@financial-times/n-logger');
 
-const { RESOLVE_RETURN_PROPS } = require('config');
-
 const fetchContentById = require('../lib/fetch-content-by-id');
+const resolve = require('../lib/resolve');
+
+const RESOLVE_PROPERTIES = Object.keys(resolve);
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
@@ -39,8 +40,9 @@ module.exports = exports = async (req, res, next) => {
 	log.info(`${MODULE_ID} => ${DISTINCT_ITEMS.length} distinct items found out of ${body.length} total items`);
 	log.info(`${MODULE_ID} => Retrieved ${items.length}/${DISTINCT_ITEMS.length} distinct items in ${Date.now() - START}ms`);
 
-	const response = items.map(item => RESOLVE_RETURN_PROPS.reduce((acc, prop) => {
-		acc[prop] = FILTERS[prop](item[prop]);
+	const response = items.map(item => RESOLVE_PROPERTIES.reduce((acc, prop) => {
+		acc[prop] = resolve[prop](item[prop]);
+
 		return acc;
 	}, {}));
 
@@ -50,14 +52,3 @@ module.exports = exports = async (req, res, next) => {
 
 	next();
 };
-
-const FILTERS = {
-	id: (value) => path.basename((url.parse(value)).pathname),
-	type: (value) => path.basename((url.parse(value)).pathname).toLowerCase()
-};
-
-RESOLVE_RETURN_PROPS.forEach(prop => {
-	if (typeof FILTERS[prop] !== 'function') {
-		FILTERS[prop] = value => value;
-	}
-});
