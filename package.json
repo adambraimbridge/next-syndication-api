@@ -50,6 +50,7 @@
       "secret-squirrel.js",
       "queue/index.js",
       "server/controllers/__health.js",
+      "server/lib/resolve/index.js",
       "server/middleware/log-request.js",
       "server/app.js",
       "server/env.js",
