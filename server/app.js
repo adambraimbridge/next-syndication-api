@@ -41,8 +41,7 @@ const middleware = [
 app.get(`${BASE_URI_PATH}/__gtg`, (req, res) => res.sendStatus(200));
 //app.get(`${BASE_URI_PATH}/__health`, require('./controllers/__health'));
 
-app.options(`${BASE_URI_PATH}/generate-download-links`, accessControl);
-app.post(`${BASE_URI_PATH}/generate-download-links`, middleware, require('./controllers/generate-download-links'));
+app.post(`${BASE_URI_PATH}/resolve`, middleware, require('./controllers/resolve'));
 
 //app.get(`${BASE_URI_PATH}/download`, middleware, require('./controllers/download-by-uri'));
 app.get(`${BASE_URI_PATH}/download/:content_id`, middleware, require('./controllers/download-by-content-id'));
