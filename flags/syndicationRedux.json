@@ -1,0 +1,21 @@
+{
+  "name": "syndicationRedux",
+  "description": "über flag that ignores all previous syndication implementations in favour of the new unobtrusive implementation.",
+  "owner": "christos.constandinou@ft.com",
+  "notificationRecipients": {
+    "slack": {
+      "channels": [
+        "#ft-next-conversion",
+        "#ft-syndikat",
+        "#syndication"
+      ],
+      "users": [
+        "@thurston.tye",
+        "@laura.carvajal",
+        "@christos.constandinou"
+      ]
+    }
+  },
+  "userFacing": true,
+  "expiry": "3 months"
+}
