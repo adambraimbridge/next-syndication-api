@@ -30,7 +30,12 @@
     plain: txt
   DOWNLOAD_FILENAME_PREFIX: FT_
 
-  LICENCE_ITEMS_ARRAY_PROPERTY: accessLicences
+  FEATURE_FLAGS:
+    - syndication
+    - syndicationNew
+    - syndicationNewOverride
+    - syndicationNewUsersAwaiting
+    - syndicationRedux
 
   FORMAT_ARTICLE_CLEAN_ELEMENTS:
     - a
@@ -41,6 +46,8 @@
     - img
     - script
     - pull-quote
+
+  LICENCE_ITEMS_ARRAY_PROPERTY: accessLicences
 
   MEDIA_RESOURCE_TYPES:
     - MediaResource
