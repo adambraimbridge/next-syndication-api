@@ -46,3 +46,8 @@ app.post(`${BASE_URI_PATH}/resolve`, middleware, require('./controllers/resolve'
 //app.get(`${BASE_URI_PATH}/download`, middleware, require('./controllers/download-by-uri'));
 app.get(`${BASE_URI_PATH}/download/:content_id`, middleware, require('./controllers/download-by-content-id'));
 app.get(`${BASE_URI_PATH}/save/:content_id`, middleware, require('./controllers/save-by-content-id'));
+app.get(`${BASE_URI_PATH}/user-status`, middleware, require('./controllers/user-status'));
+
+if (process.env.NODE_ENV !== 'production') {
+	app.get(`${BASE_URI_PATH}/purge`, middleware, require('./controllers/purge'));
+}
