@@ -132,37 +132,49 @@ describe(MODULE_ID, function () {
 			title: 'FT View: Brexit rethink required',
 			type: 'mediaresource',
 			canBeSyndicated: 'yes',
-			publishedDate: '2017-06-19T12:47:54.753Z'
+			publishedDate: '2017-06-19T12:47:54.753Z',
+			downloaded: false,
+			saved: false
 		}, {
 			id: '2778b97a-5bc9-11e7-9bc8-8055f264aa8b',
 			title: 'Rivals set to challenge Google’s search advantage after EU ruling',
 			type: 'article',
 			canBeSyndicated: 'yes',
-			publishedDate: '2017-06-28T10:51:47.000Z'
+			publishedDate: '2017-06-28T10:51:47.000Z',
+			downloaded: false,
+			saved: false
 		}, {
 			id: 'b59dff10-3f7e-11e7-9d56-25f963e998b2',
 			title: 'Google deploys AI for Go tournament in China charm offensive',
 			type: 'article',
 			canBeSyndicated: 'yes',
-			publishedDate: '2017-05-23T08:59:01.000Z'
+			publishedDate: '2017-05-23T08:59:01.000Z',
+			downloaded: false,
+			saved: false
 		}, {
 			id: 'c7923fba-1d31-39fd-82f0-ba1822ef20d2',
 			title: 'The significance of the Brexit sequencing U-turn',
 			type: 'article',
 			canBeSyndicated: 'verify',
-			publishedDate: '2017-06-20T10:16:52.000Z'
+			publishedDate: '2017-06-20T10:16:52.000Z',
+			downloaded: false,
+			saved: false
 		}, {
 			id: 'd7bf1822-ec58-4a8e-a669-5cbcc0d6a1b2',
 			title: 'The Future is Quantum: solution to the world’s problems',
 			type: 'mediaresource',
 			canBeSyndicated: 'yes',
-			publishedDate: '2017-06-07T10:30:59.301Z'
+			publishedDate: '2017-06-07T10:30:59.301Z',
+			downloaded: false,
+			saved: false
 		}, {
 			id: 'dbe4928a-5bec-11e7-b553-e2df1b0c3220',
 			title: 'Hillsborough police commander charged with manslaughter',
 			type: 'article',
 			canBeSyndicated: 'yes',
-			publishedDate: '2017-06-28T11:21:44.000Z'
+			publishedDate: '2017-06-28T11:21:44.000Z',
+			downloaded: false,
+			saved: false
 		} ]);
 	});
 });

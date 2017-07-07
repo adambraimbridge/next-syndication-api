@@ -40,7 +40,7 @@ module.exports = exports = async (req, res, next) => {
 	log.info(`${MODULE_ID} => Retrieved ${items.length}/${DISTINCT_ITEMS.length} distinct items in ${Date.now() - START}ms`);
 
 	const response = items.map(item => RESOLVE_PROPERTIES.reduce((acc, prop) => {
-		acc[prop] = resolve[prop](item[prop]);
+		acc[prop] = resolve[prop](item[prop], prop, item);
 
 		return acc;
 	}, {}));
