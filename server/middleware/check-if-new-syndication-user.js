@@ -10,17 +10,17 @@ const flagIsOn = require('../helpers/flag-is-on');
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = (req, res, next) => {
+	let isNewSyndicationUser = false;
+
 	if (flagIsOn(res.locals.flags.syndicationRedux)) {
-		const isNewSyndicationUser = true;
+		isNewSyndicationUser = true;
 
-		log.debug(`${MODULE_ID}`, { isNewSyndicationUser });
-
-		if (isNewSyndicationUser) {
-			res.set('FT-New-Syndication-User', 'true');
-		}
-
-		res.locals.isNewSyndicationUser = isNewSyndicationUser;
+		res.set('FT-New-Syndication-User', 'true');
 	}
+
+	log.debug(`${MODULE_ID}`, { isNewSyndicationUser });
+
+	res.locals.isNewSyndicationUser = isNewSyndicationUser;
 
 	next();
 };
