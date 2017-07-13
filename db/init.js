@@ -44,4 +44,3 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 		log.debug(`${MODULE_ID} TABLE_EXISTS => `, History);
 	}
 })();
-
