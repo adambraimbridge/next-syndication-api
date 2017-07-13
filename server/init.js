@@ -2,6 +2,8 @@
 
 const path = require('path');
 
+require('../db/init');
+
 const { default: log } = require('@financial-times/n-logger');
 
 const CONFIG = require('config');
