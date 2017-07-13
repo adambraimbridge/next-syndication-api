@@ -4,7 +4,7 @@ const path = require('path');
 
 const { default: log } = require('@financial-times/n-logger');
 
-const { db, client } = require('./connect');
+const { db } = require('./connect');
 
 const Contracts = require('./tables/contracts');
 const History = require('./tables/history');
