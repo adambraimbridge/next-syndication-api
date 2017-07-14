@@ -3,10 +3,15 @@
 const path = require('path');
 
 require('../db/init');
+require('../queue/connect');
 
 const { default: log } = require('@financial-times/n-logger');
 
 const CONFIG = require('config');
+
+if (CONFIG.STUB_FLAGS === true) {
+	require('./stubs');
+}
 
 const app = require('./app');
 
