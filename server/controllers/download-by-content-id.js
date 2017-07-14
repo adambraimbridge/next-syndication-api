@@ -34,6 +34,7 @@ module.exports = exports = (req, res, next) => {
 			res.__event = new MessageQueueEvent({
 				event: {
 					content_id: content.id,
+					contract_id: res.locals.syndicationContractID,
 					download_format: content.extension,
 					licence_id: res.locals.licence.id,
 					state: 'start',

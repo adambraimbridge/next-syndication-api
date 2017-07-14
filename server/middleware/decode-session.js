@@ -5,7 +5,6 @@ const path = require('path');
 const { default: log } = require('@financial-times/n-logger');
 const Decoder = require('@financial-times/session-decoder-js');
 const decoder = new Decoder(process.env.SESSION_PUBLIC_KEY);
-
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = (req, res, next) => {

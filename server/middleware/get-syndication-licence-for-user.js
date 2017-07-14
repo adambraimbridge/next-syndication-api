@@ -11,7 +11,10 @@ const {
 	BASE_URI_FT_API,
 	LICENCE_ITEMS_ARRAY_PROPERTY,
 	SYNDICATION_PRODUCT_CODE,
-	TEST: { SKIP_LICENCE_ID }
+	TEST: {
+		SKIP_LICENCE_ID,
+		SKIP_SYNDICATION_CONTRACT_ID
+	}
 } = require('config');
 
 const skipChecks = require('../helpers/skip-checks');
@@ -35,7 +38,12 @@ module.exports = exports = async (req, res, next) => {
 						status === 'active' && products.find(({ code }) => code === SYNDICATION_PRODUCT_CODE));
 
 		if (!syndicationLicence && skipChecks(res.locals.flags)) {
-			syndicationLicence = { id: SKIP_LICENCE_ID };
+			syndicationLicence = {
+				id: SKIP_LICENCE_ID,
+				links: [{
+					id: SKIP_SYNDICATION_CONTRACT_ID
+				}]
+			};
 		}
 
 		if (!syndicationLicence) {
@@ -43,6 +51,8 @@ module.exports = exports = async (req, res, next) => {
 		}
 
 		res.locals.licence = syndicationLicence;
+
+		res.locals.syndicationContractID = syndicationLicence.links[0].id;
 
 		log.debug(`${MODULE_ID} LicenceFoundSuccess => ${URI}`, syndicationLicence);
 
