@@ -69,6 +69,7 @@ describe(MODULE_ID, function () {
 
 		it('should allow you to pass an event structure', function () {
 			let event_data = {
+				contract_id: 'syndication',
 				licence_id: 'foo',
 				time: new Date(),
 				user_id: 'bar'
@@ -76,6 +77,7 @@ describe(MODULE_ID, function () {
 
 			let event = new underTest({ event: event_data });
 
+			expect(event).to.have.property('contract_id').and.equal(event_data.contract_id);
 			expect(event).to.have.property('licence_id').and.equal(event_data.licence_id);
 			expect(event).to.have.property('time').and.equal(event_data.time.toJSON());
 			expect(event).to.have.property('user_id').and.equal(event_data.user_id);
@@ -105,6 +107,7 @@ describe(MODULE_ID, function () {
 		it('no overwrites', function () {
 			let event_data = {
 				content_id: 'http://www.ft.com/thing/abc',
+				contract_id: 'syndication',
 				download_format: 'docx',
 				licence_id: 'foo',
 				state: 'save',
@@ -126,6 +129,7 @@ describe(MODULE_ID, function () {
 		it('with overwrites', function () {
 			let event_data = {
 				content_id: 'http://www.ft.com/thing/abc',
+				contract_id: 'syndication',
 				download_format: 'docx',
 				licence_id: 'foo',
 				state: 'save',
@@ -157,6 +161,7 @@ describe(MODULE_ID, function () {
 		let stub = sinon.stub(__proto__, 'sendMessageAsync').callsFake(transport => transport);
 
 		let event_data = {
+			contract_id: 'syndication',
 			licence_id: 'foo',
 			time: new Date(),
 			user_id: 'bar'
@@ -175,6 +180,7 @@ describe(MODULE_ID, function () {
 
 	it('#stringify', function () {
 		let event_data = {
+			contract_id: 'syndication',
 			licence_id: 'foo',
 			time: new Date(),
 			user_id: 'bar'
@@ -187,6 +193,7 @@ describe(MODULE_ID, function () {
 
 	it('#toJSON', function () {
 		let event_data = {
+			contract_id: 'syndication',
 			content_id: 'http://www.ft.com/thing/abc',
 			download_format: 'docx',
 			licence_id: 'foo',
@@ -207,6 +214,7 @@ describe(MODULE_ID, function () {
 
 	it('#toSQSTransport', function () {
 		let event_data = {
+			contract_id: 'syndication',
 			content_id: 'http://www.ft.com/thing/abc',
 			download_format: 'docx',
 			licence_id: 'foo',
@@ -235,6 +243,7 @@ describe(MODULE_ID, function () {
 		it('pass', function () {
 			let event_data = {
 				content_id: 'http://www.ft.com/thing/abc',
+				contract_id: 'syndication',
 				download_format: 'docx',
 				licence_id: 'foo',
 				state: 'save',
