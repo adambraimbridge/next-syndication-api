@@ -1,2 +1,4 @@
 ---
   CONVERT_FORMAT_COMMAND: "/app/pandoc-dpkg/usr/bin/pandoc"
+
+  STUB_FLAGS: false
