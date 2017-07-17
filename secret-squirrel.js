@@ -10,6 +10,7 @@ module.exports = {
 	strings: {
 		deny: [],
 		denyOverrides: [
+			'john.q@average.com',
 			'http(?:s?):\/\/.*',
 			'\/content\/.*',
 			// user UUIDs,
