@@ -28,7 +28,7 @@ module.exports = exports = class QueueSubscriber {
 	}
 
 	async fire(messages) {
-		for (let [callback] of this.callbacks.values()) {
+		for (let [callback] of this.callbacks.entries()) {
 
 			let type = Object.prototype.toString.call(callback);
 
