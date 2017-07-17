@@ -9,10 +9,12 @@ const nforce = require('nforce');
 
 const {
 	SALESFORCE: {
+		API_VERSION: SALESFORCE_API_VERSION,
 		BASE_URI: SALESFORCE_URI,
+		CALLBACK_URI: SALESFORCE_CALLBACK_URI,
 		CLIENT_ID: SALESFORCE_CLIENT_ID,
 		CLIENT_SECRET: SALESFORCE_CLIENT_SECRET,
-		CALLBACK_URI: SALESFORCE_CALLBACK_URI,
+		CONNECTION_MODE: SALESFORCE_CONNECTION_MODE,
 		ENVIRONMENT: SALESFORCE_ENVIRONMENT,
 		PASSWORD: SALESFORCE_PASSWORD,
 		USERNAME: SALESFORCE_USERNAME,
@@ -28,43 +30,54 @@ module.exports = exports = async (req, res, next) => {
 	try {
 
 		const org = nforce.createConnection({
+			apiVersion: SALESFORCE_API_VERSION,
+			autoRefresh: true,
 			clientId: SALESFORCE_CLIENT_ID,
 			clientSecret: SALESFORCE_CLIENT_SECRET,
-			redirectUri: SALESFORCE_CALLBACK_URI,
-			environment: SALESFORCE_ENVIRONMENT
+			environment: SALESFORCE_ENVIRONMENT,
+			mode: SALESFORCE_CONNECTION_MODE,
+			redirectUri: SALESFORCE_CALLBACK_URI
 		});
 
-		const oauth = await org.authenticate({ username: SALESFORCE_USERNAME, password: SALESFORCE_PASSWORD });
+		const oauth = await org.authenticate({
+			username: SALESFORCE_USERNAME,
+			password: SALESFORCE_PASSWORD
+		});
 
-		log.debug(`${MODULE_ID} => `, oauth);
-		log.debug(`${MODULE_ID} => `, `${SALESFORCE_URI}/${res.locals.syndicationContractID}`);
-		log.debug(`${MODULE_ID} => `, `${SALESFORCE_URI}/${SALESFORCE_TEST_CONTRACT}`);
+		log.debug(`${MODULE_ID} | SALESFORCE OAUTH => `, oauth);
+
+		const SALESFORCE_CONTRACT_ID = SALESFORCE_ENVIRONMENT === 'sandbox'
+									? SALESFORCE_TEST_CONTRACT
+									: res.locals.syndicationContractID;
+
+		log.debug(`${MODULE_ID} | SALESFORCE CONTRACT URI => `, `${SALESFORCE_URI}/${SALESFORCE_CONTRACT_ID}`);
 
 		let apexRes = await org.apexRest({
-			uri:'process-sf-external-inbound-msgs',
-			method: 'POST',
+			uri:`${SALESFORCE_URI}/${SALESFORCE_CONTRACT_ID}`,
+			method: 'GET',
 			oauth: oauth
 		});
 
-		log.debug(`${MODULE_ID} => apexRes = ${apexRes}`);
+		log.debug(`${MODULE_ID} | APEX RESPONSE => `, apexRes);
 
-		let uriRes = await org.getUrl({
-			oauth,
-//			url: `${SALESFORCE_URI}/${res.locals.syndicationContractID}`
-			url: `${SALESFORCE_URI}/${SALESFORCE_TEST_CONTRACT}`
-		});
+		if (apexRes) {
+			if (apexRes.success === true) {
+				res.status(200);
+				res.json(apexRes);
 
-		log.debug(`${MODULE_ID} => `, uriRes);
-//
-//		let responses = await [
-//			'getRecord',
-//			'getResources',
-//			'getSObjects'
-//		].map(async fn => await org[fn]());
-//
-//		console.log(responses);
+				next();
+			}
+			else {
+				res.status(400);
+				res.json({
+					error: apexRes.errorMessage
+				});
+			}
+		}
+		else {
+			res.sendStatus(503);
+		}
 
-		next();
 	}
 	catch (error) {
 		log.error(`${MODULE_ID}`, {
