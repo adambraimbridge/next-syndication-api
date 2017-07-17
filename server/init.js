@@ -2,7 +2,7 @@
 
 const path = require('path');
 
-require('../db/init');
+//require('../db/init');
 require('../queue/connect');
 
 const { default: log } = require('@financial-times/n-logger');
