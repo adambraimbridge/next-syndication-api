@@ -56,6 +56,11 @@
 
   QUEUE_PURGE_THROTTLE_LIMIT_MS: 60000
 
+  SALESFORCE:
+    API_VERSION: v34.0
+    ENVIRONMENT: sandbox
+    CONNECTION_MODE: single
+
   SESSION_PRODUCTS_PATH: /products
   SESSION_URI: https://session-next.ft.com
 
