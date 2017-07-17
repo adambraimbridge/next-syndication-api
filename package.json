@@ -50,6 +50,7 @@
     "exclude": [
       "secret-squirrel.js",
       "queue/index.js",
+      "scripts/init_queue.js",
       "server/controllers/__health.js",
       "server/controllers/purge.js",
       "server/lib/resolve/index.js",
@@ -57,6 +58,7 @@
       "server/app.js",
       "server/env.js",
       "server/init.js",
+      "server/stubs.js",
       "coverage",
       "test"
     ]
