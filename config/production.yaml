@@ -1,4 +1,7 @@
 ---
   CONVERT_FORMAT_COMMAND: "/app/pandoc-dpkg/usr/bin/pandoc"
 
+  SALESFORCE:
+    ENVIRONMENT: production
+
   STUB_FLAGS: false
