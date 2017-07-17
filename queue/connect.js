@@ -1,5 +1,7 @@
 'use strict';
 
+const path = require('path');
+
 require('./promisify');
 
 const { default: log } = require('@financial-times/n-logger');
@@ -9,7 +11,8 @@ const AWS = require('aws-sdk');
 const {
 	AWS_ACCESS_KEY,
 	AWS_REGION = 'eu-west-1',
-	AWS_SECRET_ACCESS_KEY
+	AWS_SECRET_ACCESS_KEY,
+	SYNDICATION_DOWNLOAD_SQS_URL: DEFAULT_QUEUE_URL
 } = require('config');
 
 const sqs = new AWS.SQS({
@@ -18,10 +21,14 @@ const sqs = new AWS.SQS({
 	secretAccessKey: AWS_SECRET_ACCESS_KEY
 });
 
-(async () => {
-	const queues = await sqs.listQueuesAsync({});
+const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
-	log.debug(queues);
+(async () => {
+	const attributes = await sqs.getQueueAttributesAsync({
+		QueueUrl: DEFAULT_QUEUE_URL
+	});
+
+	log.debug(`${MODULE_ID} =>`, attributes);
 })();
 
 module.exports = exports = sqs;
