@@ -24,3 +24,23 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 		await sleep();
 	}
 })();
+
+process.on('uncaughtException', err => {
+	log.error(`${MODULE_ID} UncaughtException =>`, {
+		error: err.stack
+	});
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+	log.warn(`${MODULE_ID} UnhandledRejection =>`, {
+		error: reason.stack || reason,
+		promise
+	});
+});
+
+process.on('unhandledPromiseRejectionWarning', (reason, promise) => {
+	log.warn(`${MODULE_ID} UnhandledPromiseRejectionWarning =>`, {
+		error: reason.stack || reason,
+		promise
+	});
+});
