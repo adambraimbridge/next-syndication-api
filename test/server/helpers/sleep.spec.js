@@ -8,7 +8,7 @@ const underTest = require('../../../server/helpers/sleep');
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
-describe.only(MODULE_ID, function () {
+describe(MODULE_ID, function () {
 	it('should wait the default 250ms before continuing', async function () {
 		const start = Date.now();
 
