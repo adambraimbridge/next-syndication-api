@@ -58,8 +58,10 @@
 
   SALESFORCE:
     API_VERSION: v34.0
+    BASE_URI: SCRMContract
     ENVIRONMENT: sandbox
     CONNECTION_MODE: single
+    TEST_CONTRACT: FTS-14046740
 
   SESSION_PRODUCTS_PATH: /products
   SESSION_URI: https://session-next.ft.com
