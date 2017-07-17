@@ -11,7 +11,7 @@
     "@financial-times/session-decoder-js": "^1.0.1",
     "ajv": "^5.1.5",
     "archiver": "^1.3.0",
-    "aws-sdk": "^2.62.0",
+    "aws-sdk": "^2.85.0",
     "body-parser": "^1.17.1",
     "config": "^1.26.1",
     "cookie-parser": "^1.4.3",
