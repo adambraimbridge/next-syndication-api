@@ -102,7 +102,13 @@ module.exports = exports = class QueueSubscriber extends EventEmitter {
 					await this.fire(response);
 				}
 
-				process.nextTick(() => this.onStart());
+				let tid = setTimeout(() => {
+					this.onStart();
+
+					clearTimeout(tid);
+
+					tid = null;
+				}, 100);
 			});
 
 			return true;
