@@ -27,6 +27,7 @@ module.exports = exports = async (req, res, next) => {
 		res.locals.event = new MessageQueueEvent({
 			event: {
 				content_id: content.id,
+				contract_id: res.locals.syndicationContractID,
 				licence_id: res.locals.licence.id,
 				state: 'save',
 				syndication_state: String(content.canBeSyndicated),
