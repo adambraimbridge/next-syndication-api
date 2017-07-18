@@ -1,5 +1,6 @@
 'use strict';
 
+const { EventEmitter } = require('events');
 const path = require('path');
 
 const { default: log } = require('@financial-times/n-logger');
@@ -12,13 +13,22 @@ const sqs = require('./connect');
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
-module.exports = exports = class QueueSubscriber {
+module.exports = exports = class QueueSubscriber extends EventEmitter {
 	constructor({ callback, queue_url = DEFAULT_QUEUE_URL }) {
+		super();
+
 		this.queue_url = queue_url;
 
 		this.callbacks = new Set();
 
 		!callback || this.addCallback(callback);
+	}
+
+	ack(message) {
+		return sqs.deleteMessageAsync({
+			QueueUrl: DEFAULT_QUEUE_URL,
+			ReceiptHandle: message.ReceiptHandle
+		});
 	}
 
 	addCallback(callback) {
@@ -27,18 +37,21 @@ module.exports = exports = class QueueSubscriber {
 		this.callbacks.add(callback);
 	}
 
-	async fire(messages) {
-		for (let [callback] of this.callbacks.entries()) {
+	async fire(response) {
+		for (let [, message] of response.Messages.entries()) {
+			this.emit('message', message, response);
 
-			let type = Object.prototype.toString.call(callback);
+			for (let [callback] of this.callbacks.entries()) {
+				const type = Object.prototype.toString.call(callback);
 
-			switch (type) {
-				case '[object Function]':
-					callback(messages);
-					break;
-				case '[object AsyncFunction]':
-					await callback(messages);
-					break;
+				switch (type) {
+					case '[object Function]':
+						callback(message.data, message, response);
+						break;
+					case '[object AsyncFunction]':
+						await callback(message.data, message, response);
+						break;
+				}
 			}
 		}
 	}
@@ -66,7 +79,7 @@ module.exports = exports = class QueueSubscriber {
 
 		try {
 			process.nextTick(async () => {
-				let messages = await sqs.receiveMessageAsync({
+				const response = await sqs.receiveMessageAsync({
 					QueueUrl: DEFAULT_QUEUE_URL,
 					AttributeNames: [
 						'All'
@@ -76,9 +89,15 @@ module.exports = exports = class QueueSubscriber {
 					WaitTimeSeconds: 20
 				});
 
-				log.info(`${MODULE_ID} SyndicationSQSQueueSubscribeSuccess =>`, { messages });
+				if (response && Array.isArray(response.Messages) && response.Messages.length) {
+					log.debug(`${MODULE_ID} SyndicationSQSQueueSubscribeSuccess =>`, { response });
 
-				await this.fire(messages);
+					response.Messages.forEach(message => message.data = JSON.parse(message.Body));
+
+					this.emit('messages', response);
+
+					await this.fire(response);
+				}
 
 				process.nextTick(() => this.onStart());
 			});
