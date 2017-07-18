@@ -44,10 +44,10 @@ module.exports = exports = async (req, res, next) => {
 
 				switch (req.query.type) {
 					case 'downloads':
-						items = items.filter(item => item.state !== 'save');
+						items = items.filter(item => item.item_state !== 'save');
 						break;
 					case 'saved':
-						items = items.filter(item => item.state === 'save');
+						items = items.filter(item => item.item_state === 'save');
 						break;
 				}
 
