@@ -26,7 +26,7 @@ module.exports = exports = class QueueSubscriber extends EventEmitter {
 
 	ack(message) {
 		return sqs.deleteMessageAsync({
-			QueueUrl: DEFAULT_QUEUE_URL,
+			QueueUrl: this.queue_url,
 			ReceiptHandle: message.ReceiptHandle
 		});
 	}
@@ -80,7 +80,7 @@ module.exports = exports = class QueueSubscriber extends EventEmitter {
 		try {
 			process.nextTick(async () => {
 				const response = await sqs.receiveMessageAsync({
-					QueueUrl: DEFAULT_QUEUE_URL,
+					QueueUrl: this.queue_url,
 					AttributeNames: [
 						'All'
 					],
