@@ -2,16 +2,23 @@
 
 const util = require('util');
 
-const AWS = require('./aws');
+const AWS = require('aws-sdk');
 
 const __proto_db__ = Object.getPrototypeOf(new AWS.DynamoDB());
-const __proto_document_client__ = Object.getPrototypeOf(new AWS.DynamoDB.DocumentClient());
+const __proto_client__ = Object.getPrototypeOf(new AWS.DynamoDB.DocumentClient());
 
 if (exports.promisified !== true) {
 	[
 		'createTable',
+		'deleteItem',
 		'deleteTable',
-		'listTables'
+		'getItem',
+		'listTables',
+		'putItem',
+		'query',
+		'scan',
+		'updateItem',
+		'updateTable'
 	].forEach(fn =>
 		__proto_db__[`${fn}Async`] = util.promisify(__proto_db__[fn]));
 
@@ -23,7 +30,7 @@ if (exports.promisified !== true) {
 		'scan',
 		'update'
 	].forEach(fn =>
-		__proto_document_client__[`${fn}Async`] = util.promisify(__proto_document_client__[fn]));
+		__proto_client__[`${fn}Async`] = util.promisify(__proto_client__[fn]));
 }
 
 exports.promisified = true;
