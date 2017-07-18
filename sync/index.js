@@ -8,7 +8,7 @@ const {
 	SYNDICATION_DOWNLOAD_SQS_URL: DEFAULT_QUEUE_URL
 } = require('config');
 
-require('../db/init');
+//require('../db/init');
 
 const QueueSubscriber = require('../queue/subscriber');
 
