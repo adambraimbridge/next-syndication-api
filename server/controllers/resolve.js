@@ -4,6 +4,9 @@ const path = require('path');
 
 const { default: log } = require('@financial-times/n-logger');
 
+const HistoryTable = require('../../db/tables/history');
+const { client } = require('../../db/connect');
+
 const fetchContentById = require('../lib/fetch-content-by-id');
 const resolve = require('../lib/resolve');
 
@@ -39,8 +42,28 @@ module.exports = exports = async (req, res, next) => {
 	log.info(`${MODULE_ID} => ${DISTINCT_ITEMS.length} distinct items found out of ${body.length} total items`);
 	log.info(`${MODULE_ID} => Retrieved ${items.length}/${DISTINCT_ITEMS.length} distinct items in ${Date.now() - START}ms`);
 
+	let saved = await client.scanAsync({
+		TableName: HistoryTable.TableName,
+		FilterExpression: 'licence_id = :licence_id and item_state = :item_state',
+		ExpressionAttributeValues: {
+			':item_state': 'save',
+			':licence_id': res.locals.licence.id
+		}
+	});
+
+	if (saved.Count > 0) {
+		saved.ItemsMap = saved.Items.reduce((acc, item) => {
+			acc[item.content_id] = item;
+
+			return acc;
+		}, {});
+	}
+	else {
+		saved.ItemsMap = {};
+	}
+
 	const response = items.map(item => RESOLVE_PROPERTIES.reduce((acc, prop) => {
-		acc[prop] = resolve[prop](item[prop], prop, item);
+		acc[prop] = resolve[prop](item[prop], prop, item, saved.ItemsMap[item.id]);
 
 		return acc;
 	}, {}));
