@@ -11,7 +11,6 @@ const {
 require('../db/init');
 
 const QueueSubscriber = require('../queue/subscriber');
-const sleep = require('../server/helpers/sleep');
 
 const persist = require('./persist');
 
@@ -34,10 +33,6 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 			log.error(`${MODULE_ID} => `, e);
 		}
 	});
-
-	while (true) {
-		await sleep();
-	}
 })();
 
 process.on('uncaughtException', err => {
