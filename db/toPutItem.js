@@ -8,7 +8,7 @@ module.exports = exports = (data, schema) => {
 
 	schema.AttributeDefinitions.reduce((acc, def) => {
 		if (Object.prototype.hasOwnProperty.call(data, def.AttributeName)) {
-			acc[def.AttributeName] = {
+			acc[def.AttributeAlias || def.AttributeName] = {
 				[def.AttributeType]: data[def.AttributeName]
 			};
 		}

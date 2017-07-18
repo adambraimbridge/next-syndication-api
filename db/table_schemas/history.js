@@ -8,8 +8,9 @@ module.exports = exports = {
 		{ AttributeName: 'contract_id', AttributeType: 'S' },
 		{ AttributeName: 'contributor_content', AttributeType: 'BOOL' },
 		{ AttributeName: 'download_format', AttributeType: 'S' },
+		// state is a reserved word in DynamoDB!!! X^@
+		{ AttributeAlias: 'item_state', AttributeName: 'state', AttributeType: 'S' },
 		{ AttributeName: 'licence_id', AttributeType: 'S' },
-		{ AttributeName: 'state', AttributeType: 'S' },
 		{ AttributeName: 'syndication_state', AttributeType: 'S' },
 		{ AttributeName: 'time', AttributeType: 'S' },
 		{ AttributeName: 'user_id', AttributeType: 'S' },
