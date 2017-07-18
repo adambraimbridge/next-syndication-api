@@ -49,6 +49,11 @@
   "nyc": {
     "exclude": [
       "secret-squirrel.js",
+      "db/index.js",
+      "db/table_schemas/contracts.js",
+      "db/table_schemas/history.js",
+      "db/tables/contracts.js",
+      "db/tables/history.js",
       "queue/index.js",
       "scripts/init_queue.js",
       "server/controllers/__health.js",
