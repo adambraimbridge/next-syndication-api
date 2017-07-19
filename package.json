@@ -60,7 +60,7 @@
       "scripts/init_queue.js",
       "scripts/purge_queue.js",
       "server/controllers/__health.js",
-      "server/controllers/get-contracts-by-id.js",
+      "server/controllers/get-contract-by-id.js",
       "server/lib/resolve/index.js",
       "server/middleware/log-request.js",
       "server/app.js",
