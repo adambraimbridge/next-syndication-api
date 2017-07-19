@@ -67,6 +67,7 @@
       "server/env.js",
       "server/init.js",
       "server/stubs.js",
+      "sync/index.js",
       "coverage",
       "test"
     ]
