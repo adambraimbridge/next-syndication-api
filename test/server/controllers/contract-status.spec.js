@@ -9,11 +9,9 @@ const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 const proxyquire = require('proxyquire');
 
-const {
-	TEST: { FIXTURES_DIRECTORY }
-} = require('config');
-
 const httpMocks = require('../../fixtures/node-mocks-http');
+
+const { db, client } = require('../../../db/connect');
 
 const { expect } = chai;
 chai.use(sinonChai);
@@ -22,12 +20,58 @@ const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(p
 
 describe(MODULE_ID, function () {
 	describe('success', function () {
+		const contractResponse = {
+			'owner_email': 'syndication@ft.com',
+			'last_updated': '2017-07-19T13:37:20.291Z',
+			'owner_name': 'FT Syndication',
+			'contract_starts': '2015-12-11',
+			'limit_podcast': 10000000,
+			'contract_ends': '2050-01-31',
+			'contributor_content': true,
+			'limit_video': 10000000,
+			'licencee_name': 'FT Staff',
+			'assets': [{
+				'online_usage_limit': 10000000,
+				'product': 'FT Article',
+				'online_usage_period': 'Week',
+				'print_usage_period': 'Week',
+				'print_usage_limit': 20,
+				'embargo_period': 0,
+				'asset': 'FT Article',
+				'content': 'FT.com'
+			}, {
+				'online_usage_limit': 10000000,
+				'product': 'Video',
+				'online_usage_period': 'Week',
+				'print_usage_period': 'Week',
+				'print_usage_limit': 20,
+				'embargo_period': 0,
+				'asset': 'Video',
+				'content': 'FT.com'
+			}, {
+				'online_usage_limit': 10000000,
+				'product': 'Podcast',
+				'online_usage_period': 'Week',
+				'print_usage_period': 'Week',
+				'print_usage_limit': 20,
+				'embargo_period': 0,
+				'asset': 'Podcast',
+				'content': 'FT.com'
+			}],
+			'contract_number': 'CA-00001558',
+			'client_website': 'https://www.ft.com',
+			'client_publications': 'FT',
+			'limit_article': 10000000
+		};
 		let next;
 		let req;
 		let res;
-		let contract = require(path.resolve(`${FIXTURES_DIRECTORY}/contractProfile.json`));
+		let contract = require('../../../stubs/CA-00001558.json');
 
 		before(async function () {
+			sinon.stub(client, 'getAsync').resolves({ Item: contractResponse });
+			sinon.stub(db, 'putItemAsync').resolves({});
+
 			const underTest = proxyquire('../../../server/controllers/contract-status', {
 				'../lib/get-contract-by-id': sinon.stub().resolves(contract)
 			});
@@ -84,7 +128,7 @@ describe(MODULE_ID, function () {
 		});
 
 		it('returns contract data', function () {
-			expect(res.json).to.have.been.calledWith(contract);
+			expect(res.json).to.have.been.calledWith(contractResponse);
 		});
 
 		it('sets the http status to 200', function () {

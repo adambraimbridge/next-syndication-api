@@ -56,17 +56,24 @@ module.exports = exports = async (req, res, next) => {
 		if (contract.success === true) {
 			contract.last_updated = (new Date()).toJSON();
 
-			res.status(200);
-
-			res.json(contract);
-
-			next();
-
-			const dbItem = toPutItem(contract, ContractsSchema);
+			let dbItem = toPutItem(contract, ContractsSchema);
 
 			const dbRes = await db.putItemAsync(dbItem);
 
+			dbItem = await client.getAsync({
+				TableName: ContractsTable.TableName,
+				Key: {
+					[ContractsTable.AttributeDefinitions[0].AttributeName]: SALESFORCE_CONTRACT_ID
+				}
+			});
+
 			log.debug(`${MODULE_ID} | Persisted contract#${SALESFORCE_CONTRACT_ID} to DB`, { dbItem, dbRes });
+
+			res.status(200);
+
+			res.json(dbItem.Item);
+
+			next();
 		}
 		else {
 			res.status(400);
