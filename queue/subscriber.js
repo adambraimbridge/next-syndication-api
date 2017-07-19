@@ -39,17 +39,17 @@ module.exports = exports = class QueueSubscriber extends EventEmitter {
 
 	async fire(response) {
 		for (let [, message] of response.Messages.entries()) {
-			this.emit('message', message, response);
+			this.emit('message', message.data,  message, response, this);
 
 			for (let [callback] of this.callbacks.entries()) {
 				const type = Object.prototype.toString.call(callback);
 
 				switch (type) {
 					case '[object Function]':
-						callback(message.data, message, response);
+						callback(message.data, message, response, this);
 						break;
 					case '[object AsyncFunction]':
-						await callback(message.data, message, response);
+						await callback(message.data, message, response, this);
 						break;
 				}
 			}
@@ -97,7 +97,7 @@ module.exports = exports = class QueueSubscriber extends EventEmitter {
 
 					response.Messages.forEach(message => message.data = JSON.parse(message.Body));
 
-					this.emit('messages', response);
+					this.emit('messages', response, this);
 
 					await this.fire(response);
 				}
