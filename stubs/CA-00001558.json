@@ -1,0 +1,47 @@
+{
+  "success": true,
+  "contractNumber": "CA-00001558",
+  "ownerName": "FT Syndication",
+  "ownerEmail": "syndication@ft.com",
+  "licenceeName": "FT Staff",
+  "articleLimit": 10000000,
+  "videoLimit": 10000000,
+  "podcastLimit": 10000000,
+  "startDate": "2015-12-11",
+  "endDate": "2050-01-31",
+  "contributor": true,
+  "clientWebsite": "https://www.ft.com",
+  "clientPublications": "FT",
+  "assets": [
+    {
+      "productName": "FT Article",
+      "maxPermittedPrintUsagePeriod": "Week",
+      "maxPermittedPrintUsage": 20,
+      "maxPermittedOnlineUsagePeriod": "Week",
+      "maxPermittedOnlineUsage": 10000000,
+      "embargoPeriod": 0,
+      "contentSet": "FT.com",
+      "assetName": "FT Article"
+    },
+    {
+      "productName": "Video",
+      "maxPermittedPrintUsagePeriod": "Week",
+      "maxPermittedPrintUsage": 20,
+      "maxPermittedOnlineUsagePeriod": "Week",
+      "maxPermittedOnlineUsage": 10000000,
+      "embargoPeriod": 0,
+      "contentSet": "FT.com",
+      "assetName": "Video"
+    },
+    {
+      "productName": "Podcast",
+      "maxPermittedPrintUsagePeriod": "Week",
+      "maxPermittedPrintUsage": 20,
+      "maxPermittedOnlineUsagePeriod": "Week",
+      "maxPermittedOnlineUsage": 10000000,
+      "embargoPeriod": 0,
+      "contentSet": "FT.com",
+      "assetName": "Podcast"
+    }
+  ]
+}
