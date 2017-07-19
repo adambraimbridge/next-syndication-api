@@ -20,6 +20,7 @@ module.exports = {
 			'c71c4e6cf5183996a34235bf50bc0e1d',
 			// user UUIDs
 			'8ef593a8-eef6-448c-8560-9ca8cdca80a5',
+			'8ef593a8-eef6-448c-8560-9ca8cdca80a6',
 			// licence UUIDs
 			'c3391af1-0d46-4ddc-a922-df7c49cf1552',
 			// content UUIDs
