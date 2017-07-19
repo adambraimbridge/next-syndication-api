@@ -4,10 +4,6 @@ const path = require('path');
 
 const { expect } = require('chai');
 
-const {
-	TEST: { FIXTURES_DIRECTORY }
-} = require('config');
-
 const AWS = require('aws-sdk');
 
 const underTest = require('../../db/promisify');
