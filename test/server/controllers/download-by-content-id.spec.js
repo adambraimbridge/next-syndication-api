@@ -7,6 +7,7 @@ const { Writable: WritableStream } = require('stream');
 
 const { expect } = require('chai');
 const nock = require('nock');
+const sinon = require('sinon');
 
 const {
 	BASE_URI_FT_API,
@@ -15,6 +16,7 @@ const {
 	TEST: { FIXTURES_DIRECTORY }
 } = require('config');
 
+const MessageQueueEvent = require('../../../queue/message-queue-event');
 const underTest = require('../../../server/controllers/download-by-content-id');
 
 const httpMocks = require('../../fixtures/node-mocks-http');
@@ -24,6 +26,14 @@ const RE_VALID_URI = /^\/content\/([A-Za-z0-9]{8}(?:-[A-Za-z0-9]{4}){3}-[A-Za-z0
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
 describe(MODULE_ID, function () {
+	before(function() {
+		sinon.stub(MessageQueueEvent.prototype, 'publish').resolves(true);
+	});
+
+	after(function() {
+		MessageQueueEvent.prototype.publish.restore();
+	});
+
 	describe('download article', function () {
 		const CONTENT_ID = 'b59dff10-3f7e-11e7-9d56-25f963e998b2';
 		let req;
