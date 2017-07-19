@@ -62,6 +62,8 @@
     ENVIRONMENT: sandbox
     CONNECTION_MODE: single
     TEST_CONTRACT: FTS-14046740
+    STUB_CONTRACTS:
+      - CA-00001558
 
   SESSION_PRODUCTS_PATH: /products
   SESSION_URI: https://session-next.ft.com
