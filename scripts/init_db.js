@@ -4,10 +4,10 @@ const path = require('path');
 
 const { default: log } = require('@financial-times/n-logger');
 
-const { db } = require('./connect');
+const { db } = require('../db/connect');
 
-const Contracts = require('./tables/contracts');
-const History = require('./tables/history');
+const Contracts = require('../db/tables/contracts');
+const History = require('../db/tables/history');
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
