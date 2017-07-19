@@ -13,8 +13,15 @@ module.exports = {
 			'john.q@average.com',
 			'http(?:s?):\/\/.*',
 			'\/content\/.*',
-			// user UUIDs,
+			// _ids
+			'9807a4b6dcb3ce1188593759dd6818cd',
+			'f55885427fa5f8c3e2b90204a6e6b0c7',
+			'4eff4aba81093b44d2a71c36fc8e9898',
+			'c71c4e6cf5183996a34235bf50bc0e1d',
+			// user UUIDs
 			'8ef593a8-eef6-448c-8560-9ca8cdca80a5',
+			// licence UUIDs
+			'c3391af1-0d46-4ddc-a922-df7c49cf1552',
 			// content UUIDs
 			'b59dff10-3f7e-11e7-9d56-25f963e998b2',
 			'c7923fba-1d31-39fd-82f0-ba1822ef20d2',
