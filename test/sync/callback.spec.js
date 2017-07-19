@@ -7,11 +7,6 @@ const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 const proxyquire = require('proxyquire');
 
-const {
-	TEST: { FIXTURES_DIRECTORY }
-} = require('config');
-
-
 const MessageQueueEvent = require('../../queue/message-queue-event');
 const QueueSubscriber = require('../../queue/subscriber');
 
