@@ -5,17 +5,15 @@ const path = require('path');
 const { Writable: WritableStream } = require('stream');
 
 const chai = require('chai');
-const nock = require('nock');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
+const proxyquire = require('proxyquire');
 
 const {
 	TEST: { FIXTURES_DIRECTORY }
 } = require('config');
 
 const httpMocks = require('../../fixtures/node-mocks-http');
-
-const underTest = require('../../../server/controllers/contract-status');
 
 const { expect } = chai;
 chai.use(sinonChai);
@@ -27,33 +25,12 @@ describe(MODULE_ID, function () {
 		let next;
 		let req;
 		let res;
+		let contract = require(path.resolve(`${FIXTURES_DIRECTORY}/contractProfile.json`));
 
 		before(async function () {
-			nock('https://test.salesforce.com')
-				.post('/services/oauth2/token')
-				.reply(() => {
-					return [
-						200,
-						{
-							access_token: '00DL....z_pH',
-							instance_url: 'https://financialtimes--test.cs8.my.salesforce.com',
-							id: 'https://test.salesforce.com/id/00D...MAM/005...IAO',
-							token_type: 'Bearer',
-							issued_at: '1500301959088',
-							signature: 'dL6R....rgA='
-						}
-					];
-				});
-
-			nock('https://financialtimes--test.cs8.my.salesforce.com')
-				.get('/services/apexrest/SCRMContract/FTS-14046740')
-				.reply(() => {
-					return [
-						200,
-						require(path.resolve(`${FIXTURES_DIRECTORY}/contractProfile.json`)),
-						{}
-					];
-				});
+			const underTest = proxyquire('../../../server/controllers/contract-status', {
+				'../lib/get-contract-by-id': sinon.stub().resolves(contract)
+			});
 
 			req = httpMocks.createRequest({
 				'eventEmitter': EventEmitter,
@@ -107,7 +84,7 @@ describe(MODULE_ID, function () {
 		});
 
 		it('returns contract data', function () {
-			expect(res.json).to.have.been.calledWith(require(path.resolve(`${FIXTURES_DIRECTORY}/contractProfile.json`)));
+			expect(res.json).to.have.been.calledWith(contract);
 		});
 
 		it('sets the http status to 200', function () {
