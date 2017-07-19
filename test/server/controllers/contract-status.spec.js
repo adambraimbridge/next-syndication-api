@@ -128,7 +128,7 @@ describe(MODULE_ID, function () {
 		});
 
 		after(function () {
-		    db.putItemAsync.restore();
+			db.putItemAsync.restore();
 		});
 
 		it('returns contract data', function () {
