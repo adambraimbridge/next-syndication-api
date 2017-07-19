@@ -127,6 +127,10 @@ describe(MODULE_ID, function () {
 			await underTest(req, res, next);
 		});
 
+		after(function () {
+		    db.putItemAsync.restore();
+		});
+
 		it('returns contract data', function () {
 			expect(res.json).to.have.been.calledWith(contractResponse);
 		});
