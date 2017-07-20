@@ -10,9 +10,11 @@ const accessControl = require('./middleware/access-control');
 const cache = require('./middleware/cache');
 const checkIfNewSyndicationUser = require('./middleware/check-if-new-syndication-user');
 const decodeSession = require('./middleware/decode-session');
-const getAccessAuthToken = require('./middleware/get-access-auth-token');
+const getLicenceAccessAuthToken = require('./middleware/get-licence-access-auth-token');
+const getUserAccessAuthToken = require('./middleware/get-user-access-auth-token');
 const getSyndicationLicenceForUser = require('./middleware/get-syndication-licence-for-user');
 const getUserProfile = require('./middleware/get-user-profile');
+const getUsersForLicence = require('./middleware/get-users-for-licence');
 const isSyndicationUser = require('./middleware/is-syndication-user');
 const flags = require('./middleware/flags');
 const logRequest = require('./middleware/log-request');
@@ -33,10 +35,15 @@ const middleware = [
 	decodeSession,
 	isSyndicationUser,
 	getSyndicationLicenceForUser,
-	getAccessAuthToken,
+	getUserAccessAuthToken,
 	getUserProfile,
 	checkIfNewSyndicationUser
 ];
+
+const licenceAuthMiddleware = Array.from(middleware);
+//licenceAuthMiddleware.splice(licenceAuthMiddleware.indexOf(getUserAccessAuthToken), 2, getLicenceAccessAuthToken);
+//licenceAuthMiddleware.push(getUsersForLicence);
+licenceAuthMiddleware.push(getLicenceAccessAuthToken, getUsersForLicence);
 
 app.get(`${BASE_URI_PATH}/__gtg`, (req, res) => res.sendStatus(200));
 //app.get(`${BASE_URI_PATH}/__health`, require('./controllers/__health'));
@@ -45,7 +52,7 @@ app.post(`${BASE_URI_PATH}/resolve`, middleware, require('./controllers/resolve'
 
 app.get(`${BASE_URI_PATH}/contract-status`, middleware, require('./controllers/contract-status'));
 app.get(`${BASE_URI_PATH}/download/:content_id`, middleware, require('./controllers/download-by-content-id'));
-app.get(`${BASE_URI_PATH}/history`, middleware, require('./controllers/history'));
+app.get(`${BASE_URI_PATH}/history`, licenceAuthMiddleware, require('./controllers/history'));
 app.get(`${BASE_URI_PATH}/save/:content_id`, middleware, require('./controllers/save-by-content-id'));
 app.get(`${BASE_URI_PATH}/user-status`, middleware, require('./controllers/user-status'));
 
