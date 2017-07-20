@@ -16,6 +16,7 @@ if (exports.promisified !== true) {
 		'deleteMessageBatch',
 		'getQueueAttributes',
 		'getQueueUrl',
+		'listQueues',
 		'purgeQueue',
 		'receiveMessage',
 		'sendMessage',

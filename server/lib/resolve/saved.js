@@ -1,4 +1,4 @@
 'use strict';
 
-// todo: once we have a DB and salesforce endpoint
-module.exports = exports = () => false;
+module.exports = exports = (val, prop, item, saved) =>
+	Object.prototype.toString.call(saved) === '[object Object]';

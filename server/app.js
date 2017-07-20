@@ -43,11 +43,24 @@ app.get(`${BASE_URI_PATH}/__gtg`, (req, res) => res.sendStatus(200));
 
 app.post(`${BASE_URI_PATH}/resolve`, middleware, require('./controllers/resolve'));
 
-//app.get(`${BASE_URI_PATH}/download`, middleware, require('./controllers/download-by-uri'));
+app.get(`${BASE_URI_PATH}/contract-status`, middleware, require('./controllers/contract-status'));
 app.get(`${BASE_URI_PATH}/download/:content_id`, middleware, require('./controllers/download-by-content-id'));
+app.get(`${BASE_URI_PATH}/history`, middleware, require('./controllers/history'));
 app.get(`${BASE_URI_PATH}/save/:content_id`, middleware, require('./controllers/save-by-content-id'));
 app.get(`${BASE_URI_PATH}/user-status`, middleware, require('./controllers/user-status'));
 
 if (process.env.NODE_ENV !== 'production') {
-	app.get(`${BASE_URI_PATH}/purge`, middleware, require('./controllers/purge'));
+	const middleware = [
+		cookieParser(),
+		bodyParser.text(),
+		bodyParser.json(),
+		logRequest,
+		accessControl,
+		cache,
+		flags
+	];
+
+	app.get(`${BASE_URI_PATH}/contracts/:contract_id`, middleware, require('./controllers/get-contract-by-id'));
+//	app.post(`${BASE_URI_PATH}/contracts`, middleware, require('./controllers/get-contracts-by-id'));
+//	app.get(`${BASE_URI_PATH}/purge`, middleware, require('./controllers/purge'));
 }

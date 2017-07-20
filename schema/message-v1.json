@@ -9,6 +9,9 @@
             "format": "uri",
             "type": "string"
         },
+        "contract_id": {
+            "type": "string"
+        },
         "contributor_content": {
             "default": false,
             "type": "boolean"
@@ -59,6 +62,7 @@
     "required": [
         "_id",
         "content_id",
+        "contract_id",
         "licence_id",
         "state",
         "syndication_state",
