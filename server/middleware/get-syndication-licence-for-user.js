@@ -34,17 +34,28 @@ module.exports = exports = async (req, res, next) => {
 
 		const licenceList = licences[LICENCE_ITEMS_ARRAY_PROPERTY];
 
-		let syndicationLicence = licenceList.find(({ products = [], status }) =>
+		let syndicationLicences = licenceList.filter(({ products = [], status }) =>
 						status === 'active' && products.find(({ code }) => code === SYNDICATION_PRODUCT_CODE));
 
-		if (!syndicationLicence && skipChecks(res.locals.flags)) {
-			syndicationLicence = {
+		if (!syndicationLicences.length) {
+			if (!skipChecks(res.locals.flags)) {
+				throw new ReferenceError(`No Syndication Licence found for user#${res.locals.userUuid} using ${URI}`);
+			}
+
+			syndicationLicences.push({
 				id: SKIP_LICENCE_ID,
 				links: [{
-					id: SKIP_SYNDICATION_CONTRACT_ID
+					href: 'NULL',
+					id: SKIP_SYNDICATION_CONTRACT_ID,
+					rel: 'complimentary'
 				}]
-			};
+			});
 		}
+
+		let syndicationLicence = syndicationLicences.length === 1
+								? syndicationLicences[0]
+								: syndicationLicences.find(item => item.links[0].rel !== 'complimentary')
+								|| syndicationLicences[0];
 
 		if (!syndicationLicence) {
 			throw new ReferenceError(`No Syndication Licence found for user#${res.locals.userUuid} using ${URI}`);
@@ -52,7 +63,7 @@ module.exports = exports = async (req, res, next) => {
 
 		res.locals.licence = syndicationLicence;
 
-		res.locals.syndicationContractID = syndicationLicence.links[0].id;
+		res.locals.syndication_contract = syndicationLicence.links[0];
 
 		log.debug(`${MODULE_ID} LicenceFoundSuccess => ${URI}`, syndicationLicence);
 
