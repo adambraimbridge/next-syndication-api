@@ -18,7 +18,7 @@ module.exports = exports = async (req, res, next) => {
 	const URI = `${BASE_URI_FT_API}/users/${res.locals.userUuid}/profile`;
 
 	const headers = {
-		'authorization': `Bearer ${res.locals.ACCESS_TOKEN}`,
+		'authorization': `Bearer ${res.locals.ACCESS_TOKEN_USER || res.locals.ACCESS_TOKEN_LICENCE}`,
 		'cookie': req.headers.cookie,
 		'content-type': 'application/json',
 		[API_KEY_HEADER_NAME]: ALS_API_KEY
