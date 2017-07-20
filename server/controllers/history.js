@@ -56,6 +56,8 @@ module.exports = exports = async (req, res, next) => {
 				items.forEach(item => {
 					const user = LICENCE.usersMap[item.user_id];
 
+					item.id = item.content_id.split('/').pop();
+
 					if (user) {
 						item.user_email = user.email;
 						item.user_name = `${user.firstName} ${user.lastName}`;
