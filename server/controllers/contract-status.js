@@ -25,7 +25,7 @@ module.exports = exports = async (req, res, next) => {
 	try {
 		const SALESFORCE_CONTRACT_ID = /*SALESFORCE_ENVIRONMENT === 'sandbox'
 									? SALESFORCE_TEST_CONTRACT
-									:*/ res.locals.syndicationContractID;
+									:*/ res.locals.syndication_contract.id;
 
 		const dbItem = await client.getAsync({
 			TableName: ContractsTable.TableName,

@@ -127,7 +127,14 @@ describe(MODULE_ID, function () {
 					syndicationNew: 'on',
 					syndicationRedux: 'on'
 				},
-				licence: { id: 'c3391af1-0d46-4ddc-a922-df7c49cf1552' },
+				licence: {
+					id: 'c3391af1-0d46-4ddc-a922-df7c49cf1552',
+					users: [],
+					usersMap: {}
+				},
+				syndication_contract: {
+					id: 'lmno'
+				},
 				userUuid: '8ef593a8-eef6-448c-8560-9ca8cdca80a5'
 			};
 
@@ -231,7 +238,14 @@ describe(MODULE_ID, function () {
 					syndicationNew: 'on',
 					syndicationRedux: 'on'
 				},
-				licence: { id: 'c3391af1-0d46-4ddc-a922-df7c49cf1552' },
+				licence: {
+					id: 'c3391af1-0d46-4ddc-a922-df7c49cf1552',
+					users: [],
+					usersMap: {}
+				},
+				syndication_contract: {
+					id: 'lmno'
+				},
 				userUuid: user_id
 			};
 
@@ -333,7 +347,14 @@ describe(MODULE_ID, function () {
 					syndicationNew: 'on',
 					syndicationRedux: 'on'
 				},
-				licence: { id: 'c3391af1-0d46-4ddc-a922-df7c49cf1552' },
+				licence: {
+					id: 'c3391af1-0d46-4ddc-a922-df7c49cf1552',
+					users: [],
+					usersMap: {}
+				},
+				syndication_contract: {
+					id: 'lmno'
+				},
 				userUuid: '8ef593a8-eef6-448c-8560-9ca8cdca80a5'
 			};
 
@@ -434,7 +455,14 @@ describe(MODULE_ID, function () {
 					syndicationNew: 'on',
 					syndicationRedux: 'on'
 				},
-				licence: { id: 'c3391af1-0d46-4ddc-a922-df7c49cf1552' },
+				licence: {
+					id: 'c3391af1-0d46-4ddc-a922-df7c49cf1552',
+					users: [],
+					usersMap: {}
+				},
+				syndication_contract: {
+					id: 'lmno'
+				},
 				userUuid: '8ef593a8-eef6-448c-8560-9ca8cdca80a5'
 			};
 

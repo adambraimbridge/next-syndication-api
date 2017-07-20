@@ -94,6 +94,9 @@ describe(MODULE_ID, function () {
 			});
 
 			res.locals = {
+				syndication_contract: {
+					id: 'lmno'
+				},
 				userUuid: 'abc'
 			};
 
@@ -232,6 +235,9 @@ describe(MODULE_ID, function () {
 			});
 
 			res.locals = {
+				syndication_contract: {
+					id: 'lmno'
+				},
 				userUuid: 'abc'
 			};
 

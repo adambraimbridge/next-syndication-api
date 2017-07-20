@@ -87,6 +87,9 @@ describe(MODULE_ID, function () {
 
 		res.locals = {
 			licence: { id: 'xyz' },
+			syndication_contract: {
+				id: 'lmno'
+			},
 			userUuid: 'abc'
 		};
 
