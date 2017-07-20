@@ -49,7 +49,9 @@ module.exports = exports = (req, res, next) => {
 	archive.on('end', () => {
 		log.debug(`${MODULE_ID} ArchiveEnd => ${content.id} in ${Date.now() - START}ms`);
 
-		res.end();
+		if (req.__download_cancelled__ !== true) {
+			res.end();
+		}
 
 		next();
 	});
@@ -62,23 +64,23 @@ module.exports = exports = (req, res, next) => {
 			sourceFormat: 'html',
 			targetFormat: content.transcriptExtension
 		})
-			.then(file => {
-				archive.append(file, { name: `${content.fileName}.${content.transcriptExtension}` });
+		.then(file => {
+			archive.append(file, { name: `${content.fileName}.${content.transcriptExtension}` });
 
-				log.debug(`${MODULE_ID} TranscriptAppendSuccess => ${content.id} in ${Date.now() - START}ms`);
+			log.debug(`${MODULE_ID} TranscriptAppendSuccess => ${content.id} in ${Date.now() - START}ms`);
 
-				transcriptAppended = true;
+			transcriptAppended = true;
 
-				if (captionsAppended === true && mediaAppended === true && archive._state.finalize !== true && archive._state.finalizing !== true) {
-					archive.finalize();
-				}
-			})
-			.catch(err => {
-				log.error(`${MODULE_ID} TranscriptAppendError => ${content.id}`, {
-					error: err.stack || err,
-					content
-				});
+			if (captionsAppended === true && mediaAppended === true && archive._state.finalize !== true && archive._state.finalizing !== true) {
+				archive.finalize();
+			}
+		})
+		.catch(err => {
+			log.error(`${MODULE_ID} TranscriptAppendError => ${content.id}`, {
+				error: err.stack || err,
+				content
 			});
+		});
 	}
 	else {
 		transcriptAppended = true;
@@ -133,7 +135,7 @@ module.exports = exports = (req, res, next) => {
 			let state = 'complete';
 			let status = 200;
 
-			if (length < LENGTH) {
+			if (length < LENGTH || req.__download_cancelled__ === true) {
 				state = 'interrupted';
 				status = 400;
 			}
@@ -143,6 +145,7 @@ module.exports = exports = (req, res, next) => {
 			publishEndEvent(res, state);
 		};
 
+		stream.on('error', onend);
 		stream.on('close', onend);
 		stream.on('end', onend);
 
@@ -152,9 +155,15 @@ module.exports = exports = (req, res, next) => {
 
 		stream.on('data', (chunk) => {
 			if (req.__download_cancelled__ === true) {
-				uriStream.end();
+				if (req.__end_called__ !== true) {
+					uriStream.end();
 
-				archive.end();
+					archive.end();
+
+					req.__end_called__ = true;
+
+					onend();
+				}
 
 				return;
 			}
@@ -193,10 +202,15 @@ function cloneRequestHeaders(req) {
 }
 
 function publishEndEvent(res, state) {
-	const event = res.__event.clone({
+	// don't fire twice
+	if (res.__eventEnd) {
+		return;
+	}
+
+	res.__eventEnd = res.__event.clone({
 		state,
 		time: moment().toJSON()
 	});
 
-	process.nextTick(async () => await event.publish());
+	process.nextTick(async () => await res.__eventEnd.publish());
 }
