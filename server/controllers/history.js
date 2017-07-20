@@ -11,9 +11,11 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 
 module.exports = exports = async (req, res, next) => {
 	try {
+		const LICENCE = res.locals.licence;
+
 		let FilterExpression = 'licence_id = :licence_id';
 		const ExpressionAttributeValues = {
-			':licence_id': res.locals.licence.id
+			':licence_id': LICENCE.id
 		};
 
 		if (req.query.show === 'mine') {
@@ -50,6 +52,21 @@ module.exports = exports = async (req, res, next) => {
 						items = items.filter(item => item.item_state === 'save');
 						break;
 				}
+
+				items.forEach(item => {
+					const user = LICENCE.usersMap[item.user_id];
+
+					if (user) {
+						item.user_email = user.email;
+						item.user_name = `${user.firstName} ${user.lastName}`;
+					}
+					else {
+						if (res.locals.syndication_contract.rel === 'complimentary') {
+							item.user_email = `${item.user_id.substring(0, 4)}.${item.user_id.substring(item.user_id.length - 4)}@complimentary.ft.com`;
+							item.user_name = `${item.user_id.substring(0, 4)}...${item.user_id.substring(item.user_id.length - 4)}`;
+						}
+					}
+				});
 
 				res.json(items);
 			}
