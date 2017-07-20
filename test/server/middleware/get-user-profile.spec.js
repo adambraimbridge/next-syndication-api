@@ -37,7 +37,7 @@ describe(MODULE_ID, function () {
 			},
 			res: {
 				locals: {
-					ACCESS_TOKEN: 'abc.123.xyz',
+					ACCESS_TOKEN_USER: 'abc.123.xyz',
 					userUuid: 'abc'
 				},
 				sendStatus: sandbox.stub()

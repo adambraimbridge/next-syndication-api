@@ -54,7 +54,7 @@ describe(MODULE_ID, function () {
 			next: sandbox.stub()
 		};
 
-		underTest = proxyquire('../../../server/middleware/get-access-auth-token', {
+		underTest = proxyquire('../../../server/middleware/get-user-access-auth-token', {
 			'@financial-times/n-logger': stubs.logger,
 			'n-eager-fetch': stubs.fetch
 		});
@@ -64,12 +64,12 @@ describe(MODULE_ID, function () {
 		sandbox.restore();
 	});
 
-	it('should assign the access token to `res.locals.ACCESS_TOKEN`', async function () {
+	it('should assign the access token to `res.locals.ACCESS_TOKEN_USER`', async function () {
 		await underTest(mocks.req, mocks.res, stubs.next);
 
-		const { ACCESS_TOKEN } = mocks.res.locals;
+		const { ACCESS_TOKEN_USER } = mocks.res.locals;
 
-		expect(ACCESS_TOKEN).to.be.a('string')
+		expect(ACCESS_TOKEN_USER).to.be.a('string')
 			.and.to.equal('abc.123.xyz');
 	});
 
