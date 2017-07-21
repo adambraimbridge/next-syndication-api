@@ -27,14 +27,6 @@ module.exports = exports = (req, res, next) => {
 
 	let { __content: content } = res;
 
-	let cancelDownload = () => {
-		log.warn(`${MODULE_ID} => DownloadRequestCancelled => `, res.locals.__event.toJSON());
-
-		req.__download_cancelled__ = true;
-	};
-	req.on('abort', cancelDownload);
-	req.connection.on('close', cancelDownload);
-
 	let captionsAppended = false;
 	let mediaAppended = false;
 	let transcriptAppended = false;
@@ -54,6 +46,8 @@ module.exports = exports = (req, res, next) => {
 		log.debug(`${MODULE_ID} ArchiveEnd => ${content.id} in ${Date.now() - START}ms`);
 
 		if (req.__download_cancelled__ !== true) {
+			req.__download_successful__ = true;
+
 			res.end();
 		}
 
@@ -130,23 +124,52 @@ module.exports = exports = (req, res, next) => {
 			return next();
 		}
 
+		let cancelDownload = () => {
+			if (req.__download_successful__ === true) {
+				return;
+			}
+
+			log.warn(`${MODULE_ID} => DownloadRequestCancelled => `, res.locals.__event.toJSON());
+
+			req.__download_cancelled__ = true;
+
+			if (req.__end_called__ !== true) {
+				uriStream.end();
+
+				archive.end();
+
+				onend();
+
+				req.__end_called__ = true;
+
+				if (req.__download_successful__ !== true) {
+					next();
+				}
+			}
+		};
+
+		req.on('abort', cancelDownload);
+		req.connection.on('close', cancelDownload);
+
 		const LENGTH = parseInt(uriRes.headers.get('content-length'), 10);
 
 		let length = 0;
 		let uriStream;
 
 		let onend = () => {
-			let state = 'complete';
-			let status = 200;
+			if (req.__end_called__ !== true) {
+				let state = 'complete';
+				let status = 200;
 
-			if (length < LENGTH || req.__download_cancelled__ === true) {
-				state = 'interrupted';
-				status = 400;
+				if (length < LENGTH || req.__download_cancelled__ === true) {
+					state = 'interrupted';
+					status = 400;
+				}
+
+				res.status(status);
+
+				publishEndEvent(res, state);
 			}
-
-			res.status(status);
-
-			publishEndEvent(res, state);
 		};
 
 		stream.on('error', onend);
@@ -164,9 +187,9 @@ module.exports = exports = (req, res, next) => {
 
 					archive.end();
 
-					req.__end_called__ = true;
-
 					onend();
+
+					req.__end_called__ = true;
 				}
 
 				return;
