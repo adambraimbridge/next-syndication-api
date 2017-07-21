@@ -27,7 +27,11 @@ module.exports = exports = (req, res, next) => {
 
 	let { __content: content } = res;
 
-	let cancelDownload = () => req.__download_cancelled__ = true;
+	let cancelDownload = () => {
+		log.warn(`${MODULE_ID} => DownloadRequestCancelled => `, res.locals.__event.toJSON());
+
+		req.__download_cancelled__ = true;
+	};
 	req.on('abort', cancelDownload);
 	req.connection.on('close', cancelDownload);
 
@@ -203,14 +207,14 @@ function cloneRequestHeaders(req) {
 
 function publishEndEvent(res, state) {
 	// don't fire twice
-	if (res.__eventEnd) {
+	if (res.locals.__eventEnd) {
 		return;
 	}
 
-	res.__eventEnd = res.__event.clone({
+	res.locals.__eventEnd = res.locals.__event.clone({
 		state,
 		time: moment().toJSON()
 	});
 
-	process.nextTick(async () => await res.__eventEnd.publish());
+	process.nextTick(async () => await res.locals.__eventEnd.publish());
 }
