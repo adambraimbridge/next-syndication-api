@@ -49,9 +49,9 @@ module.exports = exports = (req, res, next) => {
 			req.__download_successful__ = true;
 
 			res.end();
-		}
 
-		next();
+			next();
+		}
 	});
 
 	archive.pipe(res);
@@ -142,9 +142,7 @@ module.exports = exports = (req, res, next) => {
 
 				req.__end_called__ = true;
 
-				if (req.__download_successful__ !== true) {
-					next();
-				}
+				next();
 			}
 		};
 
