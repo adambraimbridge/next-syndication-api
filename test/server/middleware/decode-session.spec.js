@@ -7,6 +7,11 @@ const chai = require('chai');
 const sinonChai = require('sinon-chai');
 const proxyquire = require('proxyquire');
 
+const {
+	AUTH_SIGN_IN_REDIRECT_PROPERTY,
+	AUTH_SIGN_IN_URI
+} = require('config');
+
 const { expect } = chai;
 chai.use(sinonChai);
 
@@ -23,11 +28,13 @@ describe(MODULE_ID, function () {
 		mocks = {
 			req: {
 				cookies: {
-					FTSession: '123'
+					FTSession: '123',
+					FTSession_s: '123s'
 				}
 			},
 			res: {
 				locals: {},
+				redirect: sandbox.stub(),
 				sendStatus: sandbox.stub()
 			}
 		};
@@ -56,12 +63,12 @@ describe(MODULE_ID, function () {
 		sandbox.restore();
 	});
 
-	it('should send an unauthorised status code if no session token is found', function () {
+	it('should redirect the response to the sign in page', function () {
 		mocks.req.cookies.FTSession = undefined;
 
 		decodeSessionMiddleware(mocks.req, mocks.res, stubs.next);
 
-		expect(mocks.res.sendStatus).to.have.been.calledWith(401);
+		expect(mocks.res.redirect).to.have.been.calledWith(`${AUTH_SIGN_IN_URI}?${AUTH_SIGN_IN_REDIRECT_PROPERTY}=${mocks.req.originalUrl}`);
 		expect(mocks.res.locals.userUuid).to.equal(undefined);
 		expect(stubs.next).not.to.have.been.called;
 	});

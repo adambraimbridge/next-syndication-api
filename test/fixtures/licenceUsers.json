@@ -1,0 +1,15 @@
+{
+  "offset": 0,
+  "limit": 50000,
+  "returnedResourceCount": 1,
+  "totalResourceCount": 1,
+  "seatHolders": [
+    {
+      "id": "8ef593a8-eef6-448c-8560-9ca8cdca80a5",
+      "lastName": "Constandinou",
+      "firstName": "Christos",
+      "email": "christos.constandinou@ft.com",
+      "joinedDate": "2017-04-30T09:00:00.000Z"
+    }
+  ]
+}

@@ -24,10 +24,10 @@ module.exports = exports = async (req, res, next) => {
 			return;
 		}
 
-		res.locals.event = new MessageQueueEvent({
+		res.locals.__event = new MessageQueueEvent({
 			event: {
 				content_id: content.id,
-				contract_id: res.locals.syndicationContractID,
+				contract_id: res.locals.syndication_contract.id,
 				licence_id: res.locals.licence.id,
 				state: 'save',
 				syndication_state: String(content.canBeSyndicated),
@@ -36,7 +36,7 @@ module.exports = exports = async (req, res, next) => {
 			}
 		});
 
-		await res.locals.event.publish();
+		await res.locals.__event.publish();
 
 		log.debug(`${MODULE_ID} ContentFoundSuccess => ${content.id}`);
 

@@ -119,6 +119,9 @@ describe(MODULE_ID, function () {
 					syndicationRedux: 'on'
 				},
 				licence: { id: 'xyz' },
+				syndication_contract: {
+					id: 'lmno'
+				},
 				userUuid: 'abc'
 			};
 

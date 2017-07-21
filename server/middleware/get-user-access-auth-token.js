@@ -9,7 +9,7 @@ const fetch = require('n-eager-fetch');
 const {
 	AUTH_API_CLIENT_ID,
 	AUTH_API_ID_PROPERTY,
-	AUTH_API_QUERY,
+	AUTH_API_QUERY_USER: AUTH_API_QUERY,
 	BASE_URI_FT_API
 } = require('config');
 
@@ -34,17 +34,17 @@ module.exports = exports = async (req, res, next) => {
 		const authQuery = qs.parse(authRes.url.split('#').pop());
 
 		if (!authQuery.access_token) {
-			throw new ReferenceError(`No Access Token returned for ${URI}`);
+			throw new ReferenceError(`No User Access Token returned for ${URI}`);
 		}
 
-		log.debug(`${MODULE_ID} AccessTokenSuccess => ${URI}`);
+		log.debug(`${MODULE_ID} UserAccessTokenSuccess => ${URI}`);
 
-		res.locals.ACCESS_TOKEN = authQuery.access_token;
+		res.locals.ACCESS_TOKEN_USER = authQuery.access_token;
 
 		next();
 	}
 	catch (err) {
-		log.error(`${MODULE_ID} AccessTokenError`, {
+		log.error(`${MODULE_ID} UserAccessTokenError`, {
 			error: err.stack,
 			URI
 		});

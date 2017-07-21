@@ -37,7 +37,13 @@ describe(MODULE_ID, function () {
 			},
 			res: {
 				locals: {
-					ACCESS_TOKEN_USER: 'abc.123.xyz',
+					ACCESS_TOKEN_LICENCE: 'abc.123.xyz',
+					licence: {
+						id: 'xyz'
+					},
+					syndication_contract: {
+						id: 'lmno'
+					},
 					userUuid: 'abc'
 				},
 				sendStatus: sandbox.stub()
@@ -59,7 +65,7 @@ describe(MODULE_ID, function () {
 			next: sandbox.stub()
 		};
 
-		underTest = proxyquire('../../../server/middleware/get-user-profile', {
+		underTest = proxyquire('../../../server/middleware/get-users-for-licence', {
 			'@financial-times/n-logger': stubs.logger/*,
 			'n-eager-fetch': stubs.fetch*/
 		});
@@ -69,13 +75,13 @@ describe(MODULE_ID, function () {
 		sandbox.restore();
 	});
 
-	it('should assign the returned user profile to `res.locals.user`', async function () {
+	it('should assign the returned users to `res.locals.licence.users:Array`', async function () {
 		nock(BASE_URI_FT_API)
-			.get(`/users/${mocks.res.locals.userUuid}/profile`)
+			.get(`/licence-seat-holders/${mocks.res.locals.licence.id}`)
 			.reply(() => {
 				return [
 					200,
-					require(path.resolve(`${FIXTURES_DIRECTORY}/userProfile.json`)),
+					require(path.resolve(`${FIXTURES_DIRECTORY}/licenceUsers.json`)),
 					{}
 				];
 			});
@@ -83,12 +89,31 @@ describe(MODULE_ID, function () {
 
 		await underTest(mocks.req, mocks.res, stubs.next);
 
-		const { user } = mocks.res.locals;
+		const { users } = mocks.res.locals.licence;
 
-		expect(user).to.be.an('object')
-			.and.have.property('email')
-			.and.to.be.a('string')
-			.and.to.equal('christos.constandinou@ft.com');
+		expect(users).to.be.an('array')
+			.and.have.length(1);
+	});
+
+	it('should assign the returned users to `res.locals.licence.usersMap:Object`', async function () {
+		nock(BASE_URI_FT_API)
+			.get(`/licence-seat-holders/${mocks.res.locals.licence.id}`)
+			.reply(() => {
+				return [
+					200,
+					require(path.resolve(`${FIXTURES_DIRECTORY}/licenceUsers.json`)),
+					{}
+				];
+			});
+
+
+		await underTest(mocks.req, mocks.res, stubs.next);
+
+		const { usersMap } = mocks.res.locals.licence;
+
+		expect(usersMap).to.be.an('object')
+			.and.have.property('8ef593a8-eef6-448c-8560-9ca8cdca80a5')
+			.and.to.be.an('object');
 	});
 
 });

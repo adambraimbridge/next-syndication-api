@@ -5,15 +5,13 @@ const path = require('path');
 const sinon = require('sinon');
 const chai = require('chai');
 const sinonChai = require('sinon-chai');
-const nock = require('nock');
 const proxyquire = require('proxyquire');
 
 const { expect } = chai;
 chai.use(sinonChai);
 
 const {
-	BASE_URI_FT_API,
-	TEST: { FIXTURES_DIRECTORY }
+	BASE_URI_FT_API
 } = require('config');
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
@@ -31,22 +29,19 @@ describe(MODULE_ID, function () {
 				cookies: {
 					FTSession: '123'
 				},
-				headers: {
-					cookie: 'FTSession=123'
-				}
+				headers: {}
 			},
 			res: {
 				locals: {
-					ACCESS_TOKEN_USER: 'abc.123.xyz',
 					userUuid: 'abc'
 				},
 				sendStatus: sandbox.stub()
 			}
 		};
 		stubs = {
-//			fetch: sandbox.stub().returns({
-//				url: `${BASE_URI_FT_API}/authorize#access_token=abc.123.xyz&scope=profile_min`
-//			}),
+			fetch: sandbox.stub().returns({
+				url: `${BASE_URI_FT_API}/authorize#access_token=abc.123.xyz&scope=licence_data`
+			}),
 			logger: {
 				default: {
 					debug: sandbox.stub(),
@@ -59,9 +54,9 @@ describe(MODULE_ID, function () {
 			next: sandbox.stub()
 		};
 
-		underTest = proxyquire('../../../server/middleware/get-user-profile', {
-			'@financial-times/n-logger': stubs.logger/*,
-			'n-eager-fetch': stubs.fetch*/
+		underTest = proxyquire('../../../server/middleware/get-licence-access-auth-token', {
+			'@financial-times/n-logger': stubs.logger,
+			'n-eager-fetch': stubs.fetch
 		});
 	});
 
@@ -69,26 +64,13 @@ describe(MODULE_ID, function () {
 		sandbox.restore();
 	});
 
-	it('should assign the returned user profile to `res.locals.user`', async function () {
-		nock(BASE_URI_FT_API)
-			.get(`/users/${mocks.res.locals.userUuid}/profile`)
-			.reply(() => {
-				return [
-					200,
-					require(path.resolve(`${FIXTURES_DIRECTORY}/userProfile.json`)),
-					{}
-				];
-			});
-
-
+	it('should assign the access token to `res.locals.ACCESS_TOKEN_LICENCE`', async function () {
 		await underTest(mocks.req, mocks.res, stubs.next);
 
-		const { user } = mocks.res.locals;
+		const { ACCESS_TOKEN_LICENCE } = mocks.res.locals;
 
-		expect(user).to.be.an('object')
-			.and.have.property('email')
-			.and.to.be.a('string')
-			.and.to.equal('christos.constandinou@ft.com');
+		expect(ACCESS_TOKEN_LICENCE).to.be.a('string')
+			.and.to.equal('abc.123.xyz');
 	});
 
 });
