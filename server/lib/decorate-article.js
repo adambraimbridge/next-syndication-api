@@ -8,8 +8,10 @@ const moment = require('moment');
 const { DOMParser } = require('xmldom');
 
 const Handlebars = handlebars();
-const HD = Handlebars.compile(fs.readFileSync(path.resolve('./server/views/partial/article_metadata_hd.html.hbs'), 'utf8'), { noEscape: true });
-const FT = Handlebars.compile(fs.readFileSync(path.resolve('./server/views/partial/article_metadata_ft.html.hbs'), 'utf8'), { noEscape: true });
+
+const BASE_PATH = path.dirname(path.relative(process.cwd(), __dirname));
+const HD = Handlebars.compile(fs.readFileSync(path.resolve(BASE_PATH, './views/partial/article_metadata_hd.html.hbs'), 'utf8'), { noEscape: true });
+const FT = Handlebars.compile(fs.readFileSync(path.resolve(BASE_PATH, './views/partial/article_metadata_ft.html.hbs'), 'utf8'), { noEscape: true });
 
 module.exports = exports = (doc, content) => {
 	let publishedDate = moment(content.publishedDate);
