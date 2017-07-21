@@ -107,7 +107,7 @@ describe(MODULE_ID, function () {
 			content.fileName = 'my_test_file';
 			content.download.extension = 'mp4';
 
-			res.__event = new MessageQueueEvent({
+			res.locals.__event = new MessageQueueEvent({
 				content_id: content.id,
 				download_format: DOWNLOAD_ARCHIVE_EXTENSION,
 				syndication_state: content.canBeSyndicated,
@@ -248,7 +248,7 @@ describe(MODULE_ID, function () {
 			content.fileName = 'my_test_file';
 			content.download.extension = 'mp4';
 
-			res.__event = new MessageQueueEvent({
+			res.locals.__event = new MessageQueueEvent({
 				content_id: content.id,
 				download_format: DOWNLOAD_ARCHIVE_EXTENSION,
 				syndication_state: content.canBeSyndicated,

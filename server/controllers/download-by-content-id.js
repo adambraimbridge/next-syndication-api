@@ -31,7 +31,7 @@ module.exports = exports = (req, res, next) => {
 			}
 
 			res.__content = content;
-			res.__event = new MessageQueueEvent({
+			res.locals.__event = new MessageQueueEvent({
 				event: {
 					content_id: content.id,
 					contract_id: res.locals.syndication_contract.id,
@@ -44,7 +44,7 @@ module.exports = exports = (req, res, next) => {
 				}
 			});
 
-			process.nextTick(async () => await res.__event.publish());
+			process.nextTick(async () => await res.locals.__event.publish());
 
 			if (isMediaResource(content)) {
 				if (!Array.isArray(content.dataSource) || !content.dataSource.length) {
@@ -120,7 +120,7 @@ function cleanup(content) {
 }
 
 function publishEndEvent(res, state) {
-	const event = res.__event.clone({
+	const event = res.locals.__event.clone({
 		state,
 		time: moment().toJSON()
 	});
