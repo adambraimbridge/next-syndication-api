@@ -7,6 +7,10 @@ const { default: log } = require('@financial-times/n-logger');
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 const inSafeList = requestersOrigin => {
+	if (/^https:\/\/ft-next-syndication-(?:api|downloads).herokuapp\.com$/.test(requestersOrigin)) {
+		return true;
+	}
+
 	// Only allow ft subdomains
 	const subdomainRegex = /^(https?:\/\/)?((([^.]+)\.)*)ft\.com(:[0-9]{1,4})?$/;
 
@@ -25,7 +29,8 @@ module.exports = exports = (req, res, next) => {
 
 	if (isCorsRequest) {
 		res.set('Access-Control-Allow-Origin', requestersOrigin);
-		res.set('Access-Control-Allow-Headers', 'Content-Type');
+		res.set('Access-Control-Allow-Headers', 'Content-Type, Cookie, *');
+		res.set('Access-Control-Allow-Methods', 'GET');
 		res.set('Access-Control-Allow-Credentials', true);
 		res.set('Access-Control-Expose-Headers', 'FT-New-Syndication-User');
 	}
