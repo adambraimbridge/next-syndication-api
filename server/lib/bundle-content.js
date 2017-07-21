@@ -134,7 +134,7 @@ module.exports = exports = (req, res, next) => {
 			req.__download_cancelled__ = true;
 
 			if (req.__end_called__ !== true) {
-				uriStream.end();
+				!uriStream || uriStream.end();
 
 				archive.end();
 
@@ -208,6 +208,8 @@ module.exports = exports = (req, res, next) => {
 
 				return;
 			}
+
+			process.nextTick(async () => await res.locals.__event.publish());
 
 			uriRes.body.pipe(stream);
 

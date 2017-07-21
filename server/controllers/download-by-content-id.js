@@ -44,8 +44,6 @@ module.exports = exports = (req, res, next) => {
 				}
 			});
 
-			process.nextTick(async () => await res.locals.__event.publish());
-
 			if (isMediaResource(content)) {
 				if (!Array.isArray(content.dataSource) || !content.dataSource.length) {
 					res.status(400).end();
@@ -66,6 +64,8 @@ module.exports = exports = (req, res, next) => {
 
 				prepareDownloadResponse(res);
 
+				process.nextTick(async () => await res.locals.__event.publish());
+
 				convertArticle({
 					source: content[content.extension === 'plain' ? 'bodyXML__PLAIN' : 'bodyXML__CLEAN'],
 					sourceFormat: 'html',
@@ -77,9 +77,9 @@ module.exports = exports = (req, res, next) => {
 
 					res.set('content-length', file.length);
 
-					publishEndEvent(res, 'complete');
-
 					res.status(200).send(file);
+
+					publishEndEvent(res, 'complete');
 
 					log.debug(`${MODULE_ID} ArticleConversionSuccess => ${content.id} in ${Date.now() - START}ms`);
 
