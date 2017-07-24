@@ -40,6 +40,7 @@ module.exports = exports = (req, res, next) => {
 					state: 'start',
 					syndication_state: String(content.canBeSyndicated),
 					time: moment().toDate(),
+					title: content.title,
 					user_id: res.locals.userUuid
 				}
 			});

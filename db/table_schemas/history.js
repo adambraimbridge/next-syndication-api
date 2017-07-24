@@ -13,6 +13,7 @@ module.exports = exports = {
 		{ AttributeName: 'licence_id', AttributeType: 'S' },
 		{ AttributeName: 'syndication_state', AttributeType: 'S' },
 		{ AttributeName: 'time', AttributeType: 'S' },
+		{ AttributeName: 'title', AttributeType: 'S' },
 		{ AttributeName: 'user_id', AttributeType: 'S' },
 		{ AttributeName: 'version', AttributeType: 'S' }
 	]
