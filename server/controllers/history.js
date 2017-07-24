@@ -4,6 +4,8 @@ const path = require('path');
 
 const { default: log } = require('@financial-times/n-logger');
 
+const moment = require('moment');
+
 const HistoryTable = require('../../db/tables/history');
 const { client } = require('../../db/connect');
 
@@ -57,6 +59,8 @@ module.exports = exports = async (req, res, next) => {
 					const user = LICENCE.usersMap[item.user_id];
 
 					item.id = item.content_id.split('/').pop();
+
+					item.date = moment(item.time).format('DD MMMM YYYY');
 
 					if (user) {
 						item.user_email = user.email;
