@@ -43,7 +43,7 @@ function decorateContract(contract) {
 			contract.content_allowed = `${contentAllowed[0]} only`;
 			break;
 		default:
-			contract.content_allowed = `${contentAllowed.slice(0, -1).join(', ')} &amp; ${contentAllowed[contentAllowed.length - 1]}`;
+			contract.content_allowed = `${contentAllowed.slice(0, -1).join(', ')} & ${contentAllowed[contentAllowed.length - 1]}`;
 	}
 
 	return contract;
