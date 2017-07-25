@@ -31,6 +31,7 @@ describe(MODULE_ID, function () {
 			'contributor_content': true,
 			'limit_video': 10000000,
 			'licencee_name': 'FT Staff',
+			'content_allowed': 'Articles, Podcasts & Video',
 			'assets': [{
 				'online_usage_limit': 10000000,
 				'product': 'FT Article',

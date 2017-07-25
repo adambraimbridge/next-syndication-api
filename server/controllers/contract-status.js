@@ -24,6 +24,28 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 function decorateContract(contract) {
 	contract.contract_date = `${moment(contract.contract_starts).format('DD/MM/YY')} - ${moment(contract.contract_ends).format('DD/MM/YY')}`;
 
+	const contentAllowed = [];
+
+	if (contract.limit_article > 0) {
+		contentAllowed.push('Articles');
+	}
+
+	if (contract.limit_podcast > 0) {
+		contentAllowed.push('Podcasts');
+	}
+
+	if (contract.limit_video > 0) {
+		contentAllowed.push('Video');
+	}
+
+	switch (contentAllowed.length) {
+		case 1:
+			contract.content_allowed = `${contentAllowed[0]} only`;
+			break;
+		default:
+			contract.content_allowed = `${contentAllowed.slice(0, -1).join(', ')} &amp; ${contentAllowed[contentAllowed.length - 1]}`;
+	}
+
 	return contract;
 }
 
