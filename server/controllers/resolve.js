@@ -7,6 +7,8 @@ const { default: log } = require('@financial-times/n-logger');
 const HistoryTable = require('../../db/tables/history');
 const { client } = require('../../db/connect');
 
+const flagIsOn = require('../helpers/flag-is-on');
+
 const fetchContentById = require('../lib/fetch-content-by-id');
 const resolve = require('../lib/resolve');
 
@@ -37,7 +39,9 @@ module.exports = exports = async (req, res, next) => {
 		return acc;
 	}, {}));
 
-	const items = (await Promise.all(DISTINCT_ITEMS.map(async content_id => await fetchContentById(content_id)))).filter(item => Object.prototype.toString.call(item) === '[object Object]');
+	let items = (await Promise.all(DISTINCT_ITEMS.map(async content_id => await fetchContentById(content_id)))).filter(item => Object.prototype.toString.call(item) === '[object Object]');
+
+	items = items.filter(item => showItem(item, res.locals.flags));
 
 	log.info(`${MODULE_ID} => ${DISTINCT_ITEMS.length} distinct items found out of ${body.length} total items`);
 	log.info(`${MODULE_ID} => Retrieved ${items.length}/${DISTINCT_ITEMS.length} distinct items in ${Date.now() - START}ms`);
@@ -74,3 +78,25 @@ module.exports = exports = async (req, res, next) => {
 
 	next();
 };
+
+function showItem(item, flags) {
+	let { type } = item;
+
+	type = type.split('/').pop().toLowerCase();
+
+	if (type === 'article') {
+		return true;
+	}
+
+	if (type === 'mediaresource' || type === 'video' || type === 'podcast') {
+		return flagIsOn(flags.syndicationDownloadMediaResource);
+	}
+
+	if (type === 'package') {
+		return flagIsOn(flags.syndicationDownloadPackage);
+	}
+
+	if (type === 'placeholder') {
+		return flagIsOn(flags.syndicationDownloadPlaceholder);
+	}
+}

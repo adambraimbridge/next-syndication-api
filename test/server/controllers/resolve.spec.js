@@ -99,6 +99,9 @@ describe(MODULE_ID, function () {
 		res.json = sinon.stub();
 
 		res.locals = {
+			flags: {
+				syndicationDownloadMediaResource: true
+			},
 			licence: { id: 'xyz' },
 			syndication_contract: {
 				id: 'lmno'
