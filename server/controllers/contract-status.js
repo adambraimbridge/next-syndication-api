@@ -1,9 +1,9 @@
 'use strict';
 
 const path = require('path');
-//const util = require('util');
 
 const { default: log } = require('@financial-times/n-logger');
+const moment = require('moment');
 
 const {
 	SALESFORCE: {
@@ -20,6 +20,12 @@ const toPutItem = require('../../db/toPutItem');
 const getContractByID = require('../lib/get-contract-by-id');
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+
+function decorateContract(contract) {
+	contract.contract_date = `${moment(contract.contract_starts).format('DD/MM/YY')} - ${moment(contract.contract_ends).format('DD/MM/YY')}`;
+
+	return contract;
+}
 
 module.exports = exports = async (req, res, next) => {
 	try {
@@ -43,7 +49,7 @@ module.exports = exports = async (req, res, next) => {
 
 				res.status(200);
 
-				res.json(item);
+				res.json(decorateContract(item));
 
 				next();
 
@@ -71,7 +77,7 @@ module.exports = exports = async (req, res, next) => {
 
 			res.status(200);
 
-			res.json(dbItem.Item);
+			res.json(decorateContract(dbItem.Item));
 
 			next();
 		}

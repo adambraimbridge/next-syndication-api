@@ -24,6 +24,7 @@ describe(MODULE_ID, function () {
 			'owner_email': 'syndication@ft.com',
 			'last_updated': '2017-07-19T13:37:20.291Z',
 			'owner_name': 'FT Syndication',
+			'contract_date': '11/12/15 - 31/01/2015',
 			'contract_starts': '2015-12-11',
 			'limit_podcast': 10000000,
 			'contract_ends': '2050-01-31',
