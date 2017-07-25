@@ -37,7 +37,7 @@ module.exports = exports = (req, res, next) => {
 					contract_id: res.locals.syndication_contract.id,
 					download_format: content.extension,
 					licence_id: res.locals.licence.id,
-					published_date: moment(content.firstPublishedDate).toDate(),
+					published_date: content.firstPublishedDate || content.publishedDate,
 					state: 'start',
 					syndication_state: String(content.canBeSyndicated),
 					time: moment().toDate(),
