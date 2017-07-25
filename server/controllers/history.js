@@ -61,6 +61,7 @@ module.exports = exports = async (req, res, next) => {
 					item.id = item.content_id.split('/').pop();
 
 					item.date = moment(item.time).format('DD MMMM YYYY');
+					item.published = moment(item.published_date).format('DD MMMM YYYY');
 
 					if (user) {
 						item.user_email = user.email;

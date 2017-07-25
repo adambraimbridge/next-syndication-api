@@ -71,6 +71,7 @@ describe(MODULE_ID, function () {
 			let event_data = {
 				contract_id: 'syndication',
 				licence_id: 'foo',
+				published_date: new Date(),
 				time: new Date(),
 				user_id: 'bar'
 			};
@@ -79,6 +80,7 @@ describe(MODULE_ID, function () {
 
 			expect(event).to.have.property('contract_id').and.equal(event_data.contract_id);
 			expect(event).to.have.property('licence_id').and.equal(event_data.licence_id);
+			expect(event).to.have.property('published_date').and.equal(event_data.published_date.toJSON());
 			expect(event).to.have.property('time').and.equal(event_data.time.toJSON());
 			expect(event).to.have.property('user_id').and.equal(event_data.user_id);
 		});
@@ -110,6 +112,7 @@ describe(MODULE_ID, function () {
 				contract_id: 'syndication',
 				download_format: 'docx',
 				licence_id: 'foo',
+				published_date: new Date(),
 				state: 'save',
 				time: new Date(),
 				user_id: 'bar'
@@ -132,6 +135,7 @@ describe(MODULE_ID, function () {
 				contract_id: 'syndication',
 				download_format: 'docx',
 				licence_id: 'foo',
+				published_date: new Date(),
 				state: 'save',
 				time: new Date(),
 				user_id: 'bar'
@@ -163,6 +167,7 @@ describe(MODULE_ID, function () {
 		let event_data = {
 			contract_id: 'syndication',
 			licence_id: 'foo',
+			published_date: new Date(),
 			time: new Date(),
 			user_id: 'bar'
 		};
@@ -182,6 +187,7 @@ describe(MODULE_ID, function () {
 		let event_data = {
 			contract_id: 'syndication',
 			licence_id: 'foo',
+			published_date: new Date(),
 			time: new Date(),
 			user_id: 'bar'
 		};
@@ -197,6 +203,7 @@ describe(MODULE_ID, function () {
 			content_id: 'http://www.ft.com/thing/abc',
 			download_format: 'docx',
 			licence_id: 'foo',
+			published_date: new Date(),
 			state: 'save',
 			time: new Date(),
 			user_id: 'bar'
@@ -218,6 +225,7 @@ describe(MODULE_ID, function () {
 			content_id: 'http://www.ft.com/thing/abc',
 			download_format: 'docx',
 			licence_id: 'foo',
+			published_date: new Date(),
 			state: 'save',
 			time: new Date(),
 			user_id: 'bar'
@@ -246,6 +254,7 @@ describe(MODULE_ID, function () {
 				contract_id: 'syndication',
 				download_format: 'docx',
 				licence_id: 'foo',
+				published_date: new Date(),
 				state: 'save',
 				time: new Date(),
 				user_id: 'bar'

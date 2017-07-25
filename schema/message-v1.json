@@ -22,6 +22,10 @@
         "licence_id": {
             "type": "string"
         },
+        "published_date": {
+            "format": "date-time",
+            "type": "string"
+        },
         "state": {
             "default": "start",
             "enum": [
@@ -67,6 +71,7 @@
         "content_id",
         "contract_id",
         "licence_id",
+        "published_date",
         "state",
         "syndication_state",
         "time",
