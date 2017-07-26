@@ -7,14 +7,13 @@ const { Writable: WritableStream } = require('stream');
 const chai = require('chai');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
-const proxyquire = require('proxyquire');
 
 const httpMocks = require('../../fixtures/node-mocks-http');
 
-const { db, client } = require('../../../db/connect');
-
 const { expect } = chai;
 chai.use(sinonChai);
+
+const underTest = require('../../../server/controllers/contract-status');
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
@@ -68,16 +67,8 @@ describe(MODULE_ID, function () {
 		let next;
 		let req;
 		let res;
-		let contract = require('../../../stubs/CA-00001558.json');
 
 		before(async function () {
-			sinon.stub(client, 'getAsync').resolves({ Item: contractResponse });
-			sinon.stub(db, 'putItemAsync').resolves({});
-
-			const underTest = proxyquire('../../../server/controllers/contract-status', {
-				'../lib/get-contract-by-id': sinon.stub().resolves(contract)
-			});
-
 			req = httpMocks.createRequest({
 				'eventEmitter': EventEmitter,
 				'connection': new EventEmitter(),
@@ -115,6 +106,7 @@ describe(MODULE_ID, function () {
 			res.json = sinon.stub();
 
 			res.locals = {
+				contract: contractResponse,
 				flags: {
 					syndication: true,
 					syndicationNew: 'on',
@@ -130,10 +122,6 @@ describe(MODULE_ID, function () {
 			next = sinon.stub();
 
 			await underTest(req, res, next);
-		});
-
-		after(function () {
-			db.putItemAsync.restore();
 		});
 
 		it('returns contract data', function () {
