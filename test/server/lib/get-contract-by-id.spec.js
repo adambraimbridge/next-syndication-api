@@ -3,50 +3,93 @@
 const path = require('path');
 
 const chai = require('chai');
-const nock = require('nock');
+const sinon = require('sinon');
+const sinonChai = require('sinon-chai');
+const proxyquire = require('proxyquire');
 
-const {
-	TEST: { FIXTURES_DIRECTORY }
-} = require('config');
+const moment = require('moment');
 
-const underTest = require('../../../server/lib/get-contract-by-id');
+const { db, client } = require('../../../db/connect');
 
 const { expect } = chai;
+chai.use(sinonChai);
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
 describe(MODULE_ID, function () {
-	before(async function () {
-		nock('https://login.salesforce.com')
-			.post('/services/oauth2/token')
-			.reply(() => {
-				return [
-					200,
-					{
-						access_token: '00DL....z_pH',
-						instance_url: 'https://financialtimes--test.cs8.my.salesforce.com',
-						id: 'https://login.salesforce.com/id/00D...MAM/005...IAO',
-						token_type: 'Bearer',
-						issued_at: '1500301959088',
-						signature: 'dL6R....rgA='
-					}
-				];
+	describe('success', function () {
+		let underTest;
+
+		const contractResponse = {
+			'owner_email': 'syndication@ft.com',
+			'last_updated': '2017-07-19T13:37:20.291Z',
+			'owner_name': 'FT Syndication',
+			'contract_date': '11/12/15 - 31/01/2015',
+			'contract_starts': '2015-12-11',
+			'limit_podcast': 10000000,
+			'contract_ends': '2050-01-31',
+			'contributor_content': true,
+			'limit_video': 10000000,
+			'licencee_name': 'FT Staff',
+			'content_allowed': 'Articles, Podcasts & Video',
+			'assets': [{
+				'online_usage_limit': 10000000,
+				'product': 'FT Article',
+				'online_usage_period': 'Week',
+				'print_usage_period': 'Week',
+				'print_usage_limit': 20,
+				'embargo_period': 0,
+				'asset': 'FT Article',
+				'content': 'FT.com'
+			}, {
+				'online_usage_limit': 10000000,
+				'product': 'Video',
+				'online_usage_period': 'Week',
+				'print_usage_period': 'Week',
+				'print_usage_limit': 20,
+				'embargo_period': 0,
+				'asset': 'Video',
+				'content': 'FT.com'
+			}, {
+				'online_usage_limit': 10000000,
+				'product': 'Podcast',
+				'online_usage_period': 'Week',
+				'print_usage_period': 'Week',
+				'print_usage_limit': 20,
+				'embargo_period': 0,
+				'asset': 'Podcast',
+				'content': 'FT.com'
+			}],
+			'contract_number': 'CA-00001558',
+			'client_website': 'https://www.ft.com',
+			'client_publications': 'FT',
+			'limit_article': 10000000
+		};
+
+		let contract = require('../../../stubs/CA-00001558.json');
+
+		before(async function () {
+			sinon.stub(client, 'getAsync').resolves({ Item: contractResponse });
+			sinon.stub(db, 'putItemAsync').resolves({});
+
+			underTest = proxyquire('../../../server/lib/get-contract-by-id', {
+				'./get-salesforce-contract-by-id': sinon.stub().resolves(contract)
 			});
+		});
 
-		nock('https://financialtimes--test.cs8.my.salesforce.com')
-			.get('/services/apexrest/SCRMContract/FTS-14046740')
-			.reply(() => {
-				return [
-					200,
-					require(path.resolve(`${FIXTURES_DIRECTORY}/contractProfile.json`)),
-					{}
-				];
-			});
-	});
+		after(function () {
+			underTest = null;
 
-	it('returns contract data', async function () {
-		const item = await underTest('FTS-14046740');
+			db.putItemAsync.restore();
+		});
 
-		expect(item).to.eql(require(path.resolve(`${FIXTURES_DIRECTORY}/contractProfile.json`)));
+		it('returns contract data', async function () {
+			const res = await underTest('CA-00001558')
+
+			expect(res).to.eql(Object.assign(JSON.parse(JSON.stringify(contractResponse)), {
+				content_allowed: 'Articles, Podcasts & Video',
+				contract_date: `${moment(contractResponse.contract_starts).format('DD/MM/YY')} - ${moment(contractResponse.contract_ends).format('DD/MM/YY')}`
+			}));
+		});
 	});
 });

@@ -3,84 +3,90 @@
 const path = require('path');
 
 const { default: log } = require('@financial-times/n-logger');
-
-const nforce = require('nforce');
+const moment = require('moment');
 
 const {
 	SALESFORCE: {
-		API_VERSION: SALESFORCE_API_VERSION,
-		BASE_URI: SALESFORCE_URI,
-		CALLBACK_URI: SALESFORCE_CALLBACK_URI,
-		CLIENT_ID: SALESFORCE_CLIENT_ID,
-		CLIENT_SECRET: SALESFORCE_CLIENT_SECRET,
-		CONNECTION_MODE: SALESFORCE_CONNECTION_MODE,
-		ENVIRONMENT: SALESFORCE_ENVIRONMENT,
-		PASSWORD: SALESFORCE_PASSWORD,
-		STUB_CONTRACTS: SALESFORCE_STUB_CONTRACTS,
-		USERNAME: SALESFORCE_USERNAME
+		REFRESH_CONTRACT_PERIOD: SALESFORCE_REFRESH_CONTRACT_PERIOD
 	}
 } = require('config');
 
+const ContractsSchema = require('../../db/table_schemas/contracts');
+const ContractsTable = require('../../db/tables/contracts');
+const { db, client } = require('../../db/connect');
+const toPutItem = require('../../db/toPutItem');
+const getSalesforceContractByID = require('./get-salesforce-contract-by-id');
+
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
-module.exports = exports = async (contractID, dontThrow) => {
-	try {
+function decorateContract(contract) {
+	contract.contract_date = `${moment(contract.contract_starts).format('DD/MM/YY')} - ${moment(contract.contract_ends).format('DD/MM/YY')}`;
 
-		const org = nforce.createConnection({
-			apiVersion: SALESFORCE_API_VERSION,
-			autoRefresh: true,
-			clientId: SALESFORCE_CLIENT_ID,
-			clientSecret: SALESFORCE_CLIENT_SECRET,
-			environment: SALESFORCE_ENVIRONMENT,
-			mode: SALESFORCE_CONNECTION_MODE,
-			redirectUri: SALESFORCE_CALLBACK_URI
-		});
+	const contentAllowed = [];
 
-		const oauth = await org.authenticate({
-			username: SALESFORCE_USERNAME,
-			password: SALESFORCE_PASSWORD
-		});
-
-		log.debug(`${MODULE_ID} | SALESFORCE OAUTH => `, oauth);
-
-		log.debug(`${MODULE_ID} | SALESFORCE CONTRACT URI => `, `${SALESFORCE_URI}/${contractID}`);
-
-		let apexRes = await org.apexRest({
-			uri: `${SALESFORCE_URI}/${contractID}`,
-			method: 'GET',
-			oauth: oauth
-		});
-
-		log.debug(`${MODULE_ID} | APEX RESPONSE => `, apexRes);
-
-		if (apexRes) {
-			if (apexRes.success === true) {
-				return apexRes;
-			}
-			else {
-				if (SALESFORCE_STUB_CONTRACTS.includes(contractID)) {
-					return require(path.resolve(`./stubs/${contractID}.json`));
-				}
-
-				return apexRes;
-			}
-		}
-
-		if (dontThrow === true) {
-			return null;
-		}
-
-		throw new Error(`${MODULE_ID} => NullApexResponse`);
+	if (contract.limit_article > 0) {
+		contentAllowed.push('Articles');
 	}
-	catch (error) {
-		log.error(`${MODULE_ID}`, {
-			error: error.stack
+
+	if (contract.limit_podcast > 0) {
+		contentAllowed.push('Podcasts');
+	}
+
+	if (contract.limit_video > 0) {
+		contentAllowed.push('Video');
+	}
+
+	switch (contentAllowed.length) {
+		case 1:
+			contract.content_allowed = `${contentAllowed[0]} only`;
+			break;
+		default:
+			contract.content_allowed = `${contentAllowed.slice(0, -1).join(', ')} & ${contentAllowed[contentAllowed.length - 1]}`;
+	}
+
+	return contract;
+}
+
+module.exports = exports = async (contractID) => {
+	const doc = await client.getAsync({
+		TableName: ContractsTable.TableName,
+		Key: {
+			[ContractsTable.AttributeDefinitions[0].AttributeName]: contractID
+		}
+	});
+
+	if (doc.Item && doc.Item[ContractsTable.AttributeDefinitions[0].AttributeName] === contractID) {
+		const item = doc.Item;
+		let last_updated = Date.now() - +(new Date(item.last_updated));
+
+		if (last_updated < SALESFORCE_REFRESH_CONTRACT_PERIOD) {
+			log.debug(`${MODULE_ID} | Using DB version of contract#${contractID}`, doc);
+
+			return decorateContract(item);
+		}
+	}
+
+	const contract = await getSalesforceContractByID(contractID);
+
+	if (contract.success === true) {
+		contract.last_updated = (new Date()).toJSON();
+
+		let dbItem = toPutItem(contract, ContractsSchema);
+
+		const res = await db.putItemAsync(dbItem);
+
+		dbItem = await client.getAsync({
+			TableName: ContractsTable.TableName,
+			Key: {
+				[ContractsTable.AttributeDefinitions[0].AttributeName]: contractID
+			}
 		});
 
-		if (dontThrow === true) {
-			return null;
-		}
+		log.debug(`${MODULE_ID} | Persisted contract#${contractID} to DB`, { dbItem, res });
 
-		throw error;
+		return decorateContract(dbItem.Item);
+	}
+	else {
+		throw new Error(contract.errorMessage);
 	}
 };
