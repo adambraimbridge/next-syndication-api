@@ -40,7 +40,16 @@ module.exports = exports = async (req, res, next) => {
 
 		log.debug(`${MODULE_ID} | Persisted contract#${res.locals.syndication_contract.id} to DB`, { dbRes });
 
-		res.sendStatus(204);
+		const referrer = String(req.get('referrer'));
+
+		if (referrer.endsWith('/republishing/contract')) {
+			res.redirect(referrer);
+
+			return;
+		}
+		else {
+			res.sendStatus(204);
+		}
 
 		next();
 	}
