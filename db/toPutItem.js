@@ -1,5 +1,7 @@
 'use strict';
 
+const { JS_TO_DB_TYPES } = require('config');
+
 module.exports = exports = (data, schema) => {
 	return {
 		Item: assignProperties(data, schema.AttributeDefinitions),
@@ -9,13 +11,31 @@ module.exports = exports = (data, schema) => {
 
 exports.assignProperties = assignProperties;
 exports.getValue = getValue;
+exports.getType = getType;
 
 function assignProperties(data, schema, item = {}, simplify) {
+	if (!schema) {
+		for (let [key, val] of Object.entries(data)) {
+			let def = { AttributeType: getType(val) };
+			val = getValue(val, def);
+
+			if (val !== null) {
+				item[key] = {
+					[def.AttributeType]: val
+				};
+			}
+		}
+
+		return item;
+	}
+
 	schema.reduce((acc, def) => {
-		if (Object.prototype.hasOwnProperty.call(data, def.AttributeName)) {
+		if (Object.prototype.hasOwnProperty.call(data, def.AttributeName) || Object.prototype.hasOwnProperty.call(data, def.AttributeAlias)) {
 			const ATTRIBUTE_ID = def.AttributeAlias || def.AttributeName;
 
-			let val = data[def.AttributeName];
+			let val = Object.prototype.hasOwnProperty.call(data, def.AttributeName)
+					? data[def.AttributeName]
+					: data[def.AttributeAlias];
 
 			acc[ATTRIBUTE_ID] = {};
 
@@ -47,7 +67,12 @@ function assignProperties(data, schema, item = {}, simplify) {
 						acc[ATTRIBUTE_ID] = val;
 					}
 					else {
-						acc[ATTRIBUTE_ID][def.AttributeType] = val;
+						if (def.AttributeType === 'M') {
+							acc[ATTRIBUTE_ID][def.AttributeType] = assignProperties(val);
+						}
+						else {
+							acc[ATTRIBUTE_ID][def.AttributeType] = val;
+						}
 					}
 				}
 			}
@@ -57,6 +82,16 @@ function assignProperties(data, schema, item = {}, simplify) {
 	}, item);
 
 	return item;
+}
+
+function getType(item) {
+	let [, type] = Object.prototype.toString.call(item).split(' ');
+
+	type = type.substring(0, type.length - 1).toLowerCase();
+
+	type = JS_TO_DB_TYPES[type];
+
+	return type;
 }
 
 function getValue(val, def) {
