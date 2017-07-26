@@ -10,6 +10,7 @@ const accessControl = require('./middleware/access-control');
 const cache = require('./middleware/cache');
 const checkIfNewSyndicationUser = require('./middleware/check-if-new-syndication-user');
 const decodeSession = require('./middleware/decode-session');
+const getContractById = require('./middleware/get-contract-by-id');
 //const getLicenceAccessAuthToken = require('./middleware/get-licence-access-auth-token');
 const getUserAccessAuthToken = require('./middleware/get-user-access-auth-token');
 const getSyndicationLicenceForUser = require('./middleware/get-syndication-licence-for-user');
@@ -37,7 +38,8 @@ const middleware = [
 	getSyndicationLicenceForUser,
 	getUserAccessAuthToken,
 	getUserProfile,
-	checkIfNewSyndicationUser
+	checkIfNewSyndicationUser,
+	getContractById
 ];
 
 //const licenceAuthMiddleware = Array.from(middleware);
@@ -55,6 +57,7 @@ app.get(`${BASE_URI_PATH}/download/:content_id`, middleware, require('./controll
 app.get(`${BASE_URI_PATH}/history`, middleware, require('./controllers/history'));
 app.get(`${BASE_URI_PATH}/save/:content_id`, middleware, require('./controllers/save-by-content-id'));
 app.get(`${BASE_URI_PATH}/user-status`, middleware, require('./controllers/user-status'));
+app.post(`${BASE_URI_PATH}/download-format`, middleware, require('./controllers/update-download-format'));
 
 if (process.env.NODE_ENV !== 'production') {
 	const middleware = [
