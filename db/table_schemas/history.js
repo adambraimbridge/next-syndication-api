@@ -15,7 +15,14 @@ module.exports = exports = {
 		{ AttributeName: 'syndication_state', AttributeType: 'S' },
 		{ AttributeName: 'time', AttributeType: 'S' },
 		{ AttributeName: 'title', AttributeType: 'S' },
-		{ AttributeName: 'user_id', AttributeType: 'S' },
+		{
+			AttributeName: 'user', AttributeType: 'M',
+			AttributeDefinitions: [
+				{ AttributeName: 'email', AttributeType: 'S' },
+				{ AttributeName: 'first_name', AttributeType: 'S' },
+				{ AttributeName: 'id', AttributeType: 'S' },
+				{ AttributeName: 'surname', AttributeType: 'S' }
+			] },
 		{ AttributeName: 'version', AttributeType: 'S' }
 	]
 };
