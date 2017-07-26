@@ -11,7 +11,7 @@ const {
 	}
 } = require('config');
 
-const getContractByID = require('../lib/get-contract-by-id');
+const getSalesforceContractByID = require('../lib/get-salesforce-contract-by-id');
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
@@ -29,7 +29,7 @@ module.exports = exports = async (req, res, next) => {
 			return;
 		}
 
-		const contract = await getContractByID(req.params.contract_id);
+		const contract = await getSalesforceContractByID(req.params.contract_id);
 
 		if (contract.success === true) {
 			res.status(200);
