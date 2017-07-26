@@ -1,81 +1,102 @@
 {
-    "title": "MessageV1",
-    "type": "object",
-    "properties": {
-        "_id": {
-            "type": "string"
-        },
-        "content_id": {
-            "format": "uri",
-            "type": "string"
-        },
-        "contract_id": {
-            "type": "string"
-        },
-        "contributor_content": {
-            "default": false,
-            "type": "boolean"
-        },
-        "download_format": {
-            "type": "string"
-        },
-        "licence_id": {
-            "type": "string"
-        },
-        "published_date": {
-            "format": "date-time",
-            "type": "string"
-        },
-        "state": {
-            "default": "start",
-            "enum": [
-                "complete",
-                "delete",
-                "error",
-                "interrupted",
-                "save",
-                "start"
-            ],
-            "type": "string"
-        },
-        "syndication_state": {
-            "default": "yes",
-            "enum": [
-                "no",
-                "null",
-                "verify",
-                "yes"
-            ],
-            "type": "string"
-        },
-        "time": {
-            "format": "date-time",
-            "type": "string"
-        },
-        "title": {
-            "type": "string"
-        },
-        "user_id": {
-            "type": "string"
-        },
-        "version": {
-            "enum": [
-                "v1"
-            ],
-            "default": "v1",
-            "type": "string"
-        }
+  "title": "MessageV1",
+  "type": "object",
+  "properties": {
+    "_id": {
+      "type": "string"
     },
-    "required": [
-        "_id",
-        "content_id",
-        "contract_id",
-        "licence_id",
-        "published_date",
-        "state",
-        "syndication_state",
-        "time",
-        "user_id",
-        "version"
-    ]
+    "content_id": {
+      "format": "uri",
+      "type": "string"
+    },
+    "contract_id": {
+      "type": "string"
+    },
+    "contributor_content": {
+      "default": false,
+      "type": "boolean"
+    },
+    "download_format": {
+      "type": "string"
+    },
+    "licence_id": {
+      "type": "string"
+    },
+    "published_date": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "state": {
+      "default": "start",
+      "enum": [
+        "complete",
+        "delete",
+        "error",
+        "interrupted",
+        "save",
+        "start"
+      ],
+      "type": "string"
+    },
+    "syndication_state": {
+      "default": "yes",
+      "enum": [
+        "no",
+        "null",
+        "verify",
+        "yes"
+      ],
+      "type": "string"
+    },
+    "time": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "user": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "format": "email",
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "surname": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "email",
+        "first_name",
+        "surname",
+        "id"
+      ]
+    },
+    "version": {
+      "enum": [
+        "v1"
+      ],
+      "default": "v1",
+      "type": "string"
+    }
+  },
+  "required": [
+    "_id",
+    "content_id",
+    "contract_id",
+    "licence_id",
+    "published_date",
+    "state",
+    "syndication_state",
+    "time",
+    "user",
+    "version"
+  ]
 }
