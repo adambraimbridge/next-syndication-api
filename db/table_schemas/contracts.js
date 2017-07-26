@@ -28,6 +28,7 @@ module.exports = exports = {
 				{ AttributeAlias: 'content', AttributeName: 'contentSet', AttributeType: 'S' },
 				{ AttributeAlias: 'asset', AttributeName: 'assetName', AttributeType: 'S' }
 			]
-		}
+		},
+		{ AttributeAlias: 'download_formats', AttributeName: 'download_formats', AttributeType: 'M' }
 	]
 };
