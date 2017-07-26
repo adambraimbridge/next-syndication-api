@@ -27,21 +27,28 @@ module.exports = exports = async (req, res, next) => {
 	try {
 		const licenceRes = await fetch(URI, { headers });
 
-		const { seatHolders } = await licenceRes.json();
+		if (licenceRes.ok) {
+			const { seatHolders } = await licenceRes.json();
 
-		if (Array.isArray(seatHolders) && seatHolders.length) {
-			LICENCE.users = seatHolders;
+			if (Array.isArray(seatHolders) && seatHolders.length) {
+				LICENCE.users = seatHolders;
 
-			LICENCE.usersMap = seatHolders.reduce((acc, item) => {
-				acc[item.id] = item;
+				LICENCE.usersMap = seatHolders.reduce((acc, item) => {
+					acc[item.id] = item;
 
-				return acc;
-			}, {});
+					return acc;
+				}, {});
 
-			log.info(`${MODULE_ID} => Found ${seatHolders.length} users for licence#${res.locals.licence.id}; contract#${res.locals.syndication_contract.id}`);
+				log.info(`${MODULE_ID} => Found ${seatHolders.length} users for licence#${res.locals.licence.id}; contract#${res.locals.syndication_contract.id}`);
+			}
+			else {
+				log.warn(`${MODULE_ID} => Found NO users for licence#${res.locals.licence.id}; contract#${res.locals.syndication_contract.id}`);
+			}
 		}
 		else {
-			log.warn(`${MODULE_ID} => Found NO users for licence#${res.locals.licence.id}; contract#${res.locals.syndication_contract.id}`);
+			const { errors: [{ errorCode, message }] } = await licenceRes.json();
+
+			throw new Error(`${message}: ${errorCode}`);
 		}
 	}
 	catch (err) {
@@ -54,6 +61,8 @@ module.exports = exports = async (req, res, next) => {
 
 		if (res.locals.syndication_contract.rel !== 'complimentary') {
 			res.sendStatus(401);
+
+			return;
 		}
 	}
 
