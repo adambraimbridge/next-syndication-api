@@ -78,7 +78,8 @@ module.exports = exports = async (req, res, next) => {
 				res.json(items);
 			}
 			else {
-				res.sendStatus(204);
+				res.status(200);
+				res.json([]);
 			}
 		}
 		else {
