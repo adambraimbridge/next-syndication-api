@@ -48,33 +48,35 @@ module.exports = exports = async (req, res, next) => {
 					.sort(([a], [b]) => b - a)
 					.map(([, item]) => item);
 
-				switch (req.query.type) {
-					case 'downloads':
-						items = items.filter(item => DOWNLOAD_STATE_MAP[item.item_state] === true);
-						break;
-					case 'saved':
-						items = items.filter(item => SAVED_STATE_MAP[item.item_state] === true);
-						break;
+				if (req.query.type) {
+					let STATE_MAP = DOWNLOAD_STATE_MAP;
+
+					switch (req.query.type) {
+						case 'downloads':
+							break;
+						case 'saved':
+							STATE_MAP = SAVED_STATE_MAP;
+							break;
+					}
+
+					STATE_MAP = JSON.parse(JSON.stringify(STATE_MAP));
+
+					if (req.query.include) {
+						if (!Array.isArray(req.query.include)) {
+							req.query.include = [req.query.include];
+						}
+
+						req.query.include.forEach(item => STATE_MAP[item] = true);
+					}
+
+					items = items.filter(item => STATE_MAP[item.item_state] === true);
 				}
 
 				items.forEach(item => {
-					const user = LICENCE.usersMap[item.user_id];
-
 					item.id = item.content_id.split('/').pop();
 
 					item.date = moment(item.time).format('DD MMMM YYYY');
 					item.published = moment(item.published_date).format('DD MMMM YYYY');
-
-					if (user) {
-						item.user_email = user.email;
-						item.user_name = `${user.firstName} ${user.lastName}`;
-					}
-					else {
-						if (res.locals.syndication_contract.rel === 'complimentary') {
-							item.user_email = `${item.user_id.substring(0, 4)}.${item.user_id.substring(item.user_id.length - 4)}@complimentary.ft.com`;
-							item.user_name = `${item.user_id.substring(0, 4)}...${item.user_id.substring(item.user_id.length - 4)}`;
-						}
-					}
 				});
 
 				res.json(items);
