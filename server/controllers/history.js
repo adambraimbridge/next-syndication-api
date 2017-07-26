@@ -6,6 +6,8 @@ const { default: log } = require('@financial-times/n-logger');
 
 const moment = require('moment');
 
+const { DOWNLOAD_STATE_MAP, SAVED_STATE_MAP } = require('config');
+
 const HistoryTable = require('../../db/tables/history');
 const { client } = require('../../db/connect');
 
@@ -48,10 +50,10 @@ module.exports = exports = async (req, res, next) => {
 
 				switch (req.query.type) {
 					case 'downloads':
-						items = items.filter(item => item.item_state !== 'save');
+						items = items.filter(item => DOWNLOAD_STATE_MAP[item.item_state] === true);
 						break;
 					case 'saved':
-						items = items.filter(item => item.item_state === 'save');
+						items = items.filter(item => SAVED_STATE_MAP[item.item_state] === true);
 						break;
 				}
 
