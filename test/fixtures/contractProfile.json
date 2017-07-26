@@ -2,7 +2,7 @@
   "videoLimit": 15,
   "success": true,
   "startDate": "2017-10-11",
-  "podcastLimit": null,
+  "podcastLimit": 0,
   "ownerName": "John Q. Average",
   "ownerEmail": "john.q@average.com",
   "licenceeName": "John Q. Average Account",
@@ -10,8 +10,8 @@
   "endDate": "2018-10-10",
   "contributor": false,
   "contractNumber": "FTS-12345678",
-  "clientWebsite": null,
-  "clientPublications": null,
+  "clientWebsite": "http://ft.com",
+  "clientPublications": "FT.com",
   "assets": [
     {
       "productName": "Video",

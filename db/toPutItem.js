@@ -7,6 +7,9 @@ module.exports = exports = (data, schema) => {
 	};
 };
 
+exports.assignProperties = assignProperties;
+exports.getValue = getValue;
+
 function assignProperties(data, schema, item = {}, simplify) {
 	schema.reduce((acc, def) => {
 		if (Object.prototype.hasOwnProperty.call(data, def.AttributeName)) {
@@ -37,11 +40,15 @@ function assignProperties(data, schema, item = {}, simplify) {
 				}
 			}
 			else {
-				if (simplify === true) {
-					acc[ATTRIBUTE_ID] = val;
-				}
-				else {
-					acc[ATTRIBUTE_ID][def.AttributeType] = def.AttributeType === 'N' ? String(val) : val;
+				val = getValue(val, def);
+
+				if (val !== null) {
+					if (simplify === true) {
+						acc[ATTRIBUTE_ID] = val;
+					}
+					else {
+						acc[ATTRIBUTE_ID][def.AttributeType] = val;
+					}
 				}
 			}
 		}
@@ -50,4 +57,17 @@ function assignProperties(data, schema, item = {}, simplify) {
 	}, item);
 
 	return item;
+}
+
+function getValue(val, def) {
+	if (val === null || typeof val === 'undefined') {
+		if (Object.prototype.hasOwnProperty.call(def, 'DefaultValue')) {
+			val = def.DefaultValue;
+		}
+		else {
+			return null;
+		}
+	}
+
+	return def.AttributeType === 'N' ? String(val) : val;
 }

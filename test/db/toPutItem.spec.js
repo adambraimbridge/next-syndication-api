@@ -20,6 +20,19 @@ const contractFixture = require(path.resolve(`${FIXTURES_DIRECTORY}/contractProf
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
 describe(MODULE_ID, function () {
+//	const ContractsSchemaDefsMap = ContractsSchema.AttributeDefinitions.reduce(function walkDefs(acc, def) {
+//		const id = def.AttributeAlias || def.AttributeName;
+//
+//		if (Array.isArray(def.AttributeDefinitions)) {
+//			acc[id] = def.AttributeDefinitions.reduce(walkDefs, {});
+//		}
+//		else {
+//			acc[id] = def;
+//		}
+//
+//		return acc;
+//	}, {});
+
 	describe('Contracts', function () {
 		it('returns an Object in a DynamodB friendly format', function () {
 			let item = underTest(contractFixture, ContractsSchema);
