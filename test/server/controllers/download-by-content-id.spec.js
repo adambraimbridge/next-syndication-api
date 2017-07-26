@@ -89,6 +89,11 @@ describe(MODULE_ID, function () {
 			});
 
 			res.locals = {
+				contract: {
+					download_formats: {
+						abc: 'docx'
+					}
+				},
 				licence: { id: 'xyz' },
 				syndication_contract: {
 					id: 'lmno'
@@ -181,6 +186,11 @@ describe(MODULE_ID, function () {
 			});
 
 			res.locals = {
+				contract: {
+					download_formats: {
+						abc: 'docx'
+					}
+				},
 				licence: { id: 'xyz' },
 				syndication_contract: {
 					id: 'lmno'

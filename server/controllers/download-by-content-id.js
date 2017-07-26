@@ -15,12 +15,22 @@ const isMediaResource = require('../helpers/is-media-resource');
 
 const MessageQueueEvent = require('../../queue/message-queue-event');
 
+const { DEFAULT_DOWNLOAD_FORMAT } = require('config');
+
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = (req, res, next) => {
 	const START = Date.now();
 
-	getContentById(req.params.content_id, req.query.format)
+	const { download_formats } = res.locals.contract;
+
+	const format = req.query.format
+				|| (download_formats
+				? download_formats[res.locals.user.id]
+				|| DEFAULT_DOWNLOAD_FORMAT
+				: DEFAULT_DOWNLOAD_FORMAT);
+
+	getContentById(req.params.content_id, format)
 		.then(content => {
 			if (Object.prototype.toString.call(content) !== '[object Object]') {
 				log.error(`${MODULE_ID} ContentNotFoundError => ${req.params.content_id}`);
