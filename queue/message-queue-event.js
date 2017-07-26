@@ -130,7 +130,15 @@ module.exports = exports = class MessageQueueEvent {
 				this[key] = JSON.parse(JSON.stringify(val.default));
 			}
 
-			json[key] = this[key];
+			switch (Object.prototype.toString.call(this[key])) {
+				case '[object Object]':
+				case '[object Array]':
+					json[key] = JSON.parse(JSON.stringify(this[key]));
+
+					break;
+				default:
+					json[key] = this[key];
+			}
 		}
 
 		// Return a cheap clone in case we have nested data structures.
