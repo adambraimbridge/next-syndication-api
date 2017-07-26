@@ -64,6 +64,7 @@
       "server/lib/resolve/index.js",
       "server/middleware/log-request.js",
       "server/app.js",
+      "server/app-dl.js",
       "server/env.js",
       "server/init.js",
       "server/stubs.js",
@@ -78,7 +79,8 @@
   "scripts": {
     "precommit": "node_modules/.bin/secret-squirrel",
     "prepush": "make verify -j3",
-    "commit": "commit-wizard"
+    "commit": "commit-wizard",
+    "commitmsg": "node_modules/.bin/secret-squirrel-commitmsg"
   },
   "config": {}
 }
