@@ -40,7 +40,12 @@ describe(MODULE_ID, function () {
 				licence_id: 'foo',
 				state: 'save',
 				time: new Date(),
-				user_id: 'bar'
+				user: {
+					email: 'foo@bar.com',
+					firstName: 'foo',
+					id: 'abc',
+					lastName: 'bar'
+				}
 			}
 		})).toJSON();
 

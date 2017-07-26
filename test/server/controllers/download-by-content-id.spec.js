@@ -93,6 +93,12 @@ describe(MODULE_ID, function () {
 				syndication_contract: {
 					id: 'lmno'
 				},
+				user: {
+					email: 'foo@bar.com',
+					firstName: 'foo',
+					id: 'abc',
+					lastName: 'bar'
+				},
 				userUuid: 'abc'
 			}
 		});
@@ -178,6 +184,12 @@ describe(MODULE_ID, function () {
 				licence: { id: 'xyz' },
 				syndication_contract: {
 					id: 'lmno'
+				},
+				user: {
+					email: 'foo@bar.com',
+					firstName: 'foo',
+					id: 'abc',
+					lastName: 'bar'
 				},
 				userUuid: 'abc'
 			}

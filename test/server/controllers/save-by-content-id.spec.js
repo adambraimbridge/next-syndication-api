@@ -90,6 +90,12 @@ describe(MODULE_ID, function () {
 			syndication_contract: {
 				id: 'lmno'
 			},
+			user: {
+				email: 'foo@bar.com',
+				firstName: 'foo',
+				id: 'abc',
+				lastName: 'bar'
+			},
 			userUuid: 'abc'
 		};
 
@@ -104,7 +110,12 @@ describe(MODULE_ID, function () {
 		await underTest(req, res, () => {});
 
 		expect(res.locals.__event).to.have.property('state').and.to.equal('save');
-		expect(res.locals.__event).to.have.property('user_id').and.to.equal(res.locals.userUuid);
+		expect(res.locals.__event).to.have.property('user').and.to.eql({
+			email: res.locals.user.email,
+			first_name: res.locals.user.firstName,
+			id: res.locals.user.id,
+			surname: res.locals.user.lastName
+		});
 		expect(res.locals.__event).to.have.property('licence_id').and.to.equal(res.locals.licence.id);
 		expect(res.locals.__event).to.have.property('time').and.to.be.a('string');
 		expect(res.locals.__event).to.not.have.property('download_format');

@@ -20,19 +20,6 @@ const contractFixture = require(path.resolve(`${FIXTURES_DIRECTORY}/contractProf
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
 describe(MODULE_ID, function () {
-//	const ContractsSchemaDefsMap = ContractsSchema.AttributeDefinitions.reduce(function walkDefs(acc, def) {
-//		const id = def.AttributeAlias || def.AttributeName;
-//
-//		if (Array.isArray(def.AttributeDefinitions)) {
-//			acc[id] = def.AttributeDefinitions.reduce(walkDefs, {});
-//		}
-//		else {
-//			acc[id] = def;
-//		}
-//
-//		return acc;
-//	}, {});
-
 	describe('Contracts', function () {
 		it('returns an Object in a DynamodB friendly format', function () {
 			let item = underTest(contractFixture, ContractsSchema);
@@ -80,7 +67,12 @@ describe(MODULE_ID, function () {
 				licence_id: 'foo',
 				state: 'save',
 				time: new Date(),
-				user_id: 'bar'
+				user: {
+					email: 'foo@bar.com',
+					first_name: 'foo',
+					id: 'bar',
+					surname: 'bar'
+				}
 			}})).toJSON();
 			let item = underTest(event, HistorySchema);
 
@@ -96,7 +88,14 @@ describe(MODULE_ID, function () {
 					licence_id: { S: event.licence_id },
 					syndication_state: { S: event.syndication_state },
 					time: { S: event.time },
-					user_id: { S: event.user_id },
+					user: {
+						M: {
+							email: { S: event.user.email },
+							first_name: { S: event.user.first_name },
+							id: { S: event.user.id },
+							surname: { S: event.user.surname }
+						}
+					},
 					version: { S: event.version }
 				}
 			});

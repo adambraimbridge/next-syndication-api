@@ -73,7 +73,12 @@ describe(MODULE_ID, function () {
 				licence_id: 'foo',
 				published_date: new Date(),
 				time: new Date(),
-				user_id: 'bar'
+				user: {
+					email: 'foo@bar.com',
+					first_name: 'foo',
+					id: 'bar',
+					surname: 'bar'
+				}
 			};
 
 			let event = new underTest({ event: event_data });
@@ -82,7 +87,7 @@ describe(MODULE_ID, function () {
 			expect(event).to.have.property('licence_id').and.equal(event_data.licence_id);
 			expect(event).to.have.property('published_date').and.equal(event_data.published_date.toJSON());
 			expect(event).to.have.property('time').and.equal(event_data.time.toJSON());
-			expect(event).to.have.property('user_id').and.equal(event_data.user_id);
+			expect(event).to.have.property('user').and.eql(event_data.user);
 		});
 	});
 
@@ -115,7 +120,12 @@ describe(MODULE_ID, function () {
 				published_date: new Date(),
 				state: 'save',
 				time: new Date(),
-				user_id: 'bar'
+				user: {
+					email: 'foo@bar.com',
+					first_name: 'foo',
+					id: 'bar',
+					surname: 'bar'
+				}
 			};
 
 			let event = new underTest({
@@ -138,7 +148,12 @@ describe(MODULE_ID, function () {
 				published_date: new Date(),
 				state: 'save',
 				time: new Date(),
-				user_id: 'bar'
+				user: {
+					email: 'foo@bar.com',
+					first_name: 'foo',
+					id: 'bar',
+					surname: 'bar'
+				}
 			};
 
 			let event = new underTest({
@@ -169,7 +184,12 @@ describe(MODULE_ID, function () {
 			licence_id: 'foo',
 			published_date: new Date(),
 			time: new Date(),
-			user_id: 'bar'
+			user: {
+				email: 'foo@bar.com',
+				first_name: 'foo',
+				id: 'bar',
+				surname: 'bar'
+			}
 		};
 
 		let event = new underTest({ event: event_data });
@@ -189,7 +209,12 @@ describe(MODULE_ID, function () {
 			licence_id: 'foo',
 			published_date: new Date(),
 			time: new Date(),
-			user_id: 'bar'
+			user: {
+				email: 'foo@bar.com',
+				first_name: 'foo',
+				id: 'bar',
+				surname: 'bar'
+			}
 		};
 
 		let event = new underTest({ event: event_data });
@@ -206,7 +231,12 @@ describe(MODULE_ID, function () {
 			published_date: new Date(),
 			state: 'save',
 			time: new Date(),
-			user_id: 'bar'
+			user: {
+				email: 'foo@bar.com',
+				first_name: 'foo',
+				id: 'bar',
+				surname: 'bar'
+			}
 		};
 
 		let event = new underTest({ event: event_data });
@@ -215,7 +245,7 @@ describe(MODULE_ID, function () {
 		expect(validate(event_json)).to.be.true;
 
 		for (let [key, val] of Object.entries(event_data)) {
-			expect(event_json).to.have.property(key).and.equal(typeof val.toJSON === 'function' ? val.toJSON() : val);
+			expect(event_json).to.have.property(key).and.eql(typeof val.toJSON === 'function' ? val.toJSON() : val);
 		}
 	});
 
@@ -228,7 +258,12 @@ describe(MODULE_ID, function () {
 			published_date: new Date(),
 			state: 'save',
 			time: new Date(),
-			user_id: 'bar'
+			user: {
+				email: 'foo@bar.com',
+				first_name: 'foo',
+				id: 'bar',
+				surname: 'bar'
+			}
 		};
 
 		let event = new underTest({ event: event_data });
@@ -257,7 +292,12 @@ describe(MODULE_ID, function () {
 				published_date: new Date(),
 				state: 'save',
 				time: new Date(),
-				user_id: 'bar'
+				user: {
+					email: 'foo@bar.com',
+					first_name: 'foo',
+					id: 'bar',
+					surname: 'bar'
+				}
 			};
 
 			let event = new underTest({ event: event_data });

@@ -97,6 +97,12 @@ describe(MODULE_ID, function () {
 				syndication_contract: {
 					id: 'lmno'
 				},
+				user: {
+					email: 'foo@bar.com',
+					firstName: 'foo',
+					id: 'abc',
+					lastName: 'bar'
+				},
 				userUuid: 'abc'
 			};
 
@@ -112,7 +118,12 @@ describe(MODULE_ID, function () {
 				download_format: DOWNLOAD_ARCHIVE_EXTENSION,
 				syndication_state: content.canBeSyndicated,
 				time: (new Date()).toJSON(),
-				user_id: res.locals.userUuid
+				user: {
+					email: 'foo@bar.com',
+					first_name: 'foo',
+					id: 'abc',
+					surname: 'bar'
+				}
 			});
 
 			let uri = url.parse(content.dataSource[content.dataSource.length - 1].binaryUrl);
@@ -238,6 +249,12 @@ describe(MODULE_ID, function () {
 				syndication_contract: {
 					id: 'lmno'
 				},
+				user: {
+					email: 'foo@bar.com',
+					firstName: 'foo',
+					id: 'abc',
+					lastName: 'bar'
+				},
 				userUuid: 'abc'
 			};
 
@@ -253,7 +270,12 @@ describe(MODULE_ID, function () {
 				download_format: DOWNLOAD_ARCHIVE_EXTENSION,
 				syndication_state: content.canBeSyndicated,
 				time: (new Date()).toJSON(),
-				user_id: res.locals.userUuid
+				user: {
+					email: 'foo@bar.com',
+					first_name: 'foo',
+					id: 'abc',
+					surname: 'bar'
+				}
 			});
 
 			let uri = url.parse(content.dataSource[content.dataSource.length - 1].binaryUrl);
