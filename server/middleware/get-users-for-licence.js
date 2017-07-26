@@ -37,6 +37,11 @@ module.exports = exports = async (req, res, next) => {
 
 				return acc;
 			}, {});
+
+			log.info(`${MODULE_ID} => Found ${seatHolders.length} users for licence#${res.locals.licence.id}; contract#${res.locals.syndication_contract.id}`);
+		}
+		else {
+			log.warn(`${MODULE_ID} => Found NO users for licence#${res.locals.licence.id}; contract#${res.locals.syndication_contract.id}`);
 		}
 	}
 	catch (err) {
