@@ -17,7 +17,7 @@ const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(p
 
 describe(MODULE_ID, function () {
 	before(async function () {
-		nock('https://test.salesforce.com')
+		nock('https://login.salesforce.com')
 			.post('/services/oauth2/token')
 			.reply(() => {
 				return [
@@ -25,7 +25,7 @@ describe(MODULE_ID, function () {
 					{
 						access_token: '00DL....z_pH',
 						instance_url: 'https://financialtimes--test.cs8.my.salesforce.com',
-						id: 'https://test.salesforce.com/id/00D...MAM/005...IAO',
+						id: 'https://login.salesforce.com/id/00D...MAM/005...IAO',
 						token_type: 'Bearer',
 						issued_at: '1500301959088',
 						signature: 'dL6R....rgA='
