@@ -20,6 +20,7 @@ const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(p
 describe(MODULE_ID, function () {
 	describe('success', function () {
 		const contractResponse = {
+			'MY_DOWNLOAD_FORMAT': 'html',
 			'owner_email': 'syndication@ft.com',
 			'last_updated': '2017-07-19T13:37:20.291Z',
 			'owner_name': 'FT Syndication',
