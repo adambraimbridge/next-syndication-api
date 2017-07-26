@@ -24,13 +24,15 @@
 
   CONVERT_FORMAT_COMMAND: pandoc
 
+  DEFAULT_DOWNLOAD_FORMAT: docx
+
   DOWNLOAD_ARCHIVE_EXTENSION: zip
   DOWNLOAD_ARTICLE_FORMATS:
     doc: docx
     docx: docx
     htm: html
     html: html
-    pdf: pdf
+#    pdf: pdf
     plain: plain
     text: plain
     txt: plain
@@ -43,9 +45,11 @@
 
   FEATURE_FLAGS:
     - syndication
+    - syndicationDownloadMediaResource
     - syndicationNew
     - syndicationNewOverride
     - syndicationNewUsersAwaiting
+    - syndicationPlatform
     - syndicationRedux
 
   FORMAT_ARTICLE_CLEAN_ELEMENTS:
@@ -57,6 +61,14 @@
     - img
     - script
     - pull-quote
+
+  JS_TO_DB_TYPES:
+    default: S
+    array: L
+    boolean: BOOL
+    number: N
+    object: M
+    string: S
 
   LICENCE_ITEMS_ARRAY_PROPERTY: accessLicences
 
