@@ -57,6 +57,8 @@ app.get(`${BASE_URI_PATH}/contract-status`, middleware, require('./controllers/c
 app.get(`${BASE_URI_PATH}/download/:content_id`, middleware, require('./controllers/download-by-content-id'));
 app.get(`${BASE_URI_PATH}/history`, middleware, require('./controllers/history'));
 app.get(`${BASE_URI_PATH}/save/:content_id`, middleware, require('./controllers/save-by-content-id'));
+app.delete(`${BASE_URI_PATH}/save/:content_id`, middleware, require('./controllers/unsave-by-content-id'));
+app.post(`${BASE_URI_PATH}/unsave/:content_id`, middleware, require('./controllers/unsave-by-content-id'));
 app.get(`${BASE_URI_PATH}/user-status`, middleware, require('./controllers/user-status'));
 app.post(`${BASE_URI_PATH}/download-format`, middleware, require('./controllers/update-download-format'));
 
