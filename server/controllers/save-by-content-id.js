@@ -6,7 +6,7 @@ const { default: log } = require('@financial-times/n-logger');
 
 const moment = require('moment');
 
-const getContentById = require('../lib/get-content-by-id');
+const fetchContentById = require('../lib/fetch-content-by-id');
 
 const MessageQueueEvent = require('../../queue/message-queue-event');
 
@@ -14,7 +14,7 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 
 module.exports = exports = async (req, res, next) => {
 	try {
-		const content = await getContentById(req.params.content_id, req.query.format);
+		const content = await fetchContentById(req.params.content_id);
 
 		if (Object.prototype.toString.call(content) !== '[object Object]') {
 			log.error(`${MODULE_ID} ContentNotFoundError => ${req.params.content_id}`);
