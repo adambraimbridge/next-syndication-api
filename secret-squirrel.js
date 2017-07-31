@@ -11,6 +11,7 @@ module.exports = {
 		deny: [],
 		denyOverrides: [
 			'john.q@average.com',
+			'foo@bar.com',
 			'http(?:s?):\/\/.*',
 			'\/content\/.*',
 			// _ids
