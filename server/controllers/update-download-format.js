@@ -41,8 +41,9 @@ module.exports = exports = async (req, res, next) => {
 		log.debug(`${MODULE_ID} | Persisted contract#${res.locals.syndication_contract.id} to DB`, { dbRes });
 
 		const referrer = String(req.get('referrer'));
+		const requestedWith = String(req.get('x-requested-with')).toLowerCase();
 
-		if (referrer.endsWith('/republishing/contract')) {
+		if (referrer.endsWith('/republishing/contract') && (requestedWith !== 'xmlhttprequest' && !requestedWith.includes('fetch'))) {
 			res.redirect(referrer);
 
 			return;

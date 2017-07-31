@@ -57,8 +57,9 @@ module.exports = exports = async (req, res, next) => {
 				log.info(`${MODULE_ID} => ${items.length} items deleted for licence#${LICENCE.id}; content#${content.id};`, items);
 
 				const referrer = String(req.get('referrer'));
+				const requestedWith = String(req.get('x-requested-with')).toLowerCase();
 
-				if (referrer.includes('/republishing/save')) {
+				if (referrer.includes('/republishing/save') && (requestedWith !== 'xmlhttprequest' && !requestedWith.includes('fetch'))) {
 					res.redirect(referrer);
 
 					return;
