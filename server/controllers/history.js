@@ -4,12 +4,7 @@ const path = require('path');
 
 const { default: log } = require('@financial-times/n-logger');
 
-const moment = require('moment');
-
-const { DOWNLOAD_STATE_MAP, SAVED_STATE_MAP } = require('config');
-
-const HistoryTable = require('../../db/tables/history');
-const { client } = require('../../db/connect');
+const getHistoryByLicenceID  = require('../lib/get-history-by-licence-id');
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
@@ -17,74 +12,27 @@ module.exports = exports = async (req, res, next) => {
 	try {
 		const LICENCE = res.locals.licence;
 
-		let FilterExpression = 'licence_id = :licence_id';
-		const ExpressionAttributeValues = {
-			':licence_id': LICENCE.id
+		const options = {
+			licence_id: LICENCE.id
 		};
 
-		if (req.query.show === 'mine') {
-			FilterExpression += ' and user_id = :user_id';
-
-			ExpressionAttributeValues[':user_id'] = res.locals.userUuid;
+		if (req.query.include) {
+			options.include = req.query.include;
 		}
 
-		let response = await client.scanAsync({
-			TableName: HistoryTable.TableName,
-			FilterExpression,
-			ExpressionAttributeValues
-		});
+		if (req.query.show === 'mine') {
+			options.user_id = res.locals.userUuid;
+		}
 
-		if (response) {
-			if (response.Count > 0) {
-				res.status(200);
+		if (req.query.type) {
+			options.type = req.query.type;
+		}
 
-				// Sort items in descending order by `time:Date`
-				// This is a schwartzian transform, if you don't know what that is
-				// and/or why it's being used, I suggest you look it up.
-				// DO NOT try and "simplify" — and thereby slow down the sort — if you do not understand what's going on.
-				let items = response.Items.map(item => {
-						return [+(new Date(item.time)), item];
-					})
-					.sort(([a], [b]) => b - a)
-					.map(([, item]) => item);
+		const items = await getHistoryByLicenceID(options);
 
-				if (req.query.type) {
-					let STATE_MAP = DOWNLOAD_STATE_MAP;
-
-					switch (req.query.type) {
-						case 'downloads':
-							break;
-						case 'saved':
-							STATE_MAP = SAVED_STATE_MAP;
-							break;
-					}
-
-					STATE_MAP = JSON.parse(JSON.stringify(STATE_MAP));
-
-					if (req.query.include) {
-						if (!Array.isArray(req.query.include)) {
-							req.query.include = [req.query.include];
-						}
-
-						req.query.include.forEach(item => STATE_MAP[item] = true);
-					}
-
-					items = items.filter(item => STATE_MAP[item.item_state] === true);
-				}
-
-				items.forEach(item => {
-					item.id = item.content_id.split('/').pop();
-
-					item.date = moment(item.time).format('DD MMMM YYYY');
-					item.published = moment(item.published_date).format('DD MMMM YYYY');
-				});
-
-				res.json(items);
-			}
-			else {
-				res.status(200);
-				res.json([]);
-			}
+		if (Array.isArray(items)) {
+			res.status(200);
+			res.json(items);
 		}
 		else {
 			res.sendStatus(400);
