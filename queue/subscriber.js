@@ -14,8 +14,10 @@ const sqs = require('./connect');
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = class QueueSubscriber extends EventEmitter {
-	constructor({ callback, queue_url = DEFAULT_QUEUE_URL }) {
+	constructor({ callback, queue_url = DEFAULT_QUEUE_URL, type }) {
 		super();
+
+		this.type = type;
 
 		this.queue_url = queue_url;
 
@@ -38,22 +40,30 @@ module.exports = exports = class QueueSubscriber extends EventEmitter {
 	}
 
 	async fire(response) {
+		let fired = 0;
+
 		for (let [, message] of response.Messages.entries()) {
-			this.emit('message', message.data,  message, response, this);
+			if (!this.type || message.data.type === this.type) {
+				this.emit('message', message.data,  message, response, this);
 
-			for (let [callback] of this.callbacks.entries()) {
-				const type = Object.prototype.toString.call(callback);
+				for (let [callback] of this.callbacks.entries()) {
+					const type = Object.prototype.toString.call(callback);
 
-				switch (type) {
-					case '[object Function]':
-						callback(message.data, message, response, this);
-						break;
-					case '[object AsyncFunction]':
-						await callback(message.data, message, response, this);
-						break;
+					switch (type) {
+						case '[object Function]':
+							callback(message.data, message, response, this);
+							break;
+						case '[object AsyncFunction]':
+							await callback(message.data, message, response, this);
+							break;
+					}
 				}
+
+				++fired;
 			}
 		}
+
+		!fired || this.emit('complete', fired, response, this);
 	}
 
 	removeCallback(callback) {
