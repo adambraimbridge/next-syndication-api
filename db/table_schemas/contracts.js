@@ -29,6 +29,37 @@ module.exports = exports = {
 				{ AttributeAlias: 'asset', AttributeName: 'assetName', AttributeType: 'S' }
 			]
 		},
-		{ AttributeAlias: 'download_formats', AttributeName: 'download_formats', AttributeType: 'M' }
+		{
+			AttributeName: 'download_count', AttributeType: 'M',
+			AttributeDefinitions: [
+				{ AttributeName: 'legacy', AttributeType: 'N', DefaultValue: 0 },
+				{ AttributeName: 'total', AttributeType: 'N', DefaultValue: 0 },
+				{
+					AttributeName: 'current', AttributeType: 'M',
+					AttributeDefinitions: [
+						{ AttributeName: 'day', AttributeType: 'N' },
+						{ AttributeName: 'week', AttributeType: 'N' },
+						{ AttributeName: 'month', AttributeType: 'N' },
+						{ AttributeName: 'year', AttributeType: 'N' }
+					]
+				},
+				{
+					AttributeName: 'archive', AttributeType: 'L',
+					AttributeDefinitions: [
+						{ AttributeName: 'year', AttributeType: 'N' },
+						{
+							AttributeName: 'breakdown', AttributeType: 'M',
+							AttributeDefinitions: [
+								{ AttributeName: 'year', AttributeType: 'N' },
+								{ AttributeName: 'months', AttributeType: 'L', AttributeItemTypes: 'N' },
+								{ AttributeName: 'weeks', AttributeType: 'L', AttributeItemTypes: 'N' },
+								{ AttributeName: 'days', AttributeType: 'L', AttributeItemTypes: 'N' }
+							]
+						},
+					]
+				}
+			]
+		},
+		{ AttributeName: 'download_formats', AttributeType: 'M' }
 	]
 };

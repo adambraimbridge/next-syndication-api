@@ -41,6 +41,7 @@
     "node-pandoc": "^0.3.0",
     "nodemon": "^1.11.0",
     "nyc": "^11.0.2",
+    "pm2": "^2.6.1",
     "proxyquire": "^1.7.4",
     "shelljs": "^0.7.8",
     "sinon": "^2.3.2",
@@ -68,7 +69,9 @@
       "server/env.js",
       "server/init.js",
       "server/stubs.js",
-      "sync/index.js",
+      "worker/index.js",
+      "worker/db-persist/index.js",
+      "worker/sync-download_counts/index.js",
       "coverage",
       "test"
     ]

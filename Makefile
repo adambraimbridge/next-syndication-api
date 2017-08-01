@@ -24,15 +24,29 @@ install-clean:
 	rm -rf ./package-lock.json node_modules
 	make install
 
-run-coveralls: coverage-report
-	@cat ./coverage/lcov.info | coveralls
-	@$(DONE)
+kill-all:
+	./node_modules/.bin/pm2 stop all
+	./node_modules/.bin/pm2 kill
 
 provision:
 	nht float --master --no-destroy --skip-gtg --testapp ${TEST_APP} --vault
 
 run:
 	nht run --local --https
+
+run-coveralls: coverage-report
+	@cat ./coverage/lcov.info | coveralls
+	@$(DONE)
+
+run-list:
+	while true; do clear; ./node_modules/.bin/pm2 list; echo ""; sleep 15; done
+
+run-local:
+	./node_modules/.bin/pm2 start procfile.json
+	./node_modules/.bin/pm2 logs
+
+run-monit:
+	./node_modules/.bin/pm2 monit
 
 test: verify
 ifeq ($(CIRCLECI),true)

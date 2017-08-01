@@ -15,7 +15,7 @@ const toPutItem = require('../../db/toPutItem');
 
 const MessageQueueEvent = require('../../queue/message-queue-event');
 
-const underTest = require('../../sync/persist');
+const underTest = require('../../worker/persist');
 
 const { expect } = chai;
 chai.use(sinonChai);
@@ -49,7 +49,7 @@ describe(MODULE_ID, function () {
 			}
 		})).toJSON();
 
-		await underTest(event);
+		await underTest(event, HistorySchema);
 
 		expect(db.putItemAsync).to.be.calledWith(toPutItem(event, HistorySchema));
 	});

@@ -10,15 +10,18 @@ const {
 
 const QueueSubscriber = require('../queue/subscriber');
 
-const callback = require('./callback');
-
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
-(async () => {
-	let subscriber = new QueueSubscriber({ queue_url: DEFAULT_QUEUE_URL });
+module.exports = exports = ({ callback, event_type }) => {
+	let subscriber = new QueueSubscriber({
+		queue_url: DEFAULT_QUEUE_URL,
+		type: event_type
+	});
 
 	subscriber.start(callback);
-})();
+
+	return subscriber;
+};
 
 process.on('uncaughtException', err => {
 	log.error(`${MODULE_ID} UncaughtException =>`, {

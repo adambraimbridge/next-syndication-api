@@ -7,8 +7,8 @@ const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 const proxyquire = require('proxyquire');
 
-const MessageQueueEvent = require('../../queue/message-queue-event');
-const QueueSubscriber = require('../../queue/subscriber');
+const MessageQueueEvent = require('../../../queue/message-queue-event');
+const QueueSubscriber = require('../../../queue/subscriber');
 
 const { expect } = chai;
 chai.use(sinonChai);
@@ -27,8 +27,8 @@ describe(MODULE_ID, function () {
 	beforeEach(function () {
 		persist = sinon.stub();
 
-		underTest = proxyquire('../../sync/callback', {
-			'./persist': persist
+		underTest = proxyquire('../../../worker/db-persist/callback', {
+			'../persist': persist
 		});
 
 		sinon.stub(QueueSubscriber.prototype, 'ack').resolves({});

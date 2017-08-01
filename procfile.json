@@ -1,0 +1,55 @@
+{
+  "apps": [ {
+    "env": {
+      "PORT": 3255
+    },
+    "exec_mode": "cluster",
+    "instance_var": "SYNDICATION_API_ID",
+    "instances": 8,
+    "interpreter_args": "--harmony --preserve-symlinks --require ./server/env.js --trace-deprecation --trace-warnings --zero-fill-buffers",
+    "name": "syndication-web",
+    "script": "./server/init.js"
+  }, {
+    "env": {},
+    "exec_mode": "cluster",
+    "instance_var": "SYNDICATION_WORKER_SYNC_ID",
+    "instances": 2,
+    "interpreter_args": "--harmony --preserve-symlinks --require ./server/env.js --trace-deprecation --trace-warnings --zero-fill-buffers",
+    "name": "syndication-sync",
+    "script": "./worker/db-persist/index.js"
+  }, {
+    "env": {},
+    "exec_mode": "cluster",
+    "instance_var": "SYNDICATION_WORKER_DOWNLOAD_COUNTS_ID",
+    "instances": 2,
+    "interpreter_args": "--harmony --preserve-symlinks --require ./server/env.js --trace-deprecation --trace-warnings --zero-fill-buffers",
+    "name": "syndication-download_counts",
+    "script": "./worker/sync-download_counts/index.js"
+  }, {
+    "cwd": "../next-syn-contract",
+    "env": {
+      "NEXT_APP_SHELL": "local",
+      "NODE_ENV": "development",
+      "PORT": 3984
+    },
+    "exec_mode": "cluster",
+    "instance_var": "SYNDICATION_WEB_CONTRACT_ID",
+    "instances": 4,
+    "interpreter_args": "--harmony --preserve-symlinks --require ../next-syndication-api/server/env.js --trace-deprecation --trace-warnings --zero-fill-buffers",
+    "name": "syndication-web-contract",
+    "script": "./server/app.js"
+  }, {
+    "cwd": "../next-syn-list",
+    "env": {
+      "NEXT_APP_SHELL": "local",
+      "NODE_ENV": "development",
+      "PORT": 3566
+    },
+    "exec_mode": "cluster",
+    "instance_var": "SYNDICATION_WEB_HISTORY_ID",
+    "instances": 4,
+    "interpreter_args": "--harmony --preserve-symlinks --require ../next-syndication-api/server/env.js --trace-deprecation --trace-warnings --zero-fill-buffers",
+    "name": "syndication-web-history",
+    "script": "./server/app.js"
+  } ]
+}

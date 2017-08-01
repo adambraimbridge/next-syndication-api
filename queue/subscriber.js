@@ -14,9 +14,12 @@ const sqs = require('./connect');
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = class QueueSubscriber extends EventEmitter {
-	constructor({ callback, queue_url = DEFAULT_QUEUE_URL }) {
+	constructor({ callback, max_messages = 4, queue_url = DEFAULT_QUEUE_URL, type }) {
 		super();
 
+		this.type = type;
+
+		this.max_messages = max_messages;
 		this.queue_url = queue_url;
 
 		this.callbacks = new Set();
@@ -38,22 +41,30 @@ module.exports = exports = class QueueSubscriber extends EventEmitter {
 	}
 
 	async fire(response) {
+		let fired = 0;
+
 		for (let [, message] of response.Messages.entries()) {
-			this.emit('message', message.data,  message, response, this);
+			if (!this.type || message.data.type === this.type) {
+				this.emit('message', message.data,  message, response, this);
 
-			for (let [callback] of this.callbacks.entries()) {
-				const type = Object.prototype.toString.call(callback);
+				for (let [callback] of this.callbacks.entries()) {
+					const type = Object.prototype.toString.call(callback);
 
-				switch (type) {
-					case '[object Function]':
-						callback(message.data, message, response, this);
-						break;
-					case '[object AsyncFunction]':
-						await callback(message.data, message, response, this);
-						break;
+					switch (type) {
+						case '[object Function]':
+							callback(message.data, message, response, this);
+							break;
+						case '[object AsyncFunction]':
+							await callback(message.data, message, response, this);
+							break;
+					}
 				}
+
+				++fired;
 			}
 		}
+
+		!fired || this.emit('complete', fired, response, this);
 	}
 
 	removeCallback(callback) {
@@ -84,8 +95,8 @@ module.exports = exports = class QueueSubscriber extends EventEmitter {
 					AttributeNames: [
 						'All'
 					],
-					MaxNumberOfMessages: 10,
-					VisibilityTimeout: 0,
+					MaxNumberOfMessages: this.max_messages,
+					VisibilityTimeout: 10,
 					WaitTimeSeconds: 20
 				});
 
@@ -97,9 +108,15 @@ module.exports = exports = class QueueSubscriber extends EventEmitter {
 
 					response.Messages.forEach(message => message.data = JSON.parse(message.Body));
 
-					this.emit('messages', response, this);
+					if (this.type) {
+						response.Messages = response.Messages.filter(message => message.data.type === this.type);
+					}
 
-					await this.fire(response);
+					if (response.Messages.length) {
+						this.emit('messages', response, this);
+
+						await this.fire(response);
+					}
 				}
 
 				let tid = setTimeout(() => {
