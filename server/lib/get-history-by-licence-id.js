@@ -11,18 +11,21 @@ const { client } = require('../../db/connect');
 
 //const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
-module.exports = exports = async ({ include, licence_id, prep_aggregation = false, type, user_id }) => {
+module.exports = exports = async ({ include, licence_id, prep_aggregation = false, type/*, user_id*/ }) => {
 	let FilterExpression = 'licence_id = :licence_id';
 
 	const ExpressionAttributeValues = {
 		':licence_id': licence_id
 	};
 
-	if (user_id) {
-		FilterExpression += ' and user_id = :user_id';
-
-		ExpressionAttributeValues[':user_id'] = user_id;
-	}
+// this is out for now; until I get time to fix it.
+// `user` is a "reserved word" in dynamoDB.
+// how bloody idiotic of whoever designed it: to stop developers from using certain words when storing documents!
+//	if (user_id) {
+//		FilterExpression += ' and user_id = :user_id';
+//
+//		ExpressionAttributeValues[':user_id'] = user_id;
+//	}
 
 	let response = await client.scanAsync({
 		TableName: HistoryTable.TableName,

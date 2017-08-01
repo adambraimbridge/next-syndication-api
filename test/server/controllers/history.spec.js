@@ -5,15 +5,11 @@ const path = require('path');
 const { Writable: WritableStream } = require('stream');
 
 const chai = require('chai');
+const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 
 const httpMocks = require('../../fixtures/node-mocks-http');
-
-const HistoryTable = require('../../../db/tables/history');
-const { client } = require('../../../db/connect');
-
-const underTest = require('../../../server/controllers/history');
 
 const { expect } = chai;
 chai.use(sinonChai);
@@ -21,6 +17,7 @@ chai.use(sinonChai);
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
 describe(MODULE_ID, function () {
+	let underTest;
 	const items = [{
 		'syndication_state': 'yes',
 		'item_state': 'complete',
@@ -91,17 +88,18 @@ describe(MODULE_ID, function () {
 
 	describe('default call', function () {
 		let next;
+		let geyHistoryByLicenceID;
 		let req;
 		let res;
 
 		afterEach(function () {
-			client.scanAsync.restore();
 		});
 
 		beforeEach(function () {
-			sinon.stub(client, 'scanAsync').resolves({
-				Count: items.length,
-				Items: items
+			geyHistoryByLicenceID = sinon.stub().resolves(items);
+
+			underTest = proxyquire('../../../server/controllers/history', {
+				'../lib/get-history-by-licence-id': geyHistoryByLicenceID
 			});
 
 			req = httpMocks.createRequest({
@@ -161,15 +159,11 @@ describe(MODULE_ID, function () {
 			next = sinon.stub();
 		});
 
-		it('db query', async function () {
+		it('geyHistoryByLicenceID', async function () {
 			await underTest(req, res, next);
 
-			expect(client.scanAsync).to.be.calledWith({
-				TableName: HistoryTable.TableName,
-				FilterExpression: 'licence_id = :licence_id',
-				ExpressionAttributeValues: {
-					':licence_id': res.locals.licence.id
-				}
+			expect(geyHistoryByLicenceID).to.be.calledWith({
+				licence_id: res.locals.licence.id
 			});
 		});
 
@@ -194,14 +188,13 @@ describe(MODULE_ID, function () {
 
 	describe('show only current user\'s items', function () {
 		let filteredItems;
+		let geyHistoryByLicenceID;
 		let user_id;
 		let next;
 		let req;
 		let res;
 
 		afterEach(function () {
-			client.scanAsync.restore();
-
 			filteredItems = null;
 		});
 
@@ -210,9 +203,10 @@ describe(MODULE_ID, function () {
 
 			filteredItems = items.filter(item => item.user_id === user_id);
 
-			sinon.stub(client, 'scanAsync').resolves({
-				Count: filteredItems.length,
-				Items: filteredItems
+			geyHistoryByLicenceID = sinon.stub().resolves(filteredItems);
+
+			underTest = proxyquire('../../../server/controllers/history', {
+				'../lib/get-history-by-licence-id': geyHistoryByLicenceID
 			});
 
 			req = httpMocks.createRequest({
@@ -272,16 +266,12 @@ describe(MODULE_ID, function () {
 			next = sinon.stub();
 		});
 
-		it('db query', async function () {
+		it('geyHistoryByLicenceID', async function () {
 			await underTest(req, res, next);
 
-			expect(client.scanAsync).to.be.calledWith({
-				TableName: HistoryTable.TableName,
-				FilterExpression: 'licence_id = :licence_id and user_id = :user_id',
-				ExpressionAttributeValues: {
-					':licence_id': res.locals.licence.id,
-					':user_id': res.locals.userUuid
-				}
+			expect(geyHistoryByLicenceID).to.be.calledWith({
+				licence_id: res.locals.licence.id,
+				user_id: user_id
 			});
 		});
 
@@ -306,22 +296,22 @@ describe(MODULE_ID, function () {
 
 	describe('show only saved items', function () {
 		let filteredItems;
+		let geyHistoryByLicenceID;
 		let next;
 		let req;
 		let res;
 
 		afterEach(function () {
-			client.scanAsync.restore();
-
 			filteredItems = null;
 		});
 
 		beforeEach(function () {
 			filteredItems = items.filter(item => item.item_state === 'save');
 
-			sinon.stub(client, 'scanAsync').resolves({
-				Count: filteredItems.length,
-				Items: items
+			geyHistoryByLicenceID = sinon.stub().resolves(filteredItems);
+
+			underTest = proxyquire('../../../server/controllers/history', {
+				'../lib/get-history-by-licence-id': geyHistoryByLicenceID
 			});
 
 			req = httpMocks.createRequest({
@@ -381,15 +371,12 @@ describe(MODULE_ID, function () {
 			next = sinon.stub();
 		});
 
-		it('db query', async function () {
+		it('geyHistoryByLicenceID', async function () {
 			await underTest(req, res, next);
 
-			expect(client.scanAsync).to.be.calledWith({
-				TableName: HistoryTable.TableName,
-				FilterExpression: 'licence_id = :licence_id',
-				ExpressionAttributeValues: {
-					':licence_id': res.locals.licence.id
-				}
+			expect(geyHistoryByLicenceID).to.be.calledWith({
+				licence_id: res.locals.licence.id,
+				type: 'saved'
 			});
 		});
 
@@ -412,24 +399,24 @@ describe(MODULE_ID, function () {
 		});
 	});
 
-	describe('show only saved items', function () {
+	describe('show only downloaded items', function () {
 		let filteredItems;
+		let geyHistoryByLicenceID;
 		let next;
 		let req;
 		let res;
 
 		afterEach(function () {
-			client.scanAsync.restore();
-
 			filteredItems = null;
 		});
 
 		beforeEach(function () {
 			filteredItems = items.filter(item => item.item_state !== 'save');
 
-			sinon.stub(client, 'scanAsync').resolves({
-				Count: filteredItems.length,
-				Items: items
+			geyHistoryByLicenceID = sinon.stub().resolves(filteredItems);
+
+			underTest = proxyquire('../../../server/controllers/history', {
+				'../lib/get-history-by-licence-id': geyHistoryByLicenceID
 			});
 
 			req = httpMocks.createRequest({
@@ -489,15 +476,12 @@ describe(MODULE_ID, function () {
 			next = sinon.stub();
 		});
 
-		it('db query', async function () {
+		it('geyHistoryByLicenceID', async function () {
 			await underTest(req, res, next);
 
-			expect(client.scanAsync).to.be.calledWith({
-				TableName: HistoryTable.TableName,
-				FilterExpression: 'licence_id = :licence_id',
-				ExpressionAttributeValues: {
-					':licence_id': res.locals.licence.id
-				}
+			expect(geyHistoryByLicenceID).to.be.calledWith({
+				licence_id: res.locals.licence.id,
+				type: 'downloads'
 			});
 		});
 
