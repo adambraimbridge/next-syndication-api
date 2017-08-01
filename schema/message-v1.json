@@ -79,6 +79,13 @@
         "id"
       ]
     },
+    "type": {
+      "default": "db.persist",
+      "enum": [
+        "db.persist"
+      ],
+      "type": "string"
+    },
     "version": {
       "enum": [
         "v1"
@@ -96,6 +103,7 @@
     "state",
     "syndication_state",
     "time",
+    "type",
     "user",
     "version"
   ]
