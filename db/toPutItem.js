@@ -59,6 +59,11 @@ function assignProperties(data, schema, item = {}, simplify) {
 						break;
 				}
 			}
+			else if (def.AttributeType === 'L' && def.AttributeItemTypes) {
+				acc[ATTRIBUTE_ID][def.AttributeType] = val.map(item => {
+					return { [def.AttributeItemTypes]: getValue(item, { AttributeType: def.AttributeItemTypes }) };
+				});
+			}
 			else {
 				val = getValue(val, def);
 
