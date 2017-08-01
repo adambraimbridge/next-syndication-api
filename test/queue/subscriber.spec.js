@@ -208,8 +208,8 @@ describe(MODULE_ID, function () {
 				AttributeNames: [
 					'All'
 				],
-				MaxNumberOfMessages: 10,
-				VisibilityTimeout: 0,
+				MaxNumberOfMessages: item.max_messages,
+				VisibilityTimeout: 10,
 				WaitTimeSeconds: 20
 			});
 
