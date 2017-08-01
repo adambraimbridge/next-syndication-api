@@ -26,5 +26,5 @@ subscriber.on('complete', async (count, response) => {
 		schema: SchemaJobV1
 	});
 
-	await message.publish();
+	process.nextTick(async () => await message.publish());
 });
