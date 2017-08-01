@@ -48,12 +48,12 @@ module.exports = exports = {
 					AttributeDefinitions: [
 						{ AttributeName: 'year', AttributeType: 'N' },
 						{
-							AttributeName: 'breakdown', AttributeType: 'L',
+							AttributeName: 'breakdown', AttributeType: 'M',
 							AttributeDefinitions: [
 								{ AttributeName: 'year', AttributeType: 'N' },
-								{ AttributeName: 'months', AttributeType: 'NS' },
-								{ AttributeName: 'weeks', AttributeType: 'NS' },
-								{ AttributeName: 'days', AttributeType: 'NS' }
+								{ AttributeName: 'months', AttributeType: 'L', AttributeItemTypes: 'N' },
+								{ AttributeName: 'weeks', AttributeType: 'L', AttributeItemTypes: 'N' },
+								{ AttributeName: 'days', AttributeType: 'L', AttributeItemTypes: 'N' }
 							]
 						},
 					]
