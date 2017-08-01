@@ -7,9 +7,9 @@ const worker = require('../index');
 
 const callback = require('./callback');
 
-const type = 'db.persist';
+const event_type = 'db.persist';
 
-const subscriber = worker({ callback, type });
+const subscriber = worker({ callback, event_type });
 
 // once we've processed all messages, we'll fire off another event to aggregate the download counts
 subscriber.on('complete', async (count, response) => {

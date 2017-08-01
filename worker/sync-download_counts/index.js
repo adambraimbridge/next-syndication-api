@@ -4,6 +4,6 @@ const worker = require('../index');
 
 const callback = require('./callback');
 
-const type = 'sync.download_counts';
+const event_type = 'sync.download_counts';
 
-worker({ callback, type });
+worker({ callback, event_type });
