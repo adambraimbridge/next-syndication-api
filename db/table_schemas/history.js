@@ -22,7 +22,8 @@ module.exports = exports = {
 				{ AttributeName: 'first_name', AttributeType: 'S' },
 				{ AttributeName: 'id', AttributeType: 'S' },
 				{ AttributeName: 'surname', AttributeType: 'S' }
-			] },
+			]
+		},
 		{ AttributeName: 'version', AttributeType: 'S' }
 	]
 };
