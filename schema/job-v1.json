@@ -1,0 +1,41 @@
+{
+  "title": "JobV1",
+  "type": "object",
+  "properties": {
+    "_id": {
+      "type": "string"
+    },
+    "contract_id": {
+      "type": "string"
+    },
+    "licence_id": {
+      "type": "string"
+    },
+    "time": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "type": {
+      "default": "sync.download_counts",
+      "enum": [
+        "sync.download_counts"
+      ],
+      "type": "string"
+    },
+    "version": {
+      "enum": [
+        "v1"
+      ],
+      "default": "v1",
+      "type": "string"
+    }
+  },
+  "required": [
+    "_id",
+    "contract_id",
+    "licence_id",
+    "time",
+    "type",
+    "version"
+  ]
+}
