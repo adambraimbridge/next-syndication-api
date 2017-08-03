@@ -794,17 +794,6 @@
     "creationDate": "2016-06-27T12:19:17.816Z"
   },
   {
-    "name": "streamNewSubheader",
-    "description": "development flag for new stream sub header design",
-    "owner": "moshe.raphaely@ft.com",
-    "notificationRecipients": { "slack": { "users": [ "@moshe.raphaely" ] } },
-    "safeState": false,
-    "state": true,
-    "userFacing": true,
-    "expiry": "2017-07-12T15:43:10.708Z",
-    "creationDate": "2016-07-04T14:30:50.645Z"
-  },
-  {
     "name": "serviceWorker",
     "description": "Turn on the global service worker",
     "owner": "amy.nicholson@ft.com",
