@@ -23,16 +23,17 @@ module.exports = exports = async (event, message, response, subscriber) => {
 			throw new ReferenceError(`${MODULE_ID} contract not found => `, event);
 		}
 
-		if (!contract.download_count) {
-			contract.download_count = initDownloadCount();
-		}
-		else {
-			contract.download_count.total = 0;
-
-			for (let [key] of Object.entries(contract.download_count.current)) {
-				contract.download_count.current[key] = 0;
-			}
-		}
+		contract.download_count = initDownloadCount(contract.limits);
+//		if (!contract.download_count) {
+//			contract.download_count = initDownloadCount(contract.limits);
+//		}
+//		else {
+//			contract.download_count.total = 0;
+//
+//			for (let [key] of Object.entries(contract.download_count.current)) {
+//				contract.download_count.current[key] = 0;
+//			}
+//		}
 
 		const history = (await getHistoryByLicenceID({
 			licence_id: event.licence_id,
@@ -40,7 +41,7 @@ module.exports = exports = async (event, message, response, subscriber) => {
 			type: 'downloads'
 		})).reverse();
 
-		const archive = {};
+//		const archive = {};
 
 		const today = moment();
 		const current = {
@@ -58,30 +59,56 @@ module.exports = exports = async (event, message, response, subscriber) => {
 			return acc;
 		}, {});
 
-		for (let [, item] of Object.entries(historyUnique)) {
-			let { aggregate } = item;
-			let { year, month, week, day } = aggregate;
+		const historyUniqueByContentType = Object.entries(historyUnique).reduce((acc, [, item]) => {
+			let { content_type = 'article' } = item;
 
-			if (!(year in archive)) {
-				archive[year] = initArchiveItem(year);
+			// todo: special case we'll treat it as a video for now
+			// todo: but may need further discussion.
+			if (content_type === 'mediaresource') {
+				content_type = 'video';
 			}
 
-			++archive[year].breakdown.year;
+			if (!Array.isArray(acc[content_type])) {
+				acc[content_type] = [];
+			}
 
-			++archive[year].breakdown.months[month];
-			++archive[year].breakdown.weeks[week];
-			++archive[year].breakdown.days[day];
+			acc[content_type].push(item);
 
-			++contract.download_count.total;
+			return acc;
+		}, {});
 
-			for (let [key, val] of Object.entries(current)) {
-				if (aggregate[key] === val) {
-					++contract.download_count.current[key];
+		for (let [content_type, items] of Object.entries(historyUniqueByContentType)) {
+			contract.download_count.total.total += items.length;
+			contract.download_count.total[content_type] += items.length;
+
+			items.forEach(item => {
+				let { aggregate } = item;
+//				let { year, month, week, day } = aggregate;
+
+				for (let [key, val] of Object.entries(current)) {
+					if (aggregate[key] === val) {
+						++contract.download_count.current[key].total;
+						++contract.download_count.current[key][content_type];
+					}
 				}
-			}
+
+//				if (!(year in archive)) {
+//					archive[year] = initArchiveItem(year, contract.limits);
+//				}
+
+//				++archive[year].breakdown.year;
+
+//				++archive[year].breakdown.months[month];
+//				++archive[year].breakdown.weeks[week];
+//				++archive[year].breakdown.days[day];
+			});
 		}
 
-		contract.download_count.archive = Object.keys(archive).map(year => archive[year]);
+//		contract.download_count.archive = Object.keys(archive).map(year => archive[year]);
+
+		for (let [key, val] of Object.entries(contract.limits)) {
+			contract.download_count.remaining[key] = val - contract.download_count.total[key];
+		}
 
 		let res = await persist(contract, ContractsSchema);
 
@@ -94,33 +121,48 @@ module.exports = exports = async (event, message, response, subscriber) => {
 	}
 };
 
-function initDownloadCount () {
+function createCountsByLimits (limits) {
+	const item = {
+		total: 0
+	};
+
+	for (let [key, val] of Object.entries(limits)) {
+		if (val > -1) {
+			item[key] = 0;
+		}
+	}
+
+	return item;
+}
+
+function initDownloadCount (limits) {
 	return {
-		legacy: 0,
-		total: 0,
+		legacy: createCountsByLimits(limits),
+		remaining: createCountsByLimits(limits),
+		total: createCountsByLimits(limits),
 		current: {
-			day: 0,
-			week: 0,
-			month: 0,
-			year: 0
+			day: createCountsByLimits(limits),
+			week: createCountsByLimits(limits),
+			month: createCountsByLimits(limits),
+			year: createCountsByLimits(limits)
 		}
 	};
 }
 
-function initArchiveItem(year) {
-	const endOfYear = moment(year, 'YYYY').endOf('year');
+//function initArchiveItem (year, limits) {
+//	const endOfYear = moment(year, 'YYYY').endOf('year');
+//
+//	return {
+//		year: endOfYear.format('YYYY'),
+//		breakdown: {
+//			year: createCountsByLimits(limits),
+//			months: makeArray(endOfYear.format('M')),
+//			weeks: makeArray(endOfYear.format('W')),
+//			days: makeArray(endOfYear.format('DDD'))
+//		}
+//	};
+//}
 
-	return {
-		year: endOfYear.format('YYYY'),
-		breakdown: {
-			year: 0,
-			months: makeArray(endOfYear.format('M')),
-			weeks: makeArray(endOfYear.format('W')),
-			days: makeArray(endOfYear.format('DDD'))
-		}
-	};
-}
-
-function makeArray(length) {
-	return '0'.repeat(Number(length)).split('').map(parseFloat);
-}
+//function makeArray(length) {
+//	return '0'.repeat(Number(length)).split('').map(parseFloat);
+//}
