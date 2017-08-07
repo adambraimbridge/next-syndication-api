@@ -12,6 +12,11 @@ const flagIsOn = require('../helpers/flag-is-on');
 const fetchContentById = require('../lib/fetch-content-by-id');
 const resolve = require('../lib/resolve');
 
+const {
+	DOWNLOAD_STATE_MAP,
+	SAVED_STATE_MAP
+} = require('config');
+
 const RESOLVE_PROPERTIES = Object.keys(resolve);
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
@@ -20,6 +25,8 @@ module.exports = exports = async (req, res, next) => {
 	const START = Date.now();
 
 	let { body } = req;
+
+	const { locals: { contract, flags, licence } } = res;
 
 	if (!Array.isArray(body)) {
 		log.error(`${MODULE_ID} Expected \`req.body\` to be [object Array] and got \`${Object.prototype.toString.call(body)}\` instead`);
@@ -41,33 +48,34 @@ module.exports = exports = async (req, res, next) => {
 
 	let items = (await Promise.all(DISTINCT_ITEMS.map(async content_id => await fetchContentById(content_id)))).filter(item => Object.prototype.toString.call(item) === '[object Object]');
 
-	items = items.filter(item => showItem(item, res.locals.flags));
+	items = items.filter(item => showItem(item, flags));
 
 	log.info(`${MODULE_ID} => ${DISTINCT_ITEMS.length} distinct items found out of ${body.length} total items`);
 	log.info(`${MODULE_ID} => Retrieved ${items.length}/${DISTINCT_ITEMS.length} distinct items in ${Date.now() - START}ms`);
 
-	let saved = await client.scanAsync({
+	let existing = await client.scanAsync({
 		TableName: HistoryTable.TableName,
-		FilterExpression: 'licence_id = :licence_id and item_state = :item_state',
+		FilterExpression: 'licence_id = :licence_id',
 		ExpressionAttributeValues: {
-			':item_state': 'save',
-			':licence_id': res.locals.licence.id
+			':licence_id': licence.id
 		}
 	});
 
-	if (saved.Count > 0) {
-		saved.ItemsMap = saved.Items.reduce((acc, item) => {
-			acc[item.content_id] = item;
+	if (existing.Count > 0) {
+		existing.ItemsMap = existing.Items.reduce((acc, item) => {
+			if (item.item_state in DOWNLOAD_STATE_MAP || item.item_state in SAVED_STATE_MAP) {
+				acc[item.content_id] = item;
+			}
 
 			return acc;
 		}, {});
 	}
 	else {
-		saved.ItemsMap = {};
+		existing.ItemsMap = {};
 	}
 
 	const response = items.map(item => RESOLVE_PROPERTIES.reduce((acc, prop) => {
-		acc[prop] = resolve[prop](item[prop], prop, item, saved.ItemsMap[item.id]);
+		acc[prop] = resolve[prop](item[prop], prop, item, existing.ItemsMap[item.id], contract);
 
 		return acc;
 	}, {}));
