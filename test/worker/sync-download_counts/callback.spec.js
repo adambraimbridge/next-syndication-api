@@ -7,6 +7,8 @@ const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 const proxyquire = require('proxyquire');
 
+const moment = require('moment');
+
 const MessageQueueEvent = require('../../../queue/message-queue-event');
 const QueueSubscriber = require('../../../queue/subscriber');
 const SchemaJobV1 = require('../../../schema/job-v1.json');
@@ -23,13 +25,17 @@ describe(MODULE_ID, function () {
 		'owner_name': 'FT Syndication',
 		'contract_date': '11/12/15 - 31/01/2015',
 		'contract_starts': '2015-12-11',
-		'limit_podcast': 10000000,
 		'contract_ends': '2050-01-31',
 		'contributor_content': true,
-		'limit_video': 10000000,
 		'licence_id': 'f0e793d6-90d6-4581-9743-c905940602f5',
 		'licencee_name': 'FT Staff',
 		'content_allowed': 'Articles, Podcasts & Video',
+		'limits': {
+			'article': 10000000,
+			'podcast': 10000000,
+			'video': 10000000,
+			'total': 30000000
+		},
 		'assets': [{
 			'online_usage_limit': 10000000,
 			'product': 'FT Article',
@@ -60,8 +66,7 @@ describe(MODULE_ID, function () {
 		}],
 		'contract_number': 'CA-00001558',
 		'client_website': 'https://www.ft.com',
-		'client_publications': 'FT',
-		'limit_article': 10000000
+		'client_publications': 'FT'
 	};
 
 	const downloadHistory = [{
@@ -75,7 +80,7 @@ describe(MODULE_ID, function () {
 		'version': 'v1',
 		'contributor_content': false,
 		'_id': '1643097dede85a81e5e94cd6168a0a06',
-		'time': '2017-08-01T12:37:26.910Z',
+		'time': moment().startOf('day').add(4, 'hours').toJSON(),
 		'published_date': '2017-08-01T04:02:08.000Z',
 		'user': {
 			'id': '8ef593a8-eef6-448c-8560-9ca8cdca80a5',
@@ -87,10 +92,10 @@ describe(MODULE_ID, function () {
 		'date': '01 August 2017',
 		'published': '01 August 2017',
 		'aggregate': {
-			'year': '2017',
-			'month': 7,
-			'week': 30,
-			'day': 212
+			year: moment().startOf('day').add(4, 'hours').format('YYYY'),
+			month: moment().startOf('day').add(4, 'hours').format('M') - 1,
+			week: moment().startOf('day').add(4, 'hours').format('W') - 1,
+			day: moment().startOf('day').add(4, 'hours').format('DDD') - 1
 		}
 	}, {
 		'syndication_state': 'yes',
@@ -103,7 +108,7 @@ describe(MODULE_ID, function () {
 		'version': 'v1',
 		'contributor_content': false,
 		'_id': 'd7cf17839495d7176ae7b986e6ce3eff',
-		'time': '2017-08-01T12:37:25.194Z',
+		'time': moment().startOf('week').subtract(2, 'days').toJSON(),
 		'published_date': '2017-08-01T04:02:08.000Z',
 		'user': {
 			'id': '8ef593a8-eef6-448c-8560-9ca8cdca80a5',
@@ -115,10 +120,10 @@ describe(MODULE_ID, function () {
 		'date': '01 August 2017',
 		'published': '01 August 2017',
 		'aggregate': {
-			'year': '2017',
-			'month': 7,
-			'week': 30,
-			'day': 212
+			year: moment().startOf('week').subtract(2, 'days').format('YYYY'),
+			month: moment().startOf('week').subtract(2, 'days').format('M') - 1,
+			week: moment().startOf('week').subtract(2, 'days').format('W') - 1,
+			day: moment().startOf('week').subtract(2, 'days').format('DDD') - 1
 		}
 	}, {
 		'syndication_state': 'yes',
@@ -131,7 +136,7 @@ describe(MODULE_ID, function () {
 		'version': 'v1',
 		'contributor_content': false,
 		'_id': '108ff39fefbaff6a7f889287e1e7f0ff',
-		'time': '2017-08-01T12:37:21.533Z',
+		'time': moment().startOf('month').toJSON(),
 		'published_date': '2017-07-31T23:02:12.000Z',
 		'user': {
 			'id': '8ef593a8-eef6-448c-8560-9ca8cdca80a5',
@@ -143,10 +148,10 @@ describe(MODULE_ID, function () {
 		'date': '01 August 2017',
 		'published': '01 August 2017',
 		'aggregate': {
-			'year': '2017',
-			'month': 7,
-			'week': 30,
-			'day': 212
+			year: moment().startOf('month').format('YYYY'),
+			month: moment().startOf('month').format('M') - 1,
+			week: moment().startOf('month').format('W') - 1,
+			day: moment().startOf('month').format('DDD') - 1
 		}
 	}];
 
@@ -234,29 +239,64 @@ describe(MODULE_ID, function () {
 
 		expect(contractResponse.download_count)
 			.to.have.property('total')
-			.and.to.equal(2);
+			.and.to.eql({
+				article: 2,
+				podcast: 0,
+				video: 0,
+				total: 2
+			});
 
 		expect(contractResponse.download_count)
 			.to.have.property('legacy')
-			.and.to.equal(0);
+			.and.to.eql({
+				article: 0,
+				podcast: 0,
+				video: 0,
+				total: 0
+			});
 
 		expect(contractResponse.download_count)
 			.to.have.property('current')
-			.and.to.be.an('object');
+			.and.to.eql({
+				week: {
+					article: 0,
+					podcast: 0,
+					total: 0,
+					video: 0
+				},
+				month: {
+					article: 2,
+					podcast: 0,
+					total: 2,
+					video: 0
+				},
+				day: {
+					article: 0,
+					podcast: 0,
+					total: 0,
+					video: 0
+				},
+				year: {
+					article: 2,
+					podcast: 0,
+					total: 2,
+					video: 0
+				}
+			});
 
-		expect(contractResponse.download_count)
-			.to.have.property('archive')
-			.and.to.be.an('array');
+//		expect(contractResponse.download_count)
+//			.to.have.property('archive')
+//			.and.to.be.an('array');
 
-		expect(contractResponse.download_count.archive[0]).to.eql({
-			'year': '2017',
-			'breakdown': {
-				'days': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				'months': [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0],
-				'weeks': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				'year': 2
-			}
-		});
+//		expect(contractResponse.download_count.archive[0]).to.eql({
+//			'year': '2017',
+//			'breakdown': {
+//				'days': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+//				'months': [0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0],
+//				'weeks': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+//				'year': 2
+//			}
+//		});
 	});
 
 	it('persists the updated contract to the db', async function () {

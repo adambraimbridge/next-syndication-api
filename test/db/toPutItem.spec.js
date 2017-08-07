@@ -34,9 +34,6 @@ describe(MODULE_ID, function () {
 					client_publications: { S: contractFixture.clientPublications },
 					client_website: { S: contractFixture.clientWebsite },
 					licencee_name: { S: contractFixture.licenceeName },
-					limit_article: { N: String(contractFixture.articleLimit) },
-					limit_podcast: { N: String(contractFixture.podcastLimit) },
-					limit_video: { N: String(contractFixture.videoLimit) },
 					owner_name: { S: contractFixture.ownerName },
 					owner_email: { S: contractFixture.ownerEmail },
 					assets: {
