@@ -5,7 +5,7 @@ const type = require('./type');
 
 module.exports = exports = (val, prop, item, existing, contract) => {
 	if (downloaded(undefined, 'downloaded', item, existing, contract)) {
-		return true;
+		return 1;
 	}
 
 	let content_type = type(item.type, 'type', item, existing, contract);
@@ -13,10 +13,13 @@ module.exports = exports = (val, prop, item, existing, contract) => {
 	if (contract && contract.limits) {
 		if (contract.limits[content_type] > -1) {
 			if (contract.download_count.remaining[content_type] > 0) {
-				return true;
+				return 1;
+			}
+			else {
+				return -1;
 			}
 		}
 	}
 
-	return false;
+	return 0;
 };
