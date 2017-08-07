@@ -11,6 +11,8 @@ const getContractByID = require('../../server/lib/get-contract-by-id');
 const getHistoryByLicenceID = require('../../server/lib/get-history-by-licence-id');
 const persist = require('../persist');
 
+const { CONTENT_TYPE_ALIAS } = require('config');
+
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (event, message, response, subscriber) => {
@@ -64,9 +66,7 @@ module.exports = exports = async (event, message, response, subscriber) => {
 
 			// todo: special case we'll treat it as a video for now
 			// todo: but may need further discussion.
-			if (content_type === 'mediaresource') {
-				content_type = 'video';
-			}
+			content_type = CONTENT_TYPE_ALIAS[content_type] || content_type;
 
 			if (!Array.isArray(acc[content_type])) {
 				acc[content_type] = [];
