@@ -14,7 +14,7 @@ describe(MODULE_ID, function () {
 	it('returns the type name of the passed URI in lowercase', function() {
 		expect(underTest('http://www.ft.com/ontology/content/Article')).to.equal('article');
 
-		expect(underTest('http://www.ft.com/ontology/content/MediaResource')).to.equal('mediaresource');
+		expect(underTest('http://www.ft.com/ontology/content/MediaResource')).to.equal('video');
 
 		expect(underTest('http://www.ft.com/ontology/content/Package')).to.equal('package');
 

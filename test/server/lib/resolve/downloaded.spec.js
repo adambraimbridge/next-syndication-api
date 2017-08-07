@@ -14,4 +14,16 @@ describe(MODULE_ID, function () {
 	it('returns false', function() {
 		expect(underTest(undefined)).to.be.false;
 	});
+
+	it('returns false', function() {
+		expect(underTest(undefined, 'downloaded', { item_state: 'interrupted' })).to.be.false;
+	});
+
+	it('returns true', function() {
+		expect(underTest(undefined, 'downloaded', { item_state: 'complete' })).to.be.true;
+	});
+
+	it('returns true', function() {
+		expect(underTest(undefined, 'downloaded', { item_state: 'start' })).to.be.true;
+	});
 });
