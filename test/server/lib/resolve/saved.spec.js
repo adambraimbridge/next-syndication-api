@@ -16,10 +16,10 @@ describe(MODULE_ID, function () {
 	});
 
 	it('returns false', function() {
-		expect(underTest(undefined, 'saved', { item_state: 'delete' })).to.be.false;
+		expect(underTest(undefined, 'saved', null, { item_state: 'delete' })).to.be.false;
 	});
 
 	it('returns true', function() {
-		expect(underTest(undefined, 'saved', { item_state: 'save' })).to.be.true;
+		expect(underTest(undefined, 'saved', null, { item_state: 'save' })).to.be.true;
 	});
 });
