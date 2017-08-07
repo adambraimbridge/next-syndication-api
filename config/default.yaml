@@ -42,6 +42,7 @@
 
   DOWNLOAD_STATE_MAP:
     complete: true
+    start: true
 
   FEATURE_FLAGS:
     - syndication
