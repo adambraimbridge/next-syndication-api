@@ -10,7 +10,7 @@ const underTest = require('../../../../server/lib/resolve/canDownload');
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
-describe.only(MODULE_ID, function () {
+describe(MODULE_ID, function () {
 	it('returns 0', function() {
 		expect(underTest(undefined, 'canDownload', { item_state: 'interrupted', type: 'http://www.ft.com/ontology/content/Video' })).to.equal(0);
 	});
