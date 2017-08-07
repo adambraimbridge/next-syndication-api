@@ -1,5 +1,12 @@
 'use strict';
 
+const DownloadLimitsByContentType = [
+	{ AttributeName: 'article', AttributeType: 'N', DefaultValue: -1 },
+	{ AttributeName: 'podcast', AttributeType: 'N', DefaultValue: -1 },
+	{ AttributeName: 'video', AttributeType: 'N', DefaultValue: -1 },
+	{ AttributeName: 'total', AttributeType: 'N', DefaultValue: -1 }
+];
+
 module.exports = exports = {
 	TableName: 'ft-next-syndication-contracts',
 	AttributeDefinitions: [
@@ -10,9 +17,13 @@ module.exports = exports = {
 		{ AttributeAlias: 'client_publications', AttributeName: 'clientPublications', AttributeType: 'S' },
 		{ AttributeAlias: 'client_website', AttributeName: 'clientWebsite', AttributeType: 'S' },
 		{ AttributeAlias: 'licencee_name', AttributeName: 'licenceeName', AttributeType: 'S' },
-		{ AttributeAlias: 'limit_article', AttributeName: 'articleLimit', AttributeType: 'N', DefaultValue: 0  },
-		{ AttributeAlias: 'limit_podcast', AttributeName: 'podcastLimit', AttributeType: 'N', DefaultValue: 0 },
-		{ AttributeAlias: 'limit_video', AttributeName: 'videoLimit', AttributeType: 'N', DefaultValue: 0 },
+//		{ AttributeAlias: 'limit_article', AttributeName: 'articleLimit', AttributeType: 'N', DefaultValue: 0  },
+//		{ AttributeAlias: 'limit_podcast', AttributeName: 'podcastLimit', AttributeType: 'N', DefaultValue: 0 },
+//		{ AttributeAlias: 'limit_video', AttributeName: 'videoLimit', AttributeType: 'N', DefaultValue: 0 },
+		{
+			AttributeName: 'limits', AttributeType: 'M',
+			AttributeDefinitions: JSON.parse(JSON.stringify(DownloadLimitsByContentType))
+		},
 		{ AttributeAlias: 'owner_name', AttributeName: 'ownerName', AttributeType: 'S' },
 		{ AttributeAlias: 'owner_email', AttributeName: 'ownerEmail', AttributeType: 'S' },
 		{ AttributeAlias: 'last_updated', AttributeName: 'last_updated', AttributeType: 'S' },
@@ -31,34 +42,45 @@ module.exports = exports = {
 		},
 		{
 			AttributeName: 'download_count', AttributeType: 'M',
-			AttributeDefinitions: [
-				{ AttributeName: 'legacy', AttributeType: 'N', DefaultValue: 0 },
-				{ AttributeName: 'total', AttributeType: 'N', DefaultValue: 0 },
-				{
-					AttributeName: 'current', AttributeType: 'M',
-					AttributeDefinitions: [
-						{ AttributeName: 'day', AttributeType: 'N' },
-						{ AttributeName: 'week', AttributeType: 'N' },
-						{ AttributeName: 'month', AttributeType: 'N' },
-						{ AttributeName: 'year', AttributeType: 'N' }
-					]
-				},
-				{
-					AttributeName: 'archive', AttributeType: 'L',
-					AttributeDefinitions: [
-						{ AttributeName: 'year', AttributeType: 'N' },
-						{
-							AttributeName: 'breakdown', AttributeType: 'M',
-							AttributeDefinitions: [
-								{ AttributeName: 'year', AttributeType: 'N' },
-								{ AttributeName: 'months', AttributeType: 'L', AttributeItemTypes: 'N' },
-								{ AttributeName: 'weeks', AttributeType: 'L', AttributeItemTypes: 'N' },
-								{ AttributeName: 'days', AttributeType: 'L', AttributeItemTypes: 'N' }
-							]
-						},
-					]
-				}
-			]
+			AttributeDefinitions: [ {
+				AttributeName: 'legacy', AttributeType: 'M',
+				AttributeDefinitions: JSON.parse(JSON.stringify(DownloadLimitsByContentType))
+			}, {
+				AttributeName: 'remaining', AttributeType: 'M',
+				AttributeDefinitions: JSON.parse(JSON.stringify(DownloadLimitsByContentType))
+			}, {
+				AttributeName: 'total', AttributeType: 'M',
+				AttributeDefinitions: JSON.parse(JSON.stringify(DownloadLimitsByContentType))
+			}, {
+				AttributeName: 'current', AttributeType: 'M',
+				AttributeDefinitions: [ {
+					AttributeName: 'day', AttributeType: 'M',
+					AttributeDefinitions: JSON.parse(JSON.stringify(DownloadLimitsByContentType))
+				}, {
+					AttributeName: 'week', AttributeType: 'M',
+					AttributeDefinitions: JSON.parse(JSON.stringify(DownloadLimitsByContentType))
+				}, {
+					AttributeName: 'month', AttributeType: 'M',
+					AttributeDefinitions: JSON.parse(JSON.stringify(DownloadLimitsByContentType))
+				}, {
+					AttributeName: 'year', AttributeType: 'M',
+					AttributeDefinitions: JSON.parse(JSON.stringify(DownloadLimitsByContentType))
+				} ]
+			}/*, {
+				AttributeName: 'archive', AttributeType: 'L',
+				AttributeDefinitions: [
+					{ AttributeName: 'year', AttributeType: 'N' },
+					{
+						AttributeName: 'breakdown', AttributeType: 'M',
+						AttributeDefinitions: [
+							{ AttributeName: 'year', AttributeType: 'N' },
+							{ AttributeName: 'months', AttributeType: 'L', AttributeItemTypes: 'N' },
+							{ AttributeName: 'weeks', AttributeType: 'L', AttributeItemTypes: 'N' },
+							{ AttributeName: 'days', AttributeType: 'L', AttributeItemTypes: 'N' }
+						]
+					}
+				]
+			}*/ ]
 		},
 		{ AttributeName: 'download_formats', AttributeType: 'M' }
 	]
