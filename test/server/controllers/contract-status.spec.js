@@ -26,12 +26,16 @@ describe(MODULE_ID, function () {
 			'owner_name': 'FT Syndication',
 			'contract_date': '11/12/15 - 31/01/2015',
 			'contract_starts': '2015-12-11',
-			'limit_podcast': 10000000,
 			'contract_ends': '2050-01-31',
 			'contributor_content': true,
-			'limit_video': 10000000,
 			'licencee_name': 'FT Staff',
 			'content_allowed': 'Articles, Podcasts & Video',
+			'limits': {
+				'article': 10000000,
+				'podcast': 10000000,
+				'total': 300000000,
+				'video': 10000000
+			},
 			'assets': [{
 				'online_usage_limit': 10000000,
 				'product': 'FT Article',
@@ -62,8 +66,7 @@ describe(MODULE_ID, function () {
 			}],
 			'contract_number': 'CA-00001558',
 			'client_website': 'https://www.ft.com',
-			'client_publications': 'FT',
-			'limit_article': 10000000
+			'client_publications': 'FT'
 		};
 		let next;
 		let req;
