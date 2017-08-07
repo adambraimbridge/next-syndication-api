@@ -1,4 +1,6 @@
 'use strict';
 
-// todo: once we have a DB and salesforce endpoint
-module.exports = exports = () => false;
+const { DOWNLOAD_STATE_MAP } = require('config');
+
+module.exports = exports = (val, prop, item, existing) =>
+	Object.prototype.toString.call(existing) === '[object Object]' && existing.item_state in DOWNLOAD_STATE_MAP;
