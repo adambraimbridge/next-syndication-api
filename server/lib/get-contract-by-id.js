@@ -23,17 +23,47 @@ function decorateContract(contract) {
 	contract.contract_date = `${moment(contract.contract_starts).format('DD/MM/YY')} - ${moment(contract.contract_ends).format('DD/MM/YY')}`;
 
 	const contentAllowed = [];
+	const limits = { total: 0 };
 
-	if (contract.limit_article > 0) {
+	if (!contract.limits) {
+		contract.limits = {
+			article: -1,
+			podcast: - 1,
+			total: -1,
+			video: -1
+		}
+	}
+
+	if (contract.articleLimit > 0 || contract.limits.article > 0) {
 		contentAllowed.push('Articles');
+
+		const limit = contract.articleLimit || contract.limits.article;
+
+		limits.article = limit;
+
+		limits.total += limit;
 	}
 
-	if (contract.limit_podcast > 0) {
+	if (contract.podcastLimit > 0 || contract.limits.podcast > 0) {
 		contentAllowed.push('Podcasts');
+
+		const limit = contract.podcastLimit || contract.limits.podcast;
+
+		limits.podcast = limit;
+
+		limits.total += limit;
 	}
 
-	if (contract.limit_video > 0) {
+	if (contract.videoLimit > 0 || contract.limits.video > 0) {
 		contentAllowed.push('Video');
+
+		const limit = contract.videoLimit || contract.limits.video;
+
+		limits.video = limit;
+
+		limits.total += limit;
+
+		delete contract.videoLimit;
 	}
 
 	switch (contentAllowed.length) {
@@ -43,6 +73,8 @@ function decorateContract(contract) {
 		default:
 			contract.content_allowed = `${contentAllowed.slice(0, -1).join(', ')} & ${contentAllowed[contentAllowed.length - 1]}`;
 	}
+
+	contract.limits = limits;
 
 	return contract;
 }
@@ -71,7 +103,7 @@ module.exports = exports = async (contractID) => {
 	if (contract.success === true) {
 		contract.last_updated = (new Date()).toJSON();
 
-		let dbItem = toPutItem(contract, ContractsSchema);
+		let dbItem = toPutItem(decorateContract(contract), ContractsSchema);
 
 		const res = await db.putItemAsync(dbItem);
 
@@ -84,7 +116,7 @@ module.exports = exports = async (contractID) => {
 
 		log.debug(`${MODULE_ID} | Persisted contract#${contractID} to DB`, { dbItem, res });
 
-		return decorateContract(dbItem.Item);
+		return dbItem.Item;
 	}
 	else {
 		throw new Error(contract.errorMessage);
