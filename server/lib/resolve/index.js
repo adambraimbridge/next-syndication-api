@@ -1,6 +1,7 @@
 'use strict';
 
 exports.id = require('./id');
+exports.canDownload = require('./canDownload');
 exports.canBeSyndicated = require('./canBeSyndicated');
 exports.downloaded = require('./downloaded');
 exports.publishedDate = require('./publishedDate');
