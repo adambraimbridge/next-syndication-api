@@ -59,6 +59,7 @@ describe(MODULE_ID, function () {
 		it('returns an Object in a DynamodB friendly format', function () {
 			let event = (new MessageQueueEvent({ event: {
 				content_id: 'http://www.ft.com/thing/abc',
+				content_type: 'article',
 				contract_id: 'syndication',
 				download_format: 'docx',
 				licence_id: 'foo',
@@ -71,6 +72,7 @@ describe(MODULE_ID, function () {
 					surname: 'bar'
 				}
 			}})).toJSON();
+
 			let item = underTest(event, HistorySchema);
 
 			expect(item).to.eql({
@@ -78,6 +80,7 @@ describe(MODULE_ID, function () {
 				Item: {
 					_id: { S: event._id },
 					content_id: { S: event.content_id },
+					content_type: { S: event.content_type },
 					contract_id: { S: event.contract_id },
 					contributor_content: { BOOL: event.contributor_content },
 					download_format: { S: event.download_format },
