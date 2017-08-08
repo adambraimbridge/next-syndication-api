@@ -602,19 +602,6 @@
     }
   },
   {
-    "name": "streamFeaturedContent",
-    "description": "Enables certain stream pages (configured via Bertha) to use a list of featured stories",
-    "owner": "callum.locke@ft.com",
-    "notificationRecipients": { "slack": { "users": [ "@sumeet.adur" ], "channels": [ "#brexit" ] } },
-    "safeState": false,
-    "state": true,
-    "tags": [ ],
-    "cohorts": [ ],
-    "userFacing": true,
-    "expiry": "2017-04-06T12:00:00.000Z",
-    "creationDate": "2016-07-07T15:36:47.675Z"
-  },
-  {
     "name": "myFtExploreSearch",
     "description": "Display the search box on the myFT explore page",
     "owner": "james.webb@ft.com",
