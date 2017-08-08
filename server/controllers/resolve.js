@@ -80,6 +80,22 @@ module.exports = exports = async (req, res, next) => {
 		return acc;
 	}, {}));
 
+	if (req.query.test === 'messaging') {
+		[
+			['canBeSyndicated', 'no'],
+			['canBeSyndicated', 'verify'],
+			['canBeSyndicated', 'yes'],
+			['canBeSyndicated', null],
+			['canDownload', 1],
+			['canDownload', 0],
+			['canDownload', -1],
+			['downloaded', true],
+			['downloaded', false],
+			['saved', true],
+			['saved', false]
+		].forEach(([key, val], i) => response[i][key] = val);
+	}
+
 	res.json(response);
 
 	log.info(`${MODULE_ID} => Sent ${items.length}/${DISTINCT_ITEMS.length} distinct items in ${Date.now() - START}ms`);
