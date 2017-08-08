@@ -12,7 +12,7 @@ module.exports = exports = (val, prop, item, existing, contract) => {
 
 	if (contract && contract.limits) {
 		if (contract.limits[content_type] > -1) {
-			if (contract.download_count.remaining[content_type] > 0) {
+			if (!contract.download_count || !contract.download_count.remaining || contract.download_count.remaining[content_type] > 0) {
 				return 1;
 			}
 			else {
