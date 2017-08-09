@@ -1012,22 +1012,6 @@
     "creationDate": "2016-08-22T10:55:09.181Z"
   },
   {
-    "name": "myFtSponsorship",
-    "description": "Show the current myFT sponsor in the myFT header",
-    "owner": "james.webb@ft.com",
-    "notificationRecipients": {
-      "slack": {
-        "users": [ "@keith.rogers", "@laurie.boyes", "@patrick.hamann", "@dawn.budge" ],
-        "channels": [ "#ft-next-myft-dev" ]
-      }
-    },
-    "safeState": false,
-    "state": false,
-    "userFacing": true,
-    "expiry": "2017-08-01T10:05:45.830Z",
-    "creationDate": "2016-08-22T15:39:22.733Z"
-  },
-  {
     "name": "streamJobsBox",
     "description": "Enables the jobs box on the Recruitment stream page. List featured jobs from Exec appointments.",
     "owner": null,
