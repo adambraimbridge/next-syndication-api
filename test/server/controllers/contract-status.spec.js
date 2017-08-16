@@ -28,43 +28,44 @@ describe(MODULE_ID, function () {
 			'contract_starts': '2015-12-11',
 			'contract_ends': '2050-01-31',
 			'contributor_content': true,
+			'licence_id': 'xyz',
 			'licencee_name': 'FT Staff',
 			'content_allowed': 'Articles, Podcasts & Video',
-			'limits': {
-				'article': 10000000,
-				'podcast': 10000000,
-				'total': 300000000,
-				'video': 10000000
-			},
 			'assets': [{
+				'download_limit': 10000000,
 				'online_usage_limit': 10000000,
 				'product': 'FT Article',
 				'online_usage_period': 'Week',
 				'print_usage_period': 'Week',
 				'print_usage_limit': 20,
 				'embargo_period': 0,
-				'asset': 'FT Article',
+				'asset_type': 'FT Article',
 				'content': 'FT.com'
 			}, {
+				'download_limit': 10000000,
 				'online_usage_limit': 10000000,
 				'product': 'Video',
 				'online_usage_period': 'Week',
 				'print_usage_period': 'Week',
 				'print_usage_limit': 20,
 				'embargo_period': 0,
-				'asset': 'Video',
+				'asset_type': 'Video',
 				'content': 'FT.com'
 			}, {
+				'download_limit': 10000000,
 				'online_usage_limit': 10000000,
 				'product': 'Podcast',
 				'online_usage_period': 'Week',
 				'print_usage_period': 'Week',
 				'print_usage_limit': 20,
 				'embargo_period': 0,
-				'asset': 'Podcast',
+				'asset_type': 'Podcast',
 				'content': 'FT.com'
 			}],
-			'contract_number': 'CA-00001558',
+			'assetsMap': {
+
+			},
+			'contract_id': 'CA-00001558',
 			'client_website': 'https://www.ft.com',
 			'client_publications': 'FT'
 		};
@@ -119,6 +120,10 @@ describe(MODULE_ID, function () {
 				licence: { id: 'xyz' },
 				syndication_contract: {
 					id: 'lmno'
+				},
+				user: {
+					download_format: 'html',
+					user_id: '123'
 				},
 				userUuid: 'abc'
 			};
