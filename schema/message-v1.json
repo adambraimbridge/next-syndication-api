@@ -39,14 +39,14 @@
       "type": "string"
     },
     "state": {
-      "default": "start",
+      "default": "started",
       "enum": [
         "complete",
-        "delete",
+        "deleted",
         "error",
         "interrupted",
-        "save",
-        "start"
+        "saved",
+        "started"
       ],
       "type": "string"
     },
