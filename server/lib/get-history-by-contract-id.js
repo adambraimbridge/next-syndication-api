@@ -4,7 +4,7 @@ const moment = require('moment');
 
 const pg = require('../../db/pg');
 
-module.exports = exports = async ({ contract_id, limit, offset, type/*, user_id*/ }) => {
+module.exports = exports = async ({ contract_id, limit, offset, type, user_id }) => {
 	const db = await pg();
 
 	let query = 'SELECT * FROM syndication.';
@@ -19,6 +19,10 @@ module.exports = exports = async ({ contract_id, limit, offset, type/*, user_id*
 	}
 
 	query += `$text$${contract_id}$text$::text`;
+
+	if (typeof user_id !== 'undefined') {
+		query += `, $text$${user_id}$text$::text`;
+	}
 
 	if (typeof offset !== 'undefined') {
 		query += `, $integer$${offset}$integer$::integer`;
