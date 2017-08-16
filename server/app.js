@@ -9,6 +9,7 @@ const { BASE_URI_PATH = '/syndication' } = require('config');
 const accessControl = require('./middleware/access-control');
 const cache = require('./middleware/cache');
 const checkIfNewSyndicationUser = require('./middleware/check-if-new-syndication-user');
+const db = require('./middleware/db');
 const decodeSession = require('./middleware/decode-session');
 const getContractById = require('./middleware/get-contract-by-id');
 //const getLicenceAccessAuthToken = require('./middleware/get-licence-access-auth-token');
@@ -33,6 +34,7 @@ const middleware = [
 	logRequest,
 	accessControl,
 	cache,
+	db,
 	flags,
 	decodeSession,
 	isSyndicationUser,
