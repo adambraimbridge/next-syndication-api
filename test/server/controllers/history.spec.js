@@ -16,7 +16,7 @@ chai.use(sinonChai);
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
-describe.only(MODULE_ID, function () {
+describe(MODULE_ID, function () {
 	let underTest;
 	const items = [{
 		'syndication_state': 'yes',
