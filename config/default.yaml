@@ -5,6 +5,16 @@
 
   API_KEY_HEADER_NAME: X-Api-Key
 
+  ASSET_TYPE_TO_CONTENT_TYPE:
+    FT Article: article
+    Podcast: podcast
+    Video: video
+
+  ASSET_TYPE_TO_DISPLAY_TYPE:
+    FT Article: Articles
+    Podcast: Podcasts
+    Video: Videos
+
   AUTH_API_ID_PROPERTY: client_id
   AUTH_API_QUERY_LICENCE:
     redirect_uri: https://www.ft.com
@@ -23,7 +33,17 @@
   BASE_URI_PATH: /syndication
 
   CONTENT_TYPE_ALIAS:
+    content: article
+    contentpackage: package
     mediaresource: video
+
+  CONTENT_TYPE_TO_ASSET_TYPE:
+    article: "FT Article"
+    mediaresource: "Video"
+    package: "FT Article"
+    placeholder: "FT Article"
+    podcast: "Podcast"
+    video: "Video"
 
   CONVERT_FORMAT_COMMAND: pandoc
 
@@ -45,7 +65,7 @@
 
   DOWNLOAD_STATE_MAP:
     complete: true
-    start: true
+    started: true
 
   FEATURE_FLAGS:
     - syndication
@@ -111,7 +131,7 @@
       - CA-00001558
 
   SAVED_STATE_MAP:
-    save: true
+    saved: true
 
   SESSION_PRODUCTS_PATH: /products
   SESSION_URI: https://session-next.ft.com
