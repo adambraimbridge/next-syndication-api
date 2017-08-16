@@ -14,7 +14,7 @@ module.exports = exports = async (req, res, next) => {
 	try {
 		res.status(200);
 
-		res.json({
+		res.json(Object.assign({
 			features: FEATURE_FLAGS.reduce((acc, flag) => {
 				if (flagIsOn(res.locals.flags[flag])) {
 					acc[flag] = true;
@@ -22,9 +22,9 @@ module.exports = exports = async (req, res, next) => {
 
 				return acc;
 			}, {}),
+			contract_id: res.locals.syndication_contract.id,
 			licence_id: res.locals.licence.id,
-			user_id: res.locals.userUuid
-		});
+		}, res.locals.user));
 
 		next();
 	}

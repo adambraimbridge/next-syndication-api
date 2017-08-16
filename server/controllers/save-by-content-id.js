@@ -31,14 +31,14 @@ module.exports = exports = async (req, res, next) => {
 				contract_id: res.locals.syndication_contract.id,
 				licence_id: res.locals.licence.id,
 				published_date: content.firstPublishedDate || content.publishedDate,
-				state: 'save',
+				state: 'saved',
 				syndication_state: String(content.canBeSyndicated),
 				time: moment().toDate(),
 				title: content.title,
 				user: {
 					email: res.locals.user.email,
 					first_name: res.locals.user.firstName,
-					id: res.locals.user.id,
+					id: res.locals.user.user_id,
 					surname: res.locals.user.lastName
 				}
 			}

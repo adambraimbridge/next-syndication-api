@@ -5,6 +5,9 @@ const path = require('path');
 const { default: log } = require('@financial-times/n-logger');
 const fetch = require('n-eager-fetch');
 
+const usersColumnMappings = require('../../db/column_mappings/users');
+const pgMapColumns = require('../../db/pg-map-columns');
+
 const {
 	ALS_API_KEY,
 	API_KEY_HEADER_NAME,
@@ -30,15 +33,25 @@ module.exports = exports = async (req, res, next) => {
 			method: 'get'
 		});
 
-		const user = await userRes.json();
+		const userProfile = await userRes.json();
 
 		if (!userRes.ok) {
-			throw new Error(user.message || `${user.errors[0].message}: ${user.errors[0].errorCode}`);
+			throw new Error(userProfile.message || `${userProfile.errors[0].message}: ${userProfile.errors[0].errorCode}`);
 		}
 
-		log.debug(`${MODULE_ID} GetUserProfileSuccess => ${URI}`, user);
+		log.debug(`${MODULE_ID} GetUserProfileSuccess => ${URI}`, userProfile[USER_PROFILE_DATA_PROPERTY]);
 
-		res.locals.user = user[USER_PROFILE_DATA_PROPERTY];
+		res.locals.user = userProfile[USER_PROFILE_DATA_PROPERTY];
+
+		const user = pgMapColumns(JSON.parse(JSON.stringify(res.locals.user)), usersColumnMappings);
+
+		const { $DB: db } = res.locals;
+
+		const [user_data] = await db.syndication.upsert_user([user]);
+
+		res.locals.user = user_data;
+
+		log.debug(`${MODULE_ID} Upsert User => `, user_data);
 
 		next();
 	}

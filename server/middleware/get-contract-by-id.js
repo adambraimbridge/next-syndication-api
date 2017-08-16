@@ -10,7 +10,12 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 
 module.exports = exports = async (req, res, next) => {
 	try {
-		res.locals.contract = await getContractByID(res.locals.syndication_contract.id);
+		const { locals } = res;
+		const { $DB: db, syndication_contract, user } = locals;
+
+		const contract = locals.contract = await getContractByID(syndication_contract.id, locals);
+
+		await db.syndication.upsert_contract_users([syndication_contract.id, user.user_id, contract.owner_email === user.email]);
 
 		next();
 	}

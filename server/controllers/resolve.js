@@ -4,18 +4,10 @@ const path = require('path');
 
 const { default: log } = require('@financial-times/n-logger');
 
-const HistoryTable = require('../../db/tables/history');
-const { client } = require('../../db/connect');
-
 const flagIsOn = require('../helpers/flag-is-on');
 
-const fetchContentById = require('../lib/fetch-content-by-id');
+const getContentById = require('../lib/get-content-by-id');
 const resolve = require('../lib/resolve');
-
-const {
-	DOWNLOAD_STATE_MAP,
-	SAVED_STATE_MAP
-} = require('config');
 
 const RESOLVE_PROPERTIES = Object.keys(resolve);
 
@@ -26,7 +18,7 @@ module.exports = exports = async (req, res, next) => {
 
 	let { body } = req;
 
-	const { locals: { contract, flags, licence } } = res;
+	const { locals: { $DB: db, contract, flags } } = res;
 
 	if (!Array.isArray(body)) {
 		log.error(`${MODULE_ID} Expected \`req.body\` to be [object Array] and got \`${Object.prototype.toString.call(body)}\` instead`);
@@ -46,59 +38,58 @@ module.exports = exports = async (req, res, next) => {
 		return acc;
 	}, {}));
 
-	let items = (await Promise.all(DISTINCT_ITEMS.map(async content_id => await fetchContentById(content_id)))).filter(item => Object.prototype.toString.call(item) === '[object Object]');
+	const DISTINCT_ITEMS_LENGTH = DISTINCT_ITEMS.length;
 
-	items = items.filter(item => showItem(item, flags));
+	let cachedItems = await db.run(`SELECT * FROM syndication.get_content(ARRAY[$text$${DISTINCT_ITEMS.join('$text$, $text$')}$text$]);`);
 
-	log.info(`${MODULE_ID} => ${DISTINCT_ITEMS.length} distinct items found out of ${body.length} total items`);
-	log.info(`${MODULE_ID} => Retrieved ${items.length}/${DISTINCT_ITEMS.length} distinct items in ${Date.now() - START}ms`);
+	log.info(`${MODULE_ID} ${cachedItems.length} cached items found`);
 
-	let existing = await client.scanAsync({
-		TableName: HistoryTable.TableName,
-		FilterExpression: 'licence_id = :licence_id',
-		ExpressionAttributeValues: {
-			':licence_id': licence.id
+	cachedItems = cachedItems.map(item => item.data);
+
+	cachedItems.forEach(item =>
+		DISTINCT_ITEMS.splice(DISTINCT_ITEMS.indexOf(item.id.split('/').pop()), 1));
+
+	let items = (await Promise.all(DISTINCT_ITEMS.map(async content_id => await getContentById(content_id)))).filter(item => Object.prototype.toString.call(item) === '[object Object]');
+
+	items = items.concat(cachedItems).filter(item => showItem(item, flags));
+
+	log.info(`${MODULE_ID} => ${DISTINCT_ITEMS_LENGTH} distinct items found out of ${body.length} total items`);
+	log.info(`${MODULE_ID} => Retrieved ${items.length}/${DISTINCT_ITEMS_LENGTH} distinct items in ${Date.now() - START}ms`);
+
+	let alreadyDownloaded = await db.run(`SELECT * FROM syndication.get_downloads_by_contract_id($text$${contract.contract_id}$text$::text)`);
+	let alreadySaved = await db.run(`SELECT * FROM syndication.get_saved_items_by_contract_id($text$${contract.contract_id}$text$::text)`);
+
+	let existing = alreadyDownloaded.reduce((acc, item) => {
+		acc[item.content_id] = item;
+
+		item.downloaded = true;
+
+		return acc;
+	}, {});
+
+	existing = alreadySaved.reduce((acc, item) => {
+		if (!(item.content_id in acc)) {
+			acc[item.content_id] = item;
 		}
-	});
 
-	if (existing.Count > 0) {
-		existing.ItemsMap = existing.Items.reduce((acc, item) => {
-			if (item.item_state in DOWNLOAD_STATE_MAP || item.item_state in SAVED_STATE_MAP) {
-				acc[item.content_id] = item;
-			}
+		acc[item.content_id].saved = true;
 
-			return acc;
-		}, {});
-	}
-	else {
-		existing.ItemsMap = {};
-	}
+		return acc;
+	}, existing);
 
 	const response = items.map(item => RESOLVE_PROPERTIES.reduce((acc, prop) => {
-		acc[prop] = resolve[prop](item[prop], prop, item, existing.ItemsMap[item.id], contract);
+		acc[prop] = resolve[prop](item[prop], prop, item, existing[item.id], contract);
 
 		return acc;
 	}, {}));
 
 	if (req.query.test === 'messaging') {
-		[
-			['canBeSyndicated', 'no'],
-			['canBeSyndicated', 'verify'],
-			['canBeSyndicated', 'yes'],
-			['canBeSyndicated', null],
-			['canDownload', 1],
-			['canDownload', 0],
-			['canDownload', -1],
-			['downloaded', true],
-			['downloaded', false],
-			['saved', true],
-			['saved', false]
-		].forEach(([key, val], i) => response[i][key] = val);
+		addTestStuff(response);
 	}
 
 	res.json(response);
 
-	log.info(`${MODULE_ID} => Sent ${items.length}/${DISTINCT_ITEMS.length} distinct items in ${Date.now() - START}ms`);
+	log.info(`${MODULE_ID} => Sent ${items.length}/${DISTINCT_ITEMS_LENGTH} distinct items in ${Date.now() - START}ms`);
 
 	next();
 };
@@ -123,4 +114,22 @@ function showItem(item, flags) {
 	if (type === 'placeholder') {
 		return flagIsOn(flags.syndicationDownloadPlaceholder);
 	}
+}
+
+function addTestStuff(response) {
+	[
+		['canBeSyndicated', 'no'],
+		['canBeSyndicated', 'verify'],
+		['canBeSyndicated', 'yes'],
+		['canBeSyndicated', null],
+		['canDownload', 1],
+		['canDownload', 0],
+		['canDownload', -1],
+		['downloaded', true],
+		['downloaded', false],
+		['saved', true],
+		['saved', false]
+	].forEach(([key, val], i) => response[i][key] = val);
+
+	return response;
 }

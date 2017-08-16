@@ -6,15 +6,15 @@ const { default: log } = require('@financial-times/n-logger');
 const moment = require('moment');
 
 const {
+	ASSET_TYPE_TO_DISPLAY_TYPE,
 	SALESFORCE: {
 		REFRESH_CONTRACT_PERIOD: SALESFORCE_REFRESH_CONTRACT_PERIOD
 	}
 } = require('config');
 
-const ContractsSchema = require('../../db/table_schemas/contracts');
-const ContractsTable = require('../../db/tables/contracts');
-const { db, client } = require('../../db/connect');
-const toPutItem = require('../../db/toPutItem');
+const contractsColumnMappings = require('../../db/column_mappings/contracts');
+const pgMapColumns = require('../../db/pg-map-columns');
+const pg = require('../../db/pg');
 const getSalesforceContractByID = require('./get-salesforce-contract-by-id');
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
@@ -23,48 +23,19 @@ function decorateContract(contract) {
 	contract.contract_date = `${moment(contract.contract_starts).format('DD/MM/YY')} - ${moment(contract.contract_ends).format('DD/MM/YY')}`;
 
 	const contentAllowed = [];
-	const limits = { total: 0 };
 
-	if (!contract.limits) {
-		contract.limits = {
-			article: -1,
-			podcast: - 1,
-			total: -1,
-			video: -1
+	contract.assetsMap = contract.assets.reduce((acc, asset) => {
+		if (asset.download_limit > 0) {
+			contentAllowed.push(ASSET_TYPE_TO_DISPLAY_TYPE[asset.asset_type]);
 		}
-	}
 
-	if (contract.articleLimit > 0 || contract.limits.article > 0) {
-		contentAllowed.push('Articles');
+		acc[asset.asset_type] =
+		acc[asset.content_type] = asset;
 
-		const limit = contract.articleLimit || contract.limits.article;
+		asset.content = asset.content_areas.join('; ');
 
-		limits.article = limit;
-
-		limits.total += limit;
-	}
-
-	if (contract.podcastLimit > 0 || contract.limits.podcast > 0) {
-		contentAllowed.push('Podcasts');
-
-		const limit = contract.podcastLimit || contract.limits.podcast;
-
-		limits.podcast = limit;
-
-		limits.total += limit;
-	}
-
-	if (contract.videoLimit > 0 || contract.limits.video > 0) {
-		contentAllowed.push('Video');
-
-		const limit = contract.videoLimit || contract.limits.video;
-
-		limits.video = limit;
-
-		limits.total += limit;
-
-		delete contract.videoLimit;
-	}
+		return acc;
+	}, {});
 
 	switch (contentAllowed.length) {
 		case 1:
@@ -74,49 +45,39 @@ function decorateContract(contract) {
 			contract.content_allowed = `${contentAllowed.slice(0, -1).join(', ')} & ${contentAllowed[contentAllowed.length - 1]}`;
 	}
 
-	contract.limits = limits;
-
 	return contract;
 }
 
-module.exports = exports = async (contractID) => {
-	const doc = await client.getAsync({
-		TableName: ContractsTable.TableName,
-		Key: {
-			[ContractsTable.AttributeDefinitions[0].AttributeName]: contractID
-		}
-	});
+module.exports = exports = async (contractID, locals) => {
+	const db = await pg();
 
-	if (doc.Item && doc.Item[ContractsTable.AttributeDefinitions[0].AttributeName] === contractID) {
-		const item = doc.Item;
-		let last_updated = Date.now() - +(new Date(item.last_updated));
+	let [contract_data] = await db.syndication.get_contract_data([contractID]);
+
+	if (contract_data && contract_data.contract_id !== null) {
+		let last_updated = Date.now() - +contract_data.last_updated;
 
 		if (last_updated < SALESFORCE_REFRESH_CONTRACT_PERIOD) {
-			log.debug(`${MODULE_ID} | Using DB version of contract#${contractID}`, doc);
+			log.debug(`${MODULE_ID} | Using DB version of contract#${contractID}`, contract_data);
 
-			return decorateContract(item);
+			return decorateContract(contract_data);
 		}
 	}
 
-	const contract = await getSalesforceContractByID(contractID);
+	let contract = await getSalesforceContractByID(contractID);
 
 	if (contract.success === true) {
-		contract.last_updated = (new Date()).toJSON();
+		contract.last_updated = new Date();
+		contract = pgMapColumns(contract, contractsColumnMappings);
 
-		let dbItem = toPutItem(decorateContract(contract), ContractsSchema);
+		contract.licence_id = locals.licence.id;
 
-		const res = await db.putItemAsync(dbItem);
+		[contract_data] = await db.syndication.upsert_contract([contract]);
 
-		dbItem = await client.getAsync({
-			TableName: ContractsTable.TableName,
-			Key: {
-				[ContractsTable.AttributeDefinitions[0].AttributeName]: contractID
-			}
-		});
+		[contract_data] = await db.syndication.get_contract_data([contractID]);
 
-		log.debug(`${MODULE_ID} | Persisted contract#${contractID} to DB`, { dbItem, res });
+		log.debug(`${MODULE_ID} | Persisted contract#${contractID} to DB`, { contract_data });
 
-		return dbItem.Item;
+		return decorateContract(contract_data);
 	}
 	else {
 		throw new Error(contract.errorMessage);
