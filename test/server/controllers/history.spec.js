@@ -24,7 +24,7 @@ describe(MODULE_ID, function () {
 	let underTest;
 	const items = [{
 		'syndication_state': 'yes',
-		'item_state': 'complete',
+		'state': 'complete',
 		'content_id': 'http://www.ft.com/thing/0c56a4f2-6bc5-11e7-bfeb-33fe0c5b7eaa',
 		'user_email': 'christos.constandinou@ft.com',
 		'user_name': 'christos constandinou',
@@ -38,7 +38,7 @@ describe(MODULE_ID, function () {
 		'contributor_content': false
 	}, {
 		'syndication_state': 'yes',
-		'item_state': 'complete',
+		'state': 'complete',
 		'content_id': 'http://www.ft.com/thing/0aaee458-6c6e-11e7-bfeb-33fe0c5b7eaa',
 		'user_email': 'christos.constandinou@ft.com',
 		'user_name': 'christos constandinou',
@@ -52,7 +52,7 @@ describe(MODULE_ID, function () {
 		'contributor_content': false
 	}, {
 		'syndication_state': 'yes',
-		'item_state': 'saved',
+		'state': 'saved',
 		'content_id': 'http://www.ft.com/thing/74447ca2-6b0b-11e7-bfeb-33fe0c5b7eaa',
 		'user_email': 'christos.constandinou@ft.com',
 		'user_name': 'christos constandinou',
@@ -65,7 +65,7 @@ describe(MODULE_ID, function () {
 		'contributor_content': false
 	}, {
 		'syndication_state': 'yes',
-		'item_state': 'saved',
+		'state': 'saved',
 		'content_id': 'http://www.ft.com/thing/eaef2e2c-6c61-11e7-b9c7-15af748b60d0',
 		'user_email': 'christos.constandinou@ft.com',
 		'user_name': 'christos constandinou',
@@ -316,7 +316,7 @@ describe(MODULE_ID, function () {
 		beforeEach(function () {
 			user_id = '8ef593a8-eef6-448c-8560-9ca8cdca80a5';
 
-			filteredItems = items.filter(item => item.item_state === 'saved');
+			filteredItems = items.filter(item => item.state === 'saved');
 
 			getHistoryByContractID = sinon.stub().resolves(filteredItems);
 
@@ -429,7 +429,7 @@ describe(MODULE_ID, function () {
 		beforeEach(function () {
 			user_id = '8ef593a8-eef6-448c-8560-9ca8cdca80a5';
 
-			filteredItems = items.filter(item => item.item_state !== 'saved');
+			filteredItems = items.filter(item => item.state !== 'saved');
 
 			getHistoryByContractID = sinon.stub().resolves(filteredItems);
 
