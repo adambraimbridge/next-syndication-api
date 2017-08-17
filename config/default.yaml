@@ -48,7 +48,7 @@
   CONVERT_FORMAT_COMMAND: pandoc
 
   CRON:
-    content_cleanup: "* 0 * * * *"
+    content_cleanup: "* * 0 * * *"
     content_cache: "* 5 * * * *"
 
   DEFAULT_DOWNLOAD_FORMAT: docx
