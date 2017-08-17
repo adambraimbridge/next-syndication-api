@@ -21,6 +21,7 @@
     "asset_type": "FT Article",
     "content": "FT.com",
     "content_type": "article",
+    "content_areas": [ "FT.com" ],
     "current_downloads": {
       "day": 0,
       "month": 0,
@@ -39,6 +40,7 @@
     "asset_type": "Video",
     "content_type": "video",
     "content": "FT.com",
+    "content_areas": [ "FT.com" ],
     "current_downloads": {
       "day": 0,
       "month": 0,
@@ -57,6 +59,7 @@
     "asset_type": "Podcast",
     "content_type": "podcast",
     "content": "FT.com",
+    "content_areas": [ "FT.com" ],
     "current_downloads": {
       "day": 0,
       "month": 0,
@@ -77,6 +80,7 @@
       "asset_type": "FT Article",
       "content": "FT.com",
       "content_type": "article",
+      "content_areas": [ "FT.com" ],
       "current_downloads": {
         "day": 0,
         "month": 0,
@@ -96,6 +100,7 @@
       "asset_type": "FT Article",
       "content": "FT.com",
       "content_type": "article",
+      "content_areas": [ "FT.com" ],
       "current_downloads": {
         "day": 0,
         "month": 0,
@@ -115,6 +120,7 @@
       "asset_type": "Video",
       "content_type": "video",
       "content": "FT.com",
+      "content_areas": [ "FT.com" ],
       "current_downloads": {
         "day": 0,
         "month": 0,
@@ -134,6 +140,7 @@
       "asset_type": "Video",
       "content_type": "video",
       "content": "FT.com",
+      "content_areas": [ "FT.com" ],
       "current_downloads": {
         "day": 0,
         "month": 0,
@@ -153,6 +160,7 @@
       "asset_type": "Podcast",
       "content_type": "podcast",
       "content": "FT.com",
+      "content_areas": [ "FT.com" ],
       "current_downloads": {
         "day": 0,
         "month": 0,
@@ -172,6 +180,7 @@
       "asset_type": "Podcast",
       "content_type": "podcast",
       "content": "FT.com",
+      "content_areas": [ "FT.com" ],
       "current_downloads": {
         "day": 0,
         "month": 0,
