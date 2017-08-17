@@ -14,7 +14,7 @@ describe(MODULE_ID, function () {
 
 		await underTest();
 
-		expect(Date.now() - start).to.be.at.least(250);
+		expect(Date.now() - start).to.be.at.least(240);
 	});
 
 	it('should wait the passed number of ms before continuing (less than default)', async function () {
@@ -22,7 +22,7 @@ describe(MODULE_ID, function () {
 
 		await underTest(50);
 
-		expect(Date.now() - start).to.be.at.within(50, 100);
+		expect(Date.now() - start).to.be.at.within(45, 100);
 	});
 
 	it('should wait the passed number of ms before continuing (greater than default)', async function () {
@@ -30,6 +30,6 @@ describe(MODULE_ID, function () {
 
 		await underTest(500);
 
-		expect(Date.now() - start).to.be.at.within(500, 550);
+		expect(Date.now() - start).to.be.at.within(490, 550);
 	});
 });
