@@ -5,82 +5,33 @@ const path = require('path');
 const { Writable: WritableStream } = require('stream');
 
 const chai = require('chai');
-const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 
-const httpMocks = require('../../fixtures/node-mocks-http');
+const {
+	TEST: { FIXTURES_DIRECTORY }
+} = require('config');
 
-const { db } = require('../../../db/connect');
-const ContractsSchema = require('../../../db/table_schemas/contracts');
-const toPutItem = require('../../../db/toPutItem');
+const httpMocks = require(path.resolve(`${FIXTURES_DIRECTORY}/node-mocks-http`));
 
 const { expect } = chai;
 chai.use(sinonChai);
 
+const underTest = require('../../../server/controllers/update-download-format');
+
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
 describe(MODULE_ID, function () {
-	let underTest;
+	const { initDB } = require(path.resolve(`${FIXTURES_DIRECTORY}/massive`))();
 
 	describe('success', function () {
-		const contractResponse = {
-			'owner_email': 'syndication@ft.com',
-			'last_updated': '2017-07-19T13:37:20.291Z',
-			'owner_name': 'FT Syndication',
-			'contract_date': '11/12/15 - 31/01/2015',
-			'contract_starts': '2015-12-11',
-			'limit_podcast': 10000000,
-			'contract_ends': '2050-01-31',
-			'contributor_content': true,
-			'limit_video': 10000000,
-			'licencee_name': 'FT Staff',
-			'content_allowed': 'Articles, Podcasts & Video',
-			'assets': [{
-				'online_usage_limit': 10000000,
-				'product': 'FT Article',
-				'online_usage_period': 'Week',
-				'print_usage_period': 'Week',
-				'print_usage_limit': 20,
-				'embargo_period': 0,
-				'asset': 'FT Article',
-				'content': 'FT.com'
-			}, {
-				'online_usage_limit': 10000000,
-				'product': 'Video',
-				'online_usage_period': 'Week',
-				'print_usage_period': 'Week',
-				'print_usage_limit': 20,
-				'embargo_period': 0,
-				'asset': 'Video',
-				'content': 'FT.com'
-			}, {
-				'online_usage_limit': 10000000,
-				'product': 'Podcast',
-				'online_usage_period': 'Week',
-				'print_usage_period': 'Week',
-				'print_usage_limit': 20,
-				'embargo_period': 0,
-				'asset': 'Podcast',
-				'content': 'FT.com'
-			}],
-			'contract_number': 'CA-00001558',
-			'client_website': 'https://www.ft.com',
-			'client_publications': 'FT',
-			'limit_article': 10000000
-		};
+		const contractResponse = require(path.resolve(`${FIXTURES_DIRECTORY}/contractResponse.json`));
 
 		let next;
 		let req;
 		let res;
 
 		before(async function () {
-			sinon.stub(db, 'putItemAsync').resolves({});
-
-			underTest = proxyquire('../../../server/controllers/update-download-format', {
-				'../lib/get-contract-by-id': sinon.stub().resolves(contractResponse)
-			});
-
 			req = httpMocks.createRequest({
 				'eventEmitter': EventEmitter,
 				'connection': new EventEmitter(),
@@ -103,7 +54,7 @@ describe(MODULE_ID, function () {
 				'path': '/syndication/contract-status',
 				'protocol': 'http',
 				'body': {
-					'format': 'docx'
+					'format': 'plain'
 				},
 				'url': '/syndication/contract-status'
 			});
@@ -117,7 +68,19 @@ describe(MODULE_ID, function () {
 			res.status = sinon.stub();
 			res.json = sinon.stub();
 
+			const db = initDB();
+
+			db.syndication.upsert_user.resolves([{
+				download_format: 'plain',
+				email: 'foo@bar.com',
+				first_name: 'foo',
+				user_id: 'abc',
+				surname: 'bar',
+				last_modified: (new Date()).toJSON()
+			}]);
+
 			res.locals = {
+				$DB: db,
 				contract: contractResponse,
 				flags: {
 					syndication: true,
@@ -130,9 +93,9 @@ describe(MODULE_ID, function () {
 				},
 				user: {
 					email: 'foo@bar.com',
-					firstName: 'foo',
-					id: 'abc',
-					lastName: 'bar'
+					first_name: 'foo',
+					user_id: 'abc',
+					surname: 'bar'
 				},
 				userUuid: 'abc'
 			};
@@ -142,14 +105,14 @@ describe(MODULE_ID, function () {
 			await underTest(req, res, next);
 		});
 
-		after(function () {
-			underTest = null;
-
-			db.putItemAsync.restore();
-		});
-
-		it('returns contract data', function () {
-			expect(db.putItemAsync).to.have.been.calledWith(toPutItem(contractResponse, ContractsSchema));
+		it('calls syndication.update_user stored procedure function', function () {
+			expect(res.locals.$DB.syndication.upsert_user).to.have.been.calledWith([{
+				download_format: 'plain',
+				email: 'foo@bar.com',
+				first_name: 'foo',
+				user_id: 'abc',
+				surname: 'bar'
+			}]);
 		});
 
 		it('sets the http status to 204', function () {
