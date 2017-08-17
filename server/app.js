@@ -30,7 +30,7 @@ const middleware = [
 	cookieParser(),
 	bodyParser.text(),
 	bodyParser.json(),
-	bodyParser.urlencoded(),
+	bodyParser.urlencoded({ extended: true }),
 	logRequest,
 	accessControl,
 	cache,
