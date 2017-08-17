@@ -10,6 +10,10 @@ const proxyquire = require('proxyquire');
 const MessageQueueEvent = require('../../../queue/message-queue-event');
 const QueueSubscriber = require('../../../queue/subscriber');
 
+const {
+	TEST: { FIXTURES_DIRECTORY }
+} = require('config');
+
 const { expect } = chai;
 chai.use(sinonChai);
 
@@ -17,18 +21,22 @@ const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(p
 
 describe(MODULE_ID, function () {
 	let underTest;
-	let persist;
+	let db;
 	let subscriber;
+
+	const { initDB } = require(path.resolve(`${FIXTURES_DIRECTORY}/massive`))();
 
 	afterEach(function () {
 		QueueSubscriber.prototype.ack.restore();
 	});
 
 	beforeEach(function () {
-		persist = sinon.stub();
+		db = initDB();
+
+		db.syndication.upsert_history.resolves([]);
 
 		underTest = proxyquire('../../../worker/db-persist/callback', {
-			'../persist': persist
+			'../../db/pg': sinon.stub().resolves(db)
 		});
 
 		sinon.stub(QueueSubscriber.prototype, 'ack').resolves({});
@@ -43,7 +51,7 @@ describe(MODULE_ID, function () {
 				contract_id: 'syndication',
 				download_format: 'docx',
 				licence_id: 'foo',
-				state: 'save',
+				state: 'saved',
 				time: new Date(),
 				user: {
 					email: 'foo@bar.com',
@@ -58,7 +66,7 @@ describe(MODULE_ID, function () {
 
 		await underTest(event, message, {}, subscriber);
 
-		expect(persist).to.be.calledWith(event);
+		expect(db.syndication.upsert_history).to.be.calledWith([event]);
 	});
 
 	it('removes it from the queue', async function () {
@@ -68,7 +76,7 @@ describe(MODULE_ID, function () {
 				contract_id: 'syndication',
 				download_format: 'docx',
 				licence_id: 'foo',
-				state: 'save',
+				state: 'saved',
 				time: new Date(),
 				user: {
 					email: 'foo@bar.com',
