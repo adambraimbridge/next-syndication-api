@@ -25,7 +25,9 @@ module.exports = exports = function () {
 		db.run = sinon.stub().resolves(runResolves);
 		db.syndication = {
 			delete_save_history_by_contract_id: sinon.stub(),
+			get_downloads_by_contract_id: sinon.stub(),
 			get_contract_data: sinon.stub(),
+			get_saved_items_by_contract_id: sinon.stub(),
 			upsert_content: sinon.stub(),
 			upsert_contract: sinon.stub(),
 			upsert_contract_users: sinon.stub(),
