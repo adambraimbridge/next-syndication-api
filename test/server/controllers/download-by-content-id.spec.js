@@ -19,7 +19,7 @@ const {
 const MessageQueueEvent = require('../../../queue/message-queue-event');
 const underTest = require('../../../server/controllers/download-by-content-id');
 
-const httpMocks = require('../../fixtures/node-mocks-http');
+const httpMocks = require(path.resolve(`${FIXTURES_DIRECTORY}/node-mocks-http`));
 
 const RE_VALID_URI = /^\/content\/([A-Za-z0-9]{8}(?:-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12})$/;
 
