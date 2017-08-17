@@ -34,7 +34,7 @@ describe(MODULE_ID, function () {
 	let res;
 	let stub;
 
-	const { initDB } = require(path.resolve(`${FIXTURES_DIRECTORY}/massive`))();
+	require(path.resolve(`${FIXTURES_DIRECTORY}/massive`))();
 
 	before(function () {
 		nock(SESSION_URI)
