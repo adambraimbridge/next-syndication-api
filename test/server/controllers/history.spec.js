@@ -74,7 +74,7 @@ describe(MODULE_ID, function () {
 		'contributor_content': false
 	}];
 
-	const massiveDatabase__proto__ = require('../../fixtures/massive');
+	require('../../fixtures/massive')();
 
 	describe('default call', function () {
 		let next;
@@ -89,7 +89,6 @@ describe(MODULE_ID, function () {
 		beforeEach(function () {
 			user_id = '8ef593a8-eef6-448c-8560-9ca8cdca80a5';
 
-			massiveDatabase__proto__.run = sinon.stub().resolves(items);
 			getHistoryByContractID = sinon.stub().resolves(items);
 
 			underTest = proxyquire('../../../server/controllers/history', {
@@ -202,7 +201,6 @@ describe(MODULE_ID, function () {
 
 			filteredItems = items.filter(item => item.user_id === user_id);
 
-			massiveDatabase__proto__.run = sinon.stub().resolves(filteredItems);
 			getHistoryByContractID = sinon.stub().resolves(filteredItems);
 
 			underTest = proxyquire('../../../server/controllers/history', {
@@ -316,7 +314,6 @@ describe(MODULE_ID, function () {
 
 			filteredItems = items.filter(item => item.item_state === 'saved');
 
-			massiveDatabase__proto__.run = sinon.stub().resolves(filteredItems);
 			getHistoryByContractID = sinon.stub().resolves(filteredItems);
 
 			underTest = proxyquire('../../../server/controllers/history', {
@@ -430,7 +427,6 @@ describe(MODULE_ID, function () {
 
 			filteredItems = items.filter(item => item.item_state !== 'saved');
 
-			massiveDatabase__proto__.run = sinon.stub().resolves(filteredItems);
 			getHistoryByContractID = sinon.stub().resolves(filteredItems);
 
 			underTest = proxyquire('../../../server/controllers/history', {
