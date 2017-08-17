@@ -15,6 +15,7 @@
     "body-parser": "^1.17.1",
     "config": "^1.26.1",
     "cookie-parser": "^1.4.3",
+    "cron": "^1.2.1",
     "dotenv": "^4.0.0",
     "forever": "^0.15.3",
     "hat": "^0.0.3",
