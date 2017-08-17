@@ -77,8 +77,8 @@
       "server/init.js",
       "server/stubs.js",
       "worker/index.js",
+      "worker/content-cleanup/index.js",
       "worker/db-persist/index.js",
-      "worker/sync-download_counts/index.js",
       "coverage",
       "test"
     ]
