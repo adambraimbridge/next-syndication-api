@@ -13,62 +13,17 @@ const httpMocks = require('../../fixtures/node-mocks-http');
 const { expect } = chai;
 chai.use(sinonChai);
 
+const {
+	TEST: { FIXTURES_DIRECTORY }
+} = require('config');
+
 const underTest = require('../../../server/controllers/contract-status');
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
 describe(MODULE_ID, function () {
 	describe('success', function () {
-		const contractResponse = {
-			'MY_DOWNLOAD_FORMAT': 'html',
-			'owner_email': 'syndication@ft.com',
-			'last_updated': '2017-07-19T13:37:20.291Z',
-			'owner_name': 'FT Syndication',
-			'contract_date': '11/12/15 - 31/01/2015',
-			'contract_starts': '2015-12-11',
-			'contract_ends': '2050-01-31',
-			'contributor_content': true,
-			'licence_id': 'xyz',
-			'licencee_name': 'FT Staff',
-			'content_allowed': 'Articles, Podcasts & Video',
-			'assets': [{
-				'download_limit': 10000000,
-				'online_usage_limit': 10000000,
-				'product': 'FT Article',
-				'online_usage_period': 'Week',
-				'print_usage_period': 'Week',
-				'print_usage_limit': 20,
-				'embargo_period': 0,
-				'asset_type': 'FT Article',
-				'content': 'FT.com'
-			}, {
-				'download_limit': 10000000,
-				'online_usage_limit': 10000000,
-				'product': 'Video',
-				'online_usage_period': 'Week',
-				'print_usage_period': 'Week',
-				'print_usage_limit': 20,
-				'embargo_period': 0,
-				'asset_type': 'Video',
-				'content': 'FT.com'
-			}, {
-				'download_limit': 10000000,
-				'online_usage_limit': 10000000,
-				'product': 'Podcast',
-				'online_usage_period': 'Week',
-				'print_usage_period': 'Week',
-				'print_usage_limit': 20,
-				'embargo_period': 0,
-				'asset_type': 'Podcast',
-				'content': 'FT.com'
-			}],
-			'assetsMap': {
-
-			},
-			'contract_id': 'CA-00001558',
-			'client_website': 'https://www.ft.com',
-			'client_publications': 'FT'
-		};
+		const contractResponse = require(path.resolve(`${FIXTURES_DIRECTORY}/contractResponse.json`));
 		let next;
 		let req;
 		let res;
