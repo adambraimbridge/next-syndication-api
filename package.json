@@ -53,6 +53,9 @@
     "exclude": [
       "secret-squirrel.js",
       "db/index.js",
+      "db/pg/column_mappings/contracts.js",
+      "db/pg/column_mappings/history.js",
+      "db/pg/column_mappings/users.js",
       "db/table_schemas/contracts.js",
       "db/table_schemas/history.js",
       "db/tables/contracts.js",
