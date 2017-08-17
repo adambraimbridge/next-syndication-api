@@ -18,6 +18,14 @@
     "name": "syndication-sync",
     "script": "./worker/db-persist/index.js"
   }, {
+    "env": {},
+    "exec_mode": "cluster",
+    "instance_var": "SYNDICATION_WORKER_CLEANUP_ID",
+    "instances": 1,
+    "interpreter_args": "--harmony --preserve-symlinks --require ./server/env.js --trace-deprecation --trace-warnings --zero-fill-buffers",
+    "name": "content-cleanup",
+    "script": "./worker/content-cleanup/index.js"
+  }, {
     "cwd": "../next-syn-contract",
     "env": {
       "NEXT_APP_SHELL": "local",
