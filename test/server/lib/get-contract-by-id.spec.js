@@ -9,7 +9,9 @@ const proxyquire = require('proxyquire');
 
 const moment = require('moment');
 
-const { db, client } = require('../../../db/connect');
+const {
+	TEST: { FIXTURES_DIRECTORY }
+} = require('config');
 
 const { expect } = chai;
 chai.use(sinonChai);
@@ -18,78 +20,70 @@ const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(p
 
 describe(MODULE_ID, function () {
 	describe('success', function () {
+		let db;
 		let underTest;
 
-		const contractResponse = {
-			'owner_email': 'syndication@ft.com',
-			'last_updated': '2017-07-19T13:37:20.291Z',
-			'owner_name': 'FT Syndication',
-			'contract_date': '11/12/15 - 31/01/50',
-			'contract_starts': '2015-12-11',
-			'limit_podcast': 10000000,
-			'contract_ends': '2050-01-31',
-			'contributor_content': true,
-			'limit_video': 10000000,
-			'licencee_name': 'FT Staff',
-			'content_allowed': 'Articles, Podcasts & Video',
-			'assets': [{
-				'online_usage_limit': 10000000,
-				'product': 'FT Article',
-				'online_usage_period': 'Week',
-				'print_usage_period': 'Week',
-				'print_usage_limit': 20,
-				'embargo_period': 0,
-				'asset': 'FT Article',
-				'content': 'FT.com'
-			}, {
-				'online_usage_limit': 10000000,
-				'product': 'Video',
-				'online_usage_period': 'Week',
-				'print_usage_period': 'Week',
-				'print_usage_limit': 20,
-				'embargo_period': 0,
-				'asset': 'Video',
-				'content': 'FT.com'
-			}, {
-				'online_usage_limit': 10000000,
-				'product': 'Podcast',
-				'online_usage_period': 'Week',
-				'print_usage_period': 'Week',
-				'print_usage_limit': 20,
-				'embargo_period': 0,
-				'asset': 'Podcast',
-				'content': 'FT.com'
-			}],
-			'contract_number': 'CA-00001558',
-			'client_website': 'https://www.ft.com',
-			'client_publications': 'FT',
-			'limit_article': 10000000
-		};
+		const contractResponse = require(path.resolve(`${FIXTURES_DIRECTORY}/contractResponse.json`));
 
 		let contract = require('../../../stubs/CA-00001558.json');
 
+		const { initDB } = require(path.resolve(`${FIXTURES_DIRECTORY}/massive`))();
+
 		before(async function () {
-			sinon.stub(client, 'getAsync').resolves({ Item: contractResponse });
-			sinon.stub(db, 'putItemAsync').resolves({});
+			db = initDB();
+
+			db.syndication.upsert_contract.resolves([contractResponse]);
+			db.syndication.get_contract_data.resolves([contractResponse]);
 
 			underTest = proxyquire('../../../server/lib/get-contract-by-id', {
-				'./get-salesforce-contract-by-id': sinon.stub().resolves(contract)
+				'./get-salesforce-contract-by-id': sinon.stub().resolves(contract),
+				'../../db/pg': sinon.stub().resolves(db)
 			});
 		});
 
 		after(function () {
 			underTest = null;
-
-			db.putItemAsync.restore();
 		});
 
 		it('returns contract data', async function () {
-			const res = await underTest('CA-00001558');
+			const res = await underTest('CA-00001558', { licence: { id: 'xyz' } });
 
-			expect(res).to.eql(Object.assign(JSON.parse(JSON.stringify(contractResponse)), {
-				content_allowed: 'Articles, Podcasts & Video',
+			const expected = Object.assign(JSON.parse(JSON.stringify(contractResponse)), {
+				content_allowed: 'Articles, Videos & Podcasts',
 				contract_date: `${moment(contractResponse.contract_starts).format('DD/MM/YY')} - ${moment(contractResponse.contract_ends).format('DD/MM/YY')}`
-			}));
+			});
+
+			expected.assets[0] = expected.assetsMap['FT Article'] = expected.assetsMap['article'] = Object.assign(JSON.parse(JSON.stringify(expected.assetsMap['article'])), {
+				current_downloads: {
+					day: 0,
+					month: 0,
+					total: 0,
+					week: 0,
+					year: 0
+				}
+			});
+
+			expected.assets[1] = expected.assetsMap['Video'] = expected.assetsMap['video'] = Object.assign(JSON.parse(JSON.stringify(expected.assetsMap['video'])), {
+				current_downloads: {
+					day: 0,
+					month: 0,
+					total: 0,
+					week: 0,
+					year: 0
+				}
+			});
+
+			expected.assets[2] = expected.assetsMap['Podcast'] = expected.assetsMap['podcast'] = Object.assign(JSON.parse(JSON.stringify(expected.assetsMap['podcast'])), {
+				current_downloads: {
+					day: 0,
+					month: 0,
+					total: 0,
+					week: 0,
+					year: 0
+				}
+			});
+
+			expect(res).to.eql(expected);
 		});
 	});
 });
