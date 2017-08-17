@@ -118,7 +118,7 @@ describe(MODULE_ID, function () {
 				download_format: 'docx',
 				licence_id: 'foo',
 				published_date: new Date(),
-				state: 'save',
+				state: 'saved',
 				time: new Date(),
 				user: {
 					email: 'foo@bar.com',
@@ -146,7 +146,7 @@ describe(MODULE_ID, function () {
 				download_format: 'docx',
 				licence_id: 'foo',
 				published_date: new Date(),
-				state: 'save',
+				state: 'saved',
 				time: new Date(),
 				user: {
 					email: 'foo@bar.com',
@@ -229,7 +229,7 @@ describe(MODULE_ID, function () {
 			download_format: 'docx',
 			licence_id: 'foo',
 			published_date: new Date(),
-			state: 'save',
+			state: 'saved',
 			time: new Date(),
 			user: {
 				email: 'foo@bar.com',
@@ -256,7 +256,7 @@ describe(MODULE_ID, function () {
 			download_format: 'docx',
 			licence_id: 'foo',
 			published_date: new Date(),
-			state: 'save',
+			state: 'saved',
 			time: new Date(),
 			user: {
 				email: 'foo@bar.com',
@@ -290,7 +290,7 @@ describe(MODULE_ID, function () {
 				download_format: 'docx',
 				licence_id: 'foo',
 				published_date: new Date(),
-				state: 'save',
+				state: 'saved',
 				time: new Date(),
 				user: {
 					email: 'foo@bar.com',

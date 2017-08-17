@@ -83,7 +83,7 @@ describe(MODULE_ID, function () {
 				content_uri: 'https://ft.com/content/abc',
 				download_format: 'docx',
 				licence_id: 'foo',
-				state: 'save',
+				state: 'saved',
 				time: new Date(),
 				user: {
 					email: 'foo@bar.com',
