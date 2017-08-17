@@ -5,8 +5,8 @@ const path = require('path');
 const { default: log } = require('@financial-times/n-logger');
 const fetch = require('n-eager-fetch');
 
-const usersColumnMappings = require('../../db/column_mappings/users');
-const pgMapColumns = require('../../db/pg-map-columns');
+const usersColumnMappings = require('../../db/pg/column_mappings/users');
+const pgMapColumns = require('../../db/pg/map-columns');
 
 const {
 	ALS_API_KEY,

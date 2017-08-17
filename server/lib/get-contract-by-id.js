@@ -12,8 +12,8 @@ const {
 	}
 } = require('config');
 
-const contractsColumnMappings = require('../../db/column_mappings/contracts');
-const pgMapColumns = require('../../db/pg-map-columns');
+const contractsColumnMappings = require('../../db/pg/column_mappings/contracts');
+const pgMapColumns = require('../../db/pg/map-columns');
 const pg = require('../../db/pg');
 const getSalesforceContractByID = require('./get-salesforce-contract-by-id');
 
