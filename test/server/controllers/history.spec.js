@@ -78,7 +78,7 @@ describe(MODULE_ID, function () {
 		'contributor_content': false
 	}];
 
-	require('../../fixtures/massive')();
+	require(path.resolve(`${FIXTURES_DIRECTORY}/massive`))();
 
 	describe('default call', function () {
 		let next;
