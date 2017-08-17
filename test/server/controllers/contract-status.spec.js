@@ -8,14 +8,14 @@ const chai = require('chai');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 
-const httpMocks = require('../../fixtures/node-mocks-http');
-
-const { expect } = chai;
-chai.use(sinonChai);
-
 const {
 	TEST: { FIXTURES_DIRECTORY }
 } = require('config');
+
+const httpMocks = require(path.resolve(`${FIXTURES_DIRECTORY}/node-mocks-http`));
+
+const { expect } = chai;
+chai.use(sinonChai);
 
 const underTest = require('../../../server/controllers/contract-status');
 

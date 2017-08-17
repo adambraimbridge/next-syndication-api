@@ -19,7 +19,7 @@ const {
 const MessageQueueEvent = require('../../../queue/message-queue-event');
 const underTest = require('../../../server/controllers/save-by-content-id');
 
-const httpMocks = require('../../fixtures/node-mocks-http');
+const httpMocks = require(path.resolve(`${FIXTURES_DIRECTORY}/node-mocks-http`));
 
 const { expect } = chai;
 chai.use(sinonChai);
@@ -33,6 +33,8 @@ describe(MODULE_ID, function () {
 	let req;
 	let res;
 	let stub;
+
+	const { initDB } = require(path.resolve(`${FIXTURES_DIRECTORY}/massive`))();
 
 	before(function () {
 		nock(SESSION_URI)

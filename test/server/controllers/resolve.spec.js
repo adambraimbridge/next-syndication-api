@@ -16,7 +16,7 @@ const {
 
 const underTest = require('../../../server/controllers/resolve');
 
-const httpMocks = require('../../fixtures/node-mocks-http');
+const httpMocks = require(path.resolve(`${FIXTURES_DIRECTORY}/node-mocks-http`));
 
 const { expect } = chai;
 chai.use(sinonChai);

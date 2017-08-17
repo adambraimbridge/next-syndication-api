@@ -9,7 +9,11 @@ const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 
-const httpMocks = require('../../fixtures/node-mocks-http');
+const {
+	TEST: { FIXTURES_DIRECTORY }
+} = require('config');
+
+const httpMocks = require(path.resolve(`${FIXTURES_DIRECTORY}/node-mocks-http`));
 
 const { expect } = chai;
 chai.use(sinonChai);
