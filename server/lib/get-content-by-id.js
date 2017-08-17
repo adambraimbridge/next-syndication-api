@@ -48,6 +48,8 @@ module.exports = exports = async (content_id, format) => {
 
 			content.__doc = formatArticleXML(content.transcript);
 
+			content.__wordCount = content.wordCount = getWordCount(content.__doc);
+
 			content.__doc = decorateArticle(content.__doc, content);
 
 			content.transcript__CLEAN = content.__doc.toString();
