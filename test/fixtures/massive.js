@@ -23,6 +23,15 @@ module.exports = exports = function () {
 //		massiveDatabase__proto__.constructor.call(db);
 
 		db.run = sinon.stub().resolves(runResolves);
+		db.syndication = {
+			delete_save_history_by_contract_id: sinon.stub(),
+			get_contract_data: sinon.stub(),
+			upsert_content: sinon.stub(),
+			upsert_contract: sinon.stub(),
+			upsert_contract_users: sinon.stub(),
+			upsert_history: sinon.stub(),
+			upsert_user: sinon.stub()
+		};
 
 		return db;
 	}
