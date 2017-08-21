@@ -10,14 +10,9 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 
 module.exports = exports = async (req, res, next) => {
 	try {
-		const { locals: { contract } } = res;
+		const { locals: { contract, user } } = res;
 
-		if (contract.download_formats && contract.download_formats[res.locals.user.id]) {
-			contract.MY_DOWNLOAD_FORMAT = contract.download_formats[res.locals.user.id] || DEFAULT_DOWNLOAD_FORMAT;
-		}
-		else {
-			contract.MY_DOWNLOAD_FORMAT = DEFAULT_DOWNLOAD_FORMAT;
-		}
+		contract.MY_DOWNLOAD_FORMAT = user.download_format || DEFAULT_DOWNLOAD_FORMAT;
 
 		res.status(200);
 		res.json(contract);

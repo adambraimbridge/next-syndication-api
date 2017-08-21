@@ -8,9 +8,13 @@ const chai = require('chai');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 
+const {
+	TEST: { FIXTURES_DIRECTORY }
+} = require('config');
+
 const underTest = require('../../../server/controllers/user-status');
 
-const httpMocks = require('../../fixtures/node-mocks-http');
+const httpMocks = require(path.resolve(`${FIXTURES_DIRECTORY}/node-mocks-http`));
 
 const { expect } = chai;
 chai.use(sinonChai);
@@ -67,6 +71,12 @@ describe(MODULE_ID, function () {
 			syndication_contract: {
 				id: 'lmno'
 			},
+			user: {
+				email: 'foo@bar.com',
+				first_name: 'foo',
+				user_id: 'abc',
+				surname: 'bar'
+			},
 			userUuid: 'abc'
 		};
 	});
@@ -80,8 +90,12 @@ describe(MODULE_ID, function () {
 				syndicationNew: true,
 				syndicationRedux: true
 			},
+			contract_id: 'lmno',
 			licence_id: 'xyz',
-			user_id: 'abc'
+			email: 'foo@bar.com',
+			first_name: 'foo',
+			user_id: 'abc',
+			surname: 'bar'
 		});
 	});
 

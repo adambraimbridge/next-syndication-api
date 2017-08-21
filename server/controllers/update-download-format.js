@@ -6,12 +6,6 @@ const { default: log } = require('@financial-times/n-logger');
 
 const { DOWNLOAD_ARTICLE_FORMATS } = require('config');
 
-const ContractsSchema = require('../../db/table_schemas/contracts');
-const { db } = require('../../db/connect');
-const toPutItem = require('../../db/toPutItem');
-
-const getContractById = require('../lib/get-contract-by-id');
-
 const ALLOWED_FORMATS = Object.values(DOWNLOAD_ARTICLE_FORMATS).reduce((acc, val) => {
 	acc[val] = val;
 
@@ -26,19 +20,15 @@ module.exports = exports = async (req, res, next) => {
 	}
 
 	try {
-		const contract = await getContractById(res.locals.syndication_contract.id);
+		let { $DB: db, user } = res.locals;
 
-		if (!contract.download_formats) {
-			contract.download_formats = {};
-		}
+		user.download_format = req.body.format;
 
-		contract.download_formats[res.locals.user.id] = req.body.format;
+		[user] = await db.syndication.upsert_user([user]);
 
-		let dbItem = toPutItem(contract, ContractsSchema);
+		res.locals.user = user;
 
-		const dbRes = await db.putItemAsync(dbItem);
-
-		log.debug(`${MODULE_ID} | Persisted contract#${res.locals.syndication_contract.id} to DB`, { dbRes });
+		log.debug(`${MODULE_ID} | Persisted user#${user.user_id} to DB`, { user });
 
 		const referrer = String(req.get('referrer'));
 		const requestedWith = String(req.get('x-requested-with')).toLowerCase();

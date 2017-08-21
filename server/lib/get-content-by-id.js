@@ -6,6 +6,8 @@ const mime = require('mime-types');
 
 const { default: log } = require('@financial-times/n-logger');
 
+const pg = require('../../db/pg');
+
 const fetchContentById = require('./fetch-content-by-id');
 const formatArticleXML = require('./format-article-xml');
 const getWordCount = require('./get-word-count');
@@ -15,6 +17,7 @@ const toPlainText = require('./to-plain-text');
 const isMediaResource = require('../helpers/is-media-resource');
 
 const {
+	CONTENT_TYPE_ALIAS,
 	DOWNLOAD_ARCHIVE_EXTENSION,
 	DOWNLOAD_ARTICLE_FORMATS,
 	DOWNLOAD_FILENAME_PREFIX
@@ -35,6 +38,7 @@ module.exports = exports = async (content_id, format) => {
 	}
 
 	content.contentType = content.type.split('/').pop().toLowerCase();
+	content.contentType = CONTENT_TYPE_ALIAS[content.contentType] || content.contentType;
 
 	if (isMediaResource(content)) {
 		if (content.transcript) {
@@ -43,6 +47,8 @@ module.exports = exports = async (content_id, format) => {
 			}
 
 			content.__doc = formatArticleXML(content.transcript);
+
+			content.__wordCount = content.wordCount = getWordCount(content.__doc);
 
 			content.__doc = decorateArticle(content.__doc, content);
 
@@ -62,7 +68,7 @@ module.exports = exports = async (content_id, format) => {
 
 		content.__doc = formatArticleXML(content.bodyXML);
 
-		content.__wordCount = getWordCount(content.__doc);
+		content.__wordCount = content.wordCount = getWordCount(content.__doc);
 
 		content.__doc = decorateArticle(content.__doc, content);
 
@@ -79,6 +85,19 @@ module.exports = exports = async (content_id, format) => {
 	content.fileName = DOWNLOAD_FILENAME_PREFIX + content.title.replace(RE_SPACE, '_').replace(RE_BAD_CHARS, '').substring(0, 12);
 
 	log.debug(`${MODULE_ID} GetContentSuccess => ${content.id} in ${Date.now() - START}ms`);
+
+	process.nextTick(async () => {
+		const db = await pg();
+
+		let data = Object.assign({}, content);
+
+		delete data.__doc;
+		delete data.extension;
+		delete data.download;
+		delete data.transcriptExtension;
+
+		await db.syndication.upsert_content([data.id.split('/').pop(), data.contentType, data]);
+	});
 
 	return content;
 };

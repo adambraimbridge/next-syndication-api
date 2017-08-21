@@ -19,12 +19,20 @@ const {
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
 describe(MODULE_ID, function () {
+	let db;
 	let sandbox;
 	let mocks;
 	let stubs;
 	let underTest;
 
+	const { initDB } = require(path.resolve(`${FIXTURES_DIRECTORY}/massive`))();
+
+	const userResponse = require(path.resolve(`${FIXTURES_DIRECTORY}/userProfile.json`));
+
 	beforeEach(function () {
+		db = initDB();
+		db.syndication.upsert_user.resolves([userResponse]);
+
 		sandbox = sinon.sandbox.create();
 		mocks = {
 			req: {
@@ -37,6 +45,7 @@ describe(MODULE_ID, function () {
 			},
 			res: {
 				locals: {
+					$DB: db,
 					ACCESS_TOKEN_USER: 'abc.123.xyz',
 					userUuid: 'abc'
 				},
@@ -86,9 +95,7 @@ describe(MODULE_ID, function () {
 		const { user } = mocks.res.locals;
 
 		expect(user).to.be.an('object')
-			.and.have.property('email')
-			.and.to.be.a('string')
-			.and.to.equal('christos.constandinou@ft.com');
+			.and.to.eql(userResponse);
 	});
 
 });

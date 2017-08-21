@@ -22,7 +22,7 @@ const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(p
 describe(MODULE_ID, function () {
 	describe('Contracts', function () {
 		it('returns an Object in a DynamodB friendly format', function () {
-			let item = underTest(contractFixture, ContractsSchema);
+			let item = underTest(JSON.parse(JSON.stringify(contractFixture)), ContractsSchema);
 
 			expect(item).to.eql({
 				TableName: ContractsSchema.TableName,
@@ -63,7 +63,7 @@ describe(MODULE_ID, function () {
 				contract_id: 'syndication',
 				download_format: 'docx',
 				licence_id: 'foo',
-				state: 'save',
+				state: 'saved',
 				time: new Date(),
 				user: {
 					email: 'foo@bar.com',

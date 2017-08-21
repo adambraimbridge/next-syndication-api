@@ -20,11 +20,11 @@
   }, {
     "env": {},
     "exec_mode": "cluster",
-    "instance_var": "SYNDICATION_WORKER_DOWNLOAD_COUNTS_ID",
-    "instances": 2,
+    "instance_var": "SYNDICATION_WORKER_CLEANUP_ID",
+    "instances": 1,
     "interpreter_args": "--harmony --preserve-symlinks --require ./server/env.js --trace-deprecation --trace-warnings --zero-fill-buffers",
-    "name": "syndication-download_counts",
-    "script": "./worker/sync-download_counts/index.js"
+    "name": "content-cleanup",
+    "script": "./worker/content-cleanup/index.js"
   }, {
     "cwd": "../next-syn-contract",
     "env": {

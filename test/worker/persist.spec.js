@@ -38,7 +38,7 @@ describe(MODULE_ID, function () {
 				contract_id: 'syndication',
 				download_format: 'docx',
 				licence_id: 'foo',
-				state: 'save',
+				state: 'saved',
 				time: new Date(),
 				user: {
 					email: 'foo@bar.com',

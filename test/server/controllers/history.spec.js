@@ -9,7 +9,11 @@ const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 
-const httpMocks = require('../../fixtures/node-mocks-http');
+const {
+	TEST: { FIXTURES_DIRECTORY }
+} = require('config');
+
+const httpMocks = require(path.resolve(`${FIXTURES_DIRECTORY}/node-mocks-http`));
 
 const { expect } = chai;
 chai.use(sinonChai);
@@ -20,14 +24,11 @@ describe(MODULE_ID, function () {
 	let underTest;
 	const items = [{
 		'syndication_state': 'yes',
-		'item_state': 'complete',
+		'state': 'complete',
 		'content_id': 'http://www.ft.com/thing/0c56a4f2-6bc5-11e7-bfeb-33fe0c5b7eaa',
-		'user': {
-			'email': 'christos.constandinou@ft.com',
-			'first_name': 'christos',
-			'id': '8ef593a8-eef6-448c-8560-9ca8cdca80a5',
-			'surname': 'constandinou'
-		},
+		'user_email': 'christos.constandinou@ft.com',
+		'user_name': 'christos constandinou',
+		'user_id': '8ef593a8-eef6-448c-8560-9ca8cdca80a5',
 		'contract_id': 'CA-00001558',
 		'licence_id': 'c3391af1-0d46-4ddc-a922-df7c49cf1552',
 		'download_format': 'docx',
@@ -37,14 +38,11 @@ describe(MODULE_ID, function () {
 		'contributor_content': false
 	}, {
 		'syndication_state': 'yes',
-		'item_state': 'complete',
+		'state': 'complete',
 		'content_id': 'http://www.ft.com/thing/0aaee458-6c6e-11e7-bfeb-33fe0c5b7eaa',
-		'user': {
-			'email': 'christos.constandinou@ft.com',
-			'first_name': 'christos',
-			'id': '8ef593a8-eef6-448c-8560-9ca8cdca80a5',
-			'surname': 'constandinou'
-		},
+		'user_email': 'christos.constandinou@ft.com',
+		'user_name': 'christos constandinou',
+		'user_id': '8ef593a8-eef6-448c-8560-9ca8cdca80a5',
 		'contract_id': 'CA-00001558',
 		'licence_id': 'c3391af1-0d46-4ddc-a922-df7c49cf1552',
 		'download_format': 'docx',
@@ -54,14 +52,11 @@ describe(MODULE_ID, function () {
 		'contributor_content': false
 	}, {
 		'syndication_state': 'yes',
-		'item_state': 'save',
+		'state': 'saved',
 		'content_id': 'http://www.ft.com/thing/74447ca2-6b0b-11e7-bfeb-33fe0c5b7eaa',
-		'user': {
-			'email': 'christos.constandinou@ft.com',
-			'first_name': 'christos',
-			'id': '8ef593a8-eef6-448c-8560-9ca8cdca80a5',
-			'surname': 'constandinou'
-		},
+		'user_email': 'christos.constandinou@ft.com',
+		'user_name': 'christos constandinou',
+		'user_id': '8ef593a8-eef6-448c-8560-9ca8cdca80a5',
 		'contract_id': 'CA-00001558',
 		'licence_id': 'c3391af1-0d46-4ddc-a922-df7c49cf1552',
 		'_id': '4eff4aba81093b44d2a71c36fc8e9898',
@@ -70,14 +65,11 @@ describe(MODULE_ID, function () {
 		'contributor_content': false
 	}, {
 		'syndication_state': 'yes',
-		'item_state': 'save',
+		'state': 'saved',
 		'content_id': 'http://www.ft.com/thing/eaef2e2c-6c61-11e7-b9c7-15af748b60d0',
-		'user': {
-			'email': 'christos.constandinou@ft.com',
-			'first_name': 'christos',
-			'id': '8ef593a8-eef6-448c-8560-9ca8cdca80a5',
-			'surname': 'constandinou'
-		},
+		'user_email': 'christos.constandinou@ft.com',
+		'user_name': 'christos constandinou',
+		'user_id': '8ef593a8-eef6-448c-8560-9ca8cdca80a5',
 		'contract_id': 'CA-00001558',
 		'licence_id': 'c3391af1-0d46-4ddc-a922-df7c49cf1552',
 		'_id': 'c71c4e6cf5183996a34235bf50bc0e1d',
@@ -86,20 +78,25 @@ describe(MODULE_ID, function () {
 		'contributor_content': false
 	}];
 
+	require(path.resolve(`${FIXTURES_DIRECTORY}/massive`))();
+
 	describe('default call', function () {
 		let next;
-		let geyHistoryByLicenceID;
+		let getHistoryByContractID;
 		let req;
 		let res;
+		let user_id;
 
 		afterEach(function () {
 		});
 
 		beforeEach(function () {
-			geyHistoryByLicenceID = sinon.stub().resolves(items);
+			user_id = '8ef593a8-eef6-448c-8560-9ca8cdca80a5';
+
+			getHistoryByContractID = sinon.stub().resolves(items);
 
 			underTest = proxyquire('../../../server/controllers/history', {
-				'../lib/get-history-by-licence-id': geyHistoryByLicenceID
+				'../lib/get-history-by-contract-id': getHistoryByContractID
 			});
 
 			req = httpMocks.createRequest({
@@ -153,17 +150,22 @@ describe(MODULE_ID, function () {
 				syndication_contract: {
 					id: 'lmno'
 				},
-				userUuid: '8ef593a8-eef6-448c-8560-9ca8cdca80a5'
+				user: {
+					download_format: 'docx',
+					email: 'christos.constandinou@ft.com',
+					user_id: user_id
+				},
+				userUuid: user_id
 			};
 
 			next = sinon.stub();
 		});
 
-		it('geyHistoryByLicenceID', async function () {
+		it('getHistoryByContractID', async function () {
 			await underTest(req, res, next);
 
-			expect(geyHistoryByLicenceID).to.be.calledWith({
-				licence_id: res.locals.licence.id
+			expect(getHistoryByContractID).to.be.calledWith({
+				contract_id: res.locals.syndication_contract.id
 			});
 		});
 
@@ -188,11 +190,11 @@ describe(MODULE_ID, function () {
 
 	describe('show only current user\'s items', function () {
 		let filteredItems;
-		let geyHistoryByLicenceID;
-		let user_id;
+		let getHistoryByContractID;
 		let next;
 		let req;
 		let res;
+		let user_id;
 
 		afterEach(function () {
 			filteredItems = null;
@@ -203,10 +205,10 @@ describe(MODULE_ID, function () {
 
 			filteredItems = items.filter(item => item.user_id === user_id);
 
-			geyHistoryByLicenceID = sinon.stub().resolves(filteredItems);
+			getHistoryByContractID = sinon.stub().resolves(filteredItems);
 
 			underTest = proxyquire('../../../server/controllers/history', {
-				'../lib/get-history-by-licence-id': geyHistoryByLicenceID
+				'../lib/get-history-by-contract-id': getHistoryByContractID
 			});
 
 			req = httpMocks.createRequest({
@@ -260,17 +262,22 @@ describe(MODULE_ID, function () {
 				syndication_contract: {
 					id: 'lmno'
 				},
+				user: {
+					download_format: 'docx',
+					email: 'christos.constandinou@ft.com',
+					user_id
+				},
 				userUuid: user_id
 			};
 
 			next = sinon.stub();
 		});
 
-		it('geyHistoryByLicenceID', async function () {
+		it('getHistoryByContractID', async function () {
 			await underTest(req, res, next);
 
-			expect(geyHistoryByLicenceID).to.be.calledWith({
-				licence_id: res.locals.licence.id,
+			expect(getHistoryByContractID).to.be.calledWith({
+				contract_id: res.locals.syndication_contract.id,
 				user_id: user_id
 			});
 		});
@@ -296,22 +303,25 @@ describe(MODULE_ID, function () {
 
 	describe('show only saved items', function () {
 		let filteredItems;
-		let geyHistoryByLicenceID;
+		let getHistoryByContractID;
 		let next;
 		let req;
 		let res;
+		let user_id;
 
 		afterEach(function () {
 			filteredItems = null;
 		});
 
 		beforeEach(function () {
-			filteredItems = items.filter(item => item.item_state === 'save');
+			user_id = '8ef593a8-eef6-448c-8560-9ca8cdca80a5';
 
-			geyHistoryByLicenceID = sinon.stub().resolves(filteredItems);
+			filteredItems = items.filter(item => item.state === 'saved');
+
+			getHistoryByContractID = sinon.stub().resolves(filteredItems);
 
 			underTest = proxyquire('../../../server/controllers/history', {
-				'../lib/get-history-by-licence-id': geyHistoryByLicenceID
+				'../lib/get-history-by-contract-id': getHistoryByContractID
 			});
 
 			req = httpMocks.createRequest({
@@ -365,17 +375,22 @@ describe(MODULE_ID, function () {
 				syndication_contract: {
 					id: 'lmno'
 				},
-				userUuid: '8ef593a8-eef6-448c-8560-9ca8cdca80a5'
+				user: {
+					download_format: 'docx',
+					email: 'christos.constandinou@ft.com',
+					user_id
+				},
+				userUuid: user_id
 			};
 
 			next = sinon.stub();
 		});
 
-		it('geyHistoryByLicenceID', async function () {
+		it('getHistoryByContractID', async function () {
 			await underTest(req, res, next);
 
-			expect(geyHistoryByLicenceID).to.be.calledWith({
-				licence_id: res.locals.licence.id,
+			expect(getHistoryByContractID).to.be.calledWith({
+				contract_id: res.locals.syndication_contract.id,
 				type: 'saved'
 			});
 		});
@@ -401,22 +416,25 @@ describe(MODULE_ID, function () {
 
 	describe('show only downloaded items', function () {
 		let filteredItems;
-		let geyHistoryByLicenceID;
+		let getHistoryByContractID;
 		let next;
 		let req;
 		let res;
+		let user_id;
 
 		afterEach(function () {
 			filteredItems = null;
 		});
 
 		beforeEach(function () {
-			filteredItems = items.filter(item => item.item_state !== 'save');
+			user_id = '8ef593a8-eef6-448c-8560-9ca8cdca80a5';
 
-			geyHistoryByLicenceID = sinon.stub().resolves(filteredItems);
+			filteredItems = items.filter(item => item.state !== 'saved');
+
+			getHistoryByContractID = sinon.stub().resolves(filteredItems);
 
 			underTest = proxyquire('../../../server/controllers/history', {
-				'../lib/get-history-by-licence-id': geyHistoryByLicenceID
+				'../lib/get-history-by-contract-id': getHistoryByContractID
 			});
 
 			req = httpMocks.createRequest({
@@ -470,17 +488,22 @@ describe(MODULE_ID, function () {
 				syndication_contract: {
 					id: 'lmno'
 				},
-				userUuid: '8ef593a8-eef6-448c-8560-9ca8cdca80a5'
+				user: {
+					download_format: 'docx',
+					email: 'christos.constandinou@ft.com',
+					user_id
+				},
+				userUuid: user_id
 			};
 
 			next = sinon.stub();
 		});
 
-		it('geyHistoryByLicenceID', async function () {
+		it('getHistoryByContractID', async function () {
 			await underTest(req, res, next);
 
-			expect(geyHistoryByLicenceID).to.be.calledWith({
-				licence_id: res.locals.licence.id,
+			expect(getHistoryByContractID).to.be.calledWith({
+				contract_id: res.locals.syndication_contract.id,
 				type: 'downloads'
 			});
 		});

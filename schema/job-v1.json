@@ -16,9 +16,10 @@
       "type": "string"
     },
     "type": {
-      "default": "sync.download_counts",
+      "default": "content.cleanup",
       "enum": [
-        "sync.download_counts"
+        "content.cache",
+        "content.cleanup"
       ],
       "type": "string"
     },
@@ -32,8 +33,6 @@
   },
   "required": [
     "_id",
-    "contract_id",
-    "licence_id",
     "time",
     "type",
     "version"

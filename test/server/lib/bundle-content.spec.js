@@ -24,7 +24,7 @@ const {
 const MessageQueueEvent = require('../../../queue/message-queue-event');
 const underTest = require('../../../server/lib/bundle-content');
 
-const httpMocks = require('../../fixtures/node-mocks-http');
+const httpMocks = require(path.resolve(`${FIXTURES_DIRECTORY}/node-mocks-http`));
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
@@ -99,9 +99,9 @@ describe(MODULE_ID, function () {
 				},
 				user: {
 					email: 'foo@bar.com',
-					firstName: 'foo',
-					id: 'abc',
-					lastName: 'bar'
+					first_name: 'foo',
+					user_id: 'abc',
+					surname: 'bar'
 				},
 				userUuid: 'abc'
 			};
@@ -251,9 +251,9 @@ describe(MODULE_ID, function () {
 				},
 				user: {
 					email: 'foo@bar.com',
-					firstName: 'foo',
-					id: 'abc',
-					lastName: 'bar'
+					first_name: 'foo',
+					user_id: 'abc',
+					surname: 'bar'
 				},
 				userUuid: 'abc'
 			};

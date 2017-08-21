@@ -15,12 +15,15 @@
     "body-parser": "^1.17.1",
     "config": "^1.26.1",
     "cookie-parser": "^1.4.3",
+    "cron": "^1.2.1",
     "dotenv": "^4.0.0",
     "forever": "^0.15.3",
     "hat": "^0.0.3",
     "ioredis": "^3.0.0",
     "js-yaml": "^3.8.4",
+    "jsonpath": "^0.2.12",
     "mime-types": "^2.1.5",
+    "massive": "^3.1.0",
     "moment": "^2.18.1",
     "n-eager-fetch": "^2.1.3",
     "nforce": "^1.7.0",
@@ -44,13 +47,16 @@
     "pm2": "^2.6.1",
     "proxyquire": "^1.7.4",
     "shelljs": "^0.7.8",
-    "sinon": "^2.3.2",
-    "sinon-chai": "^2.10.0"
+    "sinon": "^3.2.0",
+    "sinon-chai": "^2.13.0"
   },
   "nyc": {
     "exclude": [
       "secret-squirrel.js",
       "db/index.js",
+      "db/pg/column_mappings/contracts.js",
+      "db/pg/column_mappings/history.js",
+      "db/pg/column_mappings/users.js",
       "db/table_schemas/contracts.js",
       "db/table_schemas/history.js",
       "db/tables/contracts.js",
@@ -71,8 +77,8 @@
       "server/init.js",
       "server/stubs.js",
       "worker/index.js",
+      "worker/content-cleanup/index.js",
       "worker/db-persist/index.js",
-      "worker/sync-download_counts/index.js",
       "coverage",
       "test"
     ]

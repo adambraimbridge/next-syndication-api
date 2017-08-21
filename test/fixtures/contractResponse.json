@@ -1,0 +1,196 @@
+{
+  "MY_DOWNLOAD_FORMAT": "html",
+  "owner_email": "syndication@ft.com",
+  "last_updated": "2017-07-19T13:37:20.291Z",
+  "owner_name": "FT Syndication",
+  "contract_date": "11/12/15 - 31/01/2015",
+  "contract_starts": "2015-12-11",
+  "contract_ends": "2050-01-31",
+  "contributor_content": true,
+  "licence_id": "xyz",
+  "licencee_name": "FT Staff",
+  "content_allowed": "Articles, Podcasts & Video",
+  "assets": [{
+    "download_limit": 10000000,
+    "online_usage_limit": 10000000,
+    "product": "FT Article",
+    "online_usage_period": "Week",
+    "print_usage_period": "Week",
+    "print_usage_limit": 20,
+    "embargo_period": 0,
+    "asset_type": "FT Article",
+    "content": "FT.com",
+    "content_type": "article",
+    "content_areas": [ "FT.com" ],
+    "current_downloads": {
+      "day": 0,
+      "month": 0,
+      "total": 0,
+      "week": 0,
+      "year": 0
+    }
+  }, {
+    "download_limit": 10000000,
+    "online_usage_limit": 10000000,
+    "product": "Video",
+    "online_usage_period": "Week",
+    "print_usage_period": "Week",
+    "print_usage_limit": 20,
+    "embargo_period": 0,
+    "asset_type": "Video",
+    "content_type": "video",
+    "content": "FT.com",
+    "content_areas": [ "FT.com" ],
+    "current_downloads": {
+      "day": 0,
+      "month": 0,
+      "total": 0,
+      "week": 0,
+      "year": 0
+    }
+  }, {
+    "download_limit": 10000000,
+    "online_usage_limit": 10000000,
+    "product": "Podcast",
+    "online_usage_period": "Week",
+    "print_usage_period": "Week",
+    "print_usage_limit": 20,
+    "embargo_period": 0,
+    "asset_type": "Podcast",
+    "content_type": "podcast",
+    "content": "FT.com",
+    "content_areas": [ "FT.com" ],
+    "current_downloads": {
+      "day": 0,
+      "month": 0,
+      "total": 0,
+      "week": 0,
+      "year": 0
+    }
+  }],
+  "assetsMap": {
+    "FT Article": {
+      "download_limit": 10000000,
+      "online_usage_limit": 10000000,
+      "product": "FT Article",
+      "online_usage_period": "Week",
+      "print_usage_period": "Week",
+      "print_usage_limit": 20,
+      "embargo_period": 0,
+      "asset_type": "FT Article",
+      "content": "FT.com",
+      "content_type": "article",
+      "content_areas": [ "FT.com" ],
+      "current_downloads": {
+        "day": 0,
+        "month": 0,
+        "total": 0,
+        "week": 0,
+        "year": 0
+      }
+    },
+    "article": {
+      "download_limit": 10000000,
+      "online_usage_limit": 10000000,
+      "product": "FT Article",
+      "online_usage_period": "Week",
+      "print_usage_period": "Week",
+      "print_usage_limit": 20,
+      "embargo_period": 0,
+      "asset_type": "FT Article",
+      "content": "FT.com",
+      "content_type": "article",
+      "content_areas": [ "FT.com" ],
+      "current_downloads": {
+        "day": 0,
+        "month": 0,
+        "total": 0,
+        "week": 0,
+        "year": 0
+      }
+    },
+    "Video": {
+      "download_limit": 10000000,
+      "online_usage_limit": 10000000,
+      "product": "Video",
+      "online_usage_period": "Week",
+      "print_usage_period": "Week",
+      "print_usage_limit": 20,
+      "embargo_period": 0,
+      "asset_type": "Video",
+      "content_type": "video",
+      "content": "FT.com",
+      "content_areas": [ "FT.com" ],
+      "current_downloads": {
+        "day": 0,
+        "month": 0,
+        "total": 0,
+        "week": 0,
+        "year": 0
+      }
+    },
+    "video": {
+      "download_limit": 10000000,
+      "online_usage_limit": 10000000,
+      "product": "Video",
+      "online_usage_period": "Week",
+      "print_usage_period": "Week",
+      "print_usage_limit": 20,
+      "embargo_period": 0,
+      "asset_type": "Video",
+      "content_type": "video",
+      "content": "FT.com",
+      "content_areas": [ "FT.com" ],
+      "current_downloads": {
+        "day": 0,
+        "month": 0,
+        "total": 0,
+        "week": 0,
+        "year": 0
+      }
+    },
+    "Podcast": {
+      "download_limit": 10000000,
+      "online_usage_limit": 10000000,
+      "product": "Podcast",
+      "online_usage_period": "Week",
+      "print_usage_period": "Week",
+      "print_usage_limit": 20,
+      "embargo_period": 0,
+      "asset_type": "Podcast",
+      "content_type": "podcast",
+      "content": "FT.com",
+      "content_areas": [ "FT.com" ],
+      "current_downloads": {
+        "day": 0,
+        "month": 0,
+        "total": 0,
+        "week": 0,
+        "year": 0
+      }
+    },
+    "podcast": {
+      "download_limit": 10000000,
+      "online_usage_limit": 10000000,
+      "product": "Podcast",
+      "online_usage_period": "Week",
+      "print_usage_period": "Week",
+      "print_usage_limit": 20,
+      "embargo_period": 0,
+      "asset_type": "Podcast",
+      "content_type": "podcast",
+      "content": "FT.com",
+      "content_areas": [ "FT.com" ],
+      "current_downloads": {
+        "day": 0,
+        "month": 0,
+        "total": 0,
+        "week": 0,
+        "year": 0
+      }
+    }
+  },
+  "contract_id": "CA-00001558",
+  "client_website": "https://www.ft.com",
+  "client_publications": "FT"
+}

@@ -8,3 +8,4 @@ exports.publishedDate = require('./publishedDate');
 exports.saved = require('./saved');
 exports.title = require('./title');
 exports.type = require('./type');
+exports.wordCount = require('./wordCount');

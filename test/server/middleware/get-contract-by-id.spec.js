@@ -9,7 +9,11 @@ const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 
-const httpMocks = require('../../fixtures/node-mocks-http');
+const {
+	TEST: { FIXTURES_DIRECTORY }
+} = require('config');
+
+const httpMocks = require(path.resolve(`${FIXTURES_DIRECTORY}/node-mocks-http`));
 
 const { expect } = chai;
 chai.use(sinonChai);
@@ -18,56 +22,23 @@ const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(p
 
 describe(MODULE_ID, function () {
 	describe('success', function () {
-		const contractResponse = {
-			'owner_email': 'syndication@ft.com',
-			'last_updated': '2017-07-19T13:37:20.291Z',
-			'owner_name': 'FT Syndication',
-			'contract_date': '11/12/15 - 31/01/2015',
-			'contract_starts': '2015-12-11',
-			'limit_podcast': 10000000,
-			'contract_ends': '2050-01-31',
-			'contributor_content': true,
-			'limit_video': 10000000,
-			'licencee_name': 'FT Staff',
-			'content_allowed': 'Articles, Podcasts & Video',
-			'assets': [{
-				'online_usage_limit': 10000000,
-				'product': 'FT Article',
-				'online_usage_period': 'Week',
-				'print_usage_period': 'Week',
-				'print_usage_limit': 20,
-				'embargo_period': 0,
-				'asset': 'FT Article',
-				'content': 'FT.com'
-			}, {
-				'online_usage_limit': 10000000,
-				'product': 'Video',
-				'online_usage_period': 'Week',
-				'print_usage_period': 'Week',
-				'print_usage_limit': 20,
-				'embargo_period': 0,
-				'asset': 'Video',
-				'content': 'FT.com'
-			}, {
-				'online_usage_limit': 10000000,
-				'product': 'Podcast',
-				'online_usage_period': 'Week',
-				'print_usage_period': 'Week',
-				'print_usage_limit': 20,
-				'embargo_period': 0,
-				'asset': 'Podcast',
-				'content': 'FT.com'
-			}],
-			'contract_number': 'CA-00001558',
-			'client_website': 'https://www.ft.com',
-			'client_publications': 'FT',
-			'limit_article': 10000000
-		};
+		const contractResponse = require(path.resolve(`${FIXTURES_DIRECTORY}/contractResponse.json`));
+		let db;
 		let next;
 		let req;
 		let res;
 
+		const { initDB } = require(path.resolve(`${FIXTURES_DIRECTORY}/massive`))();
+
 		before(async function () {
+			db = initDB();
+			db.syndication.upsert_contract_users.resolves([{
+				contract_id: contractResponse.contract_id,
+				user_id: 'abc',
+				owner: false,
+				last_modified: new Date()
+			}]);
+
 			const underTest = proxyquire('../../../server/middleware/get-contract-by-id', {
 				'../lib/get-contract-by-id': sinon.stub().resolves(contractResponse)
 			});
@@ -109,6 +80,7 @@ describe(MODULE_ID, function () {
 			res.json = sinon.stub();
 
 			res.locals = {
+				$DB: db,
 				contract: contractResponse,
 				flags: {
 					syndication: true,
@@ -119,12 +91,21 @@ describe(MODULE_ID, function () {
 				syndication_contract: {
 					id: 'lmno'
 				},
-				userUuid: 'abc'
+				user: {
+					download_format: 'docx',
+					email: 'christos.constandinou@ft.com',
+					user_id: '8ef593a8-eef6-448c-8560-9ca8cdca80a5'
+				},
+				userUuid: '8ef593a8-eef6-448c-8560-9ca8cdca80a5'
 			};
 
 			next = sinon.stub();
 
 			await underTest(req, res, next);
+		});
+
+		it('calls the syndication.upsert_contract_users stored procedure function', function () {
+			expect(res.locals.$DB.syndication.upsert_contract_users).to.be.calledWith([res.locals.syndication_contract.id, res.locals.userUuid, false]);
 		});
 
 		it('sets contract data on res.locals', function () {

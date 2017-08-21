@@ -19,7 +19,7 @@ const {
 const MessageQueueEvent = require('../../../queue/message-queue-event');
 const underTest = require('../../../server/controllers/save-by-content-id');
 
-const httpMocks = require('../../fixtures/node-mocks-http');
+const httpMocks = require(path.resolve(`${FIXTURES_DIRECTORY}/node-mocks-http`));
 
 const { expect } = chai;
 chai.use(sinonChai);
@@ -33,6 +33,8 @@ describe(MODULE_ID, function () {
 	let req;
 	let res;
 	let stub;
+
+	require(path.resolve(`${FIXTURES_DIRECTORY}/massive`))();
 
 	before(function () {
 		nock(SESSION_URI)
@@ -92,9 +94,9 @@ describe(MODULE_ID, function () {
 			},
 			user: {
 				email: 'foo@bar.com',
-				firstName: 'foo',
-				id: 'abc',
-				lastName: 'bar'
+				first_name: 'foo',
+				user_id: 'abc',
+				surname: 'bar'
 			},
 			userUuid: 'abc'
 		};
@@ -109,12 +111,10 @@ describe(MODULE_ID, function () {
 	it('should publish a save event', async function() {
 		await underTest(req, res, () => {});
 
-		expect(res.locals.__event).to.have.property('state').and.to.equal('save');
+		expect(res.locals.__event).to.have.property('state').and.to.equal('saved');
 		expect(res.locals.__event).to.have.property('user').and.to.eql({
 			email: res.locals.user.email,
-			first_name: res.locals.user.firstName,
-			id: res.locals.user.id,
-			surname: res.locals.user.lastName
+			id: res.locals.user.user_id
 		});
 		expect(res.locals.__event).to.have.property('licence_id').and.to.equal(res.locals.licence.id);
 		expect(res.locals.__event).to.have.property('time').and.to.be.a('string');

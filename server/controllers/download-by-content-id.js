@@ -22,13 +22,11 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 module.exports = exports = (req, res, next) => {
 	const START = Date.now();
 
-	const { download_formats } = res.locals.contract;
+	const { download_format } = res.locals.user;
 
 	const format = req.query.format
-				|| (download_formats
-				? download_formats[res.locals.user.id]
-				|| DEFAULT_DOWNLOAD_FORMAT
-				: DEFAULT_DOWNLOAD_FORMAT);
+				|| download_format
+				|| DEFAULT_DOWNLOAD_FORMAT;
 
 	getContentById(req.params.content_id, format)
 		.then(content => {
@@ -56,7 +54,7 @@ module.exports = exports = (req, res, next) => {
 					user: {
 						email: res.locals.user.email,
 						first_name: res.locals.user.firstName,
-						id: res.locals.user.id,
+						id: res.locals.user.user_id,
 						surname: res.locals.user.lastName
 					}
 				}
