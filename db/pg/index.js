@@ -5,6 +5,7 @@ const path = require('path');
 const { default: log } = require('@financial-times/n-logger');
 
 const massive = require('massive');
+const pgConn = require('pg-connection-string');
 
 const { DB } = require('config');
 
@@ -17,17 +18,11 @@ module.exports = exports = async (options = DB) => {
 		log.debug(`${MODULE_ID} creting new DB instance with options => `, options);
 
 		if (options.uri) {
-			let URI = options.uri;
+			const conn = Object.assign({ ssl: { rejectUnauthorized : false } }, pgConn.parse(options.uri));
 
-			if (!URI.includes('sslmode=require')) {
-				if (!URI.includes('?')) {
-					URI += '?';
-				}
+			log.debug(`${MODULE_ID} creting new DB instance with URI String => `, conn);
 
-				URI += 'sslmode=require'
-			}
-
-			db = await massive(URI);
+			db = await massive(conn);
 		}
 		else {
 			db = await massive({
