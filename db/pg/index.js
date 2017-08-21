@@ -17,7 +17,17 @@ module.exports = exports = async (options = DB) => {
 		log.debug(`${MODULE_ID} creting new DB instance with options => `, options);
 
 		if (options.uri) {
-			db = await massive(options.uri);
+			let URI = options.uri;
+
+			if (!URI.includes('sslmode=require')) {
+				if (!URI.includes('?')) {
+					URI += '?';
+				}
+
+				URI += 'sslmode=require'
+			}
+
+			db = await massive(URI);
 		}
 		else {
 			db = await massive({
