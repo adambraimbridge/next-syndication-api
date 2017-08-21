@@ -120,6 +120,7 @@ function addTestStuff(response) {
 	[
 		['canBeSyndicated', 'no'],
 		['canBeSyndicated', 'verify'],
+		['canBeSyndicated', 'withContributorPayment'],
 		['canBeSyndicated', 'yes'],
 		['canBeSyndicated', null],
 		['canDownload', 1],
