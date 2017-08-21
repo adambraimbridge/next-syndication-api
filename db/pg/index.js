@@ -25,13 +25,19 @@ module.exports = exports = async (options = DB) => {
 			db = await massive(conn);
 		}
 		else {
-			db = await massive({
-				host: options.host,
-				port: options.port,
+			const conn = {
 				database: options.database,
-				user: options.user_name,
-				password: options.password
-			});
+				host: options.host,
+				password: options.password,
+				port: options.port,
+				user: options.user_name
+			};
+
+			if (options.ssl === true) {
+				conn.ssl = { rejectUnauthorized : false };
+			}
+
+			db = await massive(conn);
 		}
 	}
 
