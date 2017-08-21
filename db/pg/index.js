@@ -16,13 +16,18 @@ module.exports = exports = async (options = DB) => {
 	if (!db || options !== DB) {
 		log.debug(`${MODULE_ID} creting new DB instance with options => `, options);
 
-		db = await massive({
-			host: options.host,
-			port: options.port,
-			database: options.database,
-			user: options.user_name,
-			password: options.password
-		});
+		if (options.uri) {
+			db = await massive(options.uri);
+		}
+		else {
+			db = await massive({
+				host: options.host,
+				port: options.port,
+				database: options.database,
+				user: options.user_name,
+				password: options.password
+			});
+		}
 	}
 
 	return db;
