@@ -8,7 +8,7 @@ module.exports = exports = (val, prop, item, existing, contract) => {
 		return 1;
 	}
 
-	let content_type = type(item.type, 'type', item, existing, contract);
+	let content_type = item.contentType || item.content_type || type(item.type, 'type', item, existing, contract);
 
 	if (contract && contract.assetsMap) {
 		const asset = contract.assetsMap[content_type];
