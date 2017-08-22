@@ -22,7 +22,12 @@ module.exports = exports = function () {
 		let db = Object.create(massiveDatabase__proto__);
 //		massiveDatabase__proto__.constructor.call(db);
 
-		db.run = sinon.stub().resolves(runResolves);
+		db.run = sinon.stub();
+
+		if (typeof runResolves !== 'undefined') {
+			db.run.resolves(runResolves);
+		}
+
 		db.syndication = {
 			cleanup_content: sinon.stub(),
 			delete_save_history_by_contract_id: sinon.stub(),
