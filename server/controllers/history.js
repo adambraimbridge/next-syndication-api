@@ -4,16 +4,23 @@ const path = require('path');
 
 const { default: log } = require('@financial-times/n-logger');
 
+const getContent = require('../lib/get-content');
 const getHistoryByContractID  = require('../lib/get-history-by-contract-id');
+const resolve = require('../lib/resolve');
+const messageCode = require('../lib/resolve/messageCode');
+
+const RESOLVE_PROPERTIES = Object.keys(resolve);
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
+	const START = Date.now();
+
 	try {
-		const CONTRACT = res.locals.syndication_contract;
+		const CONTRACT = res.locals.contract;
 
 		const options = {
-			contract_id: CONTRACT.id
+			contract_id: CONTRACT.contract_id
 		};
 
 		if (req.query.show === 'mine') {
@@ -40,7 +47,25 @@ module.exports = exports = async (req, res, next) => {
 			}
 		}
 
-		const items = await getHistoryByContractID(options);
+		let items = await getHistoryByContractID(options);
+
+		const contentItems = await getContent(items.map(({ id }) => id));
+		const contentItemsMap = contentItems.reduce((acc, item) => {
+			acc[item.id] = item;
+
+			return acc;
+		}, {});
+
+		items = items.map(item => RESOLVE_PROPERTIES.reduce((acc, prop) => {
+			let contentItem = contentItemsMap[item.content_id] || {};
+			acc[prop] = resolve[prop](contentItem[prop], prop, contentItem, item, CONTRACT);
+
+			return acc;
+		}, item));
+
+		items.forEach(item => messageCode(item, CONTRACT));
+
+		log.debug(`${MODULE_ID} => Retrieved ${items.length} items in ${Date.now() - START}ms`);
 
 		if (Array.isArray(items)) {
 			res.status(200);
@@ -59,4 +84,5 @@ module.exports = exports = async (req, res, next) => {
 
 		res.sendStatus(400);
 	}
+
 };
