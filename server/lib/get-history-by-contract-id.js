@@ -3,6 +3,7 @@
 const moment = require('moment');
 
 const pg = require('../../db/pg');
+const getAllExistingItemsForContract = require('./get-all-existing-items-for-contract');
 
 module.exports = exports = async ({ contract_id, limit, offset, type, user_id }) => {
 	const db = await pg();
@@ -34,9 +35,15 @@ module.exports = exports = async ({ contract_id, limit, offset, type, user_id })
 
 	query += ');';
 
-	let items = await db.run(query);
+	const items = await db.run(query);
+	const allExisting = await getAllExistingItemsForContract(contract_id);
 
 	items.forEach(item => {
+		let existing = allExisting[item.content_id];
+
+		item.downloaded = existing.downloaded;
+		item.saved = existing.saved;
+
 		item.id = item.content_id.split('/').pop();
 
 		item.date = moment(item.time).format('DD MMMM YYYY');

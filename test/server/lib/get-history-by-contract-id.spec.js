@@ -76,6 +76,12 @@ describe(MODULE_ID, function () {
 		'contributor_content': false
 	}];
 
+	const itemsMap = items.reduce((acc, item) => {
+		acc[item.content_id] = item;
+
+		return acc;
+	}, {});
+
 	const contract_id = 'CA-00001558';
 
 	let db;
@@ -92,6 +98,7 @@ describe(MODULE_ID, function () {
 
 			underTest = proxyquire('../../../server/lib/get-history-by-contract-id', {
 				'../../db/pg': sinon.stub().resolves(db),
+				'./get-all-existing-items-for-contract': sinon.stub().resolves(itemsMap),
 				'@noCallThru': true
 			});
 		});
@@ -133,6 +140,7 @@ describe(MODULE_ID, function () {
 
 			underTest = proxyquire('../../../server/lib/get-history-by-contract-id', {
 				'../../db/pg': sinon.stub().resolves(db),
+				'./get-all-existing-items-for-contract': sinon.stub().resolves(itemsMap),
 				'@noCallThru': true
 			});
 		});
@@ -172,6 +180,7 @@ describe(MODULE_ID, function () {
 
 			underTest = proxyquire('../../../server/lib/get-history-by-contract-id', {
 				'../../db/pg': sinon.stub().resolves(db),
+				'./get-all-existing-items-for-contract': sinon.stub().resolves(itemsMap),
 				'@noCallThru': true
 			});
 		});
@@ -211,6 +220,7 @@ describe(MODULE_ID, function () {
 
 			underTest = proxyquire('../../../server/lib/get-history-by-contract-id', {
 				'../../db/pg': sinon.stub().resolves(db),
+				'./get-all-existing-items-for-contract': sinon.stub().resolves(itemsMap),
 				'@noCallThru': true
 			});
 		});
