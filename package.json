@@ -17,6 +17,7 @@
     "cookie-parser": "^1.4.3",
     "cron": "^1.2.1",
     "dotenv": "^4.0.0",
+    "google-spreadsheet": "^2.0.4",
     "forever": "^0.15.3",
     "hat": "^0.0.3",
     "ioredis": "^3.0.0",
