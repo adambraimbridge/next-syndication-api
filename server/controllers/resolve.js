@@ -18,7 +18,7 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 module.exports = exports = async (req, res, next) => {
 	const START = Date.now();
 
-	let { body } = req;
+	const { body } = req;
 
 	const { locals: { contract, flags } } = res;
 

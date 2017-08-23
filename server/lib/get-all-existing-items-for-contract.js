@@ -11,11 +11,11 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 module.exports = exports = async (contract_id) => {
 	const db = await pg();
 
-	let alreadyDownloaded = await db.run(`SELECT * FROM syndication.get_downloads_by_contract_id($text$${contract_id}$text$::text)`);
+	const alreadyDownloaded = await db.run(`SELECT * FROM syndication.get_downloads_by_contract_id($text$${contract_id}$text$::text)`);
 
 	log.info(`${MODULE_ID} => ${alreadyDownloaded.length} downloaded items found`);
 
-	let alreadySaved = await db.run(`SELECT * FROM syndication.get_saved_items_by_contract_id($text$${contract_id}$text$::text)`);
+	const alreadySaved = await db.run(`SELECT * FROM syndication.get_saved_items_by_contract_id($text$${contract_id}$text$::text)`);
 
 	log.info(`${MODULE_ID} => ${alreadySaved.length} saved items found`);
 

@@ -39,7 +39,7 @@ module.exports = exports = async ({ contract_id, limit, offset, type, user_id })
 	const allExisting = await getAllExistingItemsForContract(contract_id);
 
 	items.forEach(item => {
-		let existing = allExisting[item.content_id];
+		const existing = allExisting[item.content_id];
 
 		item.downloaded = existing.downloaded;
 		item.saved = existing.saved;
