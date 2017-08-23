@@ -16,7 +16,7 @@ chai.use(sinonChai);
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
-describe(MODULE_ID, function () {
+describe.only(MODULE_ID, function () {
 	let underTest;
 	let db;
 
@@ -31,7 +31,7 @@ describe(MODULE_ID, function () {
 		db.syndication.cleanup_content.resolves([]);
 
 		underTest = proxyquire('../../../../worker/crons/content-cleanup/callback', {
-			'../../db/pg': sinon.stub().resolves(db)
+			'../../../db/pg': sinon.stub().resolves(db)
 		});
 	});
 
