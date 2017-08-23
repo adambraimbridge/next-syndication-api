@@ -4,7 +4,7 @@ const path = require('path');
 
 const { default: log } = require('@financial-times/n-logger');
 
-const pg = require('../../db/pg');
+const pg = require('../../../db/pg');
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 

@@ -30,7 +30,7 @@ describe(MODULE_ID, function () {
 
 		db.syndication.cleanup_content.resolves([]);
 
-		underTest = proxyquire('../../../worker/content-cleanup/callback', {
+		underTest = proxyquire('../../../../worker/crons/content-cleanup/callback', {
 			'../../db/pg': sinon.stub().resolves(db)
 		});
 	});
