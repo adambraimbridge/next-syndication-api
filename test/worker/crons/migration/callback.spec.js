@@ -20,6 +20,8 @@ chai.use(sinonChai);
 
 const Slack = require('node-slack');
 
+const createKey = require('../../../../worker/crons/migration/create-key');
+
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
 describe(MODULE_ID, function () {
@@ -40,6 +42,8 @@ describe(MODULE_ID, function () {
 	});
 
 	before(async function () {
+		await createKey();
+
 		db = initDB();
 
 		db.syndication.get_contract_data.resolves([contractResponse]);
