@@ -11,13 +11,17 @@ const SpreadSheet = require('../../../spreadsheet');
 const getContractByID = require('../../../server/lib/get-contract-by-id');
 
 const {
+	MIGRATION_SPREADSHEET_ID,
 	NODE_ENV,
 	SALESFORCE: {
 		CRON_CONFIG: SALESFORCE_CRON_CONFIG
 	},
 	SLACK,
 	SPREADSHEET_MAPPINGS,
-	THE_GOOGLE: { AUTH_FILE_NAME }
+	THE_GOOGLE: {
+//		AUTH_FILE_NAME,
+		AUTH_KEY
+	}
 } = require('config');
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
@@ -25,8 +29,6 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 let running = false;
 let lastRun = Date.now();
 let salesforceQueryCount = 0;
-
-const slack = new Slack(SLACK.INCOMING_HOOK_URL);
 
 module.exports = exports = async () => {
 	if (running === true) {
@@ -42,10 +44,10 @@ module.exports = exports = async () => {
 	log.debug(`${MODULE_ID} => Migration running`);
 
 	try {
-		const key = require(path.resolve(AUTH_FILE_NAME));
+//		const key = require(path.resolve(AUTH_FILE_NAME));
 		const ss = await SpreadSheet({
-			id: '1SjXTysgKVX2bGQtsFP-9pWhrHepKX8qz3ZGHrGiDhtw',
-			key: key,
+			id: MIGRATION_SPREADSHEET_ID,
+			key: AUTH_KEY,
 			mappings: SPREADSHEET_MAPPINGS
 		});
 
@@ -53,6 +55,7 @@ module.exports = exports = async () => {
 
 		const users = await migrateUsers(ss.worksheetsMap.users.rows);
 
+		const slack = new Slack(SLACK.INCOMING_HOOK_URL);
 		await slack.send(formatSlackMessage(contracts, users));
 
 		log.debug(`${MODULE_ID} => Migration complete`);
