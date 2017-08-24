@@ -46,7 +46,7 @@ module.exports = exports = async () => {
 		const key = require(path.resolve(AUTH_FILE_NAME));
 		const ss = await SpreadSheet({
 			id: MIGRATION_SPREADSHEET_ID,
-			key: AUTH_KEY,
+			key: key,
 			mappings: SPREADSHEET_MAPPINGS
 		});
 
