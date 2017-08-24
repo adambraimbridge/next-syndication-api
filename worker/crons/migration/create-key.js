@@ -29,7 +29,10 @@ module.exports = exports = async function createKey () {
 
 	log.info(`${MODULE_ID} => Creating key: ${FILE_PATH}`);
 
-	await writeFileAsync(FILE_PATH, JSON.stringify(THE_GOOGLE.AUTH_KEY, null, 2), { encoding: 'utf8', mode: '0644' });
+	await writeFileAsync(FILE_PATH, JSON.stringify(THE_GOOGLE.AUTH_KEY, null, 2).replace(/\\\\n/g, '\\n'), {
+		encoding: 'utf8',
+		mode: '0644'
+	});
 
 	log.info(`${MODULE_ID} => Created key: ${FILE_PATH}`);
 };
