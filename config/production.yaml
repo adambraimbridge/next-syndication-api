@@ -6,6 +6,8 @@
   DB:
     ssl: true
 
+  NODE_ENV: production
+
   SALESFORCE:
     ENVIRONMENT: production
 

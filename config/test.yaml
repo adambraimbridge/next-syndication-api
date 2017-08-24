@@ -3,4 +3,6 @@
 
   CONVERT_FORMAT_COMMAND: "./test/fixtures/pandoc_stub"
 
+  NODE_ENV: test
+
   QUEUE_PURGE_THROTTLE_LIMIT_MS: 25
