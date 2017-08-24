@@ -22,13 +22,22 @@ module.exports = {
 			'1643097dede85a81e5e94cd6168a0a06',
 			'd7cf17839495d7176ae7b986e6ce3eff',
 			'108ff39fefbaff6a7f889287e1e7f0ff',
+			'095ffdbf50ee4041ee18ed9077216844',
+			'6feabf0d4eed16682bfbd6d3560a45ee',
+			'8d1beddb5cc7ed98a61fc28934871b35',
+			'ee0981e4bebd818374a6c1416029656f',
 			// user UUIDs
 			'8ef593a8-eef6-448c-8560-9ca8cdca80a5',
 			'8ef593a8-eef6-448c-8560-9ca8cdca80a6',
+			'b2697f93-52d3-4d42-8409-bdf91b09e894',
 			// licence UUIDs
 			'c3391af1-0d46-4ddc-a922-df7c49cf1552',
 			'f0e793d6-90d6-4581-9743-c905940602f5',
 			// content UUIDs
+			'b3ec55b0-7dd4-11e7-9108-edda0bcbc928',
+			'02c03200-86dc-11e7-bf50-e1c239b45787',
+			'491cf75e-51d2-11e7-a1f2-db19572361bb',
+			'02c03200-86dc-11e7-bf50-e1c239b45787',
 			'9fdf35a4-7610-11e7-a3e8-60495fe6ca71',
 			'6326f528-75db-11e7-a3e8-60495fe6ca71',
 			'b59dff10-3f7e-11e7-9d56-25f963e998b2',
