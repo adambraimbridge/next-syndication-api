@@ -19,8 +19,7 @@ const {
 	SLACK,
 	SPREADSHEET_MAPPINGS,
 	THE_GOOGLE: {
-//		AUTH_FILE_NAME,
-		AUTH_KEY
+		AUTH_FILE_NAME
 	}
 } = require('config');
 
@@ -44,7 +43,7 @@ module.exports = exports = async () => {
 	log.debug(`${MODULE_ID} => Migration running`);
 
 	try {
-//		const key = require(path.resolve(AUTH_FILE_NAME));
+		const key = require(path.resolve(AUTH_FILE_NAME));
 		const ss = await SpreadSheet({
 			id: MIGRATION_SPREADSHEET_ID,
 			key: AUTH_KEY,
