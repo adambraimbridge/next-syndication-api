@@ -63,16 +63,17 @@ module.exports = exports = async function SpreadSheet({ id, key, mappings }) {
 		if (Object.prototype.toString.call(mappings) === '[object Object]' && Object.prototype.toString.call(mappings[item.title]) === '[object Object]') {
 			const MAP = mappings[item.title];
 
-			item.rows.forEach(row => {
-				row.mapped = {};
+			item.rows.forEach((row, i) => {
+				row.mapped = {
+					__index__: i,
+					__last_modified__: new Date(row['app:edited'])
+				};
 
 				for (let [key, val] of Object.entries(MAP)) {
 					if (key in row) {
 						row.mapped[val] = row[key];
 					}
 				}
-
-				row.mapped.__last_modified__ = new Date(row['app:edited']);
 			});
 		}
 
