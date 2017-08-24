@@ -12,7 +12,7 @@ const {
 	NODE_ENV,
 	SPREADSHEET_MAPPINGS,
 	TEST: { FIXTURES_DIRECTORY },
-	THE_GOOGLE: { AUTH_KEY }
+	THE_GOOGLE: { AUTH_FILE_NAME }
 } = require('config');
 
 const { expect } = chai;
@@ -25,6 +25,7 @@ const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(p
 describe(MODULE_ID, function () {
 	const contractResponse = require(path.resolve(`${FIXTURES_DIRECTORY}/contractResponse.json`));
 	const spreadsheetResponse = require(path.resolve(`${FIXTURES_DIRECTORY}/google-spreadsheet.json`));
+	const authKey = require(path.resolve(`${AUTH_FILE_NAME}`));
 	const user_id = '8ef593a8-eef6-448c-8560-9ca8cdca80a5';
 
 	let underTest;
@@ -70,7 +71,7 @@ describe(MODULE_ID, function () {
 	it('retrieves the spreadsheet with the given credentials', async function () {
 		expect(spreadsheetStub).to.have.been.calledWith({
 			id: MIGRATION_SPREADSHEET_ID,
-			key: AUTH_KEY,
+			key: authKey,
 			mappings: SPREADSHEET_MAPPINGS
 		});
 	});
