@@ -50,7 +50,8 @@
   CRON:
     content_cleanup: "* * 0 * * *"
     content_cache: "* 5 * * * *"
-    migration: "* */15 * * * *"
+    migration: "*/5 * * * * *"
+#    migration: "* */15 * * * *"
 
   DEFAULT_DOWNLOAD_FORMAT: docx
 
@@ -142,6 +143,19 @@
 
   SESSION_PRODUCTS_PATH: /products
   SESSION_URI: https://session-next.ft.com
+
+  SPREADSHEET_MAPPINGS:
+    contracts:
+      licenceename: licencee_name
+      contractid: contract_id
+      contenttype: content_type
+      legacydownloadcount: legacy_download_count
+      lastupdated: last_updated
+    users:
+      licenceename: licencee_name
+      contractid: contract_id
+      userid: user_id
+      lastupdated: last_updated
 
   STUB_FLAGS: false
 
