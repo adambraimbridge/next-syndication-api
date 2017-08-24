@@ -1,0 +1,46 @@
+{
+  "worksheetsMap": {
+    "users": {
+      "title": "users",
+      "rows": [ {
+        "mapped": {
+          "__index__": 0,
+          "__last_modified__": "2017-08-24T12:00:00.000Z",
+          "licencee_name": "Test for Syndication Project",
+          "contract_id": "CA-00001558",
+          "user_id": "8ef593a8-eef6-448c-8560-9ca8cdca80a5",
+          "last_updated": "2017-08-09"
+        } }, {
+        "mapped": {
+          "__index__": 1,
+          "__last_modified__": "2017-08-24T12:00:00.000Z",
+          "licencee_name": "Test for Syndication Project",
+          "contract_id": "CA-00001558",
+          "user_id": "8ef593a8-eef6-448c-8560-9ca8cdca80a6",
+          "last_updated": "2017-08-09"
+        } } ]
+    },
+    "contracts": {
+      "title": "contracts",
+      "rows": [ {
+        "mapped": {
+          "__index__": 0,
+          "__last_modified__": "2017-08-24T12:00:00.000Z",
+          "licencee_name": "Test for Syndication Project",
+          "contract_id": "CA-00001558",
+          "content_type": "article",
+          "legacy_download_count": "263",
+          "last_updated": "2017-08-09"
+        } }, {
+        "mapped": {
+          "__index__": 1,
+          "__last_modified__": "2017-08-24T12:00:00.000Z",
+          "licencee_name": "Test for Syndication Project",
+          "contract_id": "CA-00001558",
+          "content_type": "video",
+          "legacy_download_count": "12",
+          "last_updated": "2017-08-09"
+        } } ]
+    }
+  }
+}
