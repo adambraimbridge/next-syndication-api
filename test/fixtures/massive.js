@@ -33,10 +33,13 @@ module.exports = exports = function () {
 			delete_save_history_by_contract_id: sinon.stub(),
 			get_downloads_by_contract_id: sinon.stub(),
 			get_contract_data: sinon.stub(),
+			get_migrated_user: sinon.stub(),
 			get_saved_items_by_contract_id: sinon.stub(),
 			upsert_content: sinon.stub(),
 			upsert_contract: sinon.stub(),
+			upsert_contract_asset: sinon.stub(),
 			upsert_contract_users: sinon.stub(),
+			upsert_migrated_user: sinon.stub(),
 			upsert_history: sinon.stub(),
 			upsert_user: sinon.stub()
 		};

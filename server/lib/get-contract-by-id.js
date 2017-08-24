@@ -69,7 +69,9 @@ module.exports = exports = async (contractID, locals) => {
 		contract.last_updated = new Date();
 		contract = pgMapColumns(contract, contractsColumnMappings);
 
-		contract.licence_id = locals.licence.id;
+		if (locals && locals.licence) {
+			contract.licence_id = locals.licence.id;
+		}
 
 		[contract_data] = await db.syndication.upsert_contract([contract]);
 
