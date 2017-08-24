@@ -79,7 +79,9 @@
       "server/init.js",
       "server/stubs.js",
       "worker/index.js",
-      "worker/content-cleanup/index.js",
+      "worker/crons/index.js",
+      "worker/crons/content-cleanup/index.js",
+      "worker/crons/migration/index.js",
       "worker/db-persist/index.js",
       "coverage",
       "test"
