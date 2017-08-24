@@ -49,9 +49,8 @@
 
   CRON:
     content_cleanup: "* * 0 * * *"
-    content_cache: "* 5 * * * *"
-    migration: "*/5 * * * * *"
-#    migration: "* */15 * * * *"
+    content_cache: "* */5 * * * *"
+    migration: "* */15 * * * *"
 
   DEFAULT_DOWNLOAD_FORMAT: docx
 
@@ -126,6 +125,8 @@
     MSG_5000: >
       <p>Sorry, an error has occurred. Please try signing out and then in again. If error persists, please contact your Account Manager.</p>
 
+  NODE_ENV: development
+
   QUEUE_PURGE_THROTTLE_LIMIT_MS: 60000
 
   SALESFORCE:
@@ -133,6 +134,9 @@
     BASE_URI: SCRMContract
     ENVIRONMENT: production
     CONNECTION_MODE: single
+    CRON_CONFIG:
+      MAX_CALLS: 2
+      MAX_TIME_PER_CALL: 900000
     REFRESH_CONTRACT_PERIOD: 86400000 # 24 hours in ms
     TEST_CONTRACT: FTS-14046740
     STUB_CONTRACTS:
