@@ -24,6 +24,7 @@ module.exports = exports = async (req, res, next) => {
 			}, {}),
 			contract_id: res.locals.syndication_contract.id,
 			licence_id: res.locals.licence.id,
+			migrated: !!res.locals.isNewSyndicationUser
 		}, res.locals.user));
 
 		next();
