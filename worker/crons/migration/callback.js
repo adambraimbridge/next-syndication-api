@@ -25,6 +25,7 @@ const {
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
+let firstRun = true;
 let running = false;
 let lastRun = Date.now();
 let salesforceQueryCount = 0;
@@ -32,8 +33,12 @@ let salesforceQueryCount = 0;
 log.info(`${MODULE_ID} => started`);
 
 module.exports = exports = async () => {
-	if (running === true) {
-		return;
+	if (firstRun !== true) {
+		firstRun = false;
+
+		if (running === true || Date.now() - lastRun < 600000) {
+			return;
+		}
 	}
 
 	if (Date.now() - lastRun >= SALESFORCE_CRON_CONFIG.MAX_TIME_PER_CALL) {
