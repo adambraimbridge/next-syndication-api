@@ -29,6 +29,8 @@ let running = false;
 let lastRun = Date.now();
 let salesforceQueryCount = 0;
 
+log.info(`${MODULE_ID} => started`);
+
 module.exports = exports = async () => {
 	if (running === true) {
 		return;
