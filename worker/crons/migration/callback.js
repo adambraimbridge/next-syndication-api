@@ -144,12 +144,16 @@ async function migrateContract(db, item) {
 
 	if (asset) {
 		if (parseInt(asset.legacy_download_count, 10) === legacy_download_count) {
+			log.info(`${MODULE_ID} | contract asset already migrated => ${JSON.stringify(asset)}`);
+
 			return null;
 		}
 
 		asset.legacy_download_count = legacy_download_count;
 
 		[asset] = await db.syndication.upsert_contract_asset([item.mapped.contract_id, asset]);
+
+		log.info(`${MODULE_ID} | upserted migrated contract asset => ${JSON.stringify(asset)}`);
 	}
 
 	return item.mapped;
@@ -167,10 +171,14 @@ async function migrateUser(db, item) {
 	let [user] = await db.syndication.get_migrated_user([item.mapped.user_id, item.mapped.contract_id]);
 
 	if (user && user.user_id !== null) {
+		log.info(`${MODULE_ID} | user already migrated => ${JSON.stringify(user)}`);
+
 		return null;
 	}
 
 	[user] = await db.syndication.upsert_migrated_user([item.mapped]);
+
+	log.info(`${MODULE_ID} | upserted migrated user => ${JSON.stringify(user)}`);
 
 	return item.mapped;
 }
