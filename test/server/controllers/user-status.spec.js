@@ -68,6 +68,7 @@ describe(MODULE_ID, function () {
 				syndicationRedux: 'on'
 			},
 			licence: { id: 'xyz' },
+			isNewSyndicationUser: true,
 			syndication_contract: {
 				id: 'lmno'
 			},
@@ -94,6 +95,7 @@ describe(MODULE_ID, function () {
 			licence_id: 'xyz',
 			email: 'foo@bar.com',
 			first_name: 'foo',
+			migrated: true,
 			user_id: 'abc',
 			surname: 'bar'
 		});
