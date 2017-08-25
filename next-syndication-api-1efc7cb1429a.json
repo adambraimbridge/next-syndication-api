@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "next-syndication-api",
+  "private_key_id": "1efc7cb1429ad7db04b3ba2c01c4d06f85dcfb94",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEuwIBADANBgkqhkiG9w0BAQEFAASCBKUwggShAgEAAoIBAQCiyHKuCLGONGF9\n/V+ZuoOCh0yT7ElAqBFO9ZTsOUSX/cnCVQx/x0PUx5oV7EHQmxrmqf3e1bps3J94\nRGG9fj+5cMHb7xv5Ff6Pz5s/2CyktNv5KTmdEU4AmPmid/6VY6dPLblv9oVgd2Rv\nJFmO1yaLQjX9DAk8UyEXQjjFPqnLBQ5NNDdKk67B6kiQWbTvbOYrHyPiWb72FhnG\n21dNKZyERz74CXr3QGGlmM+XGDaopvzUginDptrdFvRbkCTb1i7GL1yp7weJT+qv\nZ3fgPSWcuKPbejnl08sgAFLRjEv9d6x9M7xa6szI2KI5l0gQtUB1wXHjOjdGCvJw\ndoZ4LLI5AgMBAAECgf9Eg5nBJmeVMvbV0I8sZRR1G/1fRVSPoi2mzjagNnpofqks\n4h8gqP4j0N9J2ubYpm/sJiB0agDNUQ7Nz/pTh4/KvWra5wkfDeLXJMpzVMl1iaoM\ndQ2Kzn3GQpzPhTHiLs98xAII3fnFYHslTGdld6kBdBzFJQu+GD8VSwoZ+wX8LLhP\nQ/C4gmQwkxos1kwPOXWYXlJTKxfjXf8b4CgpJFGMneTu5eQuXxFy5b/zhbeanWTf\n+zOWwswCXIFOGa42rJIHAsbsINWRSQnWOWWswUww1z8cgB/WFmXThxNIUrvEzXbt\nOXZbMPcDQ4JeRHh12NQlyJXcHKUvSO7tjiIpFGECgYEA21FjMohieUj2ZnLhlKJ/\nEj1avKVq0ECmOgtDm1GldAOf4C2/a2Wu7D5KwHtkVNxwXmvphENibq5BdOPeMKV2\nt5XUHGC2+2Nxra15DyjrafbqP4OODi/Ptvi17kXGCJxrrUKjUZa51nEXZGedG23m\n03jZ4piWqtWIsGlfOjN2BJECgYEAvgJiim8oCHOwEjofsOFeow7YM7KQF47sSYQQ\nRbJXqPB5LMc4EJGJvRtb16J7DguSsECAtMcJ5B3TrpbsynueWGr3VdPWnvyZripK\ngxcuKRD8RsI/9EQQlwf80RlhQDDZjKRvaystOsIgOVlWn1MN4zNIargN21OSA7/X\nmPjGBykCgYAiH760fR39SwnzlMpeiw4Ec4Frur0s2/JBM8F4KDL7Ixk8E0ImXrLh\n1StiWZCZ15awSlASIT3uhLRwkIfgv84B8JEJPU8bPDTS1hvw7Of8G8wEx95RfMTv\n7jC4eyi97ECgu66XokEWCZCfMbPzMZ1pp/MW27ENsZ3L/QkxEBK70QKBgFAVZT7/\nlpnpWJ52DQFaG68SBKHVctHbFU/u74TQpA26PPhYhxLEpI8lxtHd04uZ6RuMNDL9\naPfScnO1fNviulx9yP1NqbmcsZEslfcmf/gjBpE0Mgxb27osTaw7zDdn32ldrPA4\nZHnNdBN3ygCg2suVw8HnDUARuwsFgnMg9yXxAoGBAK6FGxmDR0in/q2UJTDuUysk\nhsYmE1kolTq8Mg/FIm1+cPnQMkiGR2BbfYUZdsFErMqSsJ+62lUP82QHPoOBa1zS\nHQW1dnAxqWKbe8zMrQEcIxmuyswUfTBfrdcNmS+cOB+NQMs/LoysZFxkPXlk+EkX\nWPi5nD/VZipvRSWR0TbY\n-----END PRIVATE KEY-----\n",
+  "client_email": "next-syndication-api@next-syndication-api.iam.gserviceaccount.com",
+  "client_id": "118413896252856751424",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/next-syndication-api%40next-syndication-api.iam.gserviceaccount.com\""
+}
