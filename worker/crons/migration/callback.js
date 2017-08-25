@@ -62,8 +62,11 @@ module.exports = exports = async () => {
 
 		const users = await migrateUsers(ss.worksheetsMap.users.rows);
 
-		const slack = new Slack(SLACK.INCOMING_HOOK_URL);
-		await slack.send(formatSlackMessage(contracts, users));
+		if (contracts.length || users.length) {
+			const slack = new Slack(SLACK.INCOMING_HOOK_URL);
+
+			await slack.send(formatSlackMessage(contracts, users));
+		}
 
 		log.debug(`${MODULE_ID} => Migration complete`);
 	}
