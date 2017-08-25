@@ -28,7 +28,7 @@ module.exports = exports = async function createKey (AUTH_DATA = THE_GOOGLE) {
 
 	log.info(`${MODULE_ID} => Creating key: ${FILE_PATH}`);
 
-	await writeFileAsync(FILE_PATH, JSON.stringify(AUTH_DATA.AUTH_KEY, null, 2).replace(/\\\\n/g, '\\n'), {
+	await writeFileAsync(FILE_PATH, JSON.stringify(AUTH_DATA.AUTH_KEY, null, 2).replace(/\\\\n/g, '\\n') + '\n', {
 		encoding: 'utf8',
 		mode: '0644'
 	});
