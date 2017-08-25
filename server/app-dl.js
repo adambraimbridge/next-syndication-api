@@ -7,6 +7,7 @@ const { BASE_URI_PATH = '/syndication' } = require('config');
 
 const accessControl = require('./middleware/access-control');
 const cache = require('./middleware/cache');
+const checkIfNewSyndicationUser = require('./middleware/check-if-new-syndication-user');
 const db = require('./middleware/db');
 const decodeSession = require('./middleware/decode-session');
 const getContractById = require('./middleware/get-contract-by-id');
@@ -31,7 +32,8 @@ const middleware = [
 	getSyndicationLicenceForUser,
 	getUserAccessAuthToken,
 	getUserProfile,
-	getContractById
+	getContractById,
+	checkIfNewSyndicationUser
 ];
 
 app.get(`${BASE_URI_PATH}/__gtg`, (req, res) => res.sendStatus(200));

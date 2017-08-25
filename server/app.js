@@ -41,8 +41,8 @@ const middleware = [
 	getSyndicationLicenceForUser,
 	getUserAccessAuthToken,
 	getUserProfile,
-	checkIfNewSyndicationUser,
-	getContractById
+	getContractById,
+	checkIfNewSyndicationUser
 ];
 
 //const licenceAuthMiddleware = Array.from(middleware);
