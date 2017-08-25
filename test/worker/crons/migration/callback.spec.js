@@ -1,6 +1,6 @@
 'use strict';
 
-const fs = require('fs');
+//const fs = require('fs');
 const path = require('path');
 
 const chai = require('chai');
@@ -13,7 +13,10 @@ const {
 	NODE_ENV,
 	SPREADSHEET_MAPPINGS,
 	TEST: { FIXTURES_DIRECTORY },
-	THE_GOOGLE: { AUTH_FILE_NAME, AUTH_KEY }
+	THE_GOOGLE: {
+		AUTH_FILE_NAME //,
+//		AUTH_KEY
+	}
 } = require('config');
 
 const { expect } = chai;
@@ -21,10 +24,10 @@ chai.use(sinonChai);
 
 const Slack = require('node-slack');
 
-const createKey = require('../../../../worker/crons/migration/create-key');
+//const createKey = require('../../../../worker/crons/migration/create-key');
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
-fs.writeFileSync(path.resolve(AUTH_FILE_NAME), JSON.stringify(AUTH_KEY, null, 2).replace(/\\\\n/g, '\\n'), 'utf8');
+//fs.writeFileSync(path.resolve(AUTH_FILE_NAME), JSON.stringify(AUTH_KEY, null, 2).replace(/\\\\n/g, '\\n'), 'utf8');
 
 describe(MODULE_ID, function () {
 	const contractResponse = require(path.resolve(`${FIXTURES_DIRECTORY}/contractResponse.json`));
@@ -44,7 +47,7 @@ describe(MODULE_ID, function () {
 	});
 
 	before(async function () {
-		await createKey();
+//		await createKey();
 
 		db = initDB();
 
