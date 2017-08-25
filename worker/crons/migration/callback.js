@@ -34,11 +34,12 @@ log.info(`${MODULE_ID} => started`);
 
 module.exports = exports = async () => {
 	if (firstRun !== true) {
-		firstRun = false;
-
 		if (running === true || Date.now() - lastRun < 600000) {
 			return;
 		}
+	}
+	else {
+		firstRun = false;
 	}
 
 	if (Date.now() - lastRun >= SALESFORCE_CRON_CONFIG.MAX_TIME_PER_CALL) {
