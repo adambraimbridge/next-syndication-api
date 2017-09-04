@@ -65,7 +65,11 @@ module.exports = exports = async () => {
 		if (contracts.length || users.length) {
 			const slack = new Slack(SLACK.INCOMING_HOOK_URL);
 
-			await slack.send(formatSlackMessage(contracts, users));
+			const message = formatSlackMessage(contracts, users);
+
+			await slack.send(message);
+
+			return message;
 		}
 
 		log.debug(`${MODULE_ID} => Migration complete`);
@@ -154,6 +158,9 @@ async function migrateContract(db, item) {
 		[asset] = await db.syndication.upsert_contract_asset([item.mapped.contract_id, asset]);
 
 		log.info(`${MODULE_ID} | upserted migrated contract asset => ${JSON.stringify(asset)}`);
+	}
+	else {
+		return null;
 	}
 
 	return item.mapped;
