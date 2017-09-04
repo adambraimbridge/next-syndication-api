@@ -38,7 +38,7 @@ module.exports = exports = async () => {
 	const [, , , , min, sec, ms] = date.toArray();
 
 	if (firstRun !== true) {
-		if (running === true || min % 15 !== 0 || (sec > 1 || ms > 100)) {
+		if (running === true || min % 15 !== 0 || (sec > 1 || ms > 150)) {
 			return;
 		}
 	}
