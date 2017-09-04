@@ -5,6 +5,7 @@ const path = require('path');
 const { default: log } = require('@financial-times/n-logger');
 
 const Slack = require('node-slack');
+const moment = require('moment');
 
 const pg = require('../../../db/pg');
 const SpreadSheet = require('../../../spreadsheet');
@@ -33,8 +34,11 @@ let salesforceQueryCount = 0;
 log.info(`${MODULE_ID} => started`);
 
 module.exports = exports = async () => {
+	const date = moment();
+	const [, , , , min, sec, ms] = date.toArray();
+
 	if (firstRun !== true) {
-		if (running === true || Date.now() - lastRun < 600000) {
+		if (running === true || min % 15 !== 0 || (sec > 1 || ms > 100)) {
 			return;
 		}
 	}
@@ -46,6 +50,7 @@ module.exports = exports = async () => {
 		salesforceQueryCount = 0;
 	}
 
+	lastRun = Date.now();
 	running = true;
 
 	log.debug(`${MODULE_ID} => Migration running`);
