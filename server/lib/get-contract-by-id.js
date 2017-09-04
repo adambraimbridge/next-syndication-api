@@ -20,7 +20,7 @@ const getSalesforceContractByID = require('./get-salesforce-contract-by-id');
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 function decorateContract(contract) {
-	contract.contract_date = `${moment(contract.contract_starts).format('DD/MM/YY')} - ${moment(contract.contract_ends).format('DD/MM/YY')}`;
+	contract.contract_date = `${moment(contract.start_date).format('DD/MM/YY')} - ${moment(contract.end_date).format('DD/MM/YY')}`;
 
 	const contentAllowed = [];
 

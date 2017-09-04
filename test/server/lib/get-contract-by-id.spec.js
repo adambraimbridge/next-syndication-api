@@ -50,7 +50,7 @@ describe(MODULE_ID, function () {
 
 			const expected = Object.assign(JSON.parse(JSON.stringify(contractResponse)), {
 				content_allowed: 'Articles, Videos & Podcasts',
-				contract_date: `${moment(contractResponse.contract_starts).format('DD/MM/YY')} - ${moment(contractResponse.contract_ends).format('DD/MM/YY')}`
+				contract_date: `${moment(contractResponse.start_date).format('DD/MM/YY')} - ${moment(contractResponse.end_date).format('DD/MM/YY')}`
 			});
 
 			expected.assets[0] = expected.assetsMap['FT Article'] = expected.assetsMap['article'] = Object.assign(JSON.parse(JSON.stringify(expected.assetsMap['article'])), {
