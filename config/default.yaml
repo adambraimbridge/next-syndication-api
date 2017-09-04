@@ -50,7 +50,7 @@
   CRON:
     content_cleanup: "* * 0 * * *"
     content_cache: "* */5 * * * *"
-    migration: "* */15 * * * *"
+    migration: "* 0,15,30,45 * * * *"
 
   DEFAULT_DOWNLOAD_FORMAT: docx
 
