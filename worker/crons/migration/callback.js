@@ -38,7 +38,9 @@ module.exports = exports = async () => {
 	const [, , , , min, sec, ms] = date.toArray();
 
 	if (firstRun !== true) {
-		if (running === true || min % 15 !== 0 || (sec > 1 || ms > 150)) {
+		if (running === true || min % 15 !== 0 || (sec > 1 || ms > 250)) {
+			log.debug(`${MODULE_ID} => THROTTLED!!! Already run/running.`);
+
 			return;
 		}
 	}
