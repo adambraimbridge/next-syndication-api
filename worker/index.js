@@ -12,8 +12,9 @@ const QueueSubscriber = require('../queue/subscriber');
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
-module.exports = exports = ({ callback, event_type }) => {
+module.exports = exports = ({ autoAck, callback, event_type }) => {
 	let subscriber = new QueueSubscriber({
+		autoAck,
 		queue_url: DEFAULT_QUEUE_URL,
 		type: event_type
 	});

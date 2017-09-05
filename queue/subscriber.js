@@ -14,9 +14,16 @@ const sqs = require('./connect');
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = class QueueSubscriber extends EventEmitter {
-	constructor({ callback, max_messages = 4, queue_url = DEFAULT_QUEUE_URL, type }) {
+	constructor({
+		autoAck = false,
+		callback,
+		max_messages = 4,
+		queue_url = DEFAULT_QUEUE_URL,
+		type
+	}) {
 		super();
 
+		this.autoAck = autoAck;
 		this.type = type;
 
 		this.max_messages = max_messages;
@@ -58,6 +65,10 @@ module.exports = exports = class QueueSubscriber extends EventEmitter {
 							await callback(message.data, message, response, this);
 							break;
 					}
+				}
+
+				if (this.autoAck === true) {
+					await this.ack(message);
 				}
 
 				++fired;

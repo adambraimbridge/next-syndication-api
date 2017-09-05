@@ -15,6 +15,8 @@ const {
 
 const httpMocks = require(path.resolve(`${FIXTURES_DIRECTORY}/node-mocks-http`));
 
+const MessageQueueEvent = require('../../../queue/message-queue-event');
+
 const { expect } = chai;
 chai.use(sinonChai);
 
@@ -45,6 +47,8 @@ describe(MODULE_ID, function () {
 		let res;
 
 		before(async function () {
+			sinon.stub(MessageQueueEvent.prototype, 'publish').resolves(true);
+
 			underTest = proxyquire('../../../server/controllers/unsave-by-content-id', {
 				'../lib/fetch-content-by-id': sinon.stub().resolves(require(path.resolve(`${FIXTURES_DIRECTORY}/80d634ea-fa2b-46b5-886f-1418c6445182.json`)))
 			});
@@ -68,7 +72,7 @@ describe(MODULE_ID, function () {
 				'method': 'POST',
 				'originalUrl': '/syndication/unsave/80d634ea-fa2b-46b5-886f-1418c6445182',
 				'params': {
-					'id': '80d634ea-fa2b-46b5-886f-1418c6445182'
+					'content_id': '80d634ea-fa2b-46b5-886f-1418c6445182'
 				},
 				'path': '/syndication/unsave/80d634ea-fa2b-46b5-886f-1418c6445182',
 				'protocol': 'http',
@@ -91,6 +95,9 @@ describe(MODULE_ID, function () {
 
 			res.locals = {
 				$DB: db,
+				FT_User: {
+					USERID: '1234567890'
+				},
 				flags: {
 					syndication: true,
 					syndicationNew: 'on',
@@ -115,7 +122,9 @@ describe(MODULE_ID, function () {
 		});
 
 		after(function () {
-			underTest = null;;
+			MessageQueueEvent.prototype.publish.restore();
+
+			underTest = null;
 		});
 
 		it('calls the syndication.delete_save_history_by_contract_id stored procedure', function () {
@@ -151,6 +160,8 @@ describe(MODULE_ID, function () {
 		let res;
 
 		before(async function () {
+			sinon.stub(MessageQueueEvent.prototype, 'publish').resolves(true);
+
 			underTest = proxyquire('../../../server/controllers/unsave-by-content-id', {
 				'../lib/fetch-content-by-id': sinon.stub().resolves(require(path.resolve(`${FIXTURES_DIRECTORY}/80d634ea-fa2b-46b5-886f-1418c6445182.json`)))
 			});
@@ -175,7 +186,7 @@ describe(MODULE_ID, function () {
 				'method': 'POST',
 				'originalUrl': '/syndication/unsave/80d634ea-fa2b-46b5-886f-1418c6445182',
 				'params': {
-					'id': '80d634ea-fa2b-46b5-886f-1418c6445182'
+					'content_id': '80d634ea-fa2b-46b5-886f-1418c6445182'
 				},
 				'path': '/syndication/unsave/80d634ea-fa2b-46b5-886f-1418c6445182',
 				'protocol': 'http',
@@ -199,6 +210,9 @@ describe(MODULE_ID, function () {
 
 			res.locals = {
 				$DB: db,
+				FT_User: {
+					USERID: '1234567890'
+				},
 				flags: {
 					syndication: true,
 					syndicationNew: 'on',
@@ -223,6 +237,8 @@ describe(MODULE_ID, function () {
 		});
 
 		after(function () {
+			MessageQueueEvent.prototype.publish.restore();
+
 			underTest = null;
 		});
 

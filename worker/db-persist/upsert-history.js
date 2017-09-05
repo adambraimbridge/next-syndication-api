@@ -16,6 +16,14 @@ module.exports = exports = async (event, message, response, subscriber) => {
 
 		log.debug(`${MODULE_ID} RECEIVED => `, event);
 
+		if (event.state === 'deleted') {
+			const items = await db.syndication.delete_save_history_by_contract_id([event.contract_id, event.content_id]);
+
+			log.info(`${MODULE_ID} => ${items.length} items deleted for contract#${event.contract_id}; content#${event.content_id};`, items);
+
+			return;
+		}
+
 		event.asset_type = CONTENT_TYPE_TO_ASSET_TYPE[event.content_type];
 		event.user_id = event.user.id;
 
@@ -23,7 +31,7 @@ module.exports = exports = async (event, message, response, subscriber) => {
 
 		log.debug(`${MODULE_ID} PERSISTED`);
 
-		await subscriber.ack(message);
+		subscriber;
 	}
 	catch (e) {
 		log.error(`${MODULE_ID} => `, e);
