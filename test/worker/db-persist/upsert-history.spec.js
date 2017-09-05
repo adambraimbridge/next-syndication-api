@@ -8,7 +8,6 @@ const sinonChai = require('sinon-chai');
 const proxyquire = require('proxyquire');
 
 const MessageQueueEvent = require('../../../queue/message-queue-event');
-const QueueSubscriber = require('../../../queue/subscriber');
 
 const {
 	TEST: { FIXTURES_DIRECTORY }
@@ -27,7 +26,6 @@ describe(MODULE_ID, function () {
 	const { initDB } = require(path.resolve(`${FIXTURES_DIRECTORY}/massive`))();
 
 	afterEach(function () {
-		QueueSubscriber.prototype.ack.restore();
 	});
 
 	beforeEach(function () {
@@ -38,10 +36,6 @@ describe(MODULE_ID, function () {
 		underTest = proxyquire('../../../worker/db-persist/upsert-history', {
 			'../../db/pg': sinon.stub().resolves(db)
 		});
-
-		sinon.stub(QueueSubscriber.prototype, 'ack').resolves({});
-
-		subscriber = new QueueSubscriber({});
 	});
 
 	it('persists a message queue event', async function () {
@@ -53,10 +47,20 @@ describe(MODULE_ID, function () {
 				licence_id: 'foo',
 				state: 'saved',
 				time: new Date(),
+				tracking: {
+					cookie: 'cookie',
+					ip_address: '127.0.0.1',
+					referrer: '/republishing/contract',
+					session: 'session',
+					spoor_id: 'spoor-id',
+					url: '/republishing/contract',
+					user_agent: 'user-agent'
+				},
 				user: {
 					email: 'foo@bar.com',
-					firstName: 'foo',
-					id: 'abc',
+					first_name: 'foo',
+					id: 'bar',
+					passport_id: '1234567890',
 					lastName: 'bar'
 				}
 			}
@@ -68,29 +72,4 @@ describe(MODULE_ID, function () {
 
 		expect(db.syndication.upsert_history).to.be.calledWith([event]);
 	});
-
-//	it('removes it from the queue', async function () {
-//		const event = (new MessageQueueEvent({
-//			event: {
-//				content_id: 'http://www.ft.com/thing/abc',
-//				contract_id: 'syndication',
-//				download_format: 'docx',
-//				licence_id: 'foo',
-//				state: 'saved',
-//				time: new Date(),
-//				user: {
-//					email: 'foo@bar.com',
-//					firstName: 'foo',
-//					id: 'abc',
-//					lastName: 'bar'
-//				}
-//			}
-//		})).toJSON();
-//
-//		const message = { data: event };
-//
-//		await underTest(event, message, {}, subscriber);
-//
-//		expect(QueueSubscriber.prototype.ack).to.be.calledWith(message);
-//	});
 });
