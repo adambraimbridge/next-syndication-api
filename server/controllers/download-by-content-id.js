@@ -51,10 +51,20 @@ module.exports = exports = (req, res, next) => {
 					syndication_state: String(content.canBeSyndicated),
 					time: moment().toDate(),
 					title: content.title,
+					tracking: {
+						cookie: req.headers.cookie,
+						ip_address: req.ip,
+						referrer: req.get('referrer'),
+						session: req.cookies.FTSession,
+						spoor_id: req.cookies['spoor-id'],
+						url: req.originalUrl,
+						user_agent: req.get('user-agent')
+					},
 					user: {
 						email: res.locals.user.email,
 						first_name: res.locals.user.firstName,
 						id: res.locals.user.user_id,
+						passport_id: res.locals.FT_User.USERID,
 						surname: res.locals.user.lastName
 					}
 				}
