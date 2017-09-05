@@ -73,10 +73,20 @@ describe(MODULE_ID, function () {
 				licence_id: 'foo',
 				published_date: new Date(),
 				time: new Date(),
+				tracking: {
+					cookie: 'cookie',
+					ip_address: '127.0.0.1',
+					referrer: '/republishing/contract',
+					session: 'session',
+					spoor_id: 'spoor-id',
+					url: '/republishing/contract',
+					user_agent: 'user-agent'
+				},
 				user: {
 					email: 'foo@bar.com',
 					first_name: 'foo',
 					id: 'bar',
+					passport_id: '1234567890',
 					surname: 'bar'
 				}
 			};
@@ -120,10 +130,20 @@ describe(MODULE_ID, function () {
 				published_date: new Date(),
 				state: 'saved',
 				time: new Date(),
+				tracking: {
+					cookie: 'cookie',
+					ip_address: '127.0.0.1',
+					referrer: '/republishing/contract',
+					session: 'session',
+					spoor_id: 'spoor-id',
+					url: '/republishing/contract',
+					user_agent: 'user-agent'
+				},
 				user: {
 					email: 'foo@bar.com',
 					first_name: 'foo',
 					id: 'bar',
+					passport_id: '1234567890',
 					surname: 'bar'
 				}
 			};
@@ -148,10 +168,20 @@ describe(MODULE_ID, function () {
 				published_date: new Date(),
 				state: 'saved',
 				time: new Date(),
+				tracking: {
+					cookie: 'cookie',
+					ip_address: '127.0.0.1',
+					referrer: '/republishing/contract',
+					session: 'session',
+					spoor_id: 'spoor-id',
+					url: '/republishing/contract',
+					user_agent: 'user-agent'
+				},
 				user: {
 					email: 'foo@bar.com',
 					first_name: 'foo',
 					id: 'bar',
+					passport_id: '1234567890',
 					surname: 'bar'
 				}
 			};
@@ -184,10 +214,20 @@ describe(MODULE_ID, function () {
 			licence_id: 'foo',
 			published_date: new Date(),
 			time: new Date(),
+			tracking: {
+				cookie: 'cookie',
+				ip_address: '127.0.0.1',
+				referrer: '/republishing/contract',
+				session: 'session',
+				spoor_id: 'spoor-id',
+				url: '/republishing/contract',
+				user_agent: 'user-agent'
+			},
 			user: {
 				email: 'foo@bar.com',
 				first_name: 'foo',
 				id: 'bar',
+				passport_id: '1234567890',
 				surname: 'bar'
 			}
 		};
@@ -209,10 +249,20 @@ describe(MODULE_ID, function () {
 			licence_id: 'foo',
 			published_date: new Date(),
 			time: new Date(),
+			tracking: {
+				cookie: 'cookie',
+				ip_address: '127.0.0.1',
+				referrer: '/republishing/contract',
+				session: 'session',
+				spoor_id: 'spoor-id',
+				url: '/republishing/contract',
+				user_agent: 'user-agent'
+			},
 			user: {
 				email: 'foo@bar.com',
 				first_name: 'foo',
 				id: 'bar',
+				passport_id: '1234567890',
 				surname: 'bar'
 			}
 		};
@@ -231,10 +281,20 @@ describe(MODULE_ID, function () {
 			published_date: new Date(),
 			state: 'saved',
 			time: new Date(),
+			tracking: {
+				cookie: 'cookie',
+				ip_address: '127.0.0.1',
+				referrer: '/republishing/contract',
+				session: 'session',
+				spoor_id: 'spoor-id',
+				url: '/republishing/contract',
+				user_agent: 'user-agent'
+			},
 			user: {
 				email: 'foo@bar.com',
 				first_name: 'foo',
 				id: 'bar',
+				passport_id: '1234567890',
 				surname: 'bar'
 			}
 		};
@@ -258,10 +318,20 @@ describe(MODULE_ID, function () {
 			published_date: new Date(),
 			state: 'saved',
 			time: new Date(),
+			tracking: {
+				cookie: 'cookie',
+				ip_address: '127.0.0.1',
+				referrer: '/republishing/contract',
+				session: 'session',
+				spoor_id: 'spoor-id',
+				url: '/republishing/contract',
+				user_agent: 'user-agent'
+			},
 			user: {
 				email: 'foo@bar.com',
 				first_name: 'foo',
 				id: 'bar',
+				passport_id: '1234567890',
 				surname: 'bar'
 			}
 		};
@@ -292,10 +362,20 @@ describe(MODULE_ID, function () {
 				published_date: new Date(),
 				state: 'saved',
 				time: new Date(),
+				tracking: {
+					cookie: 'cookie',
+					ip_address: '127.0.0.1',
+					referrer: '/republishing/contract',
+					session: 'session',
+					spoor_id: 'spoor-id',
+					url: '/republishing/contract',
+					user_agent: 'user-agent'
+				},
 				user: {
 					email: 'foo@bar.com',
 					first_name: 'foo',
 					id: 'bar',
+					passport_id: '1234567890',
 					surname: 'bar'
 				}
 			};

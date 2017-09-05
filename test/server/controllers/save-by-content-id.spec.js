@@ -88,6 +88,9 @@ describe(MODULE_ID, function () {
 		res.sendStatus = sinon.stub();
 
 		res.locals = {
+			FT_User: {
+				USERID: '1234567890'
+			},
 			licence: { id: 'xyz' },
 			syndication_contract: {
 				id: 'lmno'
@@ -114,7 +117,8 @@ describe(MODULE_ID, function () {
 		expect(res.locals.__event).to.have.property('state').and.to.equal('saved');
 		expect(res.locals.__event).to.have.property('user').and.to.eql({
 			email: res.locals.user.email,
-			id: res.locals.user.user_id
+			id: res.locals.user.user_id,
+			passport_id: res.locals.FT_User.USERID
 		});
 		expect(res.locals.__event).to.have.property('licence_id').and.to.equal(res.locals.licence.id);
 		expect(res.locals.__event).to.have.property('time').and.to.be.a('string');

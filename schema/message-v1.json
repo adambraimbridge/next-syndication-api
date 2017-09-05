@@ -85,7 +85,6 @@
           "type": "string"
         },
         "url": {
-          "format": "uri",
           "type": "string"
         },
         "user_agent": {
