@@ -174,4 +174,17 @@
     FIXTURES_DIRECTORY: ./test/fixtures
     TEMP_FILES_DIRECTORY: ./test/temp
 
+  TRACKING:
+    DATA:
+      category: syndication
+      context:
+        app: Syndication
+      system:
+        product: Syndication
+    HEADERS:
+      accept: application/json
+      content-type: application/json
+    METHOD: POST
+    URI: https://spoor-api.ft.com/ingest
+
   USER_PROFILE_DATA_PROPERTY: user
