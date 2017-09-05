@@ -19,6 +19,7 @@ const httpMocks = require(path.resolve(`${FIXTURES_DIRECTORY}/node-mocks-http`))
 const { expect } = chai;
 chai.use(sinonChai);
 
+const PACKAGE = require(path.resolve('./package.json'));
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
 describe(MODULE_ID, function () {
@@ -86,6 +87,11 @@ describe(MODULE_ID, function () {
 		await underTest(req, res, () => {});
 
 		expect(res.json).to.have.been.calledWith({
+			app: {
+				env: process.env.NODE_ENV,
+				name: PACKAGE.name,
+				version: PACKAGE.version
+			},
 			features: {
 				syndication: true,
 				syndicationNew: true,
