@@ -57,14 +57,14 @@ module.exports = exports = async (event, message, response, subscriber) => {
 
 		let res = await fetch(TRACKING.URI, {
 			headers,
-			method: TRACKING.method,
+			method: TRACKING.METHOD,
 			body: JSON.stringify(data)
 		});
 
 		if (res.ok) {
 			let payload = await res.json();
 
-			log.debug(`${MODULE_ID} PUBLISHED => `, payload);
+			log.debug(`${MODULE_ID} PUBLISHED => `, data, payload);
 		}
 		else {
 			let error = await res.text();
