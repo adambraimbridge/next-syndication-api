@@ -35,7 +35,7 @@ describe(MODULE_ID, function () {
 
 		db.syndication.upsert_history.resolves([]);
 
-		underTest = proxyquire('../../../worker/db-persist/callback', {
+		underTest = proxyquire('../../../worker/db-persist/upsert-history', {
 			'../../db/pg': sinon.stub().resolves(db)
 		});
 
