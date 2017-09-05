@@ -67,8 +67,50 @@
     "title": {
       "type": "string"
     },
+    "tracking": {
+      "properties": {
+        "cookie":{
+          "type": "string"
+        },
+        "ip_address":{
+          "type": "string"
+        },
+        "referrer": {
+          "type": "string"
+        },
+        "session": {
+          "type": "string"
+        },
+        "spoor_id": {
+          "type": "string"
+        },
+        "url": {
+          "format": "uri",
+          "type": "string"
+        },
+        "user_agent": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "cookie",
+        "ip_address",
+        "referrer",
+        "session",
+        "spoor_id",
+        "url",
+        "user_agent"
+      ],
+      "type": "object"
+    },
+    "type": {
+      "default": "db.persist",
+      "enum": [
+        "db.persist"
+      ],
+      "type": "string"
+    },
     "user": {
-      "type": "object",
       "properties": {
         "email": {
           "format": "email",
@@ -80,6 +122,9 @@
         "id": {
           "type": "string"
         },
+        "passport_id": {
+          "type": "string"
+        },
         "surname": {
           "type": "string"
         }
@@ -87,16 +132,11 @@
       "required": [
         "email",
         "first_name",
+        "passport_id",
         "surname",
         "id"
-      ]
-    },
-    "type": {
-      "default": "db.persist",
-      "enum": [
-        "db.persist"
       ],
-      "type": "string"
+      "type": "object"
     },
     "version": {
       "enum": [
@@ -115,6 +155,7 @@
     "state",
     "syndication_state",
     "time",
+    "tracking",
     "type",
     "user",
     "version"
