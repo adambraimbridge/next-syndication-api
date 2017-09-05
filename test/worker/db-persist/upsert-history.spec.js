@@ -69,28 +69,28 @@ describe(MODULE_ID, function () {
 		expect(db.syndication.upsert_history).to.be.calledWith([event]);
 	});
 
-	it('removes it from the queue', async function () {
-		const event = (new MessageQueueEvent({
-			event: {
-				content_id: 'http://www.ft.com/thing/abc',
-				contract_id: 'syndication',
-				download_format: 'docx',
-				licence_id: 'foo',
-				state: 'saved',
-				time: new Date(),
-				user: {
-					email: 'foo@bar.com',
-					firstName: 'foo',
-					id: 'abc',
-					lastName: 'bar'
-				}
-			}
-		})).toJSON();
-
-		const message = { data: event };
-
-		await underTest(event, message, {}, subscriber);
-
-		expect(QueueSubscriber.prototype.ack).to.be.calledWith(message);
-	});
+//	it('removes it from the queue', async function () {
+//		const event = (new MessageQueueEvent({
+//			event: {
+//				content_id: 'http://www.ft.com/thing/abc',
+//				contract_id: 'syndication',
+//				download_format: 'docx',
+//				licence_id: 'foo',
+//				state: 'saved',
+//				time: new Date(),
+//				user: {
+//					email: 'foo@bar.com',
+//					firstName: 'foo',
+//					id: 'abc',
+//					lastName: 'bar'
+//				}
+//			}
+//		})).toJSON();
+//
+//		const message = { data: event };
+//
+//		await underTest(event, message, {}, subscriber);
+//
+//		expect(QueueSubscriber.prototype.ack).to.be.calledWith(message);
+//	});
 });
