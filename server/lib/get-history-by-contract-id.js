@@ -9,13 +9,18 @@ module.exports = exports = async ({ contract_id, limit, offset, type, user_id })
 	const db = await pg();
 
 	let query = 'SELECT * FROM syndication.';
+	let totalQuery = 'SELECT count(*) FROM syndication.';
 
 	switch (type) {
 		case 'saved':
 			query += 'get_saved_items_by_contract_id(';
+			totalQuery += 'saved_items';
+
 			break;
 		default:
 			query += 'get_downloads_by_contract_id(';
+			totalQuery += 'downloads';
+
 			break;
 	}
 
@@ -36,6 +41,8 @@ module.exports = exports = async ({ contract_id, limit, offset, type, user_id })
 	query += ');';
 
 	const items = await db.run(query);
+	const [totalRes] = await db.run(totalQuery);
+	const total = parseInt(totalRes.count, 10);
 	const allExisting = await getAllExistingItemsForContract(contract_id);
 
 	items.forEach(item => {
@@ -51,5 +58,5 @@ module.exports = exports = async ({ contract_id, limit, offset, type, user_id })
 		item.published = moment(item.published_date).format('DD MMMM YYYY');
 	});
 
-	return items;
+	return { items, total };
 };

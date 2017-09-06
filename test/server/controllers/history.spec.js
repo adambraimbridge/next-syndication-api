@@ -211,7 +211,10 @@ describe(MODULE_ID, function () {
 		beforeEach(function () {
 			user_id = '8ef593a8-eef6-448c-8560-9ca8cdca80a5';
 
-			getHistoryByContractID = sinon.stub().resolves(items);
+			getHistoryByContractID = sinon.stub().resolves({
+				items: items,
+				total: items.length
+			});
 
 			underTest = proxyquire('../../../server/controllers/history', {
 				'../lib/get-content': sinon.stub().resolves(contentItems),
@@ -298,7 +301,10 @@ describe(MODULE_ID, function () {
 		it('response: body', async function () {
 			await underTest(req, res, next);
 
-			expect(res.json).to.be.calledWith(items);
+			expect(res.json).to.be.calledWith({
+				items: items,
+				total: items.length
+			});
 		});
 
 		it('next', async function () {
@@ -325,7 +331,10 @@ describe(MODULE_ID, function () {
 
 			filteredItems = items.filter(item => item.user_id === user_id);
 
-			getHistoryByContractID = sinon.stub().resolves(filteredItems);
+			getHistoryByContractID = sinon.stub().resolves({
+				items: filteredItems,
+				total: filteredItems.length
+			});
 
 			underTest = proxyquire('../../../server/controllers/history', {
 				'../lib/get-content': sinon.stub().resolves(contentItems),
@@ -413,7 +422,10 @@ describe(MODULE_ID, function () {
 		it('response: body', async function () {
 			await underTest(req, res, next);
 
-			expect(res.json).to.be.calledWith(filteredItems);
+			expect(res.json).to.be.calledWith({
+				items: filteredItems,
+				total: filteredItems.length
+			});
 		});
 
 		it('next', async function () {
@@ -440,7 +452,10 @@ describe(MODULE_ID, function () {
 
 			filteredItems = items.filter(item => item.state === 'saved');
 
-			getHistoryByContractID = sinon.stub().resolves(filteredItems);
+			getHistoryByContractID = sinon.stub().resolves({
+				items: filteredItems,
+				total: filteredItems.length
+			});
 
 			underTest = proxyquire('../../../server/controllers/history', {
 				'../lib/get-content': sinon.stub().resolves(contentItems),
@@ -528,7 +543,10 @@ describe(MODULE_ID, function () {
 		it('response: body', async function () {
 			await underTest(req, res, next);
 
-			expect(res.json).to.be.calledWith(filteredItems);
+			expect(res.json).to.be.calledWith({
+				items: filteredItems,
+				total: filteredItems.length
+			});
 		});
 
 		it('next', async function () {
@@ -555,7 +573,10 @@ describe(MODULE_ID, function () {
 
 			filteredItems = items.filter(item => item.state !== 'saved');
 
-			getHistoryByContractID = sinon.stub().resolves(filteredItems);
+			getHistoryByContractID = sinon.stub().resolves({
+				items: filteredItems,
+				total: filteredItems.length
+			});
 
 			underTest = proxyquire('../../../server/controllers/history', {
 				'../lib/get-content': sinon.stub().resolves(contentItems),
@@ -643,7 +664,10 @@ describe(MODULE_ID, function () {
 		it('response: body', async function () {
 			await underTest(req, res, next);
 
-			expect(res.json).to.be.calledWith(filteredItems);
+			expect(res.json).to.be.calledWith({
+				items: filteredItems,
+				total: filteredItems.length
+			});
 		});
 
 		it('next', async function () {

@@ -117,7 +117,7 @@ describe(MODULE_ID, function () {
 				contract_id: 'CA-00001558'
 			});
 
-			expect(res).to.eql(items);
+			expect(res.items).to.eql(items);
 		});
 	});
 
@@ -160,7 +160,7 @@ describe(MODULE_ID, function () {
 				user_id
 			});
 
-			expect(res).to.eql(filteredItems);
+			expect(res.items).to.eql(filteredItems);
 		});
 	});
 
@@ -200,7 +200,7 @@ describe(MODULE_ID, function () {
 				type: 'saved'
 			});
 
-			expect(res).to.eql(filteredItems);
+			expect(res.items).to.eql(filteredItems);
 		});
 	});
 
@@ -240,7 +240,7 @@ describe(MODULE_ID, function () {
 				type: 'downloads'
 			});
 
-			expect(res).to.eql(filteredItems);
+			expect(res.items).to.eql(filteredItems);
 		});
 	});
 });

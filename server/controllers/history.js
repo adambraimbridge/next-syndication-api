@@ -47,29 +47,29 @@ module.exports = exports = async (req, res, next) => {
 			}
 		}
 
-		let items = await getHistoryByContractID(options);
+		let history = await getHistoryByContractID(options);
 
-		const contentItems = await getContent(items.map(({ id }) => id));
+		const contentItems = await getContent(history.items.map(({ id }) => id));
 		const contentItemsMap = contentItems.reduce((acc, item) => {
 			acc[item.id] = item;
 
 			return acc;
 		}, {});
 
-		items = items.map(item => RESOLVE_PROPERTIES.reduce((acc, prop) => {
+		history.items = history.items.map(item => RESOLVE_PROPERTIES.reduce((acc, prop) => {
 			let contentItem = contentItemsMap[item.content_id] || {};
 			acc[prop] = resolve[prop](contentItem[prop], prop, contentItem, item, CONTRACT);
 
 			return acc;
 		}, item));
 
-		items.forEach(item => messageCode(item, CONTRACT));
+		history.items.forEach(item => messageCode(item, CONTRACT));
 
-		log.debug(`${MODULE_ID} => Retrieved ${items.length} items in ${Date.now() - START}ms`);
+		log.debug(`${MODULE_ID} => Retrieved ${history.items.length} items in ${Date.now() - START}ms`);
 
-		if (Array.isArray(items)) {
+		if (Array.isArray(history.items)) {
 			res.status(200);
-			res.json(items);
+			res.json(history);
 		}
 		else {
 			res.sendStatus(400);
