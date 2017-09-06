@@ -80,7 +80,7 @@ module.exports = exports = async (event, message, response, subscriber) => {
 	}
 };
 
-function getTrackingAction(state, referrer) {
+function getTrackingAction(state, referrer = '') {
 	switch (state) {
 		case 'complete':
 			if (referrer.includes('/republishing/download')) {
