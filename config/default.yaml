@@ -179,7 +179,12 @@
       category: syndication
       context:
         app: Syndication
+        edition: uk
+        product: next
+      device:
+        spoor_session_is_new: true
       system:
+        api_key: qUb9maKfKbtpRsdp0p2J7uWxRPGJEP
         product: Syndication
     HEADERS:
       accept: application/json

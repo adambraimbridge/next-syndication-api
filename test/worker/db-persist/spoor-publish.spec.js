@@ -73,11 +73,13 @@ describe(MODULE_ID, function () {
 		const data = JSON.parse(JSON.stringify(TRACKING.DATA));
 
 		data.action = 'save-for-later-downloads-page';
+
 		data.context.id = event._id;
 		data.context.article_id = event.content_id;
 		data.context.contractID = event.contract_id;
 		data.context.appVersion = PACKAGE.version;
 		data.context.referrer = event.tracking.referrer;
+		data.context.route_id = event._id;
 		data.context.url = event.tracking.url;
 
 		if (event.download_format) {
@@ -88,10 +90,9 @@ describe(MODULE_ID, function () {
 
 		data.context.isTestEvent = true;
 
-		data.device = {
-			ip: event.tracking.ip_address,
-			spoor_id: event.tracking.spoor_id
-		};
+		data.device.ip = event.tracking.ip_address;
+		data.device.spoor_id = event.tracking.spoor_id;
+		data.device.spoor_session = event._id;
 
 		data.system.source = PACKAGE.name;
 		data.system.version = PACKAGE.version;
