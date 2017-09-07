@@ -72,6 +72,23 @@
     complete: true
     started: true
 
+  EXPORT:
+    downloads:
+      content_type: Content Type
+      title: Item
+      download_format: Download Format
+      contract_id: URL
+      user_email: User
+      published_date: Publication Date
+      time: Downloaded Date
+    saved_items:
+      content_type: Content Type
+      title: Item
+      contract_id: URL
+      user_email: User
+      published_date: Publication Date
+      time: Saved Date
+
   FEATURE_FLAGS:
     - syndication
     - syndicationDownloadMediaResource
