@@ -26,6 +26,8 @@ module.exports = exports = async ({ contract_id, limit, offset, type, user_id })
 
 	query += `$text$${contract_id}$text$::text`;
 
+	totalQuery += ` history WHERE history.contract_id = '${contract_id}'`;
+
 	if (typeof user_id !== 'undefined') {
 		query += `, $text$${user_id}$text$::text`;
 	}
