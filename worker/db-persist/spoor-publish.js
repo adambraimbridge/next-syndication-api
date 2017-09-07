@@ -19,7 +19,7 @@ module.exports = exports = async (event, message, response, subscriber) => {
 		data.action = getTrackingAction(event.state, event.tracking.referrer);
 
 		data.context.id = event._id;
-		data.context.article_id = event.content_id;
+		data.context.article_id = event.content_id.split('/').pop();
 		data.context.contractID = event.contract_id;
 		data.context.appVersion = PACKAGE.version;
 		data.context.referrer = event.tracking.referrer;
