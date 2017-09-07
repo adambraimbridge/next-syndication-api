@@ -60,6 +60,7 @@ app.post(`${BASE_URI_PATH}/resolve`, middleware, require('./controllers/resolve'
 app.get(`${BASE_URI_PATH}/contract-status`, middleware, require('./controllers/contract-status'));
 app.get(`${BASE_URI_PATH}/content/:content_id`, middleware, require('./controllers/get-content-by-id'));
 app.get(`${BASE_URI_PATH}/download/:content_id`, middleware, require('./controllers/download-by-content-id'));
+app.get(`${BASE_URI_PATH}/export`, middleware, require('./controllers/export'));
 app.get(`${BASE_URI_PATH}/history`, middleware, require('./controllers/history'));
 app.get(`${BASE_URI_PATH}/save/:content_id`, middleware, require('./controllers/save-by-content-id'));
 app.delete(`${BASE_URI_PATH}/save/:content_id`, middleware, require('./controllers/unsave-by-content-id'));
