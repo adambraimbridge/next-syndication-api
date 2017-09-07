@@ -88,8 +88,6 @@ describe(MODULE_ID, function () {
 
 		data.context.syndication_content = event.content_type;
 
-		data.context.isTestEvent = true;
-
 		data.device.ip = event.tracking.ip_address;
 		data.device.spoor_id = event.tracking.spoor_id;
 		data.device.spoor_session = event._id;
@@ -101,6 +99,10 @@ describe(MODULE_ID, function () {
 			ft_session: event.tracking.session,
 			passport_id: event.user.passport_id
 		};
+
+		const NODE_ENV = process.env.NODE_ENV;
+
+		process.env.NODE_ENV = 'production';
 
 		await underTest(event, message, {}, subscriber);
 
@@ -115,5 +117,7 @@ describe(MODULE_ID, function () {
 			}, TRACKING.HEADERS),
 			method: TRACKING.METHOD
 		});
+
+		process.env.NODE_ENV = NODE_ENV;
 	});
 });

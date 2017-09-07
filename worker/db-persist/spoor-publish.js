@@ -10,7 +10,7 @@ const { TRACKING } = require('config');
 const PACKAGE = require(path.resolve('./package.json'));
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
-module.exports = exports = async (event, message, response, subscriber) => {
+module.exports = exports = async (event) => {
 	try {
 		log.debug(`${MODULE_ID} RECEIVED => `, event);
 
@@ -56,24 +56,28 @@ module.exports = exports = async (event, message, response, subscriber) => {
 		headers['spoor-ticket'] = event._id;
 		headers['user-agent'] = event.tracking.user_agent;
 
-		let res = await fetch(TRACKING.URI, {
-			headers,
-			method: TRACKING.METHOD,
-			body: JSON.stringify(data)
-		});
+		if (process.env.NODE_ENV === 'production') {
+			let res = await fetch(TRACKING.URI, {
+				headers,
+				method: TRACKING.METHOD,
+				body: JSON.stringify(data)
+			});
 
-		if (res.ok) {
-			let payload = await res.json();
+			if (res.ok) {
+				let payload = await res.json();
 
-			log.debug(`${MODULE_ID} PUBLISHED => ${JSON.stringify(data)} ` , payload);
+				log.debug(`${MODULE_ID} PUBLISHED => ${JSON.stringify(data)} ` , payload);
+			}
+			else {
+				let error = await res.text();
+
+				log.error(`${MODULE_ID} ERROR => `, error);
+			}
+
 		}
 		else {
-			let error = await res.text();
-
-			log.error(`${MODULE_ID} ERROR => `, error);
+			log.debug(`${MODULE_ID} NOT PUBLISHED => ${JSON.stringify(data)}`);
 		}
-
-		subscriber;
 	}
 	catch (e) {
 		log.error(`${MODULE_ID} ERROR => `, e);
