@@ -16,12 +16,23 @@ const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(p
 
 describe(MODULE_ID, function () {
 	const contractResponse = require(path.resolve(`${FIXTURES_DIRECTORY}/contractResponse.json`));
+	const contributor_content = contractResponse.contributor_content;
+
+	before(function () {
+		contractResponse.contributor_content = true;
+	});
+
+	after(function () {
+		contractResponse.contributor_content = contributor_content;
+	});
 
 	const messageItemMap = {
 		MSG_2000: { canBeSyndicated: 'yes', downloaded: false },
 		MSG_2100: { canBeSyndicated: 'yes', downloaded: true },
 		MSG_2200: { canBeSyndicated: 'verify' },
-		MSG_2300: { canBeSyndicated: 'withContributorPayment' },
+//		MSG_2300: { canBeSyndicated: 'withContributorPayment' },
+		MSG_2320: { canBeSyndicated: 'withContributorPayment', downloaded: false },
+		MSG_2340: { canBeSyndicated: 'withContributorPayment', downloaded: true },
 		MSG_4000: { canBeSyndicated: 'no' },
 		MSG_4100: { canDownload: -1 },
 		MSG_4200: { canDownload: 0 },
@@ -33,4 +44,10 @@ describe(MODULE_ID, function () {
 			expect(underTest(item, contractResponse)).to.equal(code);
 		});
 	}
+
+	it(`message code: MSG_2300`, function () {
+		contractResponse.contributor_content = false;
+
+		expect(underTest({ canBeSyndicated: 'withContributorPayment' }, contractResponse)).to.equal('MSG_2300');
+	});
 });

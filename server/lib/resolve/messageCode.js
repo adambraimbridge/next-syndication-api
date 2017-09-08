@@ -34,12 +34,16 @@ const ERROR_CODE = 'MSG_5000';
 const MESSAGE_CODE_RULES = exports.MESSAGE_CODE_RULES = {
 	MSG_2000: (item, contract) =>
 		(item.canBeSyndicated === 'yes' && !MESSAGE_CODE_RULES.MSG_2100(item, contract)),
-	MSG_2100: (item) =>
-		(item.downloaded === true),
+	MSG_2100: (item, contract) =>
+		(item.downloaded === true && !MESSAGE_CODE_RULES.MSG_2300(item, contract) && !MESSAGE_CODE_RULES.MSG_2340(item, contract)),
 	MSG_2200: (item) =>
 		(item.canBeSyndicated === 'verify'),
-	MSG_2300: (item) =>
-		(item.canBeSyndicated === 'withContributorPayment'),
+	MSG_2300: (item, contract) =>
+		(item.canBeSyndicated === 'withContributorPayment' && !MESSAGE_CODE_RULES.MSG_2320(item, contract) && !MESSAGE_CODE_RULES.MSG_2340(item, contract)),
+	MSG_2320: (item, contract) =>
+		(item.canBeSyndicated === 'withContributorPayment' && contract.contributor_content === true && !MESSAGE_CODE_RULES.MSG_2340(item, contract)),
+	MSG_2340: (item, contract) =>
+		(item.canBeSyndicated === 'withContributorPayment' && contract.contributor_content === true && item.downloaded === true),
 	MSG_4000: (item) =>
 		(item.canBeSyndicated === 'no' || item.canBeSyndicated === null),
 	MSG_4100: (item) =>
