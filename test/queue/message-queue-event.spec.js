@@ -124,6 +124,7 @@ describe(MODULE_ID, function () {
 		it('no overwrites', function () {
 			let event_data = {
 				content_id: 'http://www.ft.com/thing/abc',
+				content_url: 'http://www.ft.com/cms/abc',
 				contract_id: 'syndication',
 				download_format: 'docx',
 				licence_id: 'foo',
@@ -162,6 +163,7 @@ describe(MODULE_ID, function () {
 		it('with overwrites', function () {
 			let event_data = {
 				content_id: 'http://www.ft.com/thing/abc',
+				content_url: 'http://www.ft.com/cms/abc',
 				contract_id: 'syndication',
 				download_format: 'docx',
 				licence_id: 'foo',
@@ -276,6 +278,7 @@ describe(MODULE_ID, function () {
 		let event_data = {
 			contract_id: 'syndication',
 			content_id: 'http://www.ft.com/thing/abc',
+			content_url: 'http://www.ft.com/cms/abc',
 			download_format: 'docx',
 			licence_id: 'foo',
 			published_date: new Date(),
@@ -313,6 +316,7 @@ describe(MODULE_ID, function () {
 		let event_data = {
 			contract_id: 'syndication',
 			content_id: 'http://www.ft.com/thing/abc',
+			content_url: 'http://www.ft.com/cms/abc',
 			download_format: 'docx',
 			licence_id: 'foo',
 			published_date: new Date(),
@@ -356,6 +360,7 @@ describe(MODULE_ID, function () {
 		it('pass', function () {
 			let event_data = {
 				content_id: 'http://www.ft.com/thing/abc',
+				content_url: 'http://www.ft.com/cms/abc',
 				contract_id: 'syndication',
 				download_format: 'docx',
 				licence_id: 'foo',

@@ -9,6 +9,10 @@
       "format": "uri",
       "type": "string"
     },
+    "content_url": {
+      "format": "uri",
+      "type": "string"
+    },
     "content_type": {
       "default": "article",
       "enum": [

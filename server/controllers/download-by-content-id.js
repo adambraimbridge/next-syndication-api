@@ -43,6 +43,7 @@ module.exports = exports = (req, res, next) => {
 				event: {
 					content_id: content.id,
 					content_type: content.contentType,
+					content_url: content.webUrl,
 					contract_id: res.locals.syndication_contract.id,
 					download_format: content.extension,
 					licence_id: res.locals.licence.id,
