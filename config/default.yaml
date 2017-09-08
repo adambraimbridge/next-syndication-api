@@ -76,7 +76,7 @@
     downloads:
       content_type: Content Type
       title: Item
-      content_id: URL
+      content_url: URL
       download_format: Download Format
       user_email: User
       published_date: Publication Date
@@ -84,7 +84,7 @@
     saved_items:
       content_type: Content Type
       title: Item
-      content_id: URL
+      content_url: URL
       user_email: User
       published_date: Publication Date
       time: Saved Date
