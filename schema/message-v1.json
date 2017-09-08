@@ -60,7 +60,8 @@
         "no",
         "null",
         "verify",
-        "yes"
+        "yes",
+        "withContributorPayment"
       ],
       "type": "string"
     },
