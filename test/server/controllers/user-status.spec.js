@@ -63,6 +63,10 @@ describe(MODULE_ID, function () {
 		res.json = sinon.stub();
 
 		res.locals = {
+			contract: {
+				contract_id: 'lmno',
+				contributor_content: true
+			},
 			flags: {
 				syndication: true,
 				syndicationNew: 'on',
@@ -98,6 +102,7 @@ describe(MODULE_ID, function () {
 				syndicationRedux: true
 			},
 			contract_id: 'lmno',
+			contributor_content: true,
 			licence_id: 'xyz',
 			email: 'foo@bar.com',
 			first_name: 'foo',

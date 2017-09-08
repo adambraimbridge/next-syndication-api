@@ -16,6 +16,15 @@ module.exports = exports = async (req, res, next) => {
 	try {
 		res.status(200);
 
+		const { locals: {
+			contract,
+			flags,
+			isNewSyndicationUser,
+			licence,
+			syndication_contract,
+			user
+		} } = res;
+
 		res.json(Object.assign({
 			app: {
 				env: process.env.NODE_ENV,
@@ -24,17 +33,18 @@ module.exports = exports = async (req, res, next) => {
 			},
 
 			features: FEATURE_FLAGS.reduce((acc, flag) => {
-				if (flagIsOn(res.locals.flags[flag])) {
+				if (flagIsOn(flags[flag])) {
 					acc[flag] = true;
 				}
 
 				return acc;
 			}, {}),
 
-			contract_id: res.locals.syndication_contract.id,
-			licence_id: res.locals.licence.id,
-			migrated: !!res.locals.isNewSyndicationUser
-		}, res.locals.user));
+			contract_id:  syndication_contract.id,
+			contributor_content: contract.contributor_content,
+			licence_id: licence.id,
+			migrated: !!isNewSyndicationUser
+		}, user));
 
 		next();
 	}
