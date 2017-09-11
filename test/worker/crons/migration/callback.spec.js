@@ -119,11 +119,12 @@ describe(MODULE_ID, function () {
 				color: '#118833',
 				fallback: `User Migration Task: ${spreadsheetResponse.worksheetsMap.users.rows.length} users migrated.`,
 				pretext: 'User Migration Task',
-				fields: [{
-					title: `Users updated: ${spreadsheetResponse.worksheetsMap.users.rows.length}`,
-					value: `Spreadsheet rows updated: ${spreadsheetResponse.worksheetsMap.users.rows.map(item => `#${item.mapped.__index__ + 2}`).join(', ')}`,
-					short: false
-				}]
+				fields: spreadsheetResponse.worksheetsMap.users.rows.map(item => {
+					return {
+						title: `User updated on row#${item.mapped.__index__ + 2}`,
+						short: false
+					};
+				})
 			}]
 		});
 	});

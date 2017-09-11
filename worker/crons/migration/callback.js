@@ -33,19 +33,21 @@ let salesforceQueryCount = 0;
 
 log.info(`${MODULE_ID} => started`);
 
-module.exports = exports = async () => {
+module.exports = exports = async (force) => {
 	const date = moment();
 	const [, , , , min, sec, ms] = date.toArray();
 
-	if (firstRun !== true) {
-		if (running === true || min % 15 !== 0 || (sec > 1 || ms > 250)) {
-			log.debug(`${MODULE_ID} => THROTTLED!!! Already run/running.`);
+	if (force !== true) {
+		if (firstRun !== true) {
+			if (running === true || min % 15 !== 0 || (sec > 1 || ms > 250)) {
+				log.debug(`${MODULE_ID} => THROTTLED!!! Already run/running.`);
 
-			return;
+				return;
+			}
 		}
-	}
-	else {
-		firstRun = false;
+		else {
+			firstRun = false;
+		}
 	}
 
 	if (Date.now() - lastRun >= SALESFORCE_CRON_CONFIG.MAX_TIME_PER_CALL) {
@@ -91,17 +93,25 @@ module.exports = exports = async () => {
 function formatSlackMessage(contracts, users) {
 	const contractsMessage = {
 		color: '#003399',
-		fallback: `Contract Migration Task: ${contracts.length} contracts migrated.`,
+		fallback: `Contract Migration Task: ${contracts.filter(item => !(item.error && item.error instanceof Error)).length} contracts migrated.`,
 		pretext: 'Contract Migration Task'
 	};
 	const usersMessage = {
 		color: '#118833',
-		fallback: `User Migration Task: ${users.length} users migrated.`,
+		fallback: `User Migration Task: ${users.filter(item => !(item.error && item.error instanceof Error)).length} users migrated.`,
 		pretext: 'User Migration Task'
 	};
 
 	if (contracts.length) {
 		contractsMessage.fields = contracts.map(item => {
+			if (item.error && item.error instanceof Error) {
+				return {
+					title: `Error migrating contract: ${item.source.contract_id}`,
+					value: `${item.error.stack}`,
+					short: false
+				};
+			}
+
 			return {
 				title: `Contract updated: ${item.contract_id}`,
 				value: `#${item.__index__ + 2} ${item.licencee_name} => ${item.content_type} updated to: ${item.legacy_download_count}.`,
@@ -118,11 +128,20 @@ function formatSlackMessage(contracts, users) {
 	}
 
 	if (users.length) {
-		usersMessage.fields = [{
-			title: `Users updated: ${users.length}`,
-			value: `Spreadsheet rows updated: ${users.map(item => `#${item.__index__ + 2}`).join(', ')}`,
-			short: false
-		}];
+		usersMessage.fields = users.map(item => {
+			if (item.error && item.error instanceof Error) {
+				return {
+					title: `Error migrating user on row#${item.source.__index__ + 2}`,
+					value: `${item.error.stack}`,
+					short: false
+				};
+			}
+
+			return {
+				title: `User updated on row#${item.__index__ + 2}`,
+				short: false
+			};
+		});
 	}
 	else {
 		usersMessage.fields = [{
@@ -141,36 +160,49 @@ function formatSlackMessage(contracts, users) {
 }
 
 async function migrateContract(db, item) {
-	let [contract] = await db.syndication.get_contract_data([item.mapped.contract_id]);
+	let asset;
+	let contract;
+	try {
+		[contract] = await db.syndication.get_contract_data([item.mapped.contract_id]);
 
-	if ((!contract || contract.contract_id === null) && salesforceQueryCount < SALESFORCE_CRON_CONFIG.MAX_CALLS) {
-		++salesforceQueryCount;
+		if ((!contract || contract.contract_id === null) && salesforceQueryCount < SALESFORCE_CRON_CONFIG.MAX_CALLS) {
+			++salesforceQueryCount;
 
-		contract = await getContractByID(item.mapped.contract_id);
-	}
+			contract = await getContractByID(item.mapped.contract_id);
+		}
 
-	let asset = contract.assets.find(asset => asset.content_type === item.mapped.content_type);
+		asset = contract.assets.find(asset => asset.content_type === item.mapped.content_type);
 
-	const legacy_download_count = item.mapped.legacy_download_count = parseInt(item.mapped.legacy_download_count, 10);
+		const legacy_download_count = item.mapped.legacy_download_count = parseInt(item.mapped.legacy_download_count, 10);
 
-	if (asset) {
-		if (parseInt(asset.legacy_download_count, 10) === legacy_download_count) {
-			log.info(`${MODULE_ID} | contract asset already migrated => ${JSON.stringify(asset)}`);
+		if (asset) {
+			if (Object.prototype.toString.call(asset.content) === '[object String]') {
+				asset.content = asset.content.split(';').map(item => item.trim());
+			}
 
+			if (parseInt(asset.legacy_download_count, 10) === legacy_download_count) {
+				log.info(`${MODULE_ID} | contract asset already migrated => ${JSON.stringify(asset)}`);
+
+				return null;
+			}
+
+			asset.legacy_download_count = legacy_download_count;
+
+			[asset] = await db.syndication.upsert_contract_asset([item.mapped.contract_id, asset]);
+
+			log.info(`${MODULE_ID} | upserted migrated contract asset => ${JSON.stringify(asset)}`);
+		}
+		else {
 			return null;
 		}
 
-		asset.legacy_download_count = legacy_download_count;
-
-		[asset] = await db.syndication.upsert_contract_asset([item.mapped.contract_id, asset]);
-
-		log.info(`${MODULE_ID} | upserted migrated contract asset => ${JSON.stringify(asset)}`);
+		return item.mapped;
 	}
-	else {
-		return null;
-	}
+	catch (error) {
+		log.info(`${MODULE_ID} | ERROR migrating contract asset => ${JSON.stringify(asset)}`, error);
 
-	return item.mapped;
+		return { error, contract, asset, source: item.mapped };
+	}
 }
 
 async function migrateContracts(rows) {
@@ -182,19 +214,27 @@ async function migrateContracts(rows) {
 }
 
 async function migrateUser(db, item) {
-	let [user] = await db.syndication.get_migrated_user([item.mapped.user_id, item.mapped.contract_id]);
+	let user;
+	try {
+		[user] = await db.syndication.get_migrated_user([item.mapped.user_id, item.mapped.contract_id]);
 
-	if (user && user.user_id !== null) {
-		log.info(`${MODULE_ID} | user already migrated => ${JSON.stringify(user)}`);
+		if (user && user.user_id !== null) {
+			log.info(`${MODULE_ID} | user already migrated => ${JSON.stringify(user)}`);
 
-		return null;
+			return null;
+		}
+
+		[user] = await db.syndication.upsert_migrated_user([item.mapped]);
+
+		log.info(`${MODULE_ID} | upserted migrated user => ${JSON.stringify(user)}`);
+
+		return item.mapped;
 	}
+	catch (error) {
+		log.info(`${MODULE_ID} | ERROR migrating user => ${JSON.stringify(user)}`, error);
 
-	[user] = await db.syndication.upsert_migrated_user([item.mapped]);
-
-	log.info(`${MODULE_ID} | upserted migrated user => ${JSON.stringify(user)}`);
-
-	return item.mapped;
+		return { error, user, source: item.mapped };
+	}
 }
 
 async function migrateUsers(rows) {
