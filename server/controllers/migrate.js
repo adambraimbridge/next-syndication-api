@@ -41,7 +41,7 @@ module.exports = exports = async (req, res, next) => {
 
 		const migrate = require('../../worker/crons/migration/callback');
 
-		const migrated = await migrate();
+		const migrated = await migrate(true);
 
 		if (migrated) {
 			res.status(200);
