@@ -117,8 +117,10 @@ describe(MODULE_ID, function () {
 		expect(res.locals.__event).to.have.property('state').and.to.equal('saved');
 		expect(res.locals.__event).to.have.property('user').and.to.eql({
 			email: res.locals.user.email,
+			first_name: res.locals.user.first_name,
 			id: res.locals.user.user_id,
-			passport_id: res.locals.FT_User.USERID
+			passport_id: res.locals.FT_User.USERID,
+			surname: res.locals.user.surname
 		});
 		expect(res.locals.__event).to.have.property('licence_id').and.to.equal(res.locals.licence.id);
 		expect(res.locals.__event).to.have.property('time').and.to.be.a('string');

@@ -103,9 +103,9 @@ describe(MODULE_ID, function () {
 				},
 				user: {
 					email: 'foo@bar.com',
-					firstName: 'foo',
+					first_name: 'foo',
 					id: 'abc',
-					lastName: 'bar'
+					surname: 'bar'
 				},
 				userUuid: 'abc'
 			}
@@ -203,9 +203,9 @@ describe(MODULE_ID, function () {
 				},
 				user: {
 					email: 'foo@bar.com',
-					firstName: 'foo',
+					first_name: 'foo',
 					id: 'abc',
-					lastName: 'bar'
+					surname: 'bar'
 				},
 				userUuid: 'abc'
 			}

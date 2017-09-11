@@ -63,10 +63,10 @@ module.exports = exports = (req, res, next) => {
 					},
 					user: {
 						email: res.locals.user.email,
-						first_name: res.locals.user.firstName,
+						first_name: res.locals.user.first_name,
 						id: res.locals.user.user_id,
 						passport_id: res.locals.FT_User.USERID,
-						surname: res.locals.user.lastName
+						surname: res.locals.user.surname
 					}
 				}
 			});
