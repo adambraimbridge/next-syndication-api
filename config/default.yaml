@@ -45,6 +45,19 @@
     podcast: "Podcast"
     video: "Video"
 
+  CONTRIBUTOR_EMAIL:
+    from:
+      address: syndication@ft.com
+      name: FT Syndication
+    to:
+      address: christos.constandinou@ft.com
+      name: Christos Constandinou
+    subject: FT Syndication - Contributor content download
+    transport:
+      sendmail: true
+      newline: unix
+      path: /usr/sbin/sendmail
+
   CONVERT_FORMAT_COMMAND: pandoc
 
   CRON:
