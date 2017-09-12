@@ -68,6 +68,8 @@ module.exports = exports = async (event) => {
 		data.email_sent = new Date();
 
 		await db.syndication.upsert(['contributor_purchase', data, 'syndication']);
+
+		return res;
 	}
 	catch (e) {
 		log.error(`${MODULE_ID} => `, e);
