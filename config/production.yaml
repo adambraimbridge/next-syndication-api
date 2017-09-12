@@ -1,4 +1,10 @@
 ---
+
+  CONTRIBUTOR_EMAIL:
+    transport:
+      debug: false
+      logger: false
+
   CONVERT_FORMAT_COMMAND: "/app/pandoc-dpkg/usr/bin/pandoc"
 
   DEFAULT_DB_ENDPOINT: https://dynamodb.eu-west-1.amazonaws.com

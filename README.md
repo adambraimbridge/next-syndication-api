@@ -45,6 +45,38 @@ This will start the `next-syndication-api` the associated worker processes and t
 
 You can also run `make run-monit` to bring up the [PM2 process monitor](https://www.npmjs.com/package/pm2#cpu--memory-monitoring).
 
+### Emails
+
+Emails are sent by the `db-persist` worker using nodemailer and gmail. 
+
+If you are getting an `ETIMEDOUT` errors, this is probably because the connection is being blocked by the FT firewall.
+
+You can test this by running (from terminal):
+
+```shell
+
+    ~$ openssl s_client -crlf -connect smtp.gmail.com:465
+
+```
+
+The last line of your out put should look something like this:
+
+```shell
+
+    220 smtp.gmail.com ESMTP q4sm4655414wmd.3 - gsmtp
+
+```
+
+If the last line of your output looks more like this:
 
 
+```shell
 
+    connect: Operation timed out
+    connect:errno=60
+
+```
+
+Then you can't connect to the mail server.
+
+Try turning wifi off on your phone to tether your computer to your phone's 4G connection and you should find it now works.

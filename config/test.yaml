@@ -1,6 +1,10 @@
 ---
   BASE_URI_FT_API: http://localhost:5050
 
+  CONTRIBUTOR_EMAIL:
+    transport:
+      jsonTransport: true
+
   CONVERT_FORMAT_COMMAND: "./test/fixtures/pandoc_stub"
 
   NODE_ENV: test

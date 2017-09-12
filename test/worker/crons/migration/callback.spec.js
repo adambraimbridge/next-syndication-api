@@ -24,7 +24,7 @@ chai.use(sinonChai);
 
 const Slack = require('node-slack');
 
-const createKey = require('../../../../worker/crons/migration/create-key');
+const createKey = require('../../../../worker/create-key');
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
 fs.writeFileSync(path.resolve(AUTH_FILE_NAME), JSON.stringify(AUTH_KEY, null, 2).replace(/\\\\n/g, '\\n') + '\n', 'utf8');

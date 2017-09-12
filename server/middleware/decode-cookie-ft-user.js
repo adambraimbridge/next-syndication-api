@@ -5,9 +5,14 @@ const RE_EXTRACT_TIME = /TIME=(\[[^\]]+\]):?/;
 module.exports = exports = (req, res, next) => {
 	let { FT_User } = req.cookies;
 
+	if (!FT_User) {
+		res.sendStatus(401);
+	}
+
 	const [, TIME] = FT_User.match(RE_EXTRACT_TIME);
 
 	FT_User = FT_User.replace(RE_EXTRACT_TIME, '');
+
 
 	res.locals.FT_User = FT_User.split(':').reduce((acc, item) => {
 		const [key, val] = item.split('=');
