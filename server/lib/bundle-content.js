@@ -9,7 +9,6 @@ const url = require('url');
 const { default: log } = require('@financial-times/n-logger');
 
 const archiver = require('archiver');
-const moment = require('moment');
 const fetch = require('n-eager-fetch');
 
 const { DOWNLOAD_ARCHIVE_EXTENSION } = require('config');
