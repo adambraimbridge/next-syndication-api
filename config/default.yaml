@@ -46,17 +46,19 @@
     video: "Video"
 
   CONTRIBUTOR_EMAIL:
-    from:
-      address: syndication@ft.com
-      name: FT Syndication
-    to:
-      address: christos.constandinou@ft.com
-      name: Christos Constandinou
     subject: FT Syndication - Contributor content download
     transport:
-      sendmail: true
-      newline: unix
-      path: /usr/sbin/sendmail
+      connectionTimeout: 300000
+      debug: true
+      host: smtp.gmail.com
+      logger: true
+      port: 465
+#      ignoreTLS: false
+      requireTLS: true
+      secure: true
+      socketTimeout: 300000
+      tls:
+        rejectUnauthorized: false
 
   CONVERT_FORMAT_COMMAND: pandoc
 
