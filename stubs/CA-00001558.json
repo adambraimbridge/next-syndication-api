@@ -9,7 +9,7 @@
   "podcastLimit": 10000000,
   "startDate": "2015-12-11",
   "endDate": "2050-01-31",
-  "contributor": true,
+  "contributor": false,
   "clientWebsite": "https://www.ft.com",
   "clientPublications": "FT",
   "assets": [
