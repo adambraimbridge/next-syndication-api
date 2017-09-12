@@ -148,8 +148,7 @@ function cleanup(content) {
 
 function publishEndEvent(res, state) {
 	const event = res.locals.__event.clone({
-		state,
-		time: moment().toJSON()
+		state
 	});
 
 	process.nextTick(async () => await event.publish());

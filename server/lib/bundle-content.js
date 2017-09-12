@@ -235,8 +235,7 @@ function publishEndEvent(res, state) {
 	}
 
 	res.locals.__eventEnd = res.locals.__event.clone({
-		state,
-		time: moment().toJSON()
+		state
 	});
 
 	process.nextTick(async () => await res.locals.__eventEnd.publish());
