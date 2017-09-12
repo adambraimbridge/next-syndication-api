@@ -24,18 +24,24 @@ const TXT = Handlebars.compile(fs.readFileSync(path.resolve('./server/views/part
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (event) => {
-	try {
-		if (event.syndication_state !== 'withContributorPayment' || event.state !== 'started') {
-			return;
-		}
+	if (event.syndication_state !== 'withContributorPayment' || event.state !== 'started') {
+		return;
+	}
 
+	const db = await pg();
+
+	const [contributor_payment] = await db.syndication.get_contributor_purchase([event.contract_id, event.content_id]);
+
+	if (contributor_payment && contributor_payment.email_sent !== null) {
+		return;
+	}
+
+	try {
 //		const verified = await transporter.verify();
 //
 //		if (!verified) {
 //			throw new Error(`${MODULE_ID} UnverifiedEmailTransportError =>`, verified);
 //		}
-
-		const db = await pg();
 
 		const [contract] = await db.syndication.get_contract_data([event.contract_id]);
 
@@ -54,8 +60,18 @@ module.exports = exports = async (event) => {
 		const res = await transporter.sendMail(transport);
 
 		log.debug(`${MODULE_ID} MAIL SENT =>`, res);
+
+		const data = contributor_payment && contributor_payment.contract_id !== null
+					? contributor_payment
+					: event;
+
+		data.email_sent = new Date();
+
+		await db.syndication.upsert(['contributor_purchase', data, 'syndication']);
 	}
 	catch (e) {
 		log.error(`${MODULE_ID} => `, e);
+
+		await db.syndication.upsert(['contributor_purchase', event, 'syndication']);
 	}
 };
