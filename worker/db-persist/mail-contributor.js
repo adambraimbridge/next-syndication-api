@@ -59,7 +59,7 @@ module.exports = exports = async (event) => {
 
 		const res = await transporter.sendMail(transport);
 
-		log.debug(`${MODULE_ID} MAIL SENT =>`, res);
+		log.info(`${MODULE_ID} MAIL SENT =>`, res);
 
 		const data = contributor_payment && contributor_payment.contract_id !== null
 					? contributor_payment
