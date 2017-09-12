@@ -3,6 +3,7 @@
   CONTRIBUTOR_EMAIL:
     transport:
       debug: false
+      logger: false
 
   CONVERT_FORMAT_COMMAND: "/app/pandoc-dpkg/usr/bin/pandoc"
 
