@@ -11,7 +11,7 @@ const unlinkAsync = util.promisify(fs.unlink);
 
 const CONFIG = require('config');
 
-const underTest = require('../../../../worker/crons/migration/create-key');
+const underTest = require('../../worker/create-key');
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
