@@ -6,10 +6,12 @@ const { default: log } = require('@financial-times/n-logger');
 
 const createKey = require('../create-key');
 
+exports.backup = require('./backup');
 exports.content_cleanup = require('./content-cleanup');
 exports.migration = require('./migration');
 
 createKey().then(() => {
+	exports.backup.start();
 	exports.content_cleanup.start();
 	exports.migration.start();
 });
