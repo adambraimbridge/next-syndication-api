@@ -87,7 +87,7 @@ module.exports = exports = async (event) => {
 			if (res.ok) {
 				let payload = await res.json();
 
-				log.debug(`${MODULE_ID} PUBLISHED => ${JSON.stringify(data)} ` , payload);
+				log.info(`${MODULE_ID} PUBLISHED => ${JSON.stringify(data)} ` , payload);
 			}
 			else {
 				let error = await res.text();
@@ -97,7 +97,7 @@ module.exports = exports = async (event) => {
 
 		}
 		else {
-			log.debug(`${MODULE_ID} NOT PUBLISHED => ${JSON.stringify(data)}`);
+			log.info(`${MODULE_ID} NOT PUBLISHED => ${JSON.stringify(data)}`);
 		}
 	}
 	catch (e) {
