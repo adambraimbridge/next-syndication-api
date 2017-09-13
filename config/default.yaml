@@ -64,9 +64,26 @@
   CONVERT_FORMAT_COMMAND: pandoc
 
   CRON:
+    backup_database: "* * 0 * * *"
     content_cleanup: "* * 0 * * *"
     content_cache: "* */5 * * * *"
     migration: "* 0,15,30,45 * * * *"
+
+  DB:
+    BACKUP:
+      program: ./pg_dump-dpkg/usr/bin/pg_dump
+      schema: syndication
+      tables:
+        - content_areas
+        - contract_asset_content_areas
+        - contract_assets
+        - contract_users
+        - contracts
+        - contributor_purchase
+        - download_history
+        - migrated_users
+        - save_history
+        - users
 
   DEFAULT_DOWNLOAD_FORMAT: docx
 
