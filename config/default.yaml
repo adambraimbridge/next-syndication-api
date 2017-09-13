@@ -71,7 +71,7 @@
 
   DB:
     BACKUP:
-      program: ./pg_dump-dpkg/usr/bin/pg_dump
+      program: pg_dump
       schema: syndication
       tables:
         - content_areas
