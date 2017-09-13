@@ -57,6 +57,8 @@ app.get(`${BASE_URI_PATH}/__gtg`, (req, res) => res.sendStatus(200));
 
 app.post(`${BASE_URI_PATH}/resolve`, middleware, require('./controllers/resolve'));
 
+app.get(`${BASE_URI_PATH}/admin/save`, (req, res) => res.sendStatus(204));
+
 app.get(`${BASE_URI_PATH}/contract-status`, middleware, require('./controllers/contract-status'));
 app.get(`${BASE_URI_PATH}/content/:content_id`, middleware, require('./controllers/get-content-by-id'));
 app.get(`${BASE_URI_PATH}/download/:content_id`, middleware, require('./controllers/download-by-content-id'));
