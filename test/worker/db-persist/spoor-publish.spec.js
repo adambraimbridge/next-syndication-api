@@ -8,9 +8,11 @@ const sinonChai = require('sinon-chai');
 const proxyquire = require('proxyquire');
 
 const MessageQueueEvent = require('../../../queue/message-queue-event');
+const messageCode = require('../../../server/lib/resolve/messageCode');
 
 const {
-	TRACKING
+	TRACKING,
+	TEST: { FIXTURES_DIRECTORY }
 } = require('config');
 
 const { expect } = chai;
@@ -20,15 +22,24 @@ const PACKAGE = require(path.resolve('./package.json'));
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
 describe(MODULE_ID, function () {
+	const contractResponse = require(path.resolve(`${FIXTURES_DIRECTORY}/contractResponse.json`));
+
 	let underTest;
+	let db;
 	let fetchStub;
 	let fetchJSONStub;
 	let subscriber;
+
+	const { initDB } = require(path.resolve(`${FIXTURES_DIRECTORY}/massive`))();
 
 	afterEach(function () {
 	});
 
 	beforeEach(function () {
+		db = initDB();
+
+		db.syndication.get_contract_data.resolves([contractResponse]);
+
 		fetchJSONStub = sinon.stub();
 		fetchStub = sinon.stub().resolves({
 			ok: true,
@@ -36,7 +47,8 @@ describe(MODULE_ID, function () {
 		});
 
 		underTest = proxyquire('../../../worker/db-persist/spoor-publish', {
-			'n-eager-fetch': fetchStub
+			'n-eager-fetch': fetchStub,
+			'../../db/pg': sinon.stub().resolves(db)
 		});
 	});
 
@@ -78,9 +90,15 @@ describe(MODULE_ID, function () {
 		data.context.article_id = event.content_id.split('/').pop();
 		data.context.contractID = event.contract_id;
 		data.context.appVersion = PACKAGE.version;
+		data.context.message = messageCode({
+			canDownload: 1,
+			canBeSyndicated: 'yes',
+			downloaded: false
+		}, contractResponse);
 		data.context.referrer = event.tracking.referrer;
 		data.context.route_id = event._id;
 		data.context.url = event.tracking.url;
+
 
 		if (event.download_format) {
 			data.context.fileformat = event.download_format;
