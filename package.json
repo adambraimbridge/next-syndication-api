@@ -33,6 +33,7 @@
     "nforce": "^1.7.0",
     "nodemailer": "^4.1.0",
     "node-slack": "^0.0.7",
+    "shelljs": "^0.7.8",
     "xmldom": "^0.1.27"
   },
   "devDependencies": {
@@ -52,7 +53,6 @@
     "nyc": "^11.0.2",
     "pm2": "^2.6.1",
     "proxyquire": "^1.7.4",
-    "shelljs": "^0.7.8",
     "sinon": "^3.2.0",
     "sinon-chai": "^2.13.0"
   },
