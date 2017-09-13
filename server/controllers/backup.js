@@ -17,11 +17,25 @@ module.exports = exports = async (req, res, next) => {
 
 		const backup = require('../../worker/crons/backup/callback');
 
-		process.nextTick(async () => await backup(true));
+		const { archive, file_name } = await backup(true);
 
-		res.sendStatus(204);
+		archive.pipe(res);
 
-		next();
+		res.attachment(file_name);
+
+		archive.on('end', () => {
+			res.status(200);
+
+			res.end();
+
+			next();
+		});
+
+		archive.on('error', () => {
+			res.status(500);
+
+			res.end();
+		});
 	}
 	catch(error) {
 		log.error(`${MODULE_ID}`, {
