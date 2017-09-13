@@ -5,14 +5,34 @@ const path = require('path');
 const { default: log } = require('@financial-times/n-logger');
 const fetch = require('n-eager-fetch');
 
-const { TRACKING } = require('config');
+const {
+	DOWNLOAD_STATE_MAP,
+	TRACKING
+} = require('config');
+
+const pg = require('../../db/pg');
+const messageCode = require('../../server/lib/resolve/messageCode');
 
 const PACKAGE = require(path.resolve('./package.json'));
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (event) => {
 	try {
+		const db = await pg();
+
+		const [contract] = await db.syndication.get_contract_data([event.contract_id]);
+
 		log.debug(`${MODULE_ID} RECEIVED => `, event);
+
+		event.canBeSyndicated = event.syndication_state;
+
+		if (event.state in DOWNLOAD_STATE_MAP || event.state === 'interrupted') {
+			event.canDownload = 1;
+
+			event.downloaded = true;
+		}
+
+		event.message_code = messageCode(event, contract);
 
 		const data = JSON.parse(JSON.stringify(TRACKING.DATA));
 
@@ -22,6 +42,7 @@ module.exports = exports = async (event) => {
 		data.context.article_id = event.content_id.split('/').pop();
 		data.context.contractID = event.contract_id;
 		data.context.appVersion = PACKAGE.version;
+		data.context.message = event.message_code;
 		data.context.referrer = event.tracking.referrer;
 		data.context.route_id = event._id;
 		data.context.url = event.tracking.url;
