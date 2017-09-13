@@ -8,15 +8,27 @@ const util = require('util');
 const { default: log } = require('@financial-times/n-logger');
 
 const archiver = require('archiver');
+const AWS = require('aws-sdk');
+const mime = require('mime-types');
 const moment = require('moment');
+const S3UploadStream = require('s3-upload-stream');
 const { mkdir, rm } = require('shelljs');
 
 //const pg = require('../../../db/pg');
 
 const {
+	AWS_ACCESS_KEY,
+	AWS_REGION = 'eu-west-1',
+	AWS_SECRET_ACCESS_KEY,
 	DB,
 	DOWNLOAD_ARCHIVE_EXTENSION
 } = require('config');
+
+const S3 = new AWS.S3({
+	accessKeyId: AWS_ACCESS_KEY,
+	region: AWS_REGION,
+	secretAccessKey: AWS_SECRET_ACCESS_KEY
+});
 
 const execAsync = util.promisify(exec);
 const statAsync = util.promisify(stat);
@@ -74,8 +86,6 @@ module.exports = exports = async (force) => {
 
 		await execAsync(`${dump_data}`);
 
-		log.info(`${MODULE_ID} | backup complete`);
-
 		const archive = archiver(DOWNLOAD_ARCHIVE_EXTENSION);
 
 		archive.on('error', err => {
@@ -96,10 +106,16 @@ module.exports = exports = async (force) => {
 			archive.finalize();
 		}
 
-		return {
+		const file = {
 			archive,
 			file_name: `${BACKUP.schema}.${time}.${DOWNLOAD_ARCHIVE_EXTENSION}`
 		};
+
+		const res = await upload(file);
+
+		log.info(`${MODULE_ID} | backup uploaded to s3`, res);
+
+		return file;
 	}
 	catch (e) {
 		log.error(`${MODULE_ID} => `, e);
@@ -107,3 +123,31 @@ module.exports = exports = async (force) => {
 		rm('-rf', directory);
 	}
 };
+
+function upload({ archive, file_name }) {
+	return new Promise((resolve, reject) => {
+		const { BACKUP: { bucket } } = DB;
+
+		const client = new S3UploadStream(S3);
+
+		const mime_type = mime.lookup(DOWNLOAD_ARCHIVE_EXTENSION);
+
+		const upload = client.upload({
+			Bucket: bucket.id,
+			ContentType: mime_type,
+			Key: `${bucket.directory}/${file_name}`,
+			Metadata: {
+//				env: process.env.NODE_ENV,
+//				file_name,
+//				mime_type
+			}
+		});
+
+		upload.on('error', err => reject(err));
+		upload.on('uploaded', res => resolve(res));
+
+//		upload.on('part', part => console.log(part));
+
+		archive.pipe(upload);
+	});
+}
