@@ -8,13 +8,12 @@ const util = require('util');
 const { default: log } = require('@financial-times/n-logger');
 
 const moment = require('moment');
-const { mkdir, rm } = require('shelljs');
+const { mkdir/*, rm*/ } = require('shelljs');
 
 //const pg = require('../../../db/pg');
 
 const {
-	DB,
-	PG_DUMP_PATH
+	DB
 } = require('config');
 
 const execAsync = util.promisify(exec);
