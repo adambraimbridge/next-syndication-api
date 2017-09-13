@@ -67,7 +67,7 @@ app.delete(`${BASE_URI_PATH}/save/:content_id`, middleware, require('./controlle
 app.post(`${BASE_URI_PATH}/unsave/:content_id`, middleware, require('./controllers/unsave-by-content-id'));
 app.get(`${BASE_URI_PATH}/user-status`, middleware, require('./controllers/user-status'));
 app.post(`${BASE_URI_PATH}/download-format`, middleware, require('./controllers/update-download-format'));
-app.get(`${BASE_URI_PATH}/backup`, middleware, require('./controllers/backup'));
+//app.get(`${BASE_URI_PATH}/backup`, middleware, require('./controllers/backup'));
 app.get(`${BASE_URI_PATH}/migrate`, middleware, require('./controllers/migrate'));
 
 if (process.env.NODE_ENV !== 'production') {
