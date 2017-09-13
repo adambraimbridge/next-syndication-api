@@ -71,6 +71,8 @@
 
   DB:
     BACKUP:
+      bucket:
+        directory: development
       program: pg_dump
       schema: syndication
       tables:
