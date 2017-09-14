@@ -11,7 +11,8 @@
 
   DB:
     BACKUP:
-      bucket_directory: production
+      bucket:
+        directory: production
     ssl: true
 
   NODE_ENV: production
