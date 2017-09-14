@@ -64,7 +64,7 @@
   CONVERT_FORMAT_COMMAND: pandoc
 
   CRON:
-    backup_database: "* 17 * * * *"
+    backup_database: "* 7 * * * *"
     content_cleanup: "* * 0 * * *"
     content_cache: "* */5 * * * *"
     migration: "* 0,15,30,45 * * * *"
