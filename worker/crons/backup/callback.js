@@ -37,7 +37,7 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 
 module.exports = exports = async (force) => {
 	const START = Date.now();
-	const time = moment().format('YYYY-MM-DD[T]HH');
+	const time = moment().format('YYYY-MM-DD[T]HH.00');
 	const directory = path.resolve(`./tmp/${time}`);
 
 	try {
