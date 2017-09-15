@@ -34,7 +34,7 @@ module.exports = exports = async (req, res, next) => {
 		}
 
 		if (createAuthKey === true) {
-			const createKey = require('../../worker/crons/migration/create-key');
+			const createKey = require('../../worker/create-key');
 
 			await createKey();
 		}
