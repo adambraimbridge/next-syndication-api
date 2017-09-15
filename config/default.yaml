@@ -48,6 +48,7 @@
   CONTRIBUTOR_EMAIL:
     date_display_format: HH:mma on dddd, Do MMM YYYY
     subject: FT Syndication - Contributor content download
+    timezone: Europe/London
     transport:
       connectionTimeout: 300000
       debug: true
