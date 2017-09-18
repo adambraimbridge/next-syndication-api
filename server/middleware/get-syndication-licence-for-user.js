@@ -65,7 +65,7 @@ module.exports = exports = async (req, res, next) => {
 
 		res.locals.syndication_contract = syndicationLicence.links[0];
 
-		log.debug(`${MODULE_ID} LicenceFoundSuccess => ${URI}`, syndicationLicence);
+		log.info(`${MODULE_ID} LicenceFoundSuccess => ${URI}`, syndicationLicence);
 
 		next();
 	}

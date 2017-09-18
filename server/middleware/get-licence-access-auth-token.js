@@ -37,7 +37,7 @@ module.exports = exports = async (req, res, next) => {
 			throw new ReferenceError(`No Licence Access Token returned for ${URI}`);
 		}
 
-		log.debug(`${MODULE_ID} LicenceAccessTokenSuccess => ${URI}`, authQuery);
+		log.info(`${MODULE_ID} LicenceAccessTokenSuccess => ${URI}`, authQuery);
 
 		res.locals.ACCESS_TOKEN_LICENCE = authQuery.access_token;
 

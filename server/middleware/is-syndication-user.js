@@ -32,7 +32,7 @@ module.exports = exports = async (req, res, next) => {
 								&& session.products.split(',').includes(SYNDICATION_PRODUCT_CODE);
 
 			if (isSyndicationUser === true) {
-				log.debug(`${MODULE_ID} IsSyndicationUserSuccess`, {
+				log.info(`${MODULE_ID} IsSyndicationUserSuccess`, {
 					isSyndicationUser,
 					session
 				});

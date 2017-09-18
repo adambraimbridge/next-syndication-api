@@ -39,7 +39,7 @@ module.exports = exports = async (req, res, next) => {
 			throw new Error(userProfile.message || `${userProfile.errors[0].message}: ${userProfile.errors[0].errorCode}`);
 		}
 
-		log.debug(`${MODULE_ID} GetUserProfileSuccess => ${URI}`, userProfile[USER_PROFILE_DATA_PROPERTY]);
+		log.info(`${MODULE_ID} GetUserProfileSuccess => ${URI}`, userProfile[USER_PROFILE_DATA_PROPERTY]);
 
 		res.locals.user = userProfile[USER_PROFILE_DATA_PROPERTY];
 
@@ -51,7 +51,7 @@ module.exports = exports = async (req, res, next) => {
 
 		res.locals.user = user_data;
 
-		log.debug(`${MODULE_ID} Upsert User => `, user_data);
+		log.info(`${MODULE_ID} Upsert User => `, user_data);
 
 		next();
 	}

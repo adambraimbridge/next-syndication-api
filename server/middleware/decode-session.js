@@ -18,7 +18,7 @@ module.exports = exports = (req, res, next) => {
 	const sessionToken = req.cookies.FTSession;
 	const sessionSecureToken = req.cookies.FTSession_s;
 
-	log.debug(`${MODULE_ID}`, { gotSessionToken: !!sessionToken });
+	log.info(`${MODULE_ID}`, { gotSessionToken: !!sessionToken });
 
 	if (!sessionToken || !sessionSecureToken) {
 		res.redirect(`${AUTH_SIGN_IN_URI}?${AUTH_SIGN_IN_REDIRECT_PROPERTY}=${req.originalUrl}`);
@@ -31,7 +31,7 @@ module.exports = exports = (req, res, next) => {
 
 		res.locals.userUuid = userUuid;
 
-		log.debug(`${MODULE_ID} DecodeSessionSuccess`, { gotUserUuid: !!userUuid });
+		log.info(`${MODULE_ID} DecodeSessionSuccess`, { gotUserUuid: !!userUuid });
 
 		next();
 	}

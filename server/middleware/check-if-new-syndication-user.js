@@ -21,7 +21,7 @@ module.exports = exports = async (req, res, next) => {
 
 		res.set('FT-New-Syndication-User', 'true');
 
-		log.debug(`${MODULE_ID}`, { isNewSyndicationUser });
+		log.info(`${MODULE_ID}`, { isNewSyndicationUser });
 
 		res.locals.isNewSyndicationUser = isNewSyndicationUser;
 

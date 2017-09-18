@@ -37,7 +37,7 @@ module.exports = exports = async (req, res, next) => {
 			throw new ReferenceError(`No User Access Token returned for ${URI}`);
 		}
 
-		log.debug(`${MODULE_ID} UserAccessTokenSuccess => ${URI}`, authQuery);
+		log.info(`${MODULE_ID} UserAccessTokenSuccess => ${URI}`, authQuery);
 
 		res.locals.ACCESS_TOKEN_USER = authQuery.access_token;
 
