@@ -39,6 +39,10 @@ module.exports = exports = function mapColumns (item, mapping, parent) {
 				}
 			}
 
+			if ((typeof val === 'undefined' || val === null) && Object.prototype.hasOwnProperty.call(mapping, 'default')) {
+				val = mapping.default;
+			}
+
 			if (typeof mapping.transform === 'function') {
 				val = mapping.transform(val);
 			}
