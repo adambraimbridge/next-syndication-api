@@ -36,6 +36,10 @@ module.exports = exports = {
 		clean: true,
 		id: 'assets',
 		items: [{
+			cite: 'assetType',
+			default: 'New',
+			id: 'assetType'
+		}, {
 			cite: 'assetName',
 			id: 'asset_type'
 		}, {
