@@ -68,7 +68,7 @@
     backup_database: "* 7 * * * *"
     content_cleanup: "* * 0 * * *"
     content_cache: "* */5 * * * *"
-    migration: "* 0,15,30,45 * * * *"
+    migration: "* */5 * * * *"
 
   DB:
     BACKUP:
@@ -195,8 +195,8 @@
     ENVIRONMENT: production
     CONNECTION_MODE: single
     CRON_CONFIG:
-      MAX_CALLS: 2
-      MAX_TIME_PER_CALL: 900000
+      MAX_CALLS: 5
+      MAX_TIME_PER_CALL: 240000
     REFRESH_CONTRACT_PERIOD: 86400000 # 24 hours in ms
     TEST_CONTRACT: FTS-14046740
     STUB_CONTRACTS:
