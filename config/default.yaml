@@ -137,11 +137,13 @@
     - syndicationNewUsersAwaiting
     - syndicationPlatform
     - syndicationRedux
-
   FORMAT_ARTICLE_CLEAN_ELEMENTS:
     - a
     - ft-concept
     - ft-content
+
+  FORMAT_ARTICLE_CONTENT_TYPE: text/html
+
   FORMAT_ARTICLE_STRIP_ELEMENTS:
     - ft-related
     - img
