@@ -57,7 +57,7 @@ module.exports = exports = async (contractID, locals) => {
 		let last_updated = Date.now() - +contract_data.last_updated;
 
 		if (last_updated < SALESFORCE_REFRESH_CONTRACT_PERIOD) {
-			log.debug(`${MODULE_ID} | Using DB version of contract#${contractID}`, contract_data);
+			log.info(`${MODULE_ID} | Using DB version of contract#${contractID}`, contract_data);
 
 			return decorateContract(contract_data);
 		}
@@ -77,7 +77,7 @@ module.exports = exports = async (contractID, locals) => {
 
 		[contract_data] = await db.syndication.get_contract_data([contractID]);
 
-		log.debug(`${MODULE_ID} | Persisted contract#${contractID} to DB`, { contract_data });
+		log.info(`${MODULE_ID} | Persisted contract#${contractID} to DB`, { contract_data });
 
 		return decorateContract(contract_data);
 	}

@@ -112,7 +112,7 @@ module.exports = exports = class QueueSubscriber extends EventEmitter {
 				});
 
 				if (response && Array.isArray(response.Messages) && response.Messages.length) {
-					log.debug(`${MODULE_ID} SyndicationSQSQueueSubscribeSuccess =>`, {
+					log.info(`${MODULE_ID} SyndicationSQSQueueSubscribeSuccess =>`, {
 						response,
 						count: response.Messages.length
 					});

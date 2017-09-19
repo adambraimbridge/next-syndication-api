@@ -41,9 +41,9 @@ module.exports = exports = async (contractID, dontThrow) => {
 			password: SALESFORCE_PASSWORD
 		});
 
-		log.debug(`${MODULE_ID} | SALESFORCE OAUTH => `, oauth);
+		log.info(`${MODULE_ID} | SALESFORCE OAUTH => `, oauth);
 
-		log.debug(`${MODULE_ID} | SALESFORCE CONTRACT URI => `, `${SALESFORCE_URI}/${contractID}`);
+		log.info(`${MODULE_ID} | SALESFORCE CONTRACT URI => `, `${SALESFORCE_URI}/${contractID}`);
 
 		let apexRes = await org.apexRest({
 			uri: `${SALESFORCE_URI}/${contractID}`,
@@ -51,7 +51,7 @@ module.exports = exports = async (contractID, dontThrow) => {
 			oauth: oauth
 		});
 
-		log.debug(`${MODULE_ID} | APEX RESPONSE => `, apexRes);
+		log.info(`${MODULE_ID} | APEX RESPONSE => `, apexRes);
 
 		if (apexRes) {
 			if (apexRes.success === true) {

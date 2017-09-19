@@ -15,12 +15,12 @@ let db;
 
 module.exports = exports = async (options = DB) => {
 	if (!db || options !== DB) {
-		log.debug(`${MODULE_ID} creting new DB instance with options => `, options);
+		log.info(`${MODULE_ID} creting new DB instance with options => `, options);
 
 		if (options.uri) {
 			const conn = Object.assign({ ssl: { rejectUnauthorized : false } }, pgConn.parse(options.uri));
 
-			log.debug(`${MODULE_ID} creting new DB instance with URI String => `, conn);
+			log.info(`${MODULE_ID} creting new DB instance with URI String => `, conn);
 
 			db = await massive(conn);
 		}
