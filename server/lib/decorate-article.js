@@ -21,8 +21,8 @@ module.exports = exports = (doc, content) => {
 		publishedYear: publishedDate.format('YYYY'),
 		rich: content.extension !== 'plain',
 		title: content.title,
-		webUrl: content.webUrl,
-		wordCount: content.__wordCount
+		webUrl: content.url,
+		wordCount: content.wordCount
 	};
 
 	let hd = new DOMParser().parseFromString(HD(dict));

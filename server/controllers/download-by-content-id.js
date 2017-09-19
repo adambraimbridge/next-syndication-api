@@ -19,7 +19,7 @@ const { DEFAULT_DOWNLOAD_FORMAT } = require('config');
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
-module.exports = exports = (req, res, next) => {
+module.exports = exports = async (req, res, next) => {
 	const START = Date.now();
 
 	const { download_format } = res.locals.user;
@@ -28,7 +28,7 @@ module.exports = exports = (req, res, next) => {
 				|| download_format
 				|| DEFAULT_DOWNLOAD_FORMAT;
 
-	getContentById(req.params.content_id, format)
+	const content = await getContentById(req.params.content_id, format);
 		.then(content => {
 			if (Object.prototype.toString.call(content) !== '[object Object]') {
 				log.error(`${MODULE_ID} ContentNotFoundError => ${req.params.content_id}`);
@@ -42,7 +42,7 @@ module.exports = exports = (req, res, next) => {
 			res.locals.__event = new MessageQueueEvent({
 				event: {
 					content_id: content.id,
-					content_type: content.contentType,
+					content_type: content.content_type,
 					content_url: content.webUrl,
 					contract_id: res.locals.syndication_contract.id,
 					download_format: content.extension,
@@ -83,7 +83,7 @@ module.exports = exports = (req, res, next) => {
 				bundleContent(req, res, next);
 			}
 			else {
-				if (!content.bodyXML__CLEAN) {
+				if (!content.bodyHTML__CLEAN) {
 					res.status(400).end();
 
 					return;
@@ -94,13 +94,13 @@ module.exports = exports = (req, res, next) => {
 				process.nextTick(async () => await res.locals.__event.publish());
 
 				convertArticle({
-					source: content[content.extension === 'plain' ? 'bodyXML__PLAIN' : 'bodyXML__CLEAN'],
+					source: content[content.extension === 'plain' ? 'bodyHTML__PLAIN' : 'bodyHTML__CLEAN'],
 					sourceFormat: 'html',
 					targetFormat: content.extension
 				}).then(file => {
 					cleanup(content);
 
-					log.debug(`${MODULE_ID} ContentFoundSuccess => ${content.id}`);
+					log.info(`${MODULE_ID} ContentFoundSuccess => ${content.id}`);
 
 					res.set('content-length', file.length);
 
@@ -108,7 +108,7 @@ module.exports = exports = (req, res, next) => {
 
 					publishEndEvent(res, 'complete');
 
-					log.debug(`${MODULE_ID} ArticleConversionSuccess => ${content.id} in ${Date.now() - START}ms`);
+					log.info(`${MODULE_ID} ArticleConversionSuccess => ${content.id} in ${Date.now() - START}ms`);
 
 					next();
 				})
