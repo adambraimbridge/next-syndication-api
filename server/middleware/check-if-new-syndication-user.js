@@ -3,7 +3,6 @@
 const path = require('path');
 
 const { default: log } = require('@financial-times/n-logger');
-//const buildUserArray = require('../lib/build-user-array');
 
 const flagIsOn = require('../helpers/flag-is-on');
 
