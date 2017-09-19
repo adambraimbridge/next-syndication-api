@@ -40,7 +40,7 @@ module.exports = exports = async (force) => {
 	if (force !== true) {
 		if (firstRun !== true) {
 			if (running === true || min % 15 !== 0 || (sec > 1 || ms > 250)) {
-				log.debug(`${MODULE_ID} => THROTTLED!!! Already run/running.`);
+				log.info(`${MODULE_ID} => THROTTLED!!! Already run/running.`);
 
 				return;
 			}
@@ -50,14 +50,14 @@ module.exports = exports = async (force) => {
 		}
 	}
 
-	if (Date.now() - lastRun >= SALESFORCE_CRON_CONFIG.MAX_TIME_PER_CALL) {
+	if (force === true || Date.now() - lastRun >= SALESFORCE_CRON_CONFIG.MAX_TIME_PER_CALL) {
 		salesforceQueryCount = 0;
 	}
 
 	lastRun = Date.now();
 	running = true;
 
-	log.debug(`${MODULE_ID} => Migration running`);
+	log.info(`${MODULE_ID} => Migration running`);
 
 	try {
 		const key = require(path.resolve(AUTH_FILE_NAME));
@@ -81,7 +81,7 @@ module.exports = exports = async (force) => {
 			return message;
 		}
 
-		log.debug(`${MODULE_ID} => Migration complete`);
+		log.info(`${MODULE_ID} => Migration complete`);
 	}
 	catch (e) {
 		log.error(`${MODULE_ID} => `, e);
@@ -165,10 +165,18 @@ async function migrateContract(db, item) {
 	try {
 		[contract] = await db.syndication.get_contract_data([item.mapped.contract_id]);
 
-		if ((!contract || contract.contract_id === null) && salesforceQueryCount < SALESFORCE_CRON_CONFIG.MAX_CALLS) {
-			++salesforceQueryCount;
+		if ((!contract || contract.contract_id === null)) {
+			if (salesforceQueryCount < SALESFORCE_CRON_CONFIG.MAX_CALLS) {
+				++salesforceQueryCount;
 
-			contract = await getContractByID(item.mapped.contract_id);
+				contract = await getContractByID(item.mapped.contract_id);
+			}
+			else {
+				return {
+					error: new Error('Max Salesforce calls exceeded for this round.'),
+					source: item.mapped
+				};
+			}
 		}
 
 		asset = contract.assets.find(asset => asset.content_type === item.mapped.content_type);
@@ -199,7 +207,7 @@ async function migrateContract(db, item) {
 		return item.mapped;
 	}
 	catch (error) {
-		log.info(`${MODULE_ID} | ERROR migrating contract asset => ${JSON.stringify(asset)}`, error);
+		log.error(`${MODULE_ID} | ERROR migrating contract asset => ${JSON.stringify(asset)}`, error);
 
 		return { error, contract, asset, source: item.mapped };
 	}
@@ -231,7 +239,7 @@ async function migrateUser(db, item) {
 		return item.mapped;
 	}
 	catch (error) {
-		log.info(`${MODULE_ID} | ERROR migrating user => ${JSON.stringify(user)}`, error);
+		log.error(`${MODULE_ID} | ERROR migrating user => ${JSON.stringify(user)}`, error);
 
 		return { error, user, source: item.mapped };
 	}
