@@ -14,7 +14,7 @@ module.exports = exports = async (event, message, response, subscriber) => {
 	try {
 		const db = await pg();
 
-		log.debug(`${MODULE_ID} RECEIVED => `, event);
+		log.info(`${MODULE_ID} RECEIVED => `, event);
 
 		if (event.state === 'deleted') {
 			const items = await db.syndication.delete_save_history_by_contract_id([event.contract_id, event.content_id]);
@@ -29,7 +29,7 @@ module.exports = exports = async (event, message, response, subscriber) => {
 
 		await db.syndication.upsert_history([event]);
 
-		log.debug(`${MODULE_ID} PERSISTED`);
+		log.info(`${MODULE_ID} PERSISTED`);
 
 		subscriber;
 	}

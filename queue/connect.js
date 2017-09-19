@@ -28,7 +28,7 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 		QueueUrl: DEFAULT_QUEUE_URL
 	});
 
-	log.debug(`${MODULE_ID} =>`, { response: JSON.stringify(attributes) });
+	log.info(`${MODULE_ID} =>`, { response: JSON.stringify(attributes) });
 })();
 
 module.exports = exports = sqs;

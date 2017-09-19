@@ -12,11 +12,11 @@ module.exports = exports = async () => {
 	try {
 		const db = await pg();
 
-		log.debug(`${MODULE_ID} | Running content cleanup`);
+		log.info(`${MODULE_ID} | Running content cleanup`);
 
 		const items = await db.syndication.cleanup_content();
 
-		log.debug(`${MODULE_ID} | ${items.length} items removed from content`);
+		log.info(`${MODULE_ID} | ${items.length} items removed from content`);
 	}
 	catch (e) {
 		log.error(`${MODULE_ID} => `, e);
