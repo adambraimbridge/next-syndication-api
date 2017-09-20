@@ -53,6 +53,11 @@ module.exports = exports = async (req, res, next) => {
 		const contentItemsMap = contentItems.reduce((acc, item) => {
 			acc[item.id] = item;
 
+			// this is for backwards/forwards support with Content API/Elastic Search
+			if (item.id.includes('/')) {
+				acc[item.id.split('/').pop()] = item;
+			}
+
 			return acc;
 		}, {});
 
