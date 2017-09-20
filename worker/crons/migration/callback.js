@@ -39,7 +39,7 @@ module.exports = exports = async (force) => {
 
 	if (force !== true) {
 		if (firstRun !== true) {
-			if (running === true || min % 15 !== 0 || (sec > 1 || ms > 250)) {
+			if (running === true || min % 5 !== 0 || (sec > 1 || ms > 250)) {
 				log.info(`${MODULE_ID} => THROTTLED!!! Already run/running.`);
 
 				return;
