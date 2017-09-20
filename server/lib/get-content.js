@@ -15,36 +15,21 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 module.exports = exports = async (DISTINCT_ITEMS) => {
 	const START = Date.now();
 
-//	const db = await pg();
-
 	const DISTINCT_ITEMS_LENGTH = DISTINCT_ITEMS.length;
 
-//	let cachedItems = await db.run(`SELECT * FROM syndication.get_content(ARRAY[$text$${DISTINCT_ITEMS.join('$text$, $text$')}$text$]);`);
+	if (DISTINCT_ITEMS_LENGTH < 1) {
+		return [];
+	}
 
-//	log.info(`${MODULE_ID} => ${cachedItems.length} items retrieved from cache`);
-
-//	cachedItems = cachedItems.map(item => item.data);
-
-//	cachedItems.forEach(item =>
-//		DISTINCT_ITEMS.splice(DISTINCT_ITEMS.indexOf(item.id.split('/').pop()), 1));
-
-	let esContentItems = await esClient.mget({
+	let items = await esClient.mget({
 		ids: DISTINCT_ITEMS
 	});
 
-	log.info(`${MODULE_ID} => ${esContentItems.length} items retrieved from elastic search api in ${Date.now() - START}ms`);
+	log.info(`${MODULE_ID} => ${items.length} items retrieved from elastic search api in ${Date.now() - START}ms`);
 
-	esContentItems = esContentItems.filter(item => enrich(item));
+	items = items.filter(item => enrich(item));
 
-//	console.log(esContentItems);
+	log.info(`${MODULE_ID} => ${items.length}/${DISTINCT_ITEMS_LENGTH} items found in ${Date.now() - START}ms`);
 
-//	let contentItems = (await Promise.all(DISTINCT_ITEMS.map(async content_id => await getContentById(content_id))));
-//
-//	contentItems = contentItems.filter(item => Object.prototype.toString.call(item) === '[object Object]');
-
-//	const items = contentItems.concat(cachedItems);
-
-	log.info(`${MODULE_ID} => ${esContentItems.length}/${DISTINCT_ITEMS_LENGTH} items found in ${Date.now() - START}ms`);
-
-	return esContentItems;
+	return items;
 };
