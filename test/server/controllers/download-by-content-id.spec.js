@@ -14,7 +14,7 @@ const {
 	TEST: { FIXTURES_DIRECTORY }
 } = require('config');
 
-//const MessageQueueEvent = require('../../../queue/message-queue-event');
+const MessageQueueEvent = require('../../../queue/message-queue-event');
 const enrich = require('../../../server/lib/enrich');
 
 const httpMocks = require(path.resolve(`${FIXTURES_DIRECTORY}/node-mocks-http`));
@@ -27,11 +27,11 @@ describe(MODULE_ID, function () {
 	let underTest;
 
 	before(function() {
-//		sinon.stub(MessageQueueEvent.prototype, 'publish').resolves(true);
+		sinon.stub(MessageQueueEvent.prototype, 'publish').resolves(true);
 	});
 
 	after(function() {
-//		MessageQueueEvent.prototype.publish.restore();
+		MessageQueueEvent.prototype.publish.restore();
 	});
 
 	describe('download article', function () {
