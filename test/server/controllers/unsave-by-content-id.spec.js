@@ -22,7 +22,7 @@ chai.use(sinonChai);
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
-describe.only(MODULE_ID, function () {
+describe(MODULE_ID, function () {
 	let underTest;
 
 	const { initDB } = require(path.resolve(`${FIXTURES_DIRECTORY}/massive`))();
@@ -32,7 +32,8 @@ describe.only(MODULE_ID, function () {
 			'_id': '9807a4b6dcb3ce1188593759dd6818cd',
 			'contract_id': 'FTS-14029674',
 			'asset_type': 'FT Article',
-			'content_id': 'http://www.ft.com/thing/42ad255a-99f9-11e7-b83c-9588e51488a0',
+			'content_id': '42ad255a-99f9-11e7-b83c-9588e51488a0',
+			'content_url': 'http://www.ft.com/content/42ad255a-99f9-11e7-b83c-9588e51488a0',
 			'user_id': '8ef593a8-eef6-448c-8560-9ca8cdca80a5',
 			'time': '2017-07-26T12:44:26.135Z',
 			'state': 'deleted',
@@ -145,7 +146,8 @@ describe.only(MODULE_ID, function () {
 			'_id': '9807a4b6dcb3ce1188593759dd6818cd',
 			'contract_id': 'FTS-14029674',
 			'asset_type': 'FT Article',
-			'content_id': 'http://www.ft.com/thing/42ad255a-99f9-11e7-b83c-9588e51488a0',
+			'content_id': '42ad255a-99f9-11e7-b83c-9588e51488a0',
+			'content_url': 'http://www.ft.com/content/42ad255a-99f9-11e7-b83c-9588e51488a0',
 			'user_id': '8ef593a8-eef6-448c-8560-9ca8cdca80a5',
 			'time': '2017-07-26T12:44:26.135Z',
 			'state': 'deleted',
