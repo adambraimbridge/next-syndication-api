@@ -38,6 +38,8 @@ module.exports = exports = async (req, res, next) => {
 		user: res.locals.user
 	});
 
+	res.locals.download = dl;
+
 	req.on('abort', () => dl.cancel());
 	req.connection.on('close', () => dl.cancel());
 
@@ -82,5 +84,7 @@ module.exports = exports = async (req, res, next) => {
 		res.status(200).send(file);
 
 		dl.complete('complete');
+
+		next();
 	}
 };
