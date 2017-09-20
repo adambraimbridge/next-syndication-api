@@ -36,6 +36,7 @@ module.exports = exports = function () {
 			get_contributor_purchase: sinon.stub(),
 			get_migrated_user: sinon.stub(),
 			get_saved_items_by_contract_id: sinon.stub(),
+			get_user: sinon.stub(),
 			upsert: sinon.stub(),
 			upsert_content: sinon.stub(),
 			upsert_contract: sinon.stub(),

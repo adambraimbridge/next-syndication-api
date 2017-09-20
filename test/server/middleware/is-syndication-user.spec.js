@@ -14,18 +14,25 @@ chai.use(sinonChai);
 const {
 	SESSION_PRODUCTS_PATH,
 	SESSION_URI,
-	SYNDICATION_PRODUCT_CODE
+	SYNDICATION_PRODUCT_CODE,
+	TEST: { FIXTURES_DIRECTORY }
 } = require('config');
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
 describe(MODULE_ID, function () {
+	const { initDB } = require(path.resolve(`${FIXTURES_DIRECTORY}/massive`))();
+	const userResponse = require(path.resolve(`${FIXTURES_DIRECTORY}/userResponse.json`));
+
+	let db;
 	let sandbox;
 	let mocks;
 	let stubs;
 	let underTest;
 
 	beforeEach(function () {
+		db = initDB();
+		db.syndication.get_user.resolves([userResponse]);
 		sandbox = sinon.sandbox.create();
 		mocks = {
 			req: {
@@ -35,7 +42,10 @@ describe(MODULE_ID, function () {
 				headers: {}
 			},
 			res: {
-				locals: {},
+				locals: {
+					$DB: db,
+					userUuid: 'abc'
+				},
 				sendStatus: sandbox.stub()
 			}
 		};
