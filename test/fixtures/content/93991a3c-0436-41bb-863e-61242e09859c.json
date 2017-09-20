@@ -1,0 +1,143 @@
+{
+  "id": "93991a3c-0436-41bb-863e-61242e09859c",
+  "webUrl": "https://www.acast.com/ft-arts/thehitsthatshooktheworld",
+  "title": "The Hits that Shook the World",
+  "provenance": [
+    "http://rss.acast.com/ft-arts"
+  ],
+  "byline": "Each month FT music critics and contributors discuss the story of a song, from its origins and early recordings through cover versions good and bad. Formerly called FT Arts.",
+  "publishedDate": "2017-09-15T04:00:00.000Z",
+  "firstPublishedDate": "2017-09-15T04:00:00.000Z",
+  "curatedRelatedContent": [ ],
+  "comments": {
+    "enabled": false
+  },
+  "standout": { },
+  "realtime": false,
+  "originatingParty": "FT",
+  "_lastUpdatedDateTime": "2017-09-15T08:34:15.874Z",
+  "type": "podcast",
+  "bodyHTML": "<p>In a special episode to mark the publication of The Life of a Song book, FT pop critics Helen Brown, David Cheal and Ludovic Hunter-Tilney debate whether a song can really change the world. Hear the stories behind the hits, from Bowie's 'Starman' to Jay-Z's 'Hard Knock Life (Ghetto Anthem)'.</p>",
+  "url": "https://www.ft.com/content/93991a3c-0436-41bb-863e-61242e09859c",
+  "relativeUrl": "/content/93991a3c-0436-41bb-863e-61242e09859c",
+  "attachments": [
+    {
+      "mediaType": "audio/mpeg",
+      "url": "https://media.acast.com/ft-arts/thehitsthatshooktheworld/media.mp3"
+    }
+  ],
+  "annotations": [
+    {
+      "id": "72ecae21-af5a-46db-914c-f8072d342bd2",
+      "apiUrl": "http://api.ft.com/brands/72ecae21-af5a-46db-914c-f8072d342bd2",
+      "prefLabel": "Life of a Song podcast",
+      "types": [
+        "http://www.ft.com/ontology/core/Thing",
+        "http://www.ft.com/ontology/concept/Concept",
+        "http://www.ft.com/ontology/classification/Classification",
+        "http://www.ft.com/ontology/product/Brand"
+      ],
+      "directType": "http://www.ft.com/ontology/product/Brand",
+      "predicate": "http://www.ft.com/ontology/classification/isPrimarilyClassifiedBy",
+      "type": "BRAND",
+      "url": "https://www.ft.com/stream/1d3f86a4-4df8-3652-adfc-dcae9e6645a5",
+      "preposition": "from",
+      "relativeUrl": "/stream/1d3f86a4-4df8-3652-adfc-dcae9e6645a5"
+    },
+    {
+      "id": "02afce67-6a86-3e49-8425-5f026b0d9be4",
+      "apiUrl": "http://api.ft.com/things/02afce67-6a86-3e49-8425-5f026b0d9be4",
+      "prefLabel": "Arts",
+      "types": [
+        "http://www.ft.com/ontology/core/Thing",
+        "http://www.ft.com/ontology/concept/Concept",
+        "http://www.ft.com/ontology/classification/Classification",
+        "http://www.ft.com/ontology/Section"
+      ],
+      "directType": "http://www.ft.com/ontology/Section",
+      "predicate": "http://www.ft.com/ontology/classification/isClassifiedBy",
+      "type": "SECTION",
+      "url": "https://www.ft.com/arts",
+      "preposition": "in",
+      "relativeUrl": "/arts"
+    },
+    {
+      "id": "f967910f-67d5-31f7-a031-64f8af0d9cf1",
+      "apiUrl": "http://api.ft.com/things/f967910f-67d5-31f7-a031-64f8af0d9cf1",
+      "prefLabel": "Life & Arts",
+      "types": [
+        "http://www.ft.com/ontology/core/Thing",
+        "http://www.ft.com/ontology/concept/Concept",
+        "http://www.ft.com/ontology/classification/Classification",
+        "http://www.ft.com/ontology/Section"
+      ],
+      "directType": "http://www.ft.com/ontology/Section",
+      "predicate": "http://www.ft.com/ontology/classification/isClassifiedBy",
+      "type": "SECTION",
+      "url": "https://www.ft.com/life-arts",
+      "preposition": "in",
+      "relativeUrl": "/life-arts"
+    },
+    {
+      "id": "bea65a67-c2e3-3488-820a-5c21074b34e5",
+      "apiUrl": "http://api.ft.com/things/bea65a67-c2e3-3488-820a-5c21074b34e5",
+      "prefLabel": "Podcasts",
+      "types": [
+        "http://www.ft.com/ontology/core/Thing",
+        "http://www.ft.com/ontology/concept/Concept",
+        "http://www.ft.com/ontology/classification/Classification",
+        "http://www.ft.com/ontology/Section"
+      ],
+      "directType": "http://www.ft.com/ontology/Section",
+      "predicate": "http://www.ft.com/ontology/classification/isClassifiedBy",
+      "type": "SECTION",
+      "url": "https://www.ft.com/podcasts",
+      "preposition": "in",
+      "relativeUrl": "/podcasts"
+    }
+  ],
+  "displayConcept": {
+    "id": "72ecae21-af5a-46db-914c-f8072d342bd2",
+    "apiUrl": "http://api.ft.com/brands/72ecae21-af5a-46db-914c-f8072d342bd2",
+    "prefLabel": "Life of a Song podcast",
+    "types": [
+      "http://www.ft.com/ontology/core/Thing",
+      "http://www.ft.com/ontology/concept/Concept",
+      "http://www.ft.com/ontology/classification/Classification",
+      "http://www.ft.com/ontology/product/Brand"
+    ],
+    "directType": "http://www.ft.com/ontology/product/Brand",
+    "type": "BRAND",
+    "url": "https://www.ft.com/stream/1d3f86a4-4df8-3652-adfc-dcae9e6645a5",
+    "preposition": "from",
+    "relativeUrl": "/stream/1d3f86a4-4df8-3652-adfc-dcae9e6645a5"
+  },
+  "genreConcept": null,
+  "brandConcept": {
+    "id": "72ecae21-af5a-46db-914c-f8072d342bd2",
+    "apiUrl": "http://api.ft.com/brands/72ecae21-af5a-46db-914c-f8072d342bd2",
+    "prefLabel": "Life of a Song podcast",
+    "types": [
+      "http://www.ft.com/ontology/core/Thing",
+      "http://www.ft.com/ontology/concept/Concept",
+      "http://www.ft.com/ontology/classification/Classification",
+      "http://www.ft.com/ontology/product/Brand"
+    ],
+    "directType": "http://www.ft.com/ontology/product/Brand",
+    "predicate": "http://www.ft.com/ontology/classification/isPrimarilyClassifiedBy",
+    "type": "BRAND",
+    "url": "https://www.ft.com/stream/1d3f86a4-4df8-3652-adfc-dcae9e6645a5",
+    "preposition": "from",
+    "relativeUrl": "/stream/1d3f86a4-4df8-3652-adfc-dcae9e6645a5"
+  },
+  "authorConcepts": [ ],
+  "mainImage": {
+    "title": "Logo for FT Life of a Song podcast",
+    "description": "",
+    "url": "https://imagecdn.acast.com/image?h=1500&w=1500&source=https%3A%2F%2Facastprod.blob.core.windows.net%3A443%2Fmedia%2Fv1%2F6134ca00-5e85-4054-91f0-d8274e8ad994%2F1400x1400-lifeofsong-iy5xxwbw.png",
+    "width": 1500,
+    "height": 1500,
+    "ratio": 1,
+    "aspectRatio": 1
+  }
+}

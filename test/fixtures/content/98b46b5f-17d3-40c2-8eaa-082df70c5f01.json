@@ -1,0 +1,143 @@
+{
+  "id": "98b46b5f-17d3-40c2-8eaa-082df70c5f01",
+  "webUrl": "https://www.acast.com/ft-alphachat/theeconomicsofimmigration",
+  "title": "The economics of immigration",
+  "provenance": [
+    "http://rss.acast.com/ft-alphachat"
+  ],
+  "byline": "Alphachat is the conversational podcast about business and economics produced by the Financial Times in New York. Each week, FT hosts and guests delve into a new theme, with more wonkiness, humour and irreverence than you'll find anywhere else",
+  "publishedDate": "2017-09-15T04:01:00.000Z",
+  "firstPublishedDate": "2017-09-15T04:01:00.000Z",
+  "curatedRelatedContent": [ ],
+  "comments": {
+    "enabled": false
+  },
+  "standout": { },
+  "realtime": false,
+  "originatingParty": "FT",
+  "_lastUpdatedDateTime": "2017-09-15T12:24:47.138Z",
+  "type": "podcast",
+  "bodyHTML": "<p>Economist Jennifer Hunt joins Cardiff to discuss the findings of a major study on the economic impact of immigration on the US.</p>",
+  "url": "https://www.ft.com/content/98b46b5f-17d3-40c2-8eaa-082df70c5f01",
+  "relativeUrl": "/content/98b46b5f-17d3-40c2-8eaa-082df70c5f01",
+  "attachments": [
+    {
+      "mediaType": "audio/mpeg",
+      "url": "https://media.acast.com/ft-alphachat/theeconomicsofimmigration/media.mp3"
+    }
+  ],
+  "annotations": [
+    {
+      "id": "1ccd0d9f-8849-32a6-941a-0d37e1001603",
+      "apiUrl": "http://api.ft.com/brands/1ccd0d9f-8849-32a6-941a-0d37e1001603",
+      "prefLabel": "Alphachat podcast",
+      "types": [
+        "http://www.ft.com/ontology/core/Thing",
+        "http://www.ft.com/ontology/concept/Concept",
+        "http://www.ft.com/ontology/classification/Classification",
+        "http://www.ft.com/ontology/product/Brand"
+      ],
+      "directType": "http://www.ft.com/ontology/product/Brand",
+      "predicate": "http://www.ft.com/ontology/classification/isPrimarilyClassifiedBy",
+      "type": "BRAND",
+      "url": "https://www.ft.com/stream/dee66cf5-5374-4674-9f70-90cccbc9604a",
+      "preposition": "from",
+      "relativeUrl": "/stream/dee66cf5-5374-4674-9f70-90cccbc9604a"
+    },
+    {
+      "id": "d969d76e-f8f4-34ae-bc38-95cfd0884740",
+      "apiUrl": "http://api.ft.com/things/d969d76e-f8f4-34ae-bc38-95cfd0884740",
+      "prefLabel": "Markets",
+      "types": [
+        "http://www.ft.com/ontology/core/Thing",
+        "http://www.ft.com/ontology/concept/Concept",
+        "http://www.ft.com/ontology/classification/Classification",
+        "http://www.ft.com/ontology/Section"
+      ],
+      "directType": "http://www.ft.com/ontology/Section",
+      "predicate": "http://www.ft.com/ontology/classification/isClassifiedBy",
+      "type": "SECTION",
+      "url": "https://www.ft.com/markets",
+      "preposition": "in",
+      "relativeUrl": "/markets"
+    },
+    {
+      "id": "89d15f70-640d-11e4-9803-0800200c9a66",
+      "apiUrl": "http://api.ft.com/brands/89d15f70-640d-11e4-9803-0800200c9a66",
+      "prefLabel": "FT Alphaville",
+      "types": [
+        "http://www.ft.com/ontology/core/Thing",
+        "http://www.ft.com/ontology/concept/Concept",
+        "http://www.ft.com/ontology/classification/Classification",
+        "http://www.ft.com/ontology/product/Brand"
+      ],
+      "directType": "http://www.ft.com/ontology/product/Brand",
+      "predicate": "http://www.ft.com/ontology/classification/isClassifiedBy",
+      "type": "BRAND",
+      "url": "https://www.ft.com/stream/89d15f70-640d-11e4-9803-0800200c9a66",
+      "preposition": "from",
+      "relativeUrl": "/stream/89d15f70-640d-11e4-9803-0800200c9a66"
+    },
+    {
+      "id": "bea65a67-c2e3-3488-820a-5c21074b34e5",
+      "apiUrl": "http://api.ft.com/things/bea65a67-c2e3-3488-820a-5c21074b34e5",
+      "prefLabel": "Podcasts",
+      "types": [
+        "http://www.ft.com/ontology/core/Thing",
+        "http://www.ft.com/ontology/concept/Concept",
+        "http://www.ft.com/ontology/classification/Classification",
+        "http://www.ft.com/ontology/Section"
+      ],
+      "directType": "http://www.ft.com/ontology/Section",
+      "predicate": "http://www.ft.com/ontology/classification/isClassifiedBy",
+      "type": "SECTION",
+      "url": "https://www.ft.com/podcasts",
+      "preposition": "in",
+      "relativeUrl": "/podcasts"
+    }
+  ],
+  "displayConcept": {
+    "id": "1ccd0d9f-8849-32a6-941a-0d37e1001603",
+    "apiUrl": "http://api.ft.com/brands/1ccd0d9f-8849-32a6-941a-0d37e1001603",
+    "prefLabel": "Alphachat podcast",
+    "types": [
+      "http://www.ft.com/ontology/core/Thing",
+      "http://www.ft.com/ontology/concept/Concept",
+      "http://www.ft.com/ontology/classification/Classification",
+      "http://www.ft.com/ontology/product/Brand"
+    ],
+    "directType": "http://www.ft.com/ontology/product/Brand",
+    "type": "BRAND",
+    "url": "https://www.ft.com/stream/dee66cf5-5374-4674-9f70-90cccbc9604a",
+    "preposition": "from",
+    "relativeUrl": "/stream/dee66cf5-5374-4674-9f70-90cccbc9604a"
+  },
+  "genreConcept": null,
+  "brandConcept": {
+    "id": "1ccd0d9f-8849-32a6-941a-0d37e1001603",
+    "apiUrl": "http://api.ft.com/brands/1ccd0d9f-8849-32a6-941a-0d37e1001603",
+    "prefLabel": "Alphachat podcast",
+    "types": [
+      "http://www.ft.com/ontology/core/Thing",
+      "http://www.ft.com/ontology/concept/Concept",
+      "http://www.ft.com/ontology/classification/Classification",
+      "http://www.ft.com/ontology/product/Brand"
+    ],
+    "directType": "http://www.ft.com/ontology/product/Brand",
+    "predicate": "http://www.ft.com/ontology/classification/isPrimarilyClassifiedBy",
+    "type": "BRAND",
+    "url": "https://www.ft.com/stream/dee66cf5-5374-4674-9f70-90cccbc9604a",
+    "preposition": "from",
+    "relativeUrl": "/stream/dee66cf5-5374-4674-9f70-90cccbc9604a"
+  },
+  "authorConcepts": [ ],
+  "mainImage": {
+    "title": "Logo for FT Alphachat podcast",
+    "description": "",
+    "url": "https://imagecdn.acast.com/image?h=1500&w=1500&source=https%3A%2F%2Facastprod.blob.core.windows.net%3A443%2Fmedia%2Fv1%2F1ce6e12f-4352-49d1-ab21-25c725c64041%2F1400x1400-alphachat-iy5xysi7.png",
+    "width": 1500,
+    "height": 1500,
+    "ratio": 1,
+    "aspectRatio": 1
+  }
+}
