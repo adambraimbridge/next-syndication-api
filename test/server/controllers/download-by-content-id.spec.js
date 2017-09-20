@@ -7,52 +7,43 @@ const { Writable: WritableStream } = require('stream');
 
 const { expect } = require('chai');
 const nock = require('nock');
+const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 
 const {
-	BASE_URI_FT_API,
-	SESSION_PRODUCTS_PATH,
-	SESSION_URI,
 	TEST: { FIXTURES_DIRECTORY }
 } = require('config');
 
-const MessageQueueEvent = require('../../../queue/message-queue-event');
-const underTest = require('../../../server/controllers/download-by-content-id');
+//const MessageQueueEvent = require('../../../queue/message-queue-event');
+const enrich = require('../../../server/lib/enrich');
 
 const httpMocks = require(path.resolve(`${FIXTURES_DIRECTORY}/node-mocks-http`));
 
-const RE_VALID_URI = /^\/content\/([A-Za-z0-9]{8}(?:-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12})$/;
+//const RE_VALID_URI = /^\/content\/([A-Za-z0-9]{8}(?:-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12})$/;
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
 describe(MODULE_ID, function () {
+	let underTest;
+
 	before(function() {
-		sinon.stub(MessageQueueEvent.prototype, 'publish').resolves(true);
+//		sinon.stub(MessageQueueEvent.prototype, 'publish').resolves(true);
 	});
 
 	after(function() {
-		MessageQueueEvent.prototype.publish.restore();
+//		MessageQueueEvent.prototype.publish.restore();
 	});
 
 	describe('download article', function () {
-		const CONTENT_ID = 'b59dff10-3f7e-11e7-9d56-25f963e998b2';
+		const CONTENT_ID = '42ad255a-99f9-11e7-b83c-9588e51488a0';
+		let getContentStub = sinon.stub();
 		let req;
 		let res;
 
 		before(function () {
-			nock(SESSION_URI)
-				.get(SESSION_PRODUCTS_PATH)
-				.reply(200, { uuid: 'abc', products: 'Tools,S1,P0,P1,P2' }, {});
-
-			nock(BASE_URI_FT_API)
-				.get(uri => RE_VALID_URI.test(uri))
-				.reply(uri => {
-					return [
-						200,
-						require(path.resolve(`${FIXTURES_DIRECTORY}/${uri.match(RE_VALID_URI)[1]}`)),
-						{}
-					];
-				});
+			underTest = proxyquire('../../../server/controllers/download-by-content-id', {
+				'../lib/get-content-by-id': getContentStub.resolves(enrich(require(path.resolve(`${FIXTURES_DIRECTORY}/content/${CONTENT_ID}.json`))))
+			});
 
 			req = httpMocks.createRequest({
 				'eventEmitter': EventEmitter,
@@ -63,11 +54,15 @@ describe(MODULE_ID, function () {
 					'ft-vanity-url': `/syndication/download/${CONTENT_ID}?format%3Ddocx`,
 					'ft-flags-next-flags': '',
 					'ft-flags': '-',
-					'cookie': '',
+					'cookie': 'FTSession;spoor-id',
 					'accept-language': 'en-GB,en-US;q=0.8,en;q=0.6',
 					'accept-encoding': 'gzip, deflate, sdch, br',
 					'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
 					'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
+				},
+				'cookies': {
+					'FTSession': 'FTSession',
+					'spoor-id': 'spoor-id'
 				},
 				'hostname': 'localhost',
 				'method': 'GET',
@@ -111,37 +106,26 @@ describe(MODULE_ID, function () {
 			}
 		});
 
-		it('should stream the download', function (done) {
-			underTest(req, res, function () {
+		it('should stream the download', async function () {
+			await underTest(req, res, function () {
 				expect(res._isEndCalled()).to.be.true;
-
-				done();
 			});
 		});
+
 	});
 
 	describe('download video', function () {
-		const CONTENT_ID = 'd7bf1822-ec58-4a8e-a669-5cbcc0d6a1b2';
+		const CONTENT_ID = 'a1af0574-eafb-41bd-aa4f-59aa2cd084c2';
+		let getContentStub = sinon.stub();
 		let fileName;
 		let req;
 		let res;
 		let responseHeaders;
 
 		beforeEach(function () {
-			nock(SESSION_URI)
-				.get(SESSION_PRODUCTS_PATH)
-				.reply(200, { uuid: 'abc', products: 'Tools,S1,P0,P1,P2' }, {});
-
-			nock(BASE_URI_FT_API)
-				.get(uri => RE_VALID_URI.test(uri))
-				.delay(500)
-				.reply(uri => {
-					return [
-						200,
-						require(path.resolve(`${FIXTURES_DIRECTORY}/${uri.match(RE_VALID_URI)[1]}`)),
-						{}
-					];
-				});
+			underTest = proxyquire('../../../server/controllers/download-by-content-id', {
+				'../lib/get-content-by-id': getContentStub.resolves(enrich(require(path.resolve(`${FIXTURES_DIRECTORY}/content/${CONTENT_ID}.json`))))
+			});
 
 			fileName = path.resolve(`${FIXTURES_DIRECTORY}/video-small.mp4`);
 			responseHeaders = {
@@ -151,7 +135,7 @@ describe(MODULE_ID, function () {
 			};
 
 			nock('https://next-media-api.ft.com')
-				.head('/renditions/14968298368190/1920x1080.mp4')
+				.head('/renditions/15053217972320/1920x1080.mp4')
 				.reply(200, {}, JSON.parse(JSON.stringify(responseHeaders)));
 
 			req = httpMocks.createRequest({
@@ -163,11 +147,15 @@ describe(MODULE_ID, function () {
 					'ft-vanity-url': `/syndication/download/${CONTENT_ID}?format%3Ddocx`,
 					'ft-flags-next-flags': '',
 					'ft-flags': '-',
-					'cookie': '',
+					'cookie': 'FTSession;spoor-id',
 					'accept-language': 'en-GB,en-US;q=0.8,en;q=0.6',
 					'accept-encoding': 'gzip, deflate, sdch, br',
 					'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
 					'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
+				},
+				'cookies': {
+					'FTSession': 'FTSession',
+					'spoor-id': 'spoor-id'
 				},
 				'hostname': 'localhost',
 				'method': 'GET',
@@ -211,43 +199,39 @@ describe(MODULE_ID, function () {
 			}
 		});
 
-		it('should stream the download', function (done) {
+		it('should stream the download', async function () {
 			nock('https://next-media-api.ft.com')
-				.get('/renditions/14968298368190/1920x1080.mp4')
+				.get('/renditions/15053217972320/1920x1080.mp4')
 				.delay(250)
 				.reply(() => {
 					return [
-						req.__download_cancelled__ === true ? 400 : 200,
+						res.locals.download.cancelled === true ? 400 : 200,
 						fs.createReadStream(fileName),
 						JSON.parse(JSON.stringify(responseHeaders))
 					];
 				});
 
-			underTest(req, res, function () {
+			await underTest(req, res, function () {
 				expect(res._isEndCalled()).to.be.true;
-
-				done();
 			});
 		});
 
-		it('can be interrupted', function (done) {
+		it('can be interrupted', async function () {
 			nock('https://next-media-api.ft.com')
-				.get('/renditions/14968298368190/1920x1080.mp4')
+				.get('/renditions/15053217972320/1920x1080.mp4')
 				.reply(() => {
 					setTimeout(() =>
-						req.emit('abort', req), 100);
+						req.emit('abort', req), 50);
 
 					return [
-						req.__download_cancelled__ === true ? 400 : 200,
+						res.locals.download.cancelled === true ? 400 : 200,
 						fs.createReadStream(fileName),
 						JSON.parse(JSON.stringify(responseHeaders))
 					];
 				});
 
-			underTest(req, res, function () {
-				expect(req).to.have.property('__download_cancelled__').and.be.true;
-
-				done();
+			await underTest(req, res, function () {
+				expect(res.locals.download).to.have.property('cancelled').and.be.true;
 			});
 		});
 	});

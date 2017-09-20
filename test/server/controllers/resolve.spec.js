@@ -29,12 +29,12 @@ describe(MODULE_ID, function () {
 	let underTest;
 
 	const items = [
-		'80d634ea-fa2b-46b5-886f-1418c6445182',
-		'c7923fba-1d31-39fd-82f0-ba1822ef20d2',
-		'b59dff10-3f7e-11e7-9d56-25f963e998b2',
-		'c7923fba-1d31-39fd-82f0-ba1822ef20d2',
-		'd7bf1822-ec58-4a8e-a669-5cbcc0d6a1b2',
-		'dbe4928a-5bec-11e7-b553-e2df1b0c3220'
+		'42ad255a-99f9-11e7-b83c-9588e51488a0',
+		'ef4c49fe-980e-11e7-b83c-9588e51488a0',
+		'b16fce7e-3c92-48a3-ace0-d1af3fce71af',
+		'a1af0574-eafb-41bd-aa4f-59aa2cd084c2',
+		'98b46b5f-17d3-40c2-8eaa-082df70c5f01',
+		'93991a3c-0436-41bb-863e-61242e09859c'
 	];
 
 	let downloadedItems = [{
@@ -42,71 +42,75 @@ describe(MODULE_ID, function () {
 		'contract_id': 'FTS-14029674',
 		'asset_type': 'FT Article',
 		'user_id': '8ef593a8-eef6-448c-8560-9ca8cdca80a5',
-		'content_id': 'http://www.ft.com/thing/c7923fba-1d31-39fd-82f0-ba1822ef20d2',
+		'content_id': '42ad255a-99f9-11e7-b83c-9588e51488a0',
+		'content_url': 'http://www.ft.com/content/42ad255a-99f9-11e7-b83c-9588e51488a0',
 		'time': '2017-08-22T13:32:49.226Z',
 		'download_format': 'docx',
 		'state': 'complete',
 		'user_name': 'christos constandinou',
 		'user_email': 'christos.constandinou@ft.com',
 		'content_type': 'article',
-		'title': 'The significance of the Brexit sequencing U-turn',
-		'published_date': '2017-06-28T10:51:47.000Z',
+		'title': 'Pound leaps to highest level since Brexit vote',
+		'published_date': '2017-09-15T10:38:16.000Z',
 		'syndication_state': 'yes',
 		'last_modified': '2017-08-22T13:32:50.177Z',
 		'id': 'c7923fba-1d31-39fd-82f0-ba1822ef20d2',
 		'date': '22 August 2017',
-		'published': '28 June 2017'
+		'published': '15 September 2017'
 	}, {
 		'_id': '6feabf0d4eed16682bfbd6d3560a45ee',
 		'contract_id': 'FTS-14029674',
 		'asset_type': 'FT Article',
 		'user_id': 'b2697f93-52d3-4d42-8409-bdf91b09e894',
-		'content_id': 'http://www.ft.com/thing/b59dff10-3f7e-11e7-9d56-25f963e998b2',
+		'content_id': 'ef4c49fe-980e-11e7-b83c-9588e51488a0',
+		'content_url': 'http://www.ft.com/content/ef4c49fe-980e-11e7-b83c-9588e51488a0',
 		'time': '2017-08-22T12:35:10.751Z',
 		'download_format': 'plain',
 		'state': 'complete',
 		'user_name': 'James Wise',
 		'user_email': 'james.wise@ft.com',
 		'content_type': 'article',
-		'title': 'Google deploys AI for Go tournament in China charm offensive',
-		'published_date': '2017-05-23T08:59:01.000Z',
+		'title': 'Tech companies in the city: the backlash',
+		'published_date': '2017-09-15T04:01:25.000Z',
 		'syndication_state': 'yes',
 		'last_modified': '2017-08-22T12:35:11.895Z',
 		'id': 'b59dff10-3f7e-11e7-9d56-25f963e998b2',
 		'date': '22 August 2017',
-		'published': '23 May 2017'
+		'published': '15 September 2017'
 	}, {
 		'_id': '8d1beddb5cc7ed98a61fc28934871b35',
 		'contract_id': 'FTS-14029674',
-		'asset_type': 'FT Article',
+		'asset_type': 'Video',
 		'user_id': 'b2697f93-52d3-4d42-8409-bdf91b09e894',
-		'content_id': 'http://www.ft.com/thing/c7923fba-1d31-39fd-82f0-ba1822ef20d2',
+		'content_id': 'b16fce7e-3c92-48a3-ace0-d1af3fce71af',
+		'content_url': 'http://www.ft.com/video/b16fce7e-3c92-48a3-ace0-d1af3fce71af',
 		'time': '2017-08-22T10:54:54.997Z',
 		'state': 'complete',
 		'user_name': 'James Wise',
 		'user_email': 'james.wise@ft.com',
-		'content_type': 'article',
-		'title': 'The significance of the Brexit sequencing U-turn',
-		'published_date': '2017-06-20T10:16:52.000Z',
+		'content_type': 'video',
+		'title': 'Mental health and the gig economy',
+		'published_date': '2017-09-13T12:15:43.662Z',
 		'syndication_state': 'yes',
 		'last_modified': '2017-08-22T10:54:55.376Z',
 		'id': 'c7923fba-1d31-39fd-82f0-ba1822ef20d2',
 		'date': '22 August 2017',
-		'published': '20 June 2017'
+		'published': '13 September 2017'
 	}];
 	let savedItems = [{
 		'_id': '8d1beddb5cc7ed98a61fc28934871b35',
 		'contract_id': 'FTS-14029674',
-		'asset_type': 'FT Article',
+		'asset_type': 'Video',
 		'user_id': 'b2697f93-52d3-4d42-8409-bdf91b09e894',
-		'content_id': 'http://www.ft.com/thing/c7923fba-1d31-39fd-82f0-ba1822ef20d2',
+		'content_id': 'b16fce7e-3c92-48a3-ace0-d1af3fce71af',
+		'content_url': 'http://www.ft.com/video/b16fce7e-3c92-48a3-ace0-d1af3fce71af',
 		'time': '2017-08-22T10:54:54.997Z',
 		'state': 'saved',
 		'user_name': 'James Wise',
 		'user_email': 'james.wise@ft.com',
-		'content_type': 'article',
-		'title': 'The significance of the Brexit sequencing U-turn',
-		'published_date': '2017-06-20T10:16:52.000Z',
+		'content_type': 'video',
+		'title': 'Mental health and the gig economy',
+		'published_date': '2017-09-13T12:15:43.662Z',
 		'syndication_state': 'yes',
 		'last_modified': '2017-08-22T10:54:55.376Z',
 		'id': 'c7923fba-1d31-39fd-82f0-ba1822ef20d2',
@@ -115,21 +119,22 @@ describe(MODULE_ID, function () {
 	}, {
 		'_id': 'ee0981e4bebd818374a6c1416029656f',
 		'contract_id': 'FTS-14029674',
-		'asset_type': 'FT Article',
+		'asset_type': 'Video',
 		'user_id': 'b2697f93-52d3-4d42-8409-bdf91b09e894',
-		'content_id': 'http://www.ft.com/thing/dbe4928a-5bec-11e7-b553-e2df1b0c3220',
+		'content_id': 'a1af0574-eafb-41bd-aa4f-59aa2cd084c2',
+		'content_url': 'http://www.ft.com/video/a1af0574-eafb-41bd-aa4f-59aa2cd084c2',
 		'time': '2017-08-22T10:48:04.022Z',
 		'state': 'saved',
 		'user_name': 'James Wise',
 		'user_email': 'james.wise@ft.com',
-		'content_type': 'article',
-		'title': 'Hillsborough police commander charged with manslaughter',
-		'published_date': '2017-06-28T11:21:44.000Z',
+		'content_type': 'video',
+		'title': 'Is being authentic enough to be a leader?',
+		'published_date': '2017-09-13T17:10:52.586Z',
 		'syndication_state': 'yes',
 		'last_modified': '2017-08-22T10:48:04.301Z',
 		'id': 'dbe4928a-5bec-11e7-b553-e2df1b0c3220',
-		'date': '22 August 2017',
-		'published': '28 June 2017'
+		'date': '13 September 2017',
+		'published': '13 September 2017'
 	}];
 
 	let allItems = downloadedItems.reduce((acc, item) => {
@@ -153,8 +158,8 @@ describe(MODULE_ID, function () {
 	beforeEach(function () {
 		underTest = proxyquire('../../../server/controllers/resolve', {
 			'../lib/get-all-existing-items-for-contract': sinon.stub().resolves(allItems),
-			'../lib/get-content': async function(items)  {
-				return Promise.resolve(items.map(content_id => require(path.resolve(`${FIXTURES_DIRECTORY}/${content_id}`))));
+			'../lib/get-content': async function()  {
+				return Promise.resolve(require(path.resolve(`${FIXTURES_DIRECTORY}/content/items.json`)));
 			},
 			'@noCallThru': true
 		});
@@ -232,60 +237,71 @@ describe(MODULE_ID, function () {
 		await underTest(req, res, () => {});
 
 		expect(res.json).to.have.been.calledWith([{
-			id: '80d634ea-fa2b-46b5-886f-1418c6445182',
-			canDownload: 1,
 			canBeSyndicated: 'yes',
-			downloaded: false,
-			messageCode: 'MSG_2000',
-			publishedDate: '2017-06-19T12:47:54.753Z',
+			canDownload: 1,
+			downloaded: true,
+			id: '42ad255a-99f9-11e7-b83c-9588e51488a0',
+			messageCode: 'MSG_2100',
+			publishedDate: '2017-09-15T10:38:16.000Z',
 			saved: false,
-			title: 'FT View: Brexit rethink required',
+			title: 'Pound leaps to highest level since Brexit vote',
+			type: 'article',
+			wordCount: undefined
+		}, {
+			canBeSyndicated: 'yes',
+			canDownload: 1,
+			downloaded: true,
+			id: 'ef4c49fe-980e-11e7-b83c-9588e51488a0',
+			messageCode: 'MSG_2100',
+			publishedDate: '2017-09-15T04:01:25.000Z',
+			saved: false,
+			title: 'Tech companies in the city: the backlash',
+			type: 'article',
+			wordCount: undefined
+		}, {
+			canBeSyndicated: 'yes',
+			canDownload: 1,
+			downloaded: true,
+			id: 'b16fce7e-3c92-48a3-ace0-d1af3fce71af',
+			messageCode: 'MSG_2100',
+			publishedDate: '2017-09-13T12:15:43.662Z',
+			saved: true,
+			title: 'Mental health and the gig economy',
 			type: 'video',
 			wordCount: undefined
 		}, {
-			id: 'c7923fba-1d31-39fd-82f0-ba1822ef20d2',
-			canDownload: 1,
 			canBeSyndicated: 'yes',
-			downloaded: true,
-			messageCode: 'MSG_2100',
-			publishedDate: '2017-06-20T10:16:52.000Z',
-			saved: true,
-			title: 'The significance of the Brexit sequencing U-turn',
-			type: 'article',
-			wordCount: 1177
-		}, {
-			id: 'b59dff10-3f7e-11e7-9d56-25f963e998b2',
 			canDownload: 1,
-			canBeSyndicated: 'yes',
-			downloaded: true,
-			messageCode: 'MSG_2100',
-			publishedDate: '2017-05-23T08:59:01.000Z',
-			saved: false,
-			title: 'Google deploys AI for Go tournament in China charm offensive',
-			type: 'article',
-			wordCount: 493
-		}, {
-			id: 'd7bf1822-ec58-4a8e-a669-5cbcc0d6a1b2',
-			canDownload: 1,
-			canBeSyndicated: 'yes',
 			downloaded: false,
+			id: 'a1af0574-eafb-41bd-aa4f-59aa2cd084c2',
 			messageCode: 'MSG_2000',
-			publishedDate: '2017-06-07T10:30:59.301Z',
-			saved: false,
-			title: 'The Future is Quantum: solution to the world’s problems',
+			publishedDate: '2017-09-13T17:10:52.586Z',
+			saved: true,
+			title: 'Is being authentic enough to be a leader?',
 			type: 'video',
-			wordCount: 205
+			wordCount: undefined
 		}, {
-			id: 'dbe4928a-5bec-11e7-b553-e2df1b0c3220',
+			canBeSyndicated: undefined,
 			canDownload: 1,
-			canBeSyndicated: 'yes',
 			downloaded: false,
-			messageCode: 'MSG_2000',
-			publishedDate: '2017-06-28T11:21:44.000Z',
-			saved: true,
-			title: 'Hillsborough police commander charged with manslaughter',
-			type: 'article',
-			wordCount: 939
-		} ]);
+			id: '98b46b5f-17d3-40c2-8eaa-082df70c5f01',
+			messageCode: 'MSG_5000',
+			publishedDate: '2017-09-15T04:01:00.000Z',
+			saved: false,
+			title: 'The economics of immigration',
+			type: 'podcast',
+			wordCount: undefined
+		}, {
+			canBeSyndicated: undefined,
+			canDownload: 1,
+			downloaded: false,
+			id: '93991a3c-0436-41bb-863e-61242e09859c',
+			messageCode: 'MSG_5000',
+			publishedDate: '2017-09-15T04:00:00.000Z',
+			saved: false,
+			title: 'The Hits that Shook the World',
+			type: 'podcast',
+			wordCount: undefined
+		}]);
 	});
 });
