@@ -9,6 +9,7 @@ const { DOWNLOAD_ARCHIVE_EXTENSION, DOWNLOAD_MEDIA_TYPES } = require('config');
 module.exports = exports = function video(content, format) {
 	content = article(content, format);
 
+	content.hasTranscript = !!(content.bodyHTML__CLEAN && content.bodyHTML__CLEAN.length);
 	content.transcriptExtension = content.extension;
 
 	content.extension = DOWNLOAD_ARCHIVE_EXTENSION;
