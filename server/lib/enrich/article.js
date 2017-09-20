@@ -25,7 +25,7 @@ module.exports = exports = function article(content, format) {
 	if (content.bodyHTML) {
 		content.document = formatArticleXML(`<body>${content.bodyHTML}</body>`);
 
-		content.wordCound = getWordCount(content.document);
+		content.wordCount = getWordCount(content.document);
 
 		content.document = decorateArticle(content.document, content);
 
