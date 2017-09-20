@@ -18,17 +18,34 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 module.exports = exports = async (req, res, next) => {
 	try {
 		const headers = { cookie: req.headers.cookie };
+		const { locals: { $DB: db, flags, userUuid } } = res;
 
-		delete headers.host;
+		const [dbUser] = await db.syndication.get_user([userUuid]);
 
 		let isSyndicationUser = false;
+
+		if (dbUser && dbUser.user_id === userUuid) {
+			isSyndicationUser = true;
+
+			if (isSyndicationUser === true) {
+				log.info(`${MODULE_ID} IsSyndicationUserSuccess`, {
+					isSyndicationUser
+				});
+
+				next();
+
+				return;
+			}
+		}
+
+		delete headers.host;
 
 		const sessionRes = await fetch(`${SESSION_URI}${SESSION_PRODUCTS_PATH}`, { headers });
 
 		if (sessionRes.ok) {
 			const session = await sessionRes.json();
 
-			isSyndicationUser = session.uuid === res.locals.userUuid
+			isSyndicationUser = session.uuid === userUuid
 								&& session.products.split(',').includes(SYNDICATION_PRODUCT_CODE);
 
 			if (isSyndicationUser === true) {
@@ -44,7 +61,7 @@ module.exports = exports = async (req, res, next) => {
 		}
 
 		if (!sessionRes.ok) {
-			if (skipChecks(res.locals.flags)) {
+			if (skipChecks(flags)) {
 				next();
 
 				return;
