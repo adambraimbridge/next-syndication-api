@@ -22,6 +22,14 @@ module.exports = exports = async (req, res, next) => {
 
 	const content = await getContentById(req.params.content_id, format);
 
+	if (Object.prototype.toString.call(content) !== '[object Object]') {
+		log.error(`${MODULE_ID} ContentNotFoundError => ${req.params.content_id}`);
+
+		res.sendStatus(404);
+
+		return;
+	}
+
 	const dl = download({
 		content,
 		contract: res.locals.contract,

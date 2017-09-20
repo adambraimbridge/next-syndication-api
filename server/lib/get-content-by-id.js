@@ -32,19 +32,30 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 module.exports = exports = async (content_id, format) => {
 	const START = Date.now();
 
-	let content = await esClient.get(content_id);
+	let content;
 
-	if (content) {
-		content = enrich(content, format);
+	try {
+		content = await esClient.get(content_id);
+	}
+	catch (e) {
+		content = null;
 	}
 
 	if (!content) {
 		log.error(`${MODULE_ID} ContentNotFoundError => ${content_id}`);
-
-		return content;
 	}
+	else {
+		try {
+			content = enrich(content, format);
 
-	log.info(`${MODULE_ID} GetContentSuccess => ${content.content_id} in ${Date.now() - START}ms`);
+			log.info(`${MODULE_ID} GetContentSuccess => ${content.content_id} in ${Date.now() - START}ms`);
+		}
+		catch (e) {
+			log.error(`${MODULE_ID} ContentTypeNotSupportedError => ${content_id}`);
+
+			content = null;
+		}
+	}
 
 	return content;
 };
