@@ -11,11 +11,11 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 module.exports = exports = async (req, res, next) => {
 	let isNewSyndicationUser = false;
 
-	const { locals: { $DB: db, contract, user, userUuid } } = res;
+	const { locals: { $DB: db, contract, flags, user, userUuid } } = res;
 
 	const [mu] = await db.syndication.get_migrated_user([userUuid, contract.contract_id]);
 
-	if ((mu && mu.user_id !== null) || (user.user_id && flagIsOn(res.locals.flags.syndicationRedux))) {
+	if ((mu && mu.user_id !== null) || (user.user_id && flagIsOn(flags.syndicationRedux))) {
 		isNewSyndicationUser = true;
 
 		res.set('FT-New-Syndication-User', 'true');
