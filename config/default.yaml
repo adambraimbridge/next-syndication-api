@@ -145,6 +145,7 @@
   FORMAT_ARTICLE_CONTENT_TYPE: text/html
 
   FORMAT_ARTICLE_STRIP_ELEMENTS:
+    - aside
     - ft-related
     - img
     - script
