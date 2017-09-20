@@ -105,7 +105,7 @@
   DOWNLOAD_FILENAME_PREFIX: FT_
   DOWNLOAD_MEDIA_TYPES:
     caption: text/vtt
-    podcast: audio/mp3
+    podcast: audio/mpeg
     video: video/mp4
 
   DOWNLOAD_STATE_MAP:
