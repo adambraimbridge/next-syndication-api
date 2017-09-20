@@ -6,6 +6,8 @@ const { default: log } = require('@financial-times/n-logger');
 
 const { EXPORT } = require('config');
 
+const RE_QUOTES = /"/gm;
+
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
@@ -51,6 +53,17 @@ module.exports = exports = async (req, res, next) => {
 };
 
 function safe(value) {
+	switch (Object.prototype.toString.call(value)) {
+		case '[object Date]':
+			value = value.toJSON();
+			break;
+
+		case '[object Array]':
+		case '[object Object]':
+			value = JSON.stringify(value).replace(RE_QUOTES, '\"');
+			break;
+	}
+
 	if (String(value).includes(',')) {
 		return `"${value}"`;
 	}
