@@ -15,12 +15,12 @@ let db;
 
 module.exports = exports = async (options = DB) => {
 	if (!db || options !== DB) {
-		log.info(`${MODULE_ID} creting new DB instance with options => `, options);
+		log.info(`${MODULE_ID} creating new DB instance with options => `, options);
 
 		if (options.uri) {
 			const conn = Object.assign({ ssl: { rejectUnauthorized : false } }, pgConn.parse(options.uri));
 
-			log.info(`${MODULE_ID} creting new DB instance with URI String => `, conn);
+			log.info(`${MODULE_ID} creating new DB instance with URI String => `, conn);
 
 			db = await massive(conn);
 		}
@@ -39,6 +39,11 @@ module.exports = exports = async (options = DB) => {
 
 			db = await massive(conn);
 		}
+	}
+	else {
+		log.info(`${MODULE_ID} reloading DB instance => `, db.instance.$cn);
+
+		db = await db.reload();
 	}
 
 	return db;

@@ -51,6 +51,10 @@ module.exports = exports = async (req, res, next) => {
 
 		res.locals.user = user_data;
 
+		if (res.locals.FT_User) {
+			res.locals.user.passport_id = res.locals.FT_User.USERID || user_data.user_id;
+		}
+
 		log.info(`${MODULE_ID} Upsert User => `, user_data);
 
 		next();
