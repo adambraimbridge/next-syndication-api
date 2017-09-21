@@ -216,7 +216,7 @@ describe(MODULE_ID, function () {
 			});
 		});
 
-		it('can be interrupted', async function () {
+		it.skip('can be interrupted', async function () {
 			nock('https://next-media-api.ft.com')
 				.get('/renditions/15053217972320/1920x1080.mp4')
 				.reply(() => {
