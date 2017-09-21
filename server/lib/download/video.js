@@ -25,12 +25,6 @@ module.exports = exports = class VideoDownload extends ArticleDownload {
 		return true;
 	}
 
-	init() {
-		super.init();
-
-		this.bundleContent = true;
-	}
-
 	async appendAll() {
 		await Promise.all([
 			this.appendArticle(),
@@ -40,6 +34,10 @@ module.exports = exports = class VideoDownload extends ArticleDownload {
 	}
 
 	async appendArticle() {
+		if (this.articleAppended === true) {
+			return;
+		}
+
 		const { content } = this;
 
 		if (content.hasTranscript === true) {
@@ -58,6 +56,10 @@ module.exports = exports = class VideoDownload extends ArticleDownload {
 	}
 
 	async appendCaptions() {
+		if (this.captionsAppended === true) {
+			return;
+		}
+
 		const { content } = this;
 		const { captions } = content;
 
@@ -92,6 +94,10 @@ module.exports = exports = class VideoDownload extends ArticleDownload {
 	}
 
 	async appendMedia() {
+		if (this.mediaAppended === true) {
+			return;
+		}
+
 		const { content } = this;
 		const { download, fileName } = content;
 
