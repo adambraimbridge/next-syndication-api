@@ -12,6 +12,7 @@ const checkIfNewSyndicationUser = require('./middleware/check-if-new-syndication
 const db = require('./middleware/db');
 const decodeCookieFTUser = require('./middleware/decode-cookie-ft-user');
 const decodeSession = require('./middleware/decode-session');
+const expediteUserAuth = require('./middleware/expedite-user-auth');
 const getContractById = require('./middleware/get-contract-by-id');
 //const getLicenceAccessAuthToken = require('./middleware/get-licence-access-auth-token');
 const getUserAccessAuthToken = require('./middleware/get-user-access-auth-token');
@@ -19,7 +20,6 @@ const getSyndicationLicenceForUser = require('./middleware/get-syndication-licen
 const getUserProfile = require('./middleware/get-user-profile');
 //const getUsersForLicence = require('./middleware/get-users-for-licence');
 const isSyndicationUser = require('./middleware/is-syndication-user');
-const flags = require('./middleware/flags');
 const logRequest = require('./middleware/log-request');
 
 const app = module.exports = express({
@@ -36,9 +36,9 @@ const middleware = [
 	accessControl,
 	cache,
 	db,
-	flags,
 	decodeSession,
 	decodeCookieFTUser,
+	expediteUserAuth,
 	isSyndicationUser,
 	getSyndicationLicenceForUser,
 	getUserAccessAuthToken,
@@ -78,8 +78,7 @@ if (process.env.NODE_ENV !== 'production') {
 		bodyParser.json(),
 		logRequest,
 		accessControl,
-		cache,
-		flags
+		cache
 	];
 
 	app.get(`${BASE_URI_PATH}/backup`, middleware, require('./controllers/backup'));

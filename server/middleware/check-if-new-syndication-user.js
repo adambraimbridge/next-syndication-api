@@ -11,7 +11,13 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 module.exports = exports = async (req, res, next) => {
 	let isNewSyndicationUser = false;
 
-	const { locals: { $DB: db, contract, flags, user, userUuid } } = res;
+	const { locals: { $DB: db, EXPEDIATED_USER_AUTH, contract, flags, user, userUuid } } = res;
+
+	if (EXPEDIATED_USER_AUTH === true) {
+		next();
+
+		return;
+	}
 
 	const [mu] = await db.syndication.get_migrated_user([userUuid, contract.contract_id]);
 

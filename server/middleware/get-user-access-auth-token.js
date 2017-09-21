@@ -16,6 +16,14 @@ const {
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
+	const { locals: { EXPEDIATED_USER_AUTH } } = res;
+
+	if (EXPEDIATED_USER_AUTH === true) {
+		next();
+
+		return;
+	}
+
 	const query = Object.assign({
 		[AUTH_API_ID_PROPERTY]: AUTH_API_CLIENT_ID
 	}, AUTH_API_QUERY);
