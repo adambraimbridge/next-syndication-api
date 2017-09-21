@@ -48,6 +48,10 @@ describe(MODULE_ID, function () {
 		let res;
 
 		before(async function () {
+			if (MessageQueueEvent.prototype.publish.restore) {
+				MessageQueueEvent.prototype.publish.restore();
+			}
+
 			sinon.stub(MessageQueueEvent.prototype, 'publish').resolves(true);
 
 			underTest = proxyquire('../../../server/controllers/unsave-by-content-id', {
