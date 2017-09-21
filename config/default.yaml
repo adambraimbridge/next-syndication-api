@@ -186,6 +186,8 @@
       <p>Please ensure you have considered your <a data-trackable="contractual-rights" href="/republishing/contract">contractual rights</a> before republishing.</p>
     MSG_4000: >
       <p>This content is not available for republishing.</p>
+    MSG_4050: >
+      <p>Sorry, this content is no longer available.</p>
     MSG_4100: >
       <p>You have reached your download limit for articles. Please contact your Account Manager to increase your limit.</p>
     MSG_4200: >
