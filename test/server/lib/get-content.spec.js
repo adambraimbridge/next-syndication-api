@@ -40,11 +40,13 @@ describe(MODULE_ID, function () {
 	afterEach(function () {
 	});
 
-	it('return an Array of content items for every content ID it can find', async function () {
-		const res = await underTest(items);
+	describe('test', function() {
+		it('return an Array of content items for every content ID it can find', async function () {
+			const res = await underTest(items);
 
-		expect(res).to.be.an('array').and.to.have.length(items.length);
+			expect(res).to.be.an('array').and.to.have.length(items.length);
 
-		expect(res.map(item => item.id)).to.eql(items.map(content_id => require(path.resolve(`${FIXTURES_DIRECTORY}/content/${content_id}.json`)).id));
+			expect(res.map(item => item.id)).to.eql(items.map(content_id => require(path.resolve(`${FIXTURES_DIRECTORY}/content/${content_id}.json`)).id));
+		});
 	});
 });
