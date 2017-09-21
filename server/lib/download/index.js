@@ -10,39 +10,39 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 module.exports = exports = (config) => {
 	const { content, contract, licence, req, user } = config;
 
-	config.event = new MessageQueueEvent({
-		event: {
-			content_id: content.id,
-			content_type: content.content_type,
-			content_url: content.webUrl,
-			contract_id: contract.contract_id,
-			download_format: content.extension,
-			licence_id: licence.id,
-			published_date: content.firstPublishedDate || content.publishedDate,
-			state: 'started',
-			syndication_state: String(content.canBeSyndicated),
-			time: moment().toDate(),
-			title: content.title,
-			tracking: {
-				cookie: req.headers.cookie,
-				ip_address: req.ip,
-				referrer: req.get('referrer'),
-				session: req.cookies.FTSession,
-				spoor_id: req.cookies['spoor-id'],
-				url: req.originalUrl,
-				user_agent: req.get('user-agent')
-			},
-			user: {
-				email: user.email,
-				first_name: user.first_name,
-				id: user.user_id,
-				passport_id: user.passport_id,
-				surname: user.surname
-			}
-		}
-	});
-
 	if (content.content_type in exports) {
+		config.event = new MessageQueueEvent({
+			event: {
+				content_id: content.id,
+				content_type: content.content_type,
+				content_url: content.webUrl,
+				contract_id: contract.contract_id,
+				download_format: content.extension,
+				licence_id: licence.id,
+				published_date: content.firstPublishedDate || content.publishedDate,
+				state: 'started',
+				syndication_state: String(content.canBeSyndicated),
+				time: moment().toDate(),
+				title: content.title,
+				tracking: {
+					cookie: req.headers.cookie,
+					ip_address: req.ip,
+					referrer: req.get('referrer'),
+					session: req.cookies.FTSession,
+					spoor_id: req.cookies['spoor-id'],
+					url: req.originalUrl,
+					user_agent: req.get('user-agent')
+				},
+				user: {
+					email: user.email,
+					first_name: user.first_name,
+					id: user.user_id,
+					passport_id: user.passport_id,
+					surname: user.surname
+				}
+			}
+		});
+
 		return new exports[content.content_type](config);
 	}
 
