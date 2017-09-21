@@ -122,6 +122,10 @@ describe(MODULE_ID, function () {
 	let allItems = downloadedItems.reduce((acc, item) => {
 		acc[item.content_id] = JSON.parse(JSON.stringify(item));
 
+		if (item.content_id.startsWith('http')) {
+			acc[item.content_id.split('/').pop()] = acc[item.content_id];
+		}
+
 		acc[item.content_id].downloaded = true;
 
 		return acc;
@@ -130,6 +134,10 @@ describe(MODULE_ID, function () {
 	allItems = savedItems.reduce((acc, item) => {
 		if (!(item.content_id in acc)) {
 			acc[item.content_id] = JSON.parse(JSON.stringify(item));
+
+			if (item.content_id.startsWith('http')) {
+				acc[item.content_id.split('/').pop()] = acc[item.content_id];
+			}
 		}
 
 		acc[item.content_id].saved = true;
