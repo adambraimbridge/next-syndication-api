@@ -28,8 +28,6 @@ module.exports = exports = class ArticleDownload extends Archiver {
 		this.req = req;
 		this.user = user;
 
-		this.bundleContent = false;
-
 		this.init();
 	}
 
@@ -38,7 +36,7 @@ module.exports = exports = class ArticleDownload extends Archiver {
 	}
 
 	get bundled() {
-		if (this.bundleContent === true) {
+		if (this.downloadAsArchive === true) {
 			return this.articleAppended === true
 				&& this.captionsAppended === true
 				&& this.mediaAppended === true;
