@@ -62,7 +62,7 @@ module.exports = exports = async (req, res, next) => {
 		}, {});
 
 		history.items = history.items.map(item => RESOLVE_PROPERTIES.reduce((acc, prop) => {
-			let contentItem = contentItemsMap[item.content_id] || {};
+			let contentItem = contentItemsMap[item.content_id] || contentItemsMap[item.id] || {};
 			acc[prop] = resolve[prop](contentItem[prop], prop, contentItem, item, CONTRACT);
 
 			return acc;

@@ -22,6 +22,10 @@ module.exports = exports = async (contract_id) => {
 	let items = alreadyDownloaded.reduce((acc, item) => {
 		acc[item.content_id] = item;
 
+		if (item.content_id.startsWith('http')) {
+			acc[item.content_id.split('/').pop()] = item;
+		}
+
 		item.downloaded = true;
 
 		return acc;
@@ -30,6 +34,10 @@ module.exports = exports = async (contract_id) => {
 	items = alreadySaved.reduce((acc, item) => {
 		if (!(item.content_id in acc)) {
 			acc[item.content_id] = item;
+
+			if (item.content_id.startsWith('http')) {
+				acc[item.content_id.split('/').pop()] = item;
+			}
 		}
 
 		acc[item.content_id].saved = true;
