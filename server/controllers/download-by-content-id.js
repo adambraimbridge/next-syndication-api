@@ -38,6 +38,7 @@ module.exports = exports = async (req, res, next) => {
 		user: res.locals.user
 	});
 
+	res.locals.content = content;
 	res.locals.download = dl;
 
 	req.on('abort', () => dl.cancel());
