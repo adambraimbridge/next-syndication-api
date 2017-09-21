@@ -22,7 +22,7 @@ module.exports = exports = async (event) => {
 
 		const [contract] = await db.syndication.get_contract_data([event.contract_id]);
 
-		log.debug(`${MODULE_ID} RECEIVED => `, event);
+		log.info(`${MODULE_ID} RECEIVED => `, event);
 
 		event.canBeSyndicated = event.syndication_state;
 

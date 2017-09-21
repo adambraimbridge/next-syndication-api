@@ -103,6 +103,10 @@
   DOWNLOAD_ARTICLE_EXTENSION_OVERRIDES:
     plain: txt
   DOWNLOAD_FILENAME_PREFIX: FT_
+  DOWNLOAD_MEDIA_TYPES:
+    caption: text/vtt
+    podcast: audio/mpeg
+    video: video/mp4
 
   DOWNLOAD_STATE_MAP:
     complete: true
@@ -133,12 +137,16 @@
     - syndicationNewUsersAwaiting
     - syndicationPlatform
     - syndicationRedux
-
   FORMAT_ARTICLE_CLEAN_ELEMENTS:
     - a
     - ft-concept
     - ft-content
+
+  FORMAT_ARTICLE_CONTENT_TYPE: text/html
+
   FORMAT_ARTICLE_STRIP_ELEMENTS:
+    - aside
+    - figure
     - ft-related
     - img
     - script

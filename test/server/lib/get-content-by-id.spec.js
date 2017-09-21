@@ -3,56 +3,51 @@
 const path = require('path');
 
 const { expect } = require('chai');
-const nock = require('nock');
+const proxyquire = require('proxyquire');
 
 const mime = require('mime-types');
 
 const {
-	BASE_URI_FT_API,
 	DOWNLOAD_ARCHIVE_EXTENSION,
 	DOWNLOAD_ARTICLE_FORMATS,
 //    DOWNLOAD_ARTICLE_EXTENSION_OVERRIDES,
 	DOWNLOAD_FILENAME_PREFIX,
+	DOWNLOAD_MEDIA_TYPES,
 	TEST: { FIXTURES_DIRECTORY }
 } = require('config');
 
-const underTest = require('../../../server/lib/get-content-by-id');
+//const underTest = require('../../../server/lib/get-content-by-id');
 
 const RE_BAD_CHARS = /[^A-Za-z0-9_]/gm;
 const RE_SPACE = /\s/gm;
-const RE_VALID_URI = /^\/content\/([A-Za-z0-9]{8}(?:-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12})$/;
+//const RE_VALID_URI = /^\/content\/([A-Za-z0-9]{8}(?:-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12})$/;
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
 describe(MODULE_ID, function () {
 
+	const esClient  = require(path.resolve(`${FIXTURES_DIRECTORY}/n-es-client`));
+
+	let underTest;
+
 	before(function () {
-		nock.disableNetConnect(BASE_URI_FT_API);
 	});
 
 	after(function () {
-		nock.enableNetConnect(BASE_URI_FT_API);
 	});
 
 	describe('success', function () {
 		beforeEach(function () {
-			nock(BASE_URI_FT_API)
-				.get(uri => RE_VALID_URI.test(uri))
-				.reply(uri => {
-					return [
-						200,
-						require(path.resolve(`${FIXTURES_DIRECTORY}/${uri.match(RE_VALID_URI)[1]}`)),
-						{}
-					];
-				});
+			underTest = proxyquire('../../../server/lib/get-content-by-id', {
+				'@financial-times/n-es-client': esClient,
+				'@noCallThru': true
+			});
 		});
 
 		describe('type: Article', function () {
 			[
-				'b59dff10-3f7e-11e7-9d56-25f963e998b2',
-				'c7923fba-1d31-39fd-82f0-ba1822ef20d2',
-				'2778b97a-5bc9-11e7-9bc8-8055f264aa8b',
-				'dbe4928a-5bec-11e7-b553-e2df1b0c3220'
+				'42ad255a-99f9-11e7-b83c-9588e51488a0',
+				'ef4c49fe-980e-11e7-b83c-9588e51488a0'
 			].forEach(contentId => {
 				it(`should return a JSON representation of the content if it exists for content_id="${contentId}"`, async function () {
 					const content = await underTest(contentId);
@@ -63,23 +58,23 @@ describe(MODULE_ID, function () {
 						.and.to.have.string(contentId);
 				});
 
-				it(`should have a \`__doc:xmldom.Documnet\` for content_id="${contentId}"`, async function () {
+				it(`should have a \`document:xmldom.Documnet\` for content_id="${contentId}"`, async function () {
 					const content = await underTest(contentId);
 
-					expect(content.__doc.constructor.name).to.equal('Document');
+					expect(content.document.constructor.name).to.equal('Document');
 				});
 
-				it(`should have a \`__wordCount:Number\` for content_id="${contentId}"`, async function () {
+				it(`should have a \`wordCount:Number\` for content_id="${contentId}"`, async function () {
 					const content = await underTest(contentId);
 
-					expect(content).to.have.property('__wordCount')
+					expect(content).to.have.property('wordCount')
 						.and.to.be.a('number');
 				});
 
-				it(`should have a \`bodyXML__CLEAN:String\` for content_id="${contentId}"`, async function () {
+				it(`should have a \`bodyHTML__CLEAN:String\` for content_id="${contentId}"`, async function () {
 					const content = await underTest(contentId);
 
-					expect(content).to.have.property('bodyXML__CLEAN')
+					expect(content).to.have.property('bodyHTML__CLEAN')
 						.and.to.be.a('string');
 				});
 
@@ -114,8 +109,10 @@ describe(MODULE_ID, function () {
 
 		describe('type: MediaResource', function () {
 			[
-				'80d634ea-fa2b-46b5-886f-1418c6445182',
-				'd7bf1822-ec58-4a8e-a669-5cbcc0d6a1b2'
+				'b16fce7e-3c92-48a3-ace0-d1af3fce71af',
+				'a1af0574-eafb-41bd-aa4f-59aa2cd084c2',
+				'98b46b5f-17d3-40c2-8eaa-082df70c5f01',
+				'93991a3c-0436-41bb-863e-61242e09859c'
 			].forEach(contentId => {
 				it(`should return a JSON representation of the content if it exists for content_id="${contentId}"`, async function () {
 					const content = await underTest(contentId);
@@ -126,10 +123,10 @@ describe(MODULE_ID, function () {
 						.and.to.have.string(contentId);
 				});
 
-				it(`should have a \`dataSource:Array\` for content_id="${contentId}"`, async function () {
+				it(`should have a \`attachments:Array\` for content_id="${contentId}"`, async function () {
 					const content = await underTest(contentId);
 
-					expect(content).to.have.property('dataSource')
+					expect(content).to.have.property('attachments')
 						.and.to.be.an('array')
 						.and.to.have.length.at.least(1);
 				});
@@ -142,12 +139,12 @@ describe(MODULE_ID, function () {
 						.and.equal(DOWNLOAD_ARCHIVE_EXTENSION);
 				});
 
-				it(`should have a \`download:Object\` which is the final item in the \`dataSource:Array\` for content_id="${contentId}"`, async function () {
+				it(`should have a \`download:Object\` which is the final item in the \`attachments:Array\` for content_id="${contentId}"`, async function () {
 					const content = await underTest(contentId);
 
 					expect(content).to.have.property('download')
 						.and.to.be.an('object')
-						.and.equal(content.dataSource[content.dataSource.length - 1]);
+						.and.equal(Array.from(content.attachments).reverse().find(item => item.mediaType === DOWNLOAD_MEDIA_TYPES.podcast || item.mediaType === DOWNLOAD_MEDIA_TYPES.video));
 				});
 
 				it(`should have a \`download.extension:Object\` based on the \`mediaType\` for content_id="${contentId}"`, async function () {
@@ -169,25 +166,28 @@ describe(MODULE_ID, function () {
 
 		describe('type: MediaResource (with transcript)', function () {
 			[
-				'd7bf1822-ec58-4a8e-a669-5cbcc0d6a1b2'
+				'b16fce7e-3c92-48a3-ace0-d1af3fce71af',
+				'a1af0574-eafb-41bd-aa4f-59aa2cd084c2',
+				'98b46b5f-17d3-40c2-8eaa-082df70c5f01',
+				'93991a3c-0436-41bb-863e-61242e09859c'
 			].forEach(contentId => {
-				it(`should have a \`__doc:xmldom.Documnet\` for content_id="${contentId}"`, async function () {
+				it(`should have a \`document:xmldom.Documnet\` for content_id="${contentId}"`, async function () {
 					const content = await underTest(contentId);
 
-					expect(content.__doc.constructor.name).to.equal('Document');
+					expect(content.document.constructor.name).to.equal('Document');
 				});
 
-				it(`should have a \`transcript__CLEAN:String\` property for content_id="${contentId}"`, async function () {
+				it(`should have a \`bodyHTML__CLEAN:String\` property for content_id="${contentId}"`, async function () {
 					const content = await underTest(contentId);
 
-					expect(content).to.have.property('transcript__CLEAN')
+					expect(content).to.have.property('bodyHTML__CLEAN')
 						.and.to.be.a('string');
 				});
 
-				it(`should have a \`transcript__PLAIN:String\` property for content_id="${contentId}"`, async function () {
+				it(`should have a \`bodyHTML__PLAIN:String\` property for content_id="${contentId}"`, async function () {
 					const content = await underTest(contentId);
 
-					expect(content).to.have.property('transcript__PLAIN')
+					expect(content).to.have.property('bodyHTML__PLAIN')
 						.and.to.be.a('string');
 				});
 
@@ -213,6 +213,7 @@ describe(MODULE_ID, function () {
 		});
 	});
 
+/*
 	describe.skip('fail', function () {
 		[
 			'fakenews-fa2b-46b5-886f-1418c6445182',
@@ -246,4 +247,5 @@ describe(MODULE_ID, function () {
 			});
 		});
 	});
+	*/
 });

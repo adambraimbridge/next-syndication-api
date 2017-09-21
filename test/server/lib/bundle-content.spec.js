@@ -30,7 +30,7 @@ const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(p
 
 mkdir('-p', path.resolve(TEMP_FILES_DIRECTORY));
 
-describe(MODULE_ID, function () {
+describe.skip(MODULE_ID, function () {
 	before(function() {
 		sinon.stub(MessageQueueEvent.prototype, 'publish').resolves(true);
 	});

@@ -4,11 +4,12 @@ const { DOMParser } = require('xmldom');
 
 const {
 	FORMAT_ARTICLE_CLEAN_ELEMENTS,
+	FORMAT_ARTICLE_CONTENT_TYPE,
 	FORMAT_ARTICLE_STRIP_ELEMENTS
 } = require('config');
 
 module.exports = exports = xml => {
-	let doc = new DOMParser().parseFromString(xml);
+	let doc = new DOMParser().parseFromString(xml, FORMAT_ARTICLE_CONTENT_TYPE);
 
 	removeElementsByTagName(doc, ...FORMAT_ARTICLE_STRIP_ELEMENTS);
 	// first sanitize content by striping inline XML elements without deleting the content

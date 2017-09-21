@@ -111,25 +111,27 @@ describe(MODULE_ID, function () {
 		stub.restore();
 	});
 
-	it('should publish a save event', async function() {
-		await underTest(req, res, () => {});
+	describe('test', function() {
+		it('should publish a save event', async function() {
+			await underTest(req, res, () => {});
 
-		expect(res.locals.__event).to.have.property('state').and.to.equal('saved');
-		expect(res.locals.__event).to.have.property('user').and.to.eql({
-			email: res.locals.user.email,
-			first_name: res.locals.user.first_name,
-			id: res.locals.user.user_id,
-			passport_id: res.locals.FT_User.USERID,
-			surname: res.locals.user.surname
+			expect(res.locals.__event).to.have.property('state').and.to.equal('saved');
+			expect(res.locals.__event).to.have.property('user').and.to.eql({
+				email: res.locals.user.email,
+				first_name: res.locals.user.first_name,
+				id: res.locals.user.user_id,
+				passport_id: res.locals.FT_User.USERID,
+				surname: res.locals.user.surname
+			});
+			expect(res.locals.__event).to.have.property('licence_id').and.to.equal(res.locals.licence.id);
+			expect(res.locals.__event).to.have.property('time').and.to.be.a('string');
+			expect(res.locals.__event).to.not.have.property('download_format');
 		});
-		expect(res.locals.__event).to.have.property('licence_id').and.to.equal(res.locals.licence.id);
-		expect(res.locals.__event).to.have.property('time').and.to.be.a('string');
-		expect(res.locals.__event).to.not.have.property('download_format');
-	});
 
-	it('return 204 for a successful save', async function() {
-		await underTest(req, res, () => {});
+		it('return 204 for a successful save', async function() {
+			await underTest(req, res, () => {});
 
-		expect(res.sendStatus).to.be.calledWith(204);
+			expect(res.sendStatus).to.be.calledWith(204);
+		});
 	});
 });

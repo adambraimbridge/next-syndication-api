@@ -32,14 +32,15 @@ describe(MODULE_ID, function () {
 			'_id': '9807a4b6dcb3ce1188593759dd6818cd',
 			'contract_id': 'FTS-14029674',
 			'asset_type': 'FT Article',
-			'content_id': 'http://www.ft.com/thing/80d634ea-fa2b-46b5-886f-1418c6445182',
+			'content_id': '42ad255a-99f9-11e7-b83c-9588e51488a0',
+			'content_url': 'http://www.ft.com/content/42ad255a-99f9-11e7-b83c-9588e51488a0',
 			'user_id': '8ef593a8-eef6-448c-8560-9ca8cdca80a5',
 			'time': '2017-07-26T12:44:26.135Z',
 			'state': 'deleted',
 			'content_type': 'article',
-			'title': 'FT View: Brexit rethink required',
-			'published_date': '2017-06-19T12:47:54.753Z',
-			'syndication_state': 'verify',
+			'title': 'Pound leaps to highest level since Brexit vote',
+			'published_date': '2017-09-13T12:15:43.662Z',
+			'syndication_state': 'yes',
 			'last_modified': '2017-08-19T12:47:54.753Z'
 		};
 		let next;
@@ -47,19 +48,23 @@ describe(MODULE_ID, function () {
 		let res;
 
 		before(async function () {
+			if (MessageQueueEvent.prototype.publish.restore) {
+				MessageQueueEvent.prototype.publish.restore();
+			}
+
 			sinon.stub(MessageQueueEvent.prototype, 'publish').resolves(true);
 
 			underTest = proxyquire('../../../server/controllers/unsave-by-content-id', {
-				'../lib/fetch-content-by-id': sinon.stub().resolves(require(path.resolve(`${FIXTURES_DIRECTORY}/80d634ea-fa2b-46b5-886f-1418c6445182.json`)))
+				'../lib/get-content-by-id': sinon.stub().resolves(require(path.resolve(`${FIXTURES_DIRECTORY}/content/42ad255a-99f9-11e7-b83c-9588e51488a0.json`)))
 			});
 
 			req = httpMocks.createRequest({
 				'eventEmitter': EventEmitter,
 				'connection': new EventEmitter(),
 				'headers': {
-					'ft-real-url': 'https://www.ft.com/syndication/unsave/80d634ea-fa2b-46b5-886f-1418c6445182',
-					'ft-real-path': '/syndication/unsave/80d634ea-fa2b-46b5-886f-1418c6445182',
-					'ft-vanity-url': '/syndication/unsave/80d634ea-fa2b-46b5-886f-1418c6445182',
+					'ft-real-url': 'https://www.ft.com/syndication/unsave/42ad255a-99f9-11e7-b83c-9588e51488a0',
+					'ft-real-path': '/syndication/unsave/42ad255a-99f9-11e7-b83c-9588e51488a0',
+					'ft-vanity-url': '/syndication/unsave/42ad255a-99f9-11e7-b83c-9588e51488a0',
 					'ft-flags-next-flags': '',
 					'ft-flags': '-',
 					'cookie': '',
@@ -70,14 +75,14 @@ describe(MODULE_ID, function () {
 				},
 				'hostname': 'localhost',
 				'method': 'POST',
-				'originalUrl': '/syndication/unsave/80d634ea-fa2b-46b5-886f-1418c6445182',
+				'originalUrl': '/syndication/unsave/42ad255a-99f9-11e7-b83c-9588e51488a0',
 				'params': {
-					'content_id': '80d634ea-fa2b-46b5-886f-1418c6445182'
+					'content_id': '42ad255a-99f9-11e7-b83c-9588e51488a0'
 				},
-				'path': '/syndication/unsave/80d634ea-fa2b-46b5-886f-1418c6445182',
+				'path': '/syndication/unsave/42ad255a-99f9-11e7-b83c-9588e51488a0',
 				'protocol': 'http',
 				'body': {},
-				'url': '/syndication/unsave/80d634ea-fa2b-46b5-886f-1418c6445182'
+				'url': '/syndication/unsave/42ad255a-99f9-11e7-b83c-9588e51488a0'
 			});
 
 			res = httpMocks.createResponse({
@@ -145,14 +150,15 @@ describe(MODULE_ID, function () {
 			'_id': '9807a4b6dcb3ce1188593759dd6818cd',
 			'contract_id': 'FTS-14029674',
 			'asset_type': 'FT Article',
-			'content_id': 'http://www.ft.com/thing/80d634ea-fa2b-46b5-886f-1418c6445182',
+			'content_id': '42ad255a-99f9-11e7-b83c-9588e51488a0',
+			'content_url': 'http://www.ft.com/content/42ad255a-99f9-11e7-b83c-9588e51488a0',
 			'user_id': '8ef593a8-eef6-448c-8560-9ca8cdca80a5',
 			'time': '2017-07-26T12:44:26.135Z',
 			'state': 'deleted',
 			'content_type': 'article',
-			'title': 'FT View: Brexit rethink required',
-			'published_date': '2017-06-19T12:47:54.753Z',
-			'syndication_state': 'verify',
+			'title': 'Pound leaps to highest level since Brexit vote',
+			'published_date': '2017-09-13T12:15:43.662Z',
+			'syndication_state': 'yes',
 			'last_modified': '2017-08-19T12:47:54.753Z'
 		};
 		let next;
@@ -163,16 +169,16 @@ describe(MODULE_ID, function () {
 			sinon.stub(MessageQueueEvent.prototype, 'publish').resolves(true);
 
 			underTest = proxyquire('../../../server/controllers/unsave-by-content-id', {
-				'../lib/fetch-content-by-id': sinon.stub().resolves(require(path.resolve(`${FIXTURES_DIRECTORY}/80d634ea-fa2b-46b5-886f-1418c6445182.json`)))
+				'../lib/get-content-by-id': sinon.stub().resolves(require(path.resolve(`${FIXTURES_DIRECTORY}/content/42ad255a-99f9-11e7-b83c-9588e51488a0.json`)))
 			});
 
 			req = httpMocks.createRequest({
 				'eventEmitter': EventEmitter,
 				'connection': new EventEmitter(),
 				'headers': {
-					'ft-real-url': 'https://www.ft.com/syndication/unsave/80d634ea-fa2b-46b5-886f-1418c6445182',
-					'ft-real-path': '/syndication/unsave/80d634ea-fa2b-46b5-886f-1418c6445182',
-					'ft-vanity-url': '/syndication/unsave/80d634ea-fa2b-46b5-886f-1418c6445182',
+					'ft-real-url': 'https://www.ft.com/syndication/unsave/42ad255a-99f9-11e7-b83c-9588e51488a0',
+					'ft-real-path': '/syndication/unsave/42ad255a-99f9-11e7-b83c-9588e51488a0',
+					'ft-vanity-url': '/syndication/unsave/42ad255a-99f9-11e7-b83c-9588e51488a0',
 					'ft-flags-next-flags': '',
 					'ft-flags': '-',
 					'cookie': '',
@@ -184,14 +190,14 @@ describe(MODULE_ID, function () {
 				},
 				'hostname': 'localhost',
 				'method': 'POST',
-				'originalUrl': '/syndication/unsave/80d634ea-fa2b-46b5-886f-1418c6445182',
+				'originalUrl': '/syndication/unsave/42ad255a-99f9-11e7-b83c-9588e51488a0',
 				'params': {
-					'content_id': '80d634ea-fa2b-46b5-886f-1418c6445182'
+					'content_id': '42ad255a-99f9-11e7-b83c-9588e51488a0'
 				},
-				'path': '/syndication/unsave/80d634ea-fa2b-46b5-886f-1418c6445182',
+				'path': '/syndication/unsave/42ad255a-99f9-11e7-b83c-9588e51488a0',
 				'protocol': 'http',
 				'body': {},
-				'url': '/syndication/unsave/80d634ea-fa2b-46b5-886f-1418c6445182'
+				'url': '/syndication/unsave/42ad255a-99f9-11e7-b83c-9588e51488a0'
 			});
 
 			res = httpMocks.createResponse({

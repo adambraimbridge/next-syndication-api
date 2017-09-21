@@ -4,7 +4,7 @@ const path = require('path');
 
 const chai = require('chai');
 const proxyquire = require('proxyquire');
-const sinon = require('sinon');
+//const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 
 const {
@@ -17,27 +17,22 @@ chai.use(sinonChai);
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
 describe(MODULE_ID, function () {
-	const { initDB } = require(path.resolve(`${FIXTURES_DIRECTORY}/massive`))();
+	const esClient  = require(path.resolve(`${FIXTURES_DIRECTORY}/n-es-client`));
 
 	const items = [
-		'80d634ea-fa2b-46b5-886f-1418c6445182',
-		'2778b97a-5bc9-11e7-9bc8-8055f264aa8b',
-		'b59dff10-3f7e-11e7-9d56-25f963e998b2',
-		'c7923fba-1d31-39fd-82f0-ba1822ef20d2',
-		'd7bf1822-ec58-4a8e-a669-5cbcc0d6a1b2',
-		'dbe4928a-5bec-11e7-b553-e2df1b0c3220'
+		'42ad255a-99f9-11e7-b83c-9588e51488a0',
+		'ef4c49fe-980e-11e7-b83c-9588e51488a0',
+		'b16fce7e-3c92-48a3-ace0-d1af3fce71af',
+		'a1af0574-eafb-41bd-aa4f-59aa2cd084c2',
+		'98b46b5f-17d3-40c2-8eaa-082df70c5f01',
+		'93991a3c-0436-41bb-863e-61242e09859c'
 	];
 
-	let db;
 	let underTest;
 
 	beforeEach(function () {
-		db = initDB([]);
 		underTest = proxyquire('../../../server/lib/get-content', {
-			'../../db/pg': sinon.stub().resolves(db),
-			'./get-content-by-id': async function(content_id)  {
-				return Promise.resolve(require(path.resolve(`${FIXTURES_DIRECTORY}/${content_id}`)));
-			},
+			'@financial-times/n-es-client': esClient,
 			'@noCallThru': true
 		});
 	});
@@ -45,11 +40,13 @@ describe(MODULE_ID, function () {
 	afterEach(function () {
 	});
 
-	it('return an Array of content items for every content ID it can find', async function () {
-		const res = await underTest(items);
+	describe('test', function() {
+		it('return an Array of content items for every content ID it can find', async function () {
+			const res = await underTest(items);
 
-		expect(res).to.be.an('array').and.to.have.length(items.length);
+			expect(res).to.be.an('array').and.to.have.length(items.length);
 
-		expect(res).to.eql(items.map(content_id => require(path.resolve(`${FIXTURES_DIRECTORY}/${content_id}`))));
+			expect(res.map(item => item.id)).to.eql(items.map(content_id => require(path.resolve(`${FIXTURES_DIRECTORY}/content/${content_id}.json`)).id));
+		});
 	});
 });

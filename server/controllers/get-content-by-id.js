@@ -27,7 +27,7 @@ module.exports = exports = async (req, res, next) => {
 };
 
 const REMOVE_PROPERTIES = [
-	'__doc',
+	'document',
 	'download'
 ];
 

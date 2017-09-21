@@ -1,0 +1,138 @@
+{
+  "id": "b16fce7e-3c92-48a3-ace0-d1af3fce71af",
+  "webUrl": "https://www.ft.com/video/b16fce7e-3c92-48a3-ace0-d1af3fce71af",
+  "title": "Mental health and the gig economy",
+  "provenance": [
+    "http://api.ft.com/internalcontent/b16fce7e-3c92-48a3-ace0-d1af3fce71af"
+  ],
+  "byline": "Graphics by Aslan Livingstone-Ra. Produced by Seb Morton-Clark and Emma Boyde.",
+  "standfirst": "Flexibility is good for workers, but can bring health problems",
+  "publishedDate": "2017-09-13T12:15:43.662Z",
+  "firstPublishedDate": "2017-09-13T12:15:43.662Z",
+  "publishReference": "tid_eg4yqbdeuh",
+  "curatedRelatedContent": [
+    {
+      "apiUrl": "http://api.ft.com/content/749cb87e-6ca8-11e7-b9c7-15af748b60d0",
+      "id": "749cb87e-6ca8-11e7-b9c7-15af748b60d0"
+    },
+    {
+      "apiUrl": "http://api.ft.com/content/dddf09c6-77a8-11e7-a3e8-60495fe6ca71",
+      "id": "dddf09c6-77a8-11e7-a3e8-60495fe6ca71"
+    },
+    {
+      "apiUrl": "http://api.ft.com/content/d9d59684-6ca3-11e7-bfeb-33fe0c5b7eaa",
+      "id": "d9d59684-6ca3-11e7-bfeb-33fe0c5b7eaa"
+    },
+    {
+      "apiUrl": "http://api.ft.com/content/398df8c0-67b1-11e7-8526-7b38dcaef614",
+      "id": "398df8c0-67b1-11e7-8526-7b38dcaef614"
+    }
+  ],
+  "canBeSyndicated": "yes",
+  "comments": {
+    "enabled": false
+  },
+  "standout": { },
+  "realtime": false,
+  "originatingParty": "FT",
+  "_lastUpdatedDateTime": "2017-09-13T13:16:07.651Z",
+  "type": "video",
+  "description": "Workers appreciate the flexibility of the gig economy, but isolation, long hours and performance assessment by an algorithm are contributing to mental health problems",
+  "bodyHTML": "<p>[MUSIC PLAYING] </p><p>Everyone is talking about the gig economy. But what exactly are they talking about? Is it big or small, exciting or terrifying? Good for you health or bad for it? </p><p>The first thing to know about the gig economy is that not everyone actually agrees on what it means. As the name suggests, it's about people who earn money from doing a series of gigs or tasks. But some people use that term to apply to everyone who works independently, including lawyers and plumbers, but, of course, the notion of working for yourself is nothing new. </p><p>What is new is the invention of digital platforms that connect customers with workers to perform tasks on demand. That task could be to do someone's ironing, translate a document from Arabic to English, deliver a pizza, or drive someone home from a nightclub. There are a host of gig economy platforms, from Upwork or HourlyNerd, for tasks that are done online, to Uber and Deliveroo, for tasks that are done in person. </p><p>The uniting feature is that they match workers to customers, and they use their technology to facilitate the payment, while taking a cut for themselves. They say they're intermediaries, not employers. Others disagree. That's a question being thrashed out in courts in the US, the UK, and elsewhere. </p><p>If you live in a city teeming with Ubers, you might think the gig economy is huge already, but, actually, the number working in it is still pretty small, but it is significant. In the UK, one think tank says about 3 and 1/2% of the workforce are in the gig economy. That's about the same number as work for the National Health Service, the UK'S largest employer. </p><p>This is a growing army of workers without work places, colleagues, or bosses. What does that mean for their health and safety? </p><p>In some ways, it could be positive. The gig economy is based on the idea of working whenever you want. Having a job where you can easily nip out to deal with something personal, studies show that's one of the best indicators for high well-being. </p><p>But some health experts are worried. Flexibility might be good for your health, but loneliness and isolation are bad for it. </p><p>Gig workers don't have line managers to keep an eye out for them. Instead, their regular contact is with an algorithm that doesn't know how they're feeling today, or what personal problems might have cropped up. The algorithm just sends them tasks and monitors their performance. </p><p>Some algorithms also deactivate workers from their platforms, if there are performance issues. That can create pressure. And when the platform sets the fee per task, some workers feel they can only increase their earnings by working ever longer hours. </p><p>Driving or cycling and traffic can be dangerous at the best of times, let alone when you're tired and stressed. </p><p>For health experts, one thing is clear, there's an urgent need to investigate the benefits and the risks of this new world of work. </p><p>[MUSIC PLAYING] </p>",
+  "url": "https://www.ft.com/video/b16fce7e-3c92-48a3-ace0-d1af3fce71af",
+  "mainImage": {
+    "title": "mas-gig.png",
+    "description": "",
+    "url": "http://prod-upp-image-read.ft.com/7156ce33-3a5a-43b9-83ce-2206337d2784",
+    "width": 2048,
+    "height": 1152,
+    "ratio": 1.7777777777777777,
+    "aspectRatio": 0.5625
+  },
+  "attachments": [
+    {
+      "url": "https://next-media-api.ft.com/renditions/15053038942430/640x360.mp4",
+      "width": 640,
+      "height": 360,
+      "duration": 178943,
+      "codec": "h264",
+      "mediaType": "video/mp4"
+    },
+    {
+      "url": "https://next-media-api.ft.com/renditions/15053038942430/1280x720.mp4",
+      "width": 1280,
+      "height": 720,
+      "duration": 178943,
+      "codec": "h264",
+      "mediaType": "video/mp4"
+    },
+    {
+      "url": "https://next-media-api.ft.com/renditions/15053038942430/1920x1080.mp4",
+      "width": 1920,
+      "height": 1080,
+      "duration": 178943,
+      "codec": "h264",
+      "mediaType": "video/mp4"
+    },
+    {
+      "mediaType": "text/vtt",
+      "url": "https://next-media-api.ft.com/captions/15053038942430.vtt"
+    }
+  ],
+  "containedIn": [ ],
+  "relativeUrl": "/video/b16fce7e-3c92-48a3-ace0-d1af3fce71af",
+  "annotations": [
+    {
+      "apiUrl": "http://api.ft.com/things/852939c8-859c-361e-8514-f82f6c041580",
+      "directType": "http://www.ft.com/ontology/Section",
+      "id": "852939c8-859c-361e-8514-f82f6c041580",
+      "predicate": "http://www.ft.com/ontology/classification/isClassifiedBy",
+      "prefLabel": "Companies",
+      "type": "SECTION",
+      "types": [
+        "http://www.ft.com/ontology/core/Thing",
+        "http://www.ft.com/ontology/concept/Concept",
+        "http://www.ft.com/ontology/classification/Classification",
+        "http://www.ft.com/ontology/Section"
+      ],
+      "url": "https://www.ft.com/companies",
+      "preposition": "in",
+      "relativeUrl": "/companies"
+    },
+    {
+      "apiUrl": "http://api.ft.com/things/b2fa15d1-56b4-3767-8bcd-595b23a5ff22",
+      "directType": "http://www.ft.com/ontology/Genre",
+      "id": "b2fa15d1-56b4-3767-8bcd-595b23a5ff22",
+      "predicate": "http://www.ft.com/ontology/classification/isClassifiedBy",
+      "prefLabel": "Explainer",
+      "type": "GENRE",
+      "types": [
+        "http://www.ft.com/ontology/core/Thing",
+        "http://www.ft.com/ontology/concept/Concept",
+        "http://www.ft.com/ontology/classification/Classification",
+        "http://www.ft.com/ontology/Genre"
+      ],
+      "url": "https://www.ft.com/stream/b2fa15d1-56b4-3767-8bcd-595b23a5ff22",
+      "preposition": "",
+      "relativeUrl": "/stream/b2fa15d1-56b4-3767-8bcd-595b23a5ff22"
+    }
+  ],
+  "displayConcept": {
+    "apiUrl": "http://api.ft.com/things/852939c8-859c-361e-8514-f82f6c041580",
+    "directType": "http://www.ft.com/ontology/Section",
+    "id": "852939c8-859c-361e-8514-f82f6c041580",
+    "prefLabel": "Companies",
+    "type": "SECTION",
+    "types": [
+      "http://www.ft.com/ontology/core/Thing",
+      "http://www.ft.com/ontology/concept/Concept",
+      "http://www.ft.com/ontology/classification/Classification",
+      "http://www.ft.com/ontology/Section"
+    ],
+    "url": "https://www.ft.com/companies",
+    "preposition": "in",
+    "relativeUrl": "/companies"
+  },
+  "genreConcept": null,
+  "authorConcepts": [ ]
+}

@@ -80,6 +80,7 @@
       "server/controllers/get-content-by-id.js",
       "server/controllers/get-contract-by-id.js",
       "server/controllers/migrate.js",
+      "server/lib/bundle-content.js",
       "server/lib/resolve/index.js",
       "server/middleware/log-request.js",
       "server/app.js",
