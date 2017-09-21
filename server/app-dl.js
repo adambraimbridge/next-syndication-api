@@ -11,6 +11,7 @@ const checkIfNewSyndicationUser = require('./middleware/check-if-new-syndication
 const db = require('./middleware/db');
 const decodeCookieFTUser = require('./middleware/decode-cookie-ft-user');
 const decodeSession = require('./middleware/decode-session');
+const expediteUserAuth = require('./middleware/expedite-user-auth');
 const getContractById = require('./middleware/get-contract-by-id');
 const getUserAccessAuthToken = require('./middleware/get-user-access-auth-token');
 const getSyndicationLicenceForUser = require('./middleware/get-syndication-licence-for-user');
@@ -31,6 +32,7 @@ const middleware = [
 	db,
 	decodeSession,
 	decodeCookieFTUser,
+	expediteUserAuth,
 	getSyndicationLicenceForUser,
 	getUserAccessAuthToken,
 	getUserProfile,
