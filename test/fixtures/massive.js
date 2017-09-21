@@ -57,8 +57,13 @@ module.exports = exports = function () {
 	});
 
 	afterEach(function () {
-		massiveDatabase__proto__.constructor.restore();
-		massiveDatabase__proto__.query.restore();
+		if (massiveDatabase__proto__.constructor.restore) {
+			massiveDatabase__proto__.constructor.restore();
+		}
+
+		if (massiveDatabase__proto__.query.restore) {
+			massiveDatabase__proto__.query.restore();
+		}
 	});
 
 	return { initDB, massiveDatabase__proto__ };
