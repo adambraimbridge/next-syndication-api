@@ -79,6 +79,9 @@ module.exports = exports = async (req, res, next) => {
 
 		if (Array.isArray(history.items)) {
 			res.status(200);
+
+			log.info(`${MODULE_ID} SUCCESS => `, history);
+
 			res.json(history);
 		}
 		else {

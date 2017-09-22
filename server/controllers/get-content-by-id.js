@@ -1,8 +1,14 @@
 'use strict';
 
+const path = require('path');
+
+const { default: log } = require('@financial-times/n-logger');
+
 const { DEFAULT_DOWNLOAD_FORMAT } = require('config');
 
 const getContentById = require('../lib/get-content-by-id');
+
+const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
 
@@ -12,12 +18,16 @@ module.exports = exports = async (req, res, next) => {
 				|| download_format
 				|| DEFAULT_DOWNLOAD_FORMAT;
 
-	const content = await getContentById(req.params.content_id, format);
+	let content = await getContentById(req.params.content_id, format);
 
 	if (content) {
 		res.status(200);
 
-		res.json(cleanup(content));
+		content = cleanup(content);
+
+		log.info(`${MODULE_ID} SUCCESS => `, content);
+
+		res.json(content);
 
 		next();
 	}

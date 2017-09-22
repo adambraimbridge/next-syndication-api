@@ -25,7 +25,7 @@ module.exports = exports = async (req, res, next) => {
 			user
 		} } = res;
 
-		res.json(Object.assign({
+		const userStatus = Object.assign({
 			app: {
 				env: process.env.NODE_ENV,
 				name: PACKAGE.name,
@@ -44,7 +44,11 @@ module.exports = exports = async (req, res, next) => {
 			contributor_content: contract.contributor_content,
 			licence_id: licence.id,
 			migrated: !!isNewSyndicationUser
-		}, user));
+		}, user);
+
+		log.info(`${MODULE_ID} SUCCESS => `, userStatus);
+
+		res.json(userStatus);
 
 		next();
 	}

@@ -63,6 +63,8 @@ module.exports = exports = async (req, res, next) => {
 		addTestStuff(response);
 	}
 
+	log.info(`${MODULE_ID} SUCCESS => `, response);
+
 	res.json(response);
 
 	log.info(`${MODULE_ID} => Sent ${items.length}/${DISTINCT_ITEMS_LENGTH} distinct items in ${Date.now() - START}ms`);

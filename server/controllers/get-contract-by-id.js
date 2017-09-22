@@ -33,6 +33,9 @@ module.exports = exports = async (req, res, next) => {
 
 		if (contract.success === true) {
 			res.status(200);
+
+			log.info(`${MODULE_ID} SUCCESS => `, contract);
+
 			res.json(contract);
 
 			next();

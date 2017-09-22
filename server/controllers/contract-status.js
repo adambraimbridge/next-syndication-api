@@ -15,6 +15,9 @@ module.exports = exports = async (req, res, next) => {
 		contract.MY_DOWNLOAD_FORMAT = user.download_format || DEFAULT_DOWNLOAD_FORMAT;
 
 		res.status(200);
+
+		log.info(`${MODULE_ID} SUCCESS => `, contract);
+
 		res.json(contract);
 
 		next();
