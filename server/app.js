@@ -70,6 +70,7 @@ app.post(`${BASE_URI_PATH}/unsave/:content_id`, middleware, require('./controlle
 app.get(`${BASE_URI_PATH}/user-status`, middleware, require('./controllers/user-status'));
 app.post(`${BASE_URI_PATH}/download-format`, middleware, require('./controllers/update-download-format'));
 app.get(`${BASE_URI_PATH}/migrate`, middleware, require('./controllers/migrate'));
+app.get(`${BASE_URI_PATH}/reload`, middleware, require('./controllers/reload'));
 
 if (process.env.NODE_ENV !== 'production') {
 	const middleware = [
