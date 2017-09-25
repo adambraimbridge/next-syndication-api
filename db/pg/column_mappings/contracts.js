@@ -68,7 +68,7 @@ module.exports = exports = {
 		}, {
 			cite: 'contentSet',
 			id: 'content',
-			transform: (val) => val.split(';').map(item => item.trim())
+			transform: (val) => typeof val === 'string' ? val.split(';').map(item => item.trim()) : []
 		}, {
 			cite: '../articleLimit',
 			condition: (item) => item.asset_type === 'FT Article',
