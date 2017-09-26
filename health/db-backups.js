@@ -43,17 +43,22 @@ module.exports = exports = new (class S3PostgreSQLBackupCheck extends nHealthChe
 
 		const timestamp = (moment().isSameOrAfter(moment().startOf('hour').add(10, 'minutes')) ? moment() : moment().subtract(1, 'hour')).format(DB.BACKUP.date_format);
 
-		let res = await S3.listObjectsV2Async({
-			Bucket: DB.BACKUP.bucket.id,
-			MaxKeys: 5,
-			Prefix: `${DB.BACKUP.bucket.directory}/${DB.BACKUP.schema}.${timestamp}`
-		});
+		try {
+			let res = await S3.listObjectsV2Async({
+				Bucket: DB.BACKUP.bucket.id,
+				MaxKeys: 5,
+				Prefix: `${DB.BACKUP.bucket.directory}/${DB.BACKUP.schema}.${timestamp}`
+			});
 
-		const ok = !!res.Contents.length;
+			const ok = !!res.Contents.length;
 
-		this.status = ok === true ? nHealthStatus.PASSED : nHealthStatus.FAILED;
+			this.status = ok === true ? nHealthStatus.PASSED : nHealthStatus.FAILED;
 
-		log.info(`${MODULE_ID} in ${Date.now() - START}ms => ${this.checkOutput}`);
+			log.info(`${MODULE_ID} in ${Date.now() - START}ms => ${this.checkOutput}`);
+		}
+		catch (e) {
+			this.status = nHealthStatus.ERRORED;
+		}
 
 		return this.checkOutput;
 	}
@@ -65,4 +70,6 @@ module.exports = exports = new (class S3PostgreSQLBackupCheck extends nHealthChe
 	technicalSummary: 'Checks the database backup cron is running and that a zip file — containing the schema dump file and data dump file — for the previous hour has been uploaded to S3.'
 });
 
-exports.start();
+if (process.env.NODE_ENV !== 'test') {
+	exports.start();
+}
