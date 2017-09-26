@@ -73,7 +73,8 @@
   DB:
     BACKUP:
       bucket:
-        directory: development
+        directory: production
+      date_format: YYYY-MM-DD[T]HH.00
       program: pg_dump
       schema: syndication
       tables:
@@ -151,6 +152,12 @@
     - img
     - script
     - pull-quote
+
+  HEALTH_CHECK_HISTORY:
+    bloated_threshold: 50
+    directory: ./health/history
+    file_date_format: YYYY-MM-DD[T]HH-mm-ss[.json]
+    max_items: 10
 
   JS_TO_DB_TYPES:
     default: S
