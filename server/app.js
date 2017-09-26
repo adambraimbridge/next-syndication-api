@@ -1,5 +1,7 @@
 'use strict';
 
+process.env.TZ = 'UTC';
+
 const express = require('@financial-times/n-express');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -14,17 +16,20 @@ const decodeCookieFTUser = require('./middleware/decode-cookie-ft-user');
 const decodeSession = require('./middleware/decode-session');
 const expediteUserAuth = require('./middleware/expedite-user-auth');
 const getContractById = require('./middleware/get-contract-by-id');
-//const getLicenceAccessAuthToken = require('./middleware/get-licence-access-auth-token');
 const getUserAccessAuthToken = require('./middleware/get-user-access-auth-token');
 const getSyndicationLicenceForUser = require('./middleware/get-syndication-licence-for-user');
 const getUserProfile = require('./middleware/get-user-profile');
-//const getUsersForLicence = require('./middleware/get-users-for-licence');
 const isSyndicationUser = require('./middleware/is-syndication-user');
 const logRequest = require('./middleware/log-request');
 
 const app = module.exports = express({
 	systemCode: 'next-syndication-api',
-	withFlags: true
+	withFlags: true,
+	healthChecks: [
+		require('../health/db-backups'),
+		require('../health/db-sync-state'),
+		require('../health/sqs')
+	]
 });
 
 const middleware = [
@@ -47,13 +52,7 @@ const middleware = [
 	checkIfNewSyndicationUser
 ];
 
-//const licenceAuthMiddleware = Array.from(middleware);
-//licenceAuthMiddleware.splice(licenceAuthMiddleware.indexOf(getUserAccessAuthToken), 2, getLicenceAccessAuthToken);
-//licenceAuthMiddleware.push(getUsersForLicence);
-//licenceAuthMiddleware.push(getLicenceAccessAuthToken, getUsersForLicence);
-
 app.get(`${BASE_URI_PATH}/__gtg`, (req, res) => res.sendStatus(200));
-//app.get(`${BASE_URI_PATH}/__health`, require('./controllers/__health'));
 
 app.post(`${BASE_URI_PATH}/resolve`, middleware, require('./controllers/resolve'));
 
