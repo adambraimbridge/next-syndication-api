@@ -1,5 +1,7 @@
 'use strict';
 
+process.env.TZ = 'UTC';
+
 const express = require('@financial-times/n-express');
 const cookieParser = require('cookie-parser');
 
