@@ -25,6 +25,9 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 
 (async () => {
 	const attributes = await sqs.getQueueAttributesAsync({
+		AttributeNames: [
+			'All'
+		],
 		QueueUrl: DEFAULT_QUEUE_URL
 	});
 
