@@ -75,7 +75,6 @@
       "scripts/init_db.js",
       "scripts/init_queue.js",
       "scripts/purge_queue.js",
-      "server/controllers/__health.js",
       "server/controllers/backup.js",
       "server/controllers/get-content-by-id.js",
       "server/controllers/get-contract-by-id.js",
