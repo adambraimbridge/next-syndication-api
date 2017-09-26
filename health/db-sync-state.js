@@ -42,7 +42,9 @@ module.exports = exports = new (class DBSyncStateCheck extends nHealthCheck {
 	technicalSummary: 'Checks the Syndication database\'s computed tables are correctly representing the base tables\' data.'
 });
 
-exports.start();
+if (process.env.NODE_ENV !== 'test') {
+	exports.start();
+}
 
 function check(item) {
 	for (let [, val] of Object.entries(item)) {

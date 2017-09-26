@@ -131,4 +131,6 @@ module.exports = exports = new (class SQSCheck extends nHealthCheck {
 	technicalSummary: 'Checks if messages on the Syndication SQS Queue are being processed or if they are backing up.'
 });
 
-exports.start();
+if (process.env.NODE_ENV !== 'test') {
+	exports.start();
+}
