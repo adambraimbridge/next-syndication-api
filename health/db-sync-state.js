@@ -37,7 +37,18 @@ module.exports = exports = new (class DBSyncStateCheck extends nHealthCheck {
 })({
 	businessImpact: 'The Syndication database\'s computed tables are not in-sync with the base table data and, as such, may be showing incorrect data to users.',
 	name: 'Syndication database data integrity',
-	panicGuide: 'todo',
+	panicGuide: `To force a reload of all the computed tables, run:
+	 
+\`\`\`
+    ~$ psql --username \${PRODUCTION_DATABASE_USER_NAME} 
+            --password \${PRODUCTION_DATABASE_PASSWORD} 
+            --host \${PRODUCTION_DATABASE_HOST} 
+            --port \${PRODUCTION_DATABASE_PORT} 
+            --dbname \${PRODUCTION_DATABASE_NAME}  
+            --command 'select syndication.reload_all();'
+\`\`\`
+  
+Substituting the above \`\${PRODUCTION_DATABASE_*}\` placeholders with the correct values from vault.`,
 	severity: 3,
 	technicalSummary: 'Checks the Syndication database\'s computed tables are correctly representing the base tables\' data.'
 });

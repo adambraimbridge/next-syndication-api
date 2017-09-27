@@ -126,7 +126,18 @@ module.exports = exports = new (class SQSCheck extends nHealthCheck {
 })({
 	businessImpact: 'Saved and downloaded items are not currently being processed by the Syndication API and, as such, are backing up in the Syndication SQS Queue.',
 	name: 'Syndication SQS Queue message processing',
-	panicGuide: 'todo',
+	panicGuide: `1. check SQS Queue (next-syndication-downloads-prod) on Infra Prod.
+2. check/tail the server/worker logs on Heroku:
+
+  \`\`\`
+      ~$ heroku logs --app ft-next-syndication-api --tail --num 100   
+  \`\`\`
+      
+  — the queue is processed by the \`sync\` worker: \`app[sync.\${N}]\` — see if there are any errors and/or if a specific queue message is failing/erroring repeatedly.
+3. find the message in the SQS queue, copy the message body somewhere safe and remove it from the queue.
+4. check the queue is now being processed correctly and repeat steps 2 & 3 until it is.
+5. publish the failing/erroring message(s) into the developmewnt SQS Queue (next-syndication-downloads-dev) on Infra Prod to so you can replicate and fix the issue.
+6. once the issue has been fixed, if it makes sense to — e.g. a download needs to be recorded — republish the failing/erroring message(s) to te production queue for processing.`,
 	severity: 2,
 	technicalSummary: 'Checks if messages on the Syndication SQS Queue are being processed or if they are backing up.'
 });
