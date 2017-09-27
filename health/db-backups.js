@@ -65,25 +65,26 @@ module.exports = exports = new (class S3PostgreSQLBackupCheck extends nHealthChe
 })({
 	businessImpact: 'The Syndication hourly database backups have not run for the last hour, this could result in loss of data if we need to restore the database after a fatal crash.',
 	name: 'Syndication hourly database backups',
+/*eslint-disable*/
 	panicGuide: `If you want to manually take a backup of the schema and data, you can do so by running:
-	
+
 \`\`\`
 	# DUMP THE SCHEMA
-    ~$ pg_dump postgres://\${PRODUCTION_DATABASE_USER_NAME}:\${PRODUCTION_DATABASE_PASSWORD}@\${PRODUCTION_DATABASE_HOST}:\${PRODUCTION_DATABASE_PORT}/\${PRODUCTION_DATABASE_NAME}
-               --clean 
-               --create  
-               --schema-only 
-               --file schema.syndication.YYYY-MM-DDTHH.00.sql
-                
+	~$ pg_dump postgres://\${PRODUCTION_DATABASE_USER_NAME}:\${PRODUCTION_DATABASE_PASSWORD}@\${PRODUCTION_DATABASE_HOST}:\${PRODUCTION_DATABASE_PORT}/\${PRODUCTION_DATABASE_NAME}
+			--clean
+			--create
+			--schema-only
+			--file schema.syndication.YYYY-MM-DDTHH.00.sql
+
 	# DUMP THE DATA
-    ~$ pg_dump postgres://\${PRODUCTION_DATABASE_USER_NAME}:\${PRODUCTION_DATABASE_PASSWORD}@\${PRODUCTION_DATABASE_HOST}:\${PRODUCTION_DATABASE_PORT}/\${PRODUCTION_DATABASE_NAME}
-               --schema syndication
-               --data-only 
-               --file data.syndication.YYYY-MM-DDTHH.00.sql
+	~$ pg_dump postgres://\${PRODUCTION_DATABASE_USER_NAME}:\${PRODUCTION_DATABASE_PASSWORD}@\${PRODUCTION_DATABASE_HOST}:\${PRODUCTION_DATABASE_PORT}/\${PRODUCTION_DATABASE_NAME}
+			--schema syndication
+			--data-only
+			--file data.syndication.YYYY-MM-DDTHH.00.sql
 \`\`\`
 
 Substituting the above \`\${PRODUCTION_DATABASE_ *}\` placeholders with the correct values from vault and the \`YYYY-MM-DDTHH\` for the current date rounded to the hour.`,
-
+/*eslint-enable*/
 	severity: 1,
 	technicalSummary: 'Checks the database backup cron is running and that a zip file — containing the schema dump file and data dump file — for the previous hour has been uploaded to S3.'
 });
