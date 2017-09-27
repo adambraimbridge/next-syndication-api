@@ -14,7 +14,12 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 
 module.exports = exports = async (req, res, next) => {
 	try {
-		if (res.locals.userUuid !== '8ef593a8-eef6-448c-8560-9ca8cdca80a5') {
+		const authorized = {
+			'8ef593a8-eef6-448c-8560-9ca8cdca80a5': true,
+			'f74e5115-922b-409f-a82f-707a0c85e155': true
+		};
+
+		if (authorized[res.locals.userUuid] !== true) {
 
 			res.sendStatus(401);
 
