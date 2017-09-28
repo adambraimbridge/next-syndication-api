@@ -33,7 +33,7 @@ const RE_QUOTES = /"/gm;
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
-module.exports = exports = async (force) => {
+module.exports = exports = async () => {
 	const START = Date.now();
 	const time = moment().format(REDSHIFT.date_format);
 	const directory = path.resolve(`./tmp/redshift/${time}`);

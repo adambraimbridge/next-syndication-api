@@ -5,7 +5,6 @@ const path = require('path');
 const { default: log } = require('@financial-times/n-logger');
 
 const Slack = require('node-slack');
-const moment = require('moment');
 
 const pg = require('../../../db/pg');
 const SpreadSheet = require('../../../spreadsheet');
