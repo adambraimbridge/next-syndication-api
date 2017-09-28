@@ -26,36 +26,17 @@ const {
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
-let firstRun = true;
-let running = false;
 let lastRun = Date.now();
 let salesforceQueryCount = 0;
 
 log.info(`${MODULE_ID} => started`);
 
 module.exports = exports = async (force) => {
-	const date = moment();
-	const [, , , , min, sec, ms] = date.toArray();
-
-	if (force !== true) {
-		if (firstRun !== true) {
-			if (running === true || min % 5 !== 0 || (sec > 1 || ms > 250)) {
-				log.info(`${MODULE_ID} => THROTTLED!!! Already run/running.`);
-
-				return;
-			}
-		}
-		else {
-			firstRun = false;
-		}
-	}
-
 	if (force === true || Date.now() - lastRun >= SALESFORCE_CRON_CONFIG.MAX_TIME_PER_CALL) {
 		salesforceQueryCount = 0;
 	}
 
 	lastRun = Date.now();
-	running = true;
 
 	log.info(`${MODULE_ID} => Migration running`);
 
@@ -86,8 +67,6 @@ module.exports = exports = async (force) => {
 	catch (e) {
 		log.error(`${MODULE_ID} => `, e);
 	}
-
-	running = false;
 };
 
 function formatSlackMessage(contracts, users) {

@@ -1,7 +1,7 @@
 'use strict';
 
 const { exec } = require('child_process');
-const { createReadStream, stat } = require('fs');
+const { createReadStream/*, stat*/ } = require('fs');
 const path = require('path');
 const util = require('util');
 
@@ -31,23 +31,14 @@ const S3 = new AWS.S3({
 });
 
 const execAsync = util.promisify(exec);
-const statAsync = util.promisify(stat);
+//const statAsync = util.promisify(stat);
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
-module.exports = exports = async (force) => {
+module.exports = exports = async () => {
 	const START = Date.now();
 	const time = moment().format(DB.BACKUP.date_format);
 	const directory = path.resolve(`./tmp/backup/${time}`);
-
-	try {
-		if (force !== true && (await statAsync(directory)).isDirectory()) {
-			log.info(`${MODULE_ID} | THROTTLED!!! Already backed up`);
-
-			return;
-		}
-	}
-	catch (e) {}
 
 	try {
 		mkdir('-p', directory);

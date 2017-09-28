@@ -1,6 +1,6 @@
 'use strict';
 
-const { createReadStream, stat, writeFile } = require('fs');
+const { createReadStream/*, stat*/, writeFile } = require('fs');
 const path = require('path');
 const util = require('util');
 
@@ -26,7 +26,7 @@ const S3 = new AWS.S3({
 	secretAccessKey: AWS_SECRET_ACCESS_KEY
 });
 
-const statAsync = util.promisify(stat);
+//const statAsync = util.promisify(stat);
 const writeFileAsync = util.promisify(writeFile);
 
 const RE_QUOTES = /"/gm;
@@ -37,15 +37,6 @@ module.exports = exports = async (force) => {
 	const START = Date.now();
 	const time = moment().format(REDSHIFT.date_format);
 	const directory = path.resolve(`./tmp/redshift/${time}`);
-
-	try {
-		if (force !== true && (await statAsync(directory)).isDirectory()) {
-			log.info(`${MODULE_ID} | THROTTLED!!! Already backed up`);
-
-			return;
-		}
-	}
-	catch (e) {}
 
 	try {
 		mkdir('-p', directory);
