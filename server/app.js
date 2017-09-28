@@ -72,6 +72,11 @@ app.get(`${BASE_URI_PATH}/migrate`, middleware, require('./controllers/migrate')
 app.get(`${BASE_URI_PATH}/reload`, middleware, require('./controllers/reload'));
 
 if (process.env.NODE_ENV !== 'production') {
+	app.get(`${BASE_URI_PATH}/backup`, middleware, require('./controllers/backup'));
+	app.get(`${BASE_URI_PATH}/redshift`, middleware, require('./controllers/redshift'));
+}
+
+if (process.env.NODE_ENV !== 'production') {
 	const middleware = [
 		cookieParser(),
 		bodyParser.text(),
@@ -81,7 +86,6 @@ if (process.env.NODE_ENV !== 'production') {
 		cache
 	];
 
-	app.get(`${BASE_URI_PATH}/backup`, middleware, require('./controllers/backup'));
 	app.get(`${BASE_URI_PATH}/contracts/:contract_id`, middleware, require('./controllers/get-contract-by-id'));
 //	app.post(`${BASE_URI_PATH}/contracts`, middleware, require('./controllers/get-contracts-by-id'));
 //	app.get(`${BASE_URI_PATH}/purge`, middleware, require('./controllers/purge'));
