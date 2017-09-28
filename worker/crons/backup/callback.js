@@ -38,7 +38,7 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 module.exports = exports = async (force) => {
 	const START = Date.now();
 	const time = moment().format(DB.BACKUP.date_format);
-	const directory = path.resolve(`./tmp/${time}`);
+	const directory = path.resolve(`./tmp/backup/${time}`);
 
 	try {
 		if (force !== true && (await statAsync(directory)).isDirectory()) {
@@ -119,9 +119,9 @@ module.exports = exports = async (force) => {
 	}
 	catch (e) {
 		log.error(`${MODULE_ID} => `, e);
-
-		rm('-rf', directory);
 	}
+
+	rm('-rf', directory);
 };
 
 function upload({ archive, file_name }) {
