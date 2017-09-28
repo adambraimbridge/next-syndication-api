@@ -17,7 +17,6 @@ const {
 	AWS_ACCESS_KEY,
 	AWS_REGION = 'eu-west-1',
 	AWS_SECRET_ACCESS_KEY,
-	DB,
 	REDSHIFT
 } = require('config');
 
