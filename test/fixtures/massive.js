@@ -29,7 +29,6 @@ module.exports = exports = function () {
 		}
 
 		db.syndication = {
-			cleanup_content: sinon.stub(),
 			delete_save_history_by_contract_id: sinon.stub(),
 			get_downloads_by_contract_id: sinon.stub(),
 			get_contract_data: sinon.stub(),

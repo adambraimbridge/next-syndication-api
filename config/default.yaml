@@ -68,7 +68,6 @@
     backup_database: "0 7 * * * *"
     backup_redshift: "0 17 9 * * *"
     content_cache: "* */5 * * * *"
-#    content_cleanup: "* * 0 * * *"
     migration: "0 */5 * * * *"
 
   DB:

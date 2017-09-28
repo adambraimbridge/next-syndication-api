@@ -7,13 +7,11 @@ const { default: log } = require('@financial-times/n-logger');
 const createKey = require('../create-key');
 
 exports.backup = require('./backup');
-//exports.content_cleanup = require('./content-cleanup');
 exports.migration = require('./migration');
 exports.redshift = require('./redshift');
 
 createKey().then(() => {
 	exports.backup.start();
-//	exports.content_cleanup.start();
 	exports.migration.start();
 	exports.redshift.start();
 });
