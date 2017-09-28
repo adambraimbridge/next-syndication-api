@@ -66,8 +66,7 @@
 
   CRON:
     backup_database: "0 7 * * * *"
-    backup_redshift: "0 45 9 * * *"
-    content_cache: "* */5 * * * *"
+    backup_redshift: "0 0 12 * * *"
     migration: "0 */5 * * * *"
 
   DB:
