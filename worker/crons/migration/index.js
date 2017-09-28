@@ -1,13 +1,9 @@
 'use strict';
 
-const { CronJob } = require('cron');
+const schedule = require('node-schedule');
 
 const callback = require('./callback');
 
 const { CRON: { migration } } = require('config');
 
-module.exports = exports = new CronJob({
-	cronTime: migration,
-	onTick: callback,
-	start: false
-});
+module.exports = exports = schedule.scheduleJob(migration, callback);
