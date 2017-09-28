@@ -10,11 +10,7 @@ exports.backup = require('./backup');
 exports.migration = require('./migration');
 exports.redshift = require('./redshift');
 
-createKey().then(() => {
-	exports.backup.start();
-	exports.migration.start();
-	exports.redshift.start();
-});
+createKey().then(() => {});
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
