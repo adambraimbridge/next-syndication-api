@@ -65,15 +65,16 @@
   CONVERT_FORMAT_COMMAND: pandoc
 
   CRON:
-    backup_database: "* 7 * * * *"
-    content_cleanup: "* * 0 * * *"
+    backup_database: "0 7 * * * *"
+    backup_redshift: "0 17 9 * * *"
     content_cache: "* */5 * * * *"
-    migration: "* */5 * * * *"
+#    content_cleanup: "* * 0 * * *"
+    migration: "0 */5 * * * *"
 
   DB:
     BACKUP:
       bucket:
-        directory: production
+        directory: development
       date_format: YYYY-MM-DD[T]HH.00
       program: pg_dump
       schema: syndication
@@ -205,6 +206,43 @@
   NODE_ENV: development
 
   QUEUE_PURGE_THROTTLE_LIMIT_MS: 60000
+
+  REDSHIFT:
+    bucket:
+      directory: redshift
+    date_format: YYYY-MM-DD
+    export_headers:
+      contract_data:
+        - contract_id
+        - asset_type
+        - download_limit
+        - remaining_count
+        - legacy_download_count
+      downloads:
+        - _id
+        - contract_id
+        - asset_type
+        - user_id
+        - content_id
+        - time
+        - published_date
+        - state
+        - syndication_state
+        - content_url
+        - title
+      saved_items:
+        - _id
+        - contract_id
+        - asset_type
+        - user_id
+        - content_id
+        - time
+        - published_date
+        - state
+        - syndication_state
+        - content_url
+        - title
+
 
   SALESFORCE:
     API_VERSION: v34.0
