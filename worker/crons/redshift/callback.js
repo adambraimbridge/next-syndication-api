@@ -1,6 +1,5 @@
 'use strict';
 
-const { exec } = require('child_process');
 const { createReadStream, stat, writeFile } = require('fs');
 const path = require('path');
 const util = require('util');
@@ -19,7 +18,6 @@ const {
 	AWS_REGION = 'eu-west-1',
 	AWS_SECRET_ACCESS_KEY,
 	DB,
-	DOWNLOAD_ARCHIVE_EXTENSION,
 	REDSHIFT
 } = require('config');
 
@@ -29,7 +27,6 @@ const S3 = new AWS.S3({
 	secretAccessKey: AWS_SECRET_ACCESS_KEY
 });
 
-const execAsync = util.promisify(exec);
 const statAsync = util.promisify(stat);
 const writeFileAsync = util.promisify(writeFile);
 
@@ -55,8 +52,6 @@ module.exports = exports = async (force) => {
 		mkdir('-p', directory);
 
 		log.info(`${MODULE_ID} | Running redshift backup`);
-
-		let { BACKUP, database, host, password, port, uri, user_name } = DB;
 
 		const db = await pg();
 
@@ -96,6 +91,8 @@ module.exports = exports = async (force) => {
 	catch (e) {
 		log.error(`${MODULE_ID} => `, e);
 	}
+
+	log.info(`${MODULE_ID} complete in => ${Date.now() - START}ms`);
 
 	rm('-rf', directory);
 };
