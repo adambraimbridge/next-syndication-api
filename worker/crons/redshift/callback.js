@@ -8,7 +8,6 @@ const util = require('util');
 const { default: log } = require('@financial-times/n-logger');
 
 const AWS = require('aws-sdk');
-const mime = require('mime-types');
 const moment = require('moment');
 const S3UploadStream = require('s3-upload-stream');
 const { mkdir, rm } = require('shelljs');
@@ -98,7 +97,7 @@ module.exports = exports = async (force) => {
 		log.error(`${MODULE_ID} => `, e);
 	}
 
-//	rm('-rf', directory);
+	rm('-rf', directory);
 };
 
 function safe(value) {
