@@ -1,0 +1,21 @@
+{
+  "name": "syndicationMaintenance",
+  "description": "Puts the Syndication API into maintenance mode.",
+  "owner": "pooja.naidu@ft.com",
+  "notificationRecipients": {
+    "slack": {
+      "channels": [
+        "#ft-syndikat",
+        "#syndication"
+      ],
+      "users": [
+        "@thurston.tye",
+        "@simon.legg",
+        "@christos.constandinou"
+      ]
+    }
+  },
+  "state": false,
+  "userFacing": true,
+  "expiry": "3 months"
+}
