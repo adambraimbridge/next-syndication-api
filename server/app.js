@@ -15,12 +15,14 @@ const db = require('./middleware/db');
 const decodeCookieFTUser = require('./middleware/decode-cookie-ft-user');
 const decodeSession = require('./middleware/decode-session');
 const expediteUserAuth = require('./middleware/expedite-user-auth');
+const flagMaintenanceMode = require('./middleware/flag-maintenance-mode');
 const getContractById = require('./middleware/get-contract-by-id');
 const getUserAccessAuthToken = require('./middleware/get-user-access-auth-token');
 const getSyndicationLicenceForUser = require('./middleware/get-syndication-licence-for-user');
 const getUserProfile = require('./middleware/get-user-profile');
 const isSyndicationUser = require('./middleware/is-syndication-user');
 const logRequest = require('./middleware/log-request');
+const routeMaintenanceMode = require('./middleware/route-maintenance-mode');
 
 const app = module.exports = express({
 	systemCode: 'next-syndication-api',
@@ -40,6 +42,7 @@ const middleware = [
 	logRequest,
 	accessControl,
 	cache,
+	flagMaintenanceMode,
 	db,
 	decodeSession,
 	decodeCookieFTUser,
@@ -49,7 +52,8 @@ const middleware = [
 	getUserAccessAuthToken,
 	getUserProfile,
 	getContractById,
-	checkIfNewSyndicationUser
+	checkIfNewSyndicationUser,
+	routeMaintenanceMode
 ];
 
 app.get(`${BASE_URI_PATH}/__gtg`, (req, res) => res.sendStatus(200));
