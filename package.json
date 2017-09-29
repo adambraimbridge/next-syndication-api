@@ -23,7 +23,6 @@
     "google-spreadsheet": "^2.0.4",
     "forever": "^0.15.3",
     "hat": "^0.0.3",
-    "ioredis": "^3.0.0",
     "js-yaml": "^3.8.4",
     "jsonpath": "^0.2.12",
     "mime-types": "^2.1.5",
