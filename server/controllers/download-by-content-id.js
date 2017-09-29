@@ -14,7 +14,13 @@ const { DEFAULT_DOWNLOAD_FORMAT } = require('config');
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
-	const { download_format } = res.locals.user;
+	const {
+		contract,
+		licence,
+		user
+	} = res.locals;
+
+	const { download_format } = user;
 
 	const format = req.query.format
 				|| download_format
@@ -32,10 +38,10 @@ module.exports = exports = async (req, res, next) => {
 
 	const dl = download({
 		content,
-		contract: res.locals.contract,
-		licence: res.locals.licence,
+		contract: contract,
+		licence: licence,
 		req,
-		user: res.locals.user
+		user: user
 	});
 
 	res.locals.content = content;

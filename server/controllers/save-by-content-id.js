@@ -16,7 +16,13 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 
 module.exports = exports = async (req, res, next) => {
 	try {
-		const { download_format } = res.locals.user;
+		const {
+			licence,
+			syndication_contract,
+			user
+		} = res.locals;
+
+		const { download_format } = user;
 
 		const format = req.query.format
 					|| download_format
@@ -37,8 +43,8 @@ module.exports = exports = async (req, res, next) => {
 				content_id: content.id,
 				content_type: content.content_type,
 				content_url: content.webUrl,
-				contract_id: res.locals.syndication_contract.id,
-				licence_id: res.locals.licence.id,
+				contract_id: syndication_contract.id,
+				licence_id: licence.id,
 				published_date: content.firstPublishedDate || content.publishedDate,
 				state: 'saved',
 				syndication_state: String(content.canBeSyndicated),
@@ -54,11 +60,11 @@ module.exports = exports = async (req, res, next) => {
 					user_agent: req.get('user-agent')
 				},
 				user: {
-					email: res.locals.user.email,
-					first_name: res.locals.user.first_name,
-					id: res.locals.user.user_id,
-					passport_id: res.locals.FT_User.USERID,
-					surname: res.locals.user.surname
+					email: user.email,
+					first_name: user.first_name,
+					id: user.user_id,
+					passport_id: user.passport_id,
+					surname: user.surname
 				}
 			}
 		});

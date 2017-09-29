@@ -14,7 +14,10 @@ module.exports = exports = async (req, res, next) => {
 	const START = Date.now();
 
 	try {
-		const { locals: { $DB: db, contract: CONTRACT } } = res;
+		const { locals: {
+			$DB: db,
+			contract: CONTRACT
+		} } = res;
 
 		let type = req.query.type || 'downloads';
 
