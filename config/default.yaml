@@ -168,6 +168,8 @@
 
   LICENCE_ITEMS_ARRAY_PROPERTY: accessLicences
 
+  MAINTENANCE_MESSAGE: The Republishing Service is currently undergoing maintenance. Please try again later.
+
   MEDIA_RESOURCE_TYPES:
     - MediaResource
     - Podcast
