@@ -61,4 +61,22 @@ describe(MODULE_ID, function () {
 
 		expect(stubs.next).to.have.been.called;
 	});
+
+	describe('MAINTENANCE_MODE: true', function() {
+		it('does not assign a db instance to res.locals.$DB', async function() {
+			mocks.res.locals.MAINTENANCE_MODE = true;
+
+			await underTest(mocks.req, mocks.res, stubs.next);
+
+			expect(mocks.res.locals).to.not.have.property('$DB');
+		});
+
+		it('calls next', async function () {
+			mocks.res.locals.MAINTENANCE_MODE = true;
+
+			await underTest(mocks.req, mocks.res, stubs.next);
+
+			expect(stubs.next).to.have.been.called;
+		});
+	});
 });

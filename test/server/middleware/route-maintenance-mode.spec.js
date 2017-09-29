@@ -15,7 +15,7 @@ const underTest = require('../../../server/middleware/route-maintenance-mode');
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
-describe.only(MODULE_ID, function () {
+describe(MODULE_ID, function () {
 	let sandbox;
 	let mocks;
 	let stubs;

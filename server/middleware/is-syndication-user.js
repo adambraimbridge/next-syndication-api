@@ -17,35 +17,41 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 
 module.exports = exports = async (req, res, next) => {
 	try {
-		const headers = { cookie: req.headers.cookie };
-		const { locals: { $DB: db, EXPEDITED_USER_AUTH, flags, userUuid } } = res;
-
-		if (EXPEDITED_USER_AUTH === true) {
-			next();
-
-			return;
-		}
-
-		const [dbUser] = await db.syndication.get_user([userUuid]);
+		const { locals: {
+			$DB: db,
+			EXPEDITED_USER_AUTH,
+			flags,
+			MAINTENANCE_MODE,
+			userUuid
+		} } = res;
 
 		let isSyndicationUser = false;
 
-		if (dbUser && dbUser.user_id === userUuid) {
-			isSyndicationUser = true;
-
-			if (isSyndicationUser === true) {
-				log.info(`${MODULE_ID} IsSyndicationUserSuccess`, {
-					isSyndicationUser
-				});
-
+		if (MAINTENANCE_MODE !== true) {
+			if (EXPEDITED_USER_AUTH === true) {
 				next();
 
 				return;
 			}
+
+			const [dbUser] = await db.syndication.get_user([userUuid]);
+
+			if (dbUser && dbUser.user_id === userUuid) {
+				isSyndicationUser = true;
+
+				if (isSyndicationUser === true) {
+					log.info(`${MODULE_ID} IsSyndicationUserSuccess`, {
+						isSyndicationUser
+					});
+
+					next();
+
+					return;
+				}
+			}
 		}
 
-		delete headers.host;
-
+		const headers = { cookie: req.headers.cookie };
 		const sessionRes = await fetch(`${SESSION_URI}${SESSION_PRODUCTS_PATH}`, { headers });
 
 		if (sessionRes.ok) {

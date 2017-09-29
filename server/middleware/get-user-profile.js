@@ -18,18 +18,24 @@ const {
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
-	const { locals: { EXPEDITED_USER_AUTH } } = res;
+	const { locals: {
+		ACCESS_TOKEN_LICENCE,
+		ACCESS_TOKEN_USER,
+		EXPEDITED_USER_AUTH,
+		MAINTENANCE_MODE,
+		userUuid
+	} } = res;
 
-	if (EXPEDITED_USER_AUTH === true) {
+	if (MAINTENANCE_MODE !== true && EXPEDITED_USER_AUTH === true) {
 		next();
 
 		return;
 	}
 
-	const URI = `${BASE_URI_FT_API}/users/${res.locals.userUuid}/profile`;
+	const URI = `${BASE_URI_FT_API}/users/${userUuid}/profile`;
 
 	const headers = {
-		'authorization': `Bearer ${res.locals.ACCESS_TOKEN_USER || res.locals.ACCESS_TOKEN_LICENCE}`,
+		'authorization': `Bearer ${ACCESS_TOKEN_USER || ACCESS_TOKEN_LICENCE}`,
 		'cookie': req.headers.cookie,
 		'content-type': 'application/json',
 		[API_KEY_HEADER_NAME]: ALS_API_KEY
@@ -49,21 +55,24 @@ module.exports = exports = async (req, res, next) => {
 
 		log.info(`${MODULE_ID} GetUserProfileSuccess => ${URI}`, userProfile[USER_PROFILE_DATA_PROPERTY]);
 
-		res.locals.user = userProfile[USER_PROFILE_DATA_PROPERTY];
+		const user = pgMapColumns(JSON.parse(JSON.stringify(userProfile[USER_PROFILE_DATA_PROPERTY])), usersColumnMappings);
 
-		const user = pgMapColumns(JSON.parse(JSON.stringify(res.locals.user)), usersColumnMappings);
+		if (MAINTENANCE_MODE !== true) {
+			const { $DB: db } = res.locals;
 
-		const { $DB: db } = res.locals;
+			const [user_data] = await db.syndication.upsert_user([user]);
 
-		const [user_data] = await db.syndication.upsert_user([user]);
-
-		res.locals.user = user_data;
-
-		if (res.locals.FT_User) {
-			res.locals.user.passport_id = res.locals.FT_User.USERID || user_data.user_id;
+			res.locals.user = user_data;
+		}
+		else {
+			res.locals.user = user;
 		}
 
-		log.info(`${MODULE_ID} Upsert User => `, user_data);
+		if (res.locals.FT_User) {
+			res.locals.user.passport_id = res.locals.FT_User.USERID || res.locals.user.user_id;
+		}
+
+		log.info(`${MODULE_ID} Upsert User => `, res.locals.user);
 
 		next();
 	}
@@ -72,7 +81,7 @@ module.exports = exports = async (req, res, next) => {
 			error: err.stack,
 			URI,
 			headers,
-			user: res.locals.userUuid
+			user: userUuid
 		});
 
 		res.sendStatus(401);
