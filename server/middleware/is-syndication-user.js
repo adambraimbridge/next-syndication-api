@@ -18,9 +18,9 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 module.exports = exports = async (req, res, next) => {
 	try {
 		const headers = { cookie: req.headers.cookie };
-		const { locals: { $DB: db, EXPEDIATED_USER_AUTH, flags, userUuid } } = res;
+		const { locals: { $DB: db, EXPEDITED_USER_AUTH, flags, userUuid } } = res;
 
-		if (EXPEDIATED_USER_AUTH === true) {
+		if (EXPEDITED_USER_AUTH === true) {
 			next();
 
 			return;

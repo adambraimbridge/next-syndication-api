@@ -25,7 +25,7 @@ module.exports = exports = async (req, res, next) => {
 				res.locals.user = user;
 
 				res.locals.isNewSyndicationUser = true;
-				res.locals.EXPEDIATED_USER_AUTH = true;
+				res.locals.EXPEDITED_USER_AUTH = true;
 
 				log.info(`${MODULE_ID} => true`);
 

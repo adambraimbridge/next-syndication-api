@@ -79,12 +79,12 @@ describe(MODULE_ID, function () {
 
 		await underTest(mocks.req, mocks.res, stubs.next);
 
-		expect(mocks.res.locals.EXPEDIATED_USER_AUTH).to.not.be.true;
+		expect(mocks.res.locals.EXPEDITED_USER_AUTH).to.not.be.true;
 
 		expect(stubs.next).to.have.been.called;
 	});
 
-	it('sets res.locals.user and res.locals.EXPEDIATED_USER_AUTH if user is in the DB', async function () {
+	it('sets res.locals.user and res.locals.EXPEDITED_USER_AUTH if user is in the DB', async function () {
 		mocks.res.locals.userUuid = userResponse.user_id;
 		userResponse.last_modified = new Date();
 
@@ -92,7 +92,7 @@ describe(MODULE_ID, function () {
 
 		expect(mocks.res.locals.user).to.eql(userResponse);
 		expect(stubs.next).to.have.been.called;
-		expect(mocks.res.locals.EXPEDIATED_USER_AUTH).to.be.true;
+		expect(mocks.res.locals.EXPEDITED_USER_AUTH).to.be.true;
 	});
 
 });
