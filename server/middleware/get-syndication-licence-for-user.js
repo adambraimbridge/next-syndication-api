@@ -70,6 +70,7 @@ module.exports = exports = async (req, res, next) => {
 		next();
 	}
 	catch (err) {
+// todo: if user is in out system and no longer has an syndication contract, remove them from DB
 		log.error(`${MODULE_ID} LicenceFoundError =>`, {
 			error: err.stack,
 			URI,
@@ -77,7 +78,7 @@ module.exports = exports = async (req, res, next) => {
 			user: res.locals.userUuid
 		});
 
-		res.sendStatus(503);
+		res.sendStatus(401);
 
 		throw err;
 	}

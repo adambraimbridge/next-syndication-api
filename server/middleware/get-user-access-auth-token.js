@@ -16,9 +16,12 @@ const {
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
-	const { locals: { EXPEDITED_USER_AUTH } } = res;
+	const { locals: {
+		EXPEDITED_USER_AUTH,
+		MAINTENANCE_MODE
+	} } = res;
 
-	if (EXPEDITED_USER_AUTH === true) {
+	if (MAINTENANCE_MODE !== true && EXPEDITED_USER_AUTH === true) {
 		next();
 
 		return;

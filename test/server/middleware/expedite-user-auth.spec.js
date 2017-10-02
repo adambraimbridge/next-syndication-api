@@ -95,4 +95,14 @@ describe(MODULE_ID, function () {
 		expect(mocks.res.locals.EXPEDITED_USER_AUTH).to.be.true;
 	});
 
+	describe('MAINTENANCE_MODE: true', function() {
+		it('does not call the database', async function() {
+			mocks.res.locals.MAINTENANCE_MODE = true;
+
+			await underTest(mocks.req, mocks.res, stubs.next);
+
+			expect(db.run).to.not.have.been.called;
+			expect(db.syndication.get_user).to.not.have.been.called;
+		});
+	});
 });

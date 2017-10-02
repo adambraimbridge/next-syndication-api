@@ -29,73 +29,142 @@ describe(MODULE_ID, function () {
 
 	const userResponse = require(path.resolve(`${FIXTURES_DIRECTORY}/userProfile.json`));
 
-	beforeEach(function () {
-		db = initDB();
-		db.syndication.upsert_user.resolves([userResponse]);
+	describe('MAINTENANCE_MODE: false', function() {
+		beforeEach(function () {
+			db = initDB();
+			db.syndication.upsert_user.resolves([userResponse]);
 
-		sandbox = sinon.sandbox.create();
-		mocks = {
-			req: {
-				cookies: {
-					FTSession: '123'
+			sandbox = sinon.sandbox.create();
+			mocks = {
+				req: {
+					cookies: {
+						FTSession: '123'
+					},
+					headers: {
+						cookie: 'FTSession=123'
+					}
 				},
-				headers: {
-					cookie: 'FTSession=123'
+				res: {
+					locals: {
+						$DB: db,
+						ACCESS_TOKEN_USER: 'abc.123.xyz',
+						userUuid: 'abc'
+					},
+					sendStatus: sandbox.stub()
 				}
-			},
-			res: {
-				locals: {
-					$DB: db,
-					ACCESS_TOKEN_USER: 'abc.123.xyz',
-					userUuid: 'abc'
+			};
+			stubs = {
+	//			fetch: sandbox.stub().returns({
+	//				url: `${BASE_URI_FT_API}/authorize#access_token=abc.123.xyz&scope=profile_min`
+	//			}),
+				logger: {
+					default: {
+						debug: sandbox.stub(),
+						error: sandbox.stub(),
+						fatal: sandbox.stub(),
+						info: sandbox.stub(),
+						warn: sandbox.stub()
+					}
 				},
-				sendStatus: sandbox.stub()
-			}
-		};
-		stubs = {
-//			fetch: sandbox.stub().returns({
-//				url: `${BASE_URI_FT_API}/authorize#access_token=abc.123.xyz&scope=profile_min`
-//			}),
-			logger: {
-				default: {
-					debug: sandbox.stub(),
-					error: sandbox.stub(),
-					fatal: sandbox.stub(),
-					info: sandbox.stub(),
-					warn: sandbox.stub()
-				}
-			},
-			next: sandbox.stub()
-		};
+				next: sandbox.stub()
+			};
 
-		underTest = proxyquire('../../../server/middleware/get-user-profile', {
-			'@financial-times/n-logger': stubs.logger/*,
-			'n-eager-fetch': stubs.fetch*/
+			underTest = proxyquire('../../../server/middleware/get-user-profile', {
+				'@financial-times/n-logger': stubs.logger/*,
+				'n-eager-fetch': stubs.fetch*/
+			});
+		});
+
+		afterEach(function () {
+			sandbox.restore();
+		});
+
+		it('should assign the returned user profile to `res.locals.user`', async function () {
+			nock(BASE_URI_FT_API)
+				.get(`/users/${mocks.res.locals.userUuid}/profile`)
+				.reply(() => {
+					return [
+						200,
+						require(path.resolve(`${FIXTURES_DIRECTORY}/userProfile.json`)),
+						{}
+					];
+				});
+
+
+			await underTest(mocks.req, mocks.res, stubs.next);
+
+			const { user } = mocks.res.locals;
+
+			expect(user).to.be.an('object')
+				.and.to.eql(userResponse);
 		});
 	});
 
-	afterEach(function () {
-		sandbox.restore();
-	});
+	describe('MAINTENANCE_MODE: true', function() {
+		beforeEach(function () {
+			db = initDB();
+			db.syndication.upsert_user.resolves([userResponse]);
 
-	it('should assign the returned user profile to `res.locals.user`', async function () {
-		nock(BASE_URI_FT_API)
-			.get(`/users/${mocks.res.locals.userUuid}/profile`)
-			.reply(() => {
-				return [
-					200,
-					require(path.resolve(`${FIXTURES_DIRECTORY}/userProfile.json`)),
-					{}
-				];
+			sandbox = sinon.sandbox.create();
+			mocks = {
+				req: {
+					cookies: {
+						FTSession: '123'
+					},
+					headers: {
+						cookie: 'FTSession=123'
+					}
+				},
+				res: {
+					locals: {
+						$DB: db,
+						ACCESS_TOKEN_USER: 'abc.123.xyz',
+						MAINTENANCE_MODE: true,
+						userUuid: 'abc'
+					},
+					sendStatus: sandbox.stub()
+				}
+			};
+			stubs = {
+	//			fetch: sandbox.stub().returns({
+	//				url: `${BASE_URI_FT_API}/authorize#access_token=abc.123.xyz&scope=profile_min`
+	//			}),
+				logger: {
+					default: {
+						debug: sandbox.stub(),
+						error: sandbox.stub(),
+						fatal: sandbox.stub(),
+						info: sandbox.stub(),
+						warn: sandbox.stub()
+					}
+				},
+				next: sandbox.stub()
+			};
+
+			underTest = proxyquire('../../../server/middleware/get-user-profile', {
+				'@financial-times/n-logger': stubs.logger/*,
+				'n-eager-fetch': stubs.fetch*/
 			});
+		});
 
+		afterEach(function () {
+			sandbox.restore();
+		});
 
-		await underTest(mocks.req, mocks.res, stubs.next);
+		it('does not try to persist the user to the database', async function() {
+			nock(BASE_URI_FT_API)
+				.get(`/users/${mocks.res.locals.userUuid}/profile`)
+				.reply(() => {
+					return [
+						200,
+						require(path.resolve(`${FIXTURES_DIRECTORY}/userProfile.json`)),
+						{}
+					];
+				});
 
-		const { user } = mocks.res.locals;
+			await underTest(mocks.req, mocks.res, stubs.next);
 
-		expect(user).to.be.an('object')
-			.and.to.eql(userResponse);
+			expect(db.syndication.upsert_user).to.not.have.been.called;
+		});
 	});
-
 });

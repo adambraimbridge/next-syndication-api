@@ -3,7 +3,9 @@
 const pg = require('../../db/pg');
 
 module.exports = exports = async (req, res, next) => {
-	res.locals.$DB = await pg();
+	if (res.locals.MAINTENANCE_MODE !== true) {
+		res.locals.$DB = await pg();
+	}
 
 	next();
 };

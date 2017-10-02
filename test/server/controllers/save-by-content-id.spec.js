@@ -99,6 +99,7 @@ describe(MODULE_ID, function () {
 				email: 'foo@bar.com',
 				first_name: 'foo',
 				user_id: 'abc',
+				passport_id: '1234567890',
 				surname: 'bar'
 			},
 			userUuid: 'abc'

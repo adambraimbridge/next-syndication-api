@@ -72,5 +72,4 @@ describe(MODULE_ID, function () {
 		expect(ACCESS_TOKEN_USER).to.be.a('string')
 			.and.to.equal('abc.123.xyz');
 	});
-
 });
