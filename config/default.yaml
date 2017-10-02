@@ -202,6 +202,8 @@
       <p>Your contract does not allow {{type}}s to be downloaded. Please contact your Account Manager to change this.</p>
     MSG_5000: >
       <p>Sorry, an error has occurred. Please try signing out and then in again. If error persists, please contact your Account Manager.</p>
+    MSG_5100: >
+      <p>The Republishing Service is currently undergoing maintenance. Please try again later.</p>
 
   NODE_ENV: development
 
