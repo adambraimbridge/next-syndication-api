@@ -57,7 +57,7 @@
     "proxyquire": "^1.7.4",
     "sinon": "^3.2.0",
     "sinon-chai": "^2.13.0",
-    "whitesource": "^1.0.7"
+    "whitesource": "1.0.7"
   },
   "nyc": {
     "exclude": [
