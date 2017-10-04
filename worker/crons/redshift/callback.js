@@ -116,11 +116,7 @@ function upload({ file, name }) {
 			Bucket: bucket.id,
 			ContentType: 'text/csv',
 			Key: `${bucket.directory}/${name}`,
-			Metadata: {
-//				env: process.env.NODE_ENV,
-//				file_name,
-//				mime_type
-			}
+			ServerSideEncryption: bucket.encryption_type
 		});
 
 		upload.on('error', err => reject(err));

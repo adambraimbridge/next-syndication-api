@@ -127,11 +127,7 @@ function upload({ archive, file_name }) {
 			Bucket: bucket.id,
 			ContentType: mime_type,
 			Key: `${bucket.directory}/${file_name}`,
-			Metadata: {
-//				env: process.env.NODE_ENV,
-//				file_name,
-//				mime_type
-			}
+			ServerSideEncryption: bucket.encryption_type
 		});
 
 		upload.on('error', err => reject(err));
