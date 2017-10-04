@@ -177,20 +177,28 @@
     - Video
 
   MESSAGES:
+    DATE_FORMAT: Do MMM YYYY
+    EMBARGO: >
+      <p>Please note that this content is embargoed until {{embargoPeriod}} after its original publication date of {{publishedDateDisplay}}.</p>
     MSG_2000: >
+      {{embargoMessage}}
       <p>Please ensure you have considered your <a data-trackable="contractual-rights" href="/republishing/contract">contractual rights</a> before republishing.</p>
     MSG_2100: >
       <p>This content has already been downloaded and therefore will not count towards your republishing limit.</p>
+      {{embargoMessage}}
       <p>Please ensure you have considered your <a data-trackable="contractual-rights" href="/republishing/contract">contractual rights</a> before republishing.</p>
     MSG_2200: >
       <p>Please contact us for details of republishing rights for this content (<a href="mailto:syndication@ft.com">syndication@ft.com</a> or +44 (0)207 873 4816).</p>
     MSG_2300: >
+      {{embargoMessage}}
       <p>This content will incur additional charges to republish. Please contact us for further details (<a href="mailto:syndication@ft.com">syndication@ft.com</a> or +44 (0)207 873 4816).</p>
     MSG_2320: >
       <p>This content will incur additional charges to republish. Please contact us for further details (<a href="mailto:syndication@ft.com">syndication@ft.com</a> or +44 (0)207 873 4816).</p>
+      {{embargoMessage}}
       <p>Please ensure you have considered your <a data-trackable="contractual-rights" href="/republishing/contract">contractual rights</a> before republishing.</p>
     MSG_2340: >
       <p>This content has already been downloaded and therefore will not count towards your republishing limit.</p>
+      {{embargoMessage}}
       <p>This content will incur additional charges to republish. Please contact us for further details (<a href="mailto:syndication@ft.com">syndication@ft.com</a> or +44 (0)207 873 4816).</p>
       <p>Please ensure you have considered your <a data-trackable="contractual-rights" href="/republishing/contract">contractual rights</a> before republishing.</p>
     MSG_4000: >
