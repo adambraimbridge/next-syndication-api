@@ -17,6 +17,10 @@
 
   NODE_ENV: production
 
+  REDSHIFT:
+    bucket:
+      directory: redshift
+
   SALESFORCE:
     ENVIRONMENT: production
 
