@@ -73,6 +73,7 @@
     BACKUP:
       bucket:
         directory: development
+        encryption_type: AES256
       date_format: YYYY-MM-DD[T]HH.00
       program: pg_dump
       schema: syndication
@@ -211,7 +212,8 @@
 
   REDSHIFT:
     bucket:
-      directory: redshift
+      directory: development/redshift
+      encryption_type: AES256
     date_format: YYYY-MM-DD
     export_headers:
       contract_data:
