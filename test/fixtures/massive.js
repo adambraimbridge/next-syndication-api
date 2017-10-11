@@ -43,6 +43,8 @@ module.exports = exports = function () {
 			upsert_content: sinon.stub(),
 			upsert_contract: sinon.stub(),
 			upsert_contract_asset: sinon.stub(),
+			upsert_contract_asset_item: sinon.stub(),
+			upsert_contract_asset_register: sinon.stub(),
 			upsert_contract_users: sinon.stub(),
 			upsert_migrated_user: sinon.stub(),
 			upsert_history: sinon.stub(),
