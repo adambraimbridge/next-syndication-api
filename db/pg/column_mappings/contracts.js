@@ -33,6 +33,7 @@ module.exports = exports = {
 		id: 'owner_name'
 	}, {
 		cite: 'assets',
+		clean: true,
 		id: 'assets',
 		items: [{
 			cite: 'assetType',
