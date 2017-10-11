@@ -32,7 +32,6 @@ describe(MODULE_ID, function () {
 				'contributor_content': false,
 				'licencee_name': 'John Q. Average Account',
 				'assets': [{
-					'assetType': 'New',
 					'download_limit': 15,
 					'online_usage_limit': 20,
 					'product': 'Video',
@@ -40,11 +39,11 @@ describe(MODULE_ID, function () {
 					'print_usage_period': 'Week',
 					'print_usage_limit': 20,
 					'embargo_period': 10,
+					'asset_class': 'New',
 					'asset_type': 'Video',
 					'content_type': 'video',
 					'content': ['FT Newspaper']
 				}, {
-					'assetType': 'New',
 					'download_limit': 15,
 					'online_usage_limit': 20,
 					'product': 'FT Article',
@@ -52,6 +51,7 @@ describe(MODULE_ID, function () {
 					'print_usage_period': 'Week',
 					'print_usage_limit': 20,
 					'embargo_period': 10,
+					'asset_class': 'New',
 					'asset_type': 'FT Article',
 					'content_type': 'article',
 					'content': ['FT Newspaper']

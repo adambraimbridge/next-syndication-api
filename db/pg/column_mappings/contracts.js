@@ -38,7 +38,7 @@ module.exports = exports = {
 		items: [{
 			cite: 'assetType',
 			default: 'New',
-			id: 'assetType'
+			id: 'asset_class'
 		}, {
 			cite: 'assetName',
 			id: 'asset_type'
