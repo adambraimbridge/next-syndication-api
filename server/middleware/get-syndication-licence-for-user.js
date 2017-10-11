@@ -63,7 +63,9 @@ module.exports = exports = async (req, res, next) => {
 
 		res.locals.licence = syndicationLicence;
 
-		res.locals.syndication_contract = syndicationLicence.links[0];
+		if (res.locals.MASQUERADING !== true || !res.locals.syndication_contract) {
+			res.locals.syndication_contract = syndicationLicence.links[0];
+		}
 
 		log.info(`${MODULE_ID} LicenceFoundSuccess => ${URI}`, syndicationLicence);
 

@@ -22,6 +22,7 @@ const getSyndicationLicenceForUser = require('./middleware/get-syndication-licen
 const getUserProfile = require('./middleware/get-user-profile');
 const isSyndicationUser = require('./middleware/is-syndication-user');
 const logRequest = require('./middleware/log-request');
+const masquerade = require('./middleware/masquerade');
 const routeMaintenanceMode = require('./middleware/route-maintenance-mode');
 
 const app = module.exports = express({
@@ -48,6 +49,7 @@ const middleware = [
 	decodeCookieFTUser,
 	expediteUserAuth,
 	isSyndicationUser,
+	masquerade,
 	getSyndicationLicenceForUser,
 	getUserAccessAuthToken,
 	getUserProfile,

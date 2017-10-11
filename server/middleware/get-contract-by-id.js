@@ -14,6 +14,7 @@ module.exports = exports = async (req, res, next) => {
 		const {
 			$DB: db,
 			MAINTENANCE_MODE,
+			MASQUERADING,
 			syndication_contract,
 			user
 		} = locals;
@@ -21,7 +22,9 @@ module.exports = exports = async (req, res, next) => {
 		if (MAINTENANCE_MODE !== true) {
 			const contract = locals.contract = await getContractByID(syndication_contract.id, locals);
 
-			await db.syndication.upsert_contract_users([syndication_contract.id, user.user_id, contract.owner_email === user.email]);
+			if (MASQUERADING !== true) {
+				await db.syndication.upsert_contract_users([syndication_contract.id, user.user_id, contract.owner_email === user.email]);
+			}
 		}
 
 		next();
