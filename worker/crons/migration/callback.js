@@ -175,6 +175,10 @@ async function migrateContract(db, item) {
 
 			asset_data.legacy_download_count = legacy_download_count;
 
+			if (!asset_data.asset_class) {
+				asset_data.asset_class = 'New';
+			}
+
 			[asset] = await db.syndication.upsert_contract_asset_register([item.mapped.contract_id, JSON.parse(JSON.stringify(asset_data))]);
 			[asset] = await db.syndication.upsert_contract_asset_item([item.mapped.contract_id, JSON.parse(JSON.stringify(asset_data))]);
 			[asset] = await db.syndication.upsert_contract_asset([item.mapped.contract_id, JSON.parse(JSON.stringify(asset_data))]);
