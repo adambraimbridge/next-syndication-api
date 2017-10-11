@@ -59,6 +59,8 @@ describe(MODULE_ID, function () {
 		}]);
 		db.syndication.upsert_contract.resolves([contractResponse]);
 		db.syndication.upsert_contract_asset.resolves([contractResponse.assets[0]]);
+		db.syndication.upsert_contract_asset_item.resolves([contractResponse.assets[0]]);
+		db.syndication.upsert_contract_asset_register.resolves([contractResponse.assets[0]]);
 		db.syndication.upsert_migrated_user.resolves([{
 			contract_id: contractResponse.contract_id,
 			last_modified: new Date(),
@@ -87,10 +89,10 @@ describe(MODULE_ID, function () {
 
 	it('migrates contracts', async function () {
 		expect(db.syndication.get_contract_data.getCall(0)).to.have.been.calledWith([spreadsheetResponse.worksheetsMap.contracts.rows[0].mapped.contract_id]);
-		expect(db.syndication.upsert_contract_asset.getCall(0)).to.have.been.calledWith([contractResponse.contract_id, contractResponse.assets[0]]);
+		expect(db.syndication.upsert_contract_asset_register.getCall(0)).to.have.been.calledWith([contractResponse.contract_id, contractResponse.assets[0]]);
 
 		expect(db.syndication.get_contract_data.getCall(1)).to.have.been.calledWith([spreadsheetResponse.worksheetsMap.contracts.rows[1].mapped.contract_id]);
-		expect(db.syndication.upsert_contract_asset.getCall(1)).to.have.been.calledWith([contractResponse.contract_id, contractResponse.assets[1]]);
+		expect(db.syndication.upsert_contract_asset_register.getCall(1)).to.have.been.calledWith([contractResponse.contract_id, contractResponse.assets[1]]);
 	});
 
 	it('migrates users', async function () {
