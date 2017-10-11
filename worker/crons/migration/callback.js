@@ -139,6 +139,7 @@ function formatSlackMessage(contracts, users) {
 
 async function migrateContract(db, item) {
 	let asset;
+	let asset_data;
 	let contract;
 	try {
 		[contract] = await db.syndication.get_contract_data([item.mapped.contract_id]);
@@ -157,25 +158,26 @@ async function migrateContract(db, item) {
 			}
 		}
 
-		asset = contract.assets.find(asset => asset.content_type === item.mapped.content_type);
+		asset_data = contract.assets.find(asset => asset.content_type === item.mapped.content_type);
 
 		const legacy_download_count = item.mapped.legacy_download_count = parseInt(item.mapped.legacy_download_count, 10);
 
-		if (asset) {
-			if (Object.prototype.toString.call(asset.content) === '[object String]') {
-				asset.content = asset.content.split(';').map(item => item.trim());
+		if (asset_data) {
+			if (Object.prototype.toString.call(asset_data.content) === '[object String]') {
+				asset_data.content = asset_data.content.split(';').map(item => item.trim());
 			}
 
-			if (parseInt(asset.legacy_download_count, 10) === legacy_download_count) {
-				log.info(`${MODULE_ID} | contract asset already migrated => ${JSON.stringify(asset)}`);
+			if (parseInt(asset_data.legacy_download_count, 10) === legacy_download_count) {
+				log.info(`${MODULE_ID} | contract asset already migrated => ${JSON.stringify(asset_data)}`);
 
 				return null;
 			}
 
-			asset.legacy_download_count = legacy_download_count;
+			asset_data.legacy_download_count = legacy_download_count;
 
-			[asset] = await db.syndication.upsert_contract_asset([item.mapped.contract_id, asset]);
-			[asset] = await db.syndication.upsert_contract_asset_register([item.mapped.contract_id, asset]);
+			[asset] = await db.syndication.upsert_contract_asset_register([item.mapped.contract_id, JSON.parse(JSON.stringify(asset_data))]);
+			[asset] = await db.syndication.upsert_contract_asset_item([item.mapped.contract_id, JSON.parse(JSON.stringify(asset_data))]);
+			[asset] = await db.syndication.upsert_contract_asset([item.mapped.contract_id, JSON.parse(JSON.stringify(asset_data))]);
 
 			log.info(`${MODULE_ID} | upserted migrated contract asset => ${JSON.stringify(asset)}`);
 		}
@@ -186,9 +188,9 @@ async function migrateContract(db, item) {
 		return item.mapped;
 	}
 	catch (error) {
-		log.error(`${MODULE_ID} | ERROR migrating contract asset => ${JSON.stringify(asset)}`, error);
+		log.error(`${MODULE_ID} | ERROR migrating contract asset => ${JSON.stringify(asset_data)}`, error);
 
-		return { error, contract, asset, source: item.mapped };
+		return { error, contract, asset_data, source: item.mapped };
 	}
 }
 
