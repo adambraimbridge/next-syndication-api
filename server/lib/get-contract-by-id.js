@@ -26,6 +26,19 @@ function decorateContract(contract) {
 	const contentAllowed = [];
 
 	contract.assetsMap = contract.assets.reduce((acc, asset) => {
+//		if (asset.download_limit > 0) {
+//			contentAllowed.push(ASSET_TYPE_TO_DISPLAY_TYPE[asset.asset_type]);
+//		}
+
+		acc[asset.asset_type] =
+		acc[asset.content_type] = asset;
+
+		asset.content = asset.content_areas.join('; ');
+
+		return acc;
+	}, {});
+
+	contract.itemsMap = contract.items.reduce((acc, asset) => {
 		if (asset.download_limit > 0) {
 			contentAllowed.push(ASSET_TYPE_TO_DISPLAY_TYPE[asset.asset_type]);
 		}
@@ -33,7 +46,7 @@ function decorateContract(contract) {
 		acc[asset.asset_type] =
 		acc[asset.content_type] = asset;
 
-		asset.content = asset.content_areas.join('; ');
+		asset.assets.forEach(item => item.content = item.content_set.join('; '));
 
 		return acc;
 	}, {});
