@@ -12,8 +12,6 @@ const contractsColumnMappings = require('../../../db/pg/column_mappings/contract
 const historyColumnMappings = require('../../../db/pg/column_mappings/history');
 const usersColumnMappings = require('../../../db/pg/column_mappings/users');
 
-const reformatSalesforceContract = require('../../../server/lib/reformat-salesforce-contract');
-
 const underTest = require('../../../db/pg/map-columns');
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
@@ -24,7 +22,7 @@ describe(MODULE_ID, function () {
 		const contractProfile = require(path.resolve(`${FIXTURES_DIRECTORY}/contractProfile.json`));
 
 		it('assigns existing properties to their respective DB column names', async function () {
-			const res = underTest(reformatSalesforceContract(JSON.parse(JSON.stringify(contractProfile))), contractsColumnMappings);
+			const res = underTest(JSON.parse(JSON.stringify(contractProfile)), contractsColumnMappings);
 
 			expect(res).to.eql({
 				'owner_email': 'john.q@average.com',
@@ -44,8 +42,7 @@ describe(MODULE_ID, function () {
 					'asset_class': 'New',
 					'asset_type': 'Video',
 					'content_type': 'video',
-					'contentSet': 'FT Newspaper',
-					'content': ['FT Newspaper']
+					'contentSet': 'FT Newspaper'
 				}, {
 					'download_limit': 15,
 					'online_usage_limit': 20,
@@ -57,8 +54,7 @@ describe(MODULE_ID, function () {
 					'asset_class': 'New',
 					'asset_type': 'FT Article',
 					'content_type': 'article',
-					'contentSet': 'FT Newspaper',
-					'content': ['FT Newspaper']
+					'contentSet': 'FT Newspaper'
 				}],
 				'contract_id': 'FTS-12345678',
 				'client_website': 'http://ft.com',
