@@ -33,7 +33,6 @@ module.exports = exports = {
 		id: 'owner_name'
 	}, {
 		cite: 'assets',
-		clean: true,
 		id: 'assets',
 		items: [{
 			cite: 'assetType',
@@ -66,9 +65,9 @@ module.exports = exports = {
 			cite: 'embargoPeriod',
 			id: 'embargo_period'
 		}, {
-			cite: 'contentSet',
-			id: 'content',
-			transform: (val) => typeof val === 'string' ? val.split(';').map(item => item.trim()) : []
+			cite: 'content',
+			id: 'content' //,
+//			transform: (val) => typeof val === 'string' ? val.split(';').map(item => item.trim()) : Array.isArray(val) ? val : []
 		}, {
 			cite: '../articleLimit',
 			condition: (item) => item.asset_type === 'FT Article',
