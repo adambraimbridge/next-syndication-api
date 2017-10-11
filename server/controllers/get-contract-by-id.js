@@ -12,6 +12,7 @@ const {
 } = require('config');
 
 const getSalesforceContractByID = require('../lib/get-salesforce-contract-by-id');
+const reformatSalesforceContract = require('../lib/reformat-salesforce-contract');
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
@@ -29,12 +30,18 @@ module.exports = exports = async (req, res, next) => {
 			return;
 		}
 
-		const contract = await getSalesforceContractByID(req.params.contract_id);
+		let contract = await getSalesforceContractByID(req.params.contract_id);
 
 		if (contract.success === true) {
 			res.status(200);
 
 			log.info(`${MODULE_ID} SUCCESS => `, contract);
+
+			if (req.query.format === 'db') {
+				contract.last_updated = new Date();
+
+				contract = reformatSalesforceContract(contract);
+			}
 
 			res.json(contract);
 

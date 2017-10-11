@@ -16,6 +16,7 @@ const contractsColumnMappings = require('../../db/pg/column_mappings/contracts')
 const pgMapColumns = require('../../db/pg/map-columns');
 const pg = require('../../db/pg');
 const getSalesforceContractByID = require('./get-salesforce-contract-by-id');
+const reformatSalesforceContract = require('./reformat-salesforce-contract');
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
@@ -53,7 +54,7 @@ module.exports = exports = async (contractID, locals) => {
 
 	let [contract_data] = await db.syndication.get_contract_data([contractID]);
 
-	if (contract_data && contract_data.contract_id !== null) {
+	if (locals.MASQUERADING !== true && contract_data && contract_data.contract_id !== null) {
 		let last_updated = Date.now() - +contract_data.last_updated;
 
 		if (last_updated < SALESFORCE_REFRESH_CONTRACT_PERIOD) {
@@ -66,6 +67,7 @@ module.exports = exports = async (contractID, locals) => {
 	let contract = await getSalesforceContractByID(contractID);
 
 	if (contract.success === true) {
+		contract = reformatSalesforceContract(contract);
 		contract.last_updated = new Date();
 		contract = pgMapColumns(contract, contractsColumnMappings);
 
