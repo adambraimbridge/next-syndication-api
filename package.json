@@ -39,7 +39,7 @@
     "xmldom": "^0.1.27"
   },
   "devDependencies": {
-    "@financial-times/n-gage": "^1.9.5",
+    "@financial-times/n-gage": "^1.13.0",
     "@financial-times/n-heroku-tools": "^6.29.3",
     "chai": "^4.0.2",
     "coveralls": "^2.13.1",
@@ -56,8 +56,7 @@
     "pm2": "^2.6.1",
     "proxyquire": "^1.7.4",
     "sinon": "^3.2.0",
-    "sinon-chai": "^2.13.0",
-    "whitesource": "1.0.7"
+    "sinon-chai": "^2.13.0"
   },
   "nyc": {
     "exclude": [
