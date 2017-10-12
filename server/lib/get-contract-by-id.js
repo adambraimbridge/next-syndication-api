@@ -43,10 +43,18 @@ function decorateContract(contract) {
 			contentAllowed.push(ASSET_TYPE_TO_DISPLAY_TYPE[asset.asset_type]);
 		}
 
+		asset.hasAddendums = false;
+
 		acc[asset.asset_type] =
 		acc[asset.content_type] = asset;
 
-		asset.assets.forEach(item => item.content = item.content_set.join('; '));
+		asset.assets.forEach(item => {
+			item.content = item.content_set.join('; ');
+
+			if (Array.isArray(item.addendums) && item.addendums.length) {
+				asset.hasAddendums = true;
+			}
+		});
 
 		return acc;
 	}, {});
