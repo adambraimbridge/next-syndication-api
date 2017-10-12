@@ -1,7 +1,0 @@
-{
-  "checkPolicies": true,
-  "productName": "Next",
-  "projectName": "ft-next-syndication-api",
-  "devDep": true,
-  "failOnError": true
-}
