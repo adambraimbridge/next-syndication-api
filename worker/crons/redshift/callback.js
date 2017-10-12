@@ -35,7 +35,7 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 
 module.exports = exports = async () => {
 	const START = Date.now();
-	const time = moment().format(REDSHIFT.date_format);
+	const time = moment().format(REDSHIFT.date_format_file);
 	const directory = path.resolve(`./tmp/redshift/${time}`);
 
 	try {
@@ -90,7 +90,7 @@ module.exports = exports = async () => {
 function safe(value) {
 	switch (Object.prototype.toString.call(value)) {
 		case '[object Date]':
-			value = value.toJSON();
+			value = moment(value).format(REDSHIFT.date_format_cell);
 			break;
 
 		case '[object Array]':
@@ -114,7 +114,7 @@ function upload({ file, name }) {
 
 		const upload = client.upload({
 			Bucket: bucket.id,
-			ContentType: 'text/csv',
+			ContentType: 'text/plain',
 			Key: `${bucket.directory}/${name}`,
 			ServerSideEncryption: bucket.encryption_type
 		});
@@ -137,12 +137,12 @@ async function writeCSV({ items, directory, headers, name, time }) {
 
 	CSV.push(...items.map(item => headers.map(key => safe(item[key])).join(',')));
 
-	const file = path.resolve(directory, `${name}.${time}.csv`);
+	const file = path.resolve(directory, `${name}.${time}.txt`);
 
 	await writeFileAsync(file, CSV.join('\n'), 'utf8');
 
 	return {
 		file: createReadStream(file),
-		name: `${time}/${name}.${time}.csv`
+		name: `${name}.${time}.txt`
 	};
 }
