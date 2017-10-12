@@ -222,7 +222,8 @@
     bucket:
       directory: development/redshift
       encryption_type: AES256
-    date_format: YYYY-MM-DD
+    date_format_cell: YYYY-MM-DD HH:mm:ss.SSS
+    date_format_file: YYYY-MM-DD
     export_headers:
       contract_data:
         - contract_id
