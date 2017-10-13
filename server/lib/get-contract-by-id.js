@@ -70,7 +70,7 @@ function decorateContract(contract) {
 	return contract;
 }
 
-module.exports = exports = async (contractID, locals) => {
+module.exports = exports = async (contractID, locals = {}) => {
 	const db = await pg();
 
 	let [contract_data] = await db.syndication.get_contract_data([contractID]);
