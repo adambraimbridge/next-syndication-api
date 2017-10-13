@@ -27,12 +27,17 @@ module.exports = exports = SFContract => {
 	SFContract.assets.filter(({ assetType }) => assetType === 'Addendum').forEach(item => {
 		const addendum = formatAsset(item);
 
-		const asset = contract.assets.find(asset =>
+		let asset = contract.assets.find(asset =>
 			asset.content_type === addendum.content_type
 			&& asset.content_set === addendum.content_set);
 
 		if (!asset) {
-			throw new ReferenceError(`Asset not found for Addendum: ${JSON.stringify(addendum)}`);
+			asset = contract.assets.find(asset =>
+				asset.content_type === addendum.content_type);
+
+			if (!asset) {
+				throw new ReferenceError(`Asset not found for Addendum: ${JSON.stringify(addendum)}`);
+			}
 		}
 
 		if (!Array.isArray(asset.addendums)) {
