@@ -39,7 +39,6 @@ module.exports = exports = async (req, res, next) => {
 			contributor_content: contract.contributor_content
 		});
 
-
 		const userStatus = Object.assign({
 			app: {
 				env: process.env.NODE_ENV,
