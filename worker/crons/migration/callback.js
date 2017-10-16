@@ -158,7 +158,7 @@ async function migrateContract(db, item) {
 			}
 		}
 
-		asset_data = contract.assets.find(asset => asset.content_type === item.mapped.content_type);
+		asset_data = contract.items.find(asset => asset.content_type === item.mapped.content_type);
 
 		const legacy_download_count = item.mapped.legacy_download_count = parseInt(item.mapped.legacy_download_count, 10);
 
