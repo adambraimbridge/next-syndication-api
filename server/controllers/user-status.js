@@ -25,6 +25,21 @@ module.exports = exports = async (req, res, next) => {
 			user
 		} } = res;
 
+		const allowed = contract.items.reduce((acc, { assets }) => {
+			[
+				['ft.com', 'ft_com'],
+				['spanish content', 'spanish_content'],
+				['spanish weekend', 'spanish_weekend']
+			].forEach(([content_area, property]) => {
+				acc[property] = acc[property] || assets.some(({ content }) => content.toLowerCase().includes(content_area));
+			});
+
+			return acc;
+		}, {
+			contributor_content: contract.contributor_content
+		});
+
+
 		const userStatus = Object.assign({
 			app: {
 				env: process.env.NODE_ENV,
@@ -40,6 +55,7 @@ module.exports = exports = async (req, res, next) => {
 				return acc;
 			}, {}),
 
+			allowed,
 			contract_id:  syndication_contract.id,
 			contributor_content: contract.contributor_content,
 			licence_id: licence.id,

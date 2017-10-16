@@ -65,7 +65,18 @@ describe(MODULE_ID, function () {
 		res.locals = {
 			contract: {
 				contract_id: 'lmno',
-				contributor_content: true
+				contributor_content: true,
+				items: [ {
+					assets: [ {
+						content: 'FT.com'
+					}, {
+						content: 'FT.com'
+					} ]
+				}, {
+					assets: [ {
+						content: 'Spanish content'
+					} ]
+				} ]
 			},
 			flags: {
 				syndication: true,
@@ -100,6 +111,12 @@ describe(MODULE_ID, function () {
 				syndication: true,
 				syndicationNew: true,
 				syndicationRedux: true
+			},
+			allowed: {
+				contributor_content: true,
+				ft_com: true,
+				spanish_content: true,
+				spanish_weekend: false
 			},
 			contract_id: 'lmno',
 			contributor_content: true,
