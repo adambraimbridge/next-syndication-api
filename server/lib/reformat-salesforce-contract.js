@@ -45,6 +45,10 @@ module.exports = exports = SFContract => {
 		}
 
 		asset.addendums.push(cleanupAddendum(addendum));
+
+		if (addendum.embargo_period && (!asset.embargo_period || addendum.embargo_period > asset.embargo_period)) {
+			asset.embargo_period = addendum.embargo_period;
+		}
 	});
 
 	contract.assets.forEach(item => delete item.content_set);
