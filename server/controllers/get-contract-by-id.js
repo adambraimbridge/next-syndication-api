@@ -11,6 +11,10 @@ const {
 	}
 } = require('config');
 
+const contractsColumnMappings = require('../../db/pg/column_mappings/contracts');
+const pgMapColumns = require('../../db/pg/map-columns');
+const pg = require('../../db/pg');
+
 const getSalesforceContractByID = require('../lib/get-salesforce-contract-by-id');
 const reformatSalesforceContract = require('../lib/reformat-salesforce-contract');
 
@@ -36,6 +40,16 @@ module.exports = exports = async (req, res, next) => {
 			res.status(200);
 
 			log.info(`${MODULE_ID} SUCCESS => `, contract);
+
+			if (req.query.save !== '0') {
+				let contract_data = reformatSalesforceContract(JSON.parse(JSON.stringify(contract)));
+				contract_data.last_updated = new Date();
+				contract_data = pgMapColumns(contract_data, contractsColumnMappings);
+
+				const db = await pg();
+
+				await db.syndication.upsert_contract([contract_data]);
+			}
 
 			if (req.query.format === 'db') {
 				contract.last_updated = new Date();

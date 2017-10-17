@@ -9,6 +9,7 @@ const bodyParser = require('body-parser');
 const { BASE_URI_PATH = '/syndication' } = require('config');
 
 const accessControl = require('./middleware/access-control');
+const apiKey = require('./middleware/api-key');
 const cache = require('./middleware/cache');
 const checkIfNewSyndicationUser = require('./middleware/check-if-new-syndication-user');
 const db = require('./middleware/db');
@@ -82,14 +83,15 @@ if (process.env.NODE_ENV !== 'production') {
 	app.get(`${BASE_URI_PATH}/redshift`, middleware, require('./controllers/redshift'));
 }
 
-if (process.env.NODE_ENV !== 'production') {
+{
 	const middleware = [
 		cookieParser(),
 		bodyParser.text(),
 		bodyParser.json(),
 		logRequest,
 		accessControl,
-		cache
+		cache,
+		apiKey
 	];
 
 	app.get(`${BASE_URI_PATH}/contracts/:contract_id`, middleware, require('./controllers/get-contract-by-id'));
