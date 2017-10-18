@@ -35,6 +35,14 @@
     "download_format": {
       "type": "string"
     },
+    "iso_country_code": {
+      "default": "GB",
+      "enum": [
+        "GB",
+        "ES"
+      ],
+      "type": "string"
+    },
     "licence_id": {
       "type": "string"
     },
@@ -154,6 +162,7 @@
     "_id",
     "content_id",
     "contract_id",
+    "iso_country_code",
     "licence_id",
     "published_date",
     "state",
