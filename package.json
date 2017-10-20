@@ -95,7 +95,9 @@
       "worker/crons/redshift/callback.js",
       "worker/crons/redshift/index.js",
       "worker/crons/migration/index.js",
-      "worker/db-persist/index.js",
+      "worker/sync/index.js",
+      "worker/sync/content-es/index.js",
+      "worker/sync/db-persist/index.js",
       "coverage",
       "test"
     ]
