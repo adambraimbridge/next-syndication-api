@@ -16,7 +16,7 @@
     "instances": 2,
     "interpreter_args": "--harmony --preserve-symlinks --require ./server/env.js --trace-deprecation --trace-warnings --zero-fill-buffers",
     "name": "syndication-sync",
-    "script": "./worker/db-persist/index.js"
+    "script": "./worker/sync/index.js"
   }, {
     "env": {},
     "exec_mode": "cluster",
