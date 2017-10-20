@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+* IMPORTANT: THIS IS THE MAIN FILE RUN BY: dl.syndication.ft.com
+* IMPORTANT: SEE: https://github.com/Financial-Times/next-syndication-dl
+* **/
+
 process.env.TZ = 'UTC';
 
 const express = require('@financial-times/n-express');
@@ -48,4 +53,5 @@ const middleware = [
 
 app.get(`${BASE_URI_PATH}/__gtg`, (req, res) => res.sendStatus(200));
 
+// download a content item for a contract
 app.get(`${BASE_URI_PATH}/download/:content_id`, middleware, require('./controllers/download-by-content-id'));
