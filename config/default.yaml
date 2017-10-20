@@ -321,4 +321,9 @@
     METHOD: POST
     URI: https://spoor-api.ft.com/ingest
 
+  TRANSLATIONS:
+    DEFAULT_LANGUAGE: es
+    PAGINATION:
+      DEFAULT_LIMIT: 50
+
   USER_PROFILE_DATA_PROPERTY: user
