@@ -63,6 +63,12 @@ describe(MODULE_ID, function () {
 		res.json = sinon.stub();
 
 		res.locals = {
+			allowed: {
+				contributor_content: true,
+				ft_com: true,
+				spanish_content: true,
+				spanish_weekend: false
+			},
 			contract: {
 				contract_id: 'lmno',
 				contributor_content: true,

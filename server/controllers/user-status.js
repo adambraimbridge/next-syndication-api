@@ -17,6 +17,7 @@ module.exports = exports = async (req, res, next) => {
 		res.status(200);
 
 		const { locals: {
+			allowed,
 			contract,
 			flags,
 			isNewSyndicationUser,
@@ -24,20 +25,6 @@ module.exports = exports = async (req, res, next) => {
 			syndication_contract,
 			user
 		} } = res;
-
-		const allowed = contract.items.reduce((acc, { assets }) => {
-			[
-				['ft.com', 'ft_com'],
-				['spanish content', 'spanish_content'],
-				['spanish weekend', 'spanish_weekend']
-			].forEach(([content_area, property]) => {
-				acc[property] = acc[property] || assets.some(({ content }) => content.toLowerCase().includes(content_area));
-			});
-
-			return acc;
-		}, {
-			contributor_content: contract.contributor_content
-		});
 
 		const userStatus = Object.assign({
 			app: {

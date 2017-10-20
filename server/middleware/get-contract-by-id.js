@@ -22,6 +22,20 @@ module.exports = exports = async (req, res, next) => {
 		if (MAINTENANCE_MODE !== true) {
 			const contract = locals.contract = await getContractByID(syndication_contract.id, locals);
 
+			locals.allowed = contract.items.reduce((acc, { assets }) => {
+				[
+					['ft.com', 'ft_com'],
+					['spanish content', 'spanish_content'],
+					['spanish weekend', 'spanish_weekend']
+				].forEach(([content_area, property]) => {
+					acc[property] = acc[property] || assets.some(({ content }) => content.toLowerCase().includes(content_area));
+				});
+
+				return acc;
+			}, {
+				contributor_content: contract.contributor_content
+			});
+
 			if (MASQUERADING !== true) {
 				await db.syndication.upsert_contract_users([syndication_contract.id, user.user_id, contract.owner_email === user.email]);
 			}
