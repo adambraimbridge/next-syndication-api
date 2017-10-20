@@ -162,7 +162,7 @@
     "_id",
     "content_id",
     "contract_id",
-    "iso_country_code",
+    "iso_lang_code",
     "licence_id",
     "published_date",
     "state",
