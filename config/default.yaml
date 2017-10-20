@@ -79,6 +79,7 @@
       schema: syndication
       tables:
         - content_areas
+        - content_es
         - contract_asset_content_set
         - contract_asset_items
         - contract_asset_register
