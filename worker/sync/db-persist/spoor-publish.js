@@ -10,8 +10,8 @@ const {
 	TRACKING
 } = require('config');
 
-const pg = require('../../db/pg');
-const messageCode = require('../../server/lib/resolve/messageCode');
+const pg = require('../../../db/pg');
+const messageCode = require('../../../server/lib/resolve/messageCode');
 
 const PACKAGE = require(path.resolve('./package.json'));
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;

@@ -9,7 +9,7 @@ const proxyquire = require('proxyquire');
 
 const NodeMailerJSONTransport = require('nodemailer/lib/json-transport');
 
-const MessageQueueEvent = require('../../../queue/message-queue-event');
+const MessageQueueEvent = require('../../../../queue/message-queue-event');
 
 const {
 	CONTRIBUTOR_EMAIL,
@@ -84,8 +84,8 @@ describe(MODULE_ID, function () {
 
 			message = { data: event };
 
-			underTest = proxyquire('../../../worker/db-persist/mail-contributor', {
-				'../../db/pg': sinon.stub().resolves(db)
+			underTest = proxyquire('../../../../worker/sync/db-persist/mail-contributor', {
+				'../../../db/pg': sinon.stub().resolves(db)
 			});
 		});
 
@@ -168,8 +168,8 @@ describe(MODULE_ID, function () {
 
 			message = { data: event };
 
-			underTest = proxyquire('../../../worker/db-persist/mail-contributor', {
-				'../../db/pg': sinon.stub().resolves(db)
+			underTest = proxyquire('../../../../worker/sync/db-persist/mail-contributor', {
+				'../../../db/pg': sinon.stub().resolves(db)
 			});
 		});
 

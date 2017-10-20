@@ -4,7 +4,7 @@ const path = require('path');
 
 const { default: log } = require('@financial-times/n-logger');
 
-const pg = require('../../db/pg');
+const pg = require('../../../db/pg');
 
 const { CONTENT_TYPE_TO_ASSET_TYPE } = require('config');
 

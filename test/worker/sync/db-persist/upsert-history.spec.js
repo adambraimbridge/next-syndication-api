@@ -7,7 +7,7 @@ const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 const proxyquire = require('proxyquire');
 
-const MessageQueueEvent = require('../../../queue/message-queue-event');
+const MessageQueueEvent = require('../../../../queue/message-queue-event');
 
 const {
 	TEST: { FIXTURES_DIRECTORY }
@@ -33,8 +33,8 @@ describe(MODULE_ID, function () {
 
 		db.syndication.upsert_history.resolves([]);
 
-		underTest = proxyquire('../../../worker/db-persist/upsert-history', {
-			'../../db/pg': sinon.stub().resolves(db)
+		underTest = proxyquire('../../../../worker/sync/db-persist/upsert-history', {
+			'../../../db/pg': sinon.stub().resolves(db)
 		});
 	});
 

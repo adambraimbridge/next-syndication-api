@@ -1,8 +1,8 @@
 'use strict';
 
 
-const worker = require('../index');
-const createKey = require('../create-key');
+const worker = require('../../index');
+const createKey = require('../../create-key');
 
 const mailContributor = require('./mail-contributor');
 const spoorPublish = require('./spoor-publish');

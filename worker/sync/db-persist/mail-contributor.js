@@ -14,7 +14,7 @@ const {
 	CONTRIBUTOR_EMAIL
 } = require('config');
 
-const pg = require('../../db/pg');
+const pg = require('../../../db/pg');
 
 const Handlebars = handlebars();
 

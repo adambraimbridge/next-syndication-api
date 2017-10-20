@@ -7,8 +7,8 @@ const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 const proxyquire = require('proxyquire');
 
-const MessageQueueEvent = require('../../../queue/message-queue-event');
-const messageCode = require('../../../server/lib/resolve/messageCode');
+const MessageQueueEvent = require('../../../../queue/message-queue-event');
+const messageCode = require('../../../../server/lib/resolve/messageCode');
 
 const {
 	TRACKING,
@@ -46,9 +46,9 @@ describe(MODULE_ID, function () {
 			json: fetchJSONStub.resolves({ status: 'Feed me now!' })
 		});
 
-		underTest = proxyquire('../../../worker/db-persist/spoor-publish', {
+		underTest = proxyquire('../../../../worker/sync/db-persist/spoor-publish', {
 			'n-eager-fetch': fetchStub,
-			'../../db/pg': sinon.stub().resolves(db)
+			'../../../db/pg': sinon.stub().resolves(db)
 		});
 	});
 
