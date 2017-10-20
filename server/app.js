@@ -61,21 +61,43 @@ const middleware = [
 
 app.get(`${BASE_URI_PATH}/__gtg`, (req, res) => res.sendStatus(200));
 
-app.post(`${BASE_URI_PATH}/resolve`, middleware, require('./controllers/resolve'));
-
+// this is here to stop weird error logs, we can't find what exactly is pinging this endpoint
+// so this keeps everyone happy... :P
 app.get(`${BASE_URI_PATH}/admin/save`, (req, res) => res.sendStatus(204));
 
+// returns the data needed to show the syndication icon and correct messaging for each UUID POSTed in the body
+app.post(`${BASE_URI_PATH}/resolve`, middleware, require('./controllers/resolve'));
+// returns content items that have been translated into the specified language
+app.get(`${BASE_URI_PATH}/translations`, middleware, require('./controllers/translations'));
+
+// returns the syndication user tied to this session
+app.get(`${BASE_URI_PATH}/user-status`, middleware, require('./controllers/user-status'));
+// returns the syndication contract tied to this session
 app.get(`${BASE_URI_PATH}/contract-status`, middleware, require('./controllers/contract-status'));
+
+// internal: get content by UUID, handy for debugging
 app.get(`${BASE_URI_PATH}/content/:content_id`, middleware, require('./controllers/get-content-by-id'));
+
+// download a content item for a contract
+// IMPORTANT: THIS IS ONLY USED IN DEVELOPMENT. IN PRODUCTION THIS ENDPOINT IS RUN FROM ./app-dl.js
 app.get(`${BASE_URI_PATH}/download/:content_id`, middleware, require('./controllers/download-by-content-id'));
-app.get(`${BASE_URI_PATH}/export`, middleware, require('./controllers/export'));
-app.get(`${BASE_URI_PATH}/history`, middleware, require('./controllers/history'));
+
+// un/save a content item to a contract
 app.get(`${BASE_URI_PATH}/save/:content_id`, middleware, require('./controllers/save-by-content-id'));
 app.delete(`${BASE_URI_PATH}/save/:content_id`, middleware, require('./controllers/unsave-by-content-id'));
 app.post(`${BASE_URI_PATH}/unsave/:content_id`, middleware, require('./controllers/unsave-by-content-id'));
-app.get(`${BASE_URI_PATH}/user-status`, middleware, require('./controllers/user-status'));
+
+// get a contract's download/save history
+app.get(`${BASE_URI_PATH}/history`, middleware, require('./controllers/history'));
+// export a contract's download/save history to CSV
+app.get(`${BASE_URI_PATH}/export`, middleware, require('./controllers/export'));
+
+// updates a user's preferred download format
 app.post(`${BASE_URI_PATH}/download-format`, middleware, require('./controllers/update-download-format'));
+
+// force run migration cron
 app.get(`${BASE_URI_PATH}/migrate`, middleware, require('./controllers/migrate'));
+// force reload all computed tables in the DB
 app.get(`${BASE_URI_PATH}/reload`, middleware, require('./controllers/reload'));
 
 if (process.env.NODE_ENV !== 'production') {
