@@ -7,6 +7,8 @@ const { default: log } = require('@financial-times/n-logger');
 const AWS = require('aws-sdk');
 
 const pg = require('../../../db/pg');
+const enrich = require('../../../server/lib/enrich');
+const getContentById = require('../../../server/lib/get-content-by-id');
 
 const {
 	AWS_ACCESS_KEY,
@@ -59,10 +61,20 @@ module.exports = exports = async (event, message, response, subscriber) => {
 
 				item.body = item.bodyHTML;
 				item.content_area = item.isWeekendContent === true ? 'Spanish weekend' : 'Spanish content';
-				item.content_id = item.uuid;
-				item.content_type = 'article';
+				item.content_id = item.id = item.uuid;
+				item.content_type = item.type = 'article';
 				item.state = CONTENT_STATE;
 				item.translated_date = item.translatedDate;
+
+				enrich(item);
+
+				delete item.document;
+
+				item.word_count = item.wordCount;
+
+				const item_en = await getContentById(item.content_id);
+
+				item.published_date = new Date(item_en.firstPublishedDate || item_en.publishedDate);
 
 				await db.syndication.upsert_content_es([item]);
 
