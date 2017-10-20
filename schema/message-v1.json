@@ -35,11 +35,11 @@
     "download_format": {
       "type": "string"
     },
-    "iso_country_code": {
-      "default": "GB",
+    "iso_lang_code": {
+      "default": "en",
       "enum": [
-        "GB",
-        "ES"
+        "en",
+        "es"
       ],
       "type": "string"
     },
