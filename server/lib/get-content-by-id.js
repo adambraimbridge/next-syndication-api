@@ -5,17 +5,34 @@ const path = require('path');
 const esClient = require('@financial-times/n-es-client');
 const { default: log } = require('@financial-times/n-logger');
 
+const pg = require('../../db/pg');
+
 const enrich = require('./enrich');
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
-module.exports = exports = async (content_id, format) => {
+module.exports = exports = async (content_id, format, lang) => {
 	const START = Date.now();
 
 	let content;
 
 	try {
-		content = await esClient.get(content_id);
+		if (lang === 'es') {
+			const db = await pg();
+
+			[content] = await db.syndication.get_content_es_by_id([content_id]);
+
+			const contentEN = await esClient.get(content_id);
+
+			[
+				'id', 'canBeSyndicated',
+				'firstPublishedDate', 'publishedDate',
+				'webUrl'
+			].forEach(prop => content[prop] = contentEN[prop]);
+		}
+		else {
+			content = await esClient.get(content_id);
+		}
 	}
 	catch (e) {
 		content = null;
