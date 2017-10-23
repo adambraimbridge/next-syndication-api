@@ -62,10 +62,12 @@ module.exports = exports = async (req, res, next) => {
 				let getQuery = `content_areas => ARRAY[$text$${Object.keys(content_areas).join('$text$::syndication.enum_content_area_es, $text$')}$text$::syndication.enum_content_area_es],
 _offset => ${offset}::integer,
 _limit => ${limit}::integer`;
+				let getTotalQuery = getQuery + '';
 
 				if (typeof query === 'string' && query.trim().length) {
 					getQuery = `query => $text$${query.trim()}$text$,
 ${getQuery}`;
+					getTotalQuery = getQuery + '';
 				}
 				else if (typeof sort === 'string' && sort.trim().length) {
 					let sortQuery = `sort_col => $text$${sort.trim().toLowerCase()}$text$`;
@@ -84,6 +86,9 @@ ${getQuery}`;
 				}
 
 				const items = await db.run(`SELECT * FROM syndication.get_content_es(${getQuery})`);
+
+				const [{ get_content_total_es }] = await db.run(`SELECT * FROM syndication.get_content_total_es(${getTotalQuery})`);
+				const total = parseInt(get_content_total_es, 10);
 
 				items.forEach(item => enrich(item));
 
@@ -116,7 +121,7 @@ ${getQuery}`;
 
 				response.forEach(item => messageCode(item, contract));
 
-				res.json(response);
+				res.json({ items: response, total });
 
 				res.status(200);
 
