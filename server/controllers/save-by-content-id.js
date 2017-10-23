@@ -10,7 +10,10 @@ const MessageQueueEvent = require('../../queue/message-queue-event');
 
 const getContentById = require('../lib/get-content-by-id');
 
-const { DEFAULT_DOWNLOAD_FORMAT } = require('config');
+const {
+	DEFAULT_DOWNLOAD_FORMAT,
+	DEFAULT_DOWNLOAD_LANGUAGE
+} = require('config');
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
@@ -28,7 +31,9 @@ module.exports = exports = async (req, res, next) => {
 					|| download_format
 					|| DEFAULT_DOWNLOAD_FORMAT;
 
-		const content = await getContentById(req.params.content_id, format);
+		const lang = String(req.query.lang || DEFAULT_DOWNLOAD_LANGUAGE).toLowerCase();
+
+		const content = await getContentById(req.params.content_id, format, lang);
 
 		if (Object.prototype.toString.call(content) !== '[object Object]') {
 			log.error(`${MODULE_ID} ContentNotFoundError => ${req.params.content_id}`);
@@ -44,6 +49,7 @@ module.exports = exports = async (req, res, next) => {
 				content_type: content.content_type,
 				content_url: content.webUrl,
 				contract_id: syndication_contract.id,
+				iso_lang_code: lang,
 				licence_id: licence.id,
 				published_date: content.firstPublishedDate || content.publishedDate,
 				state: 'saved',

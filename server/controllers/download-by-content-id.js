@@ -9,7 +9,10 @@ const prepareDownloadResponse = require('../lib/prepare-download-response');
 
 const download = require('../lib/download');
 
-const { DEFAULT_DOWNLOAD_FORMAT } = require('config');
+const {
+	DEFAULT_DOWNLOAD_FORMAT,
+	DEFAULT_DOWNLOAD_LANGUAGE
+} = require('config');
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
@@ -26,7 +29,9 @@ module.exports = exports = async (req, res, next) => {
 				|| download_format
 				|| DEFAULT_DOWNLOAD_FORMAT;
 
-	const content = await getContentById(req.params.content_id, format);
+	const lang = String(req.query.lang || DEFAULT_DOWNLOAD_LANGUAGE).toLowerCase();
+
+	const content = await getContentById(req.params.content_id, format, lang);
 
 	if (Object.prototype.toString.call(content) !== '[object Object]') {
 		log.error(`${MODULE_ID} ContentNotFoundError => ${req.params.content_id}`);
@@ -39,6 +44,7 @@ module.exports = exports = async (req, res, next) => {
 	const dl = download({
 		content,
 		contract: contract,
+		lang,
 		licence: licence,
 		req,
 		user: user

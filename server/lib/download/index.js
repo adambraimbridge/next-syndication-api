@@ -8,7 +8,7 @@ const moment = require('moment');
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = (config) => {
-	const { content, contract, licence, req, user } = config;
+	const { content, contract, lang, licence, req, user } = config;
 
 	if (content.content_type in exports) {
 		config.event = new MessageQueueEvent({
@@ -18,6 +18,7 @@ module.exports = exports = (config) => {
 				content_url: content.webUrl,
 				contract_id: contract.contract_id,
 				download_format: content.extension,
+				iso_lang_code: lang,
 				licence_id: licence.id,
 				published_date: content.firstPublishedDate || content.publishedDate,
 				state: 'started',
