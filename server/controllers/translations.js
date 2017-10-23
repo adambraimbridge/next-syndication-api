@@ -58,72 +58,72 @@ module.exports = exports = async (req, res, next) => {
 						content_areas['Spanish weekend'] = true;
 					}
 				}
-			}
 
-			let getQuery = `content_areas => ARRAY[$text$${Object.keys(content_areas).join('$text$::syndication.enum_content_area_es, $text$')}$text$::syndication.enum_content_area_es],
+				let getQuery = `content_areas => ARRAY[$text$${Object.keys(content_areas).join('$text$::syndication.enum_content_area_es, $text$')}$text$::syndication.enum_content_area_es],
 _offset => ${offset}::integer,
 _limit => ${limit}::integer`;
 
-			if (typeof query === 'string' && query.trim().length) {
-				getQuery = `query => $text$${query.trim()}$text$,
+				if (typeof query === 'string' && query.trim().length) {
+					getQuery = `query => $text$${query.trim()}$text$,
 ${getQuery}`;
-			}
-			else if (typeof sort === 'string' && sort.trim().length) {
-				let sortQuery = `sort_col => $text$${sort.trim().toLowerCase()}$text$`;
+				}
+				else if (typeof sort === 'string' && sort.trim().length) {
+					let sortQuery = `sort_col => $text$${sort.trim().toLowerCase()}$text$`;
 
-				if (typeof order === 'string' && order.trim().toUpperCase() === 'ASC') {
-					sortQuery = `${sortQuery},
+					if (typeof order === 'string' && order.trim().toUpperCase() === 'ASC') {
+						sortQuery = `${sortQuery},
 sort_order => $text$ASC$text$`;
-				}
-				else {
-					sortQuery = `${sortQuery},
+					}
+					else {
+						sortQuery = `${sortQuery},
 sort_order => $text$DESC$text$`;
-				}
+					}
 
-				getQuery = `${sortQuery},
+					getQuery = `${sortQuery},
 ${getQuery}`;
-			}
-
-			const items = await db.run(`SELECT * FROM syndication.get_content_es(${getQuery})`);
-
-			items.forEach(item => enrich(item));
-
-			const contentItems = await getContent(items.map(({ content_id }) => content_id));
-			const contentItemsMap = contentItems.reduce((acc, item) => {
-				acc[item.id] = item;
-
-				// this is for backwards/forwards support with Content API/Elastic Search
-				if (item.id.includes('/')) {
-					acc[item.id.split('/').pop()] = item;
 				}
 
-				return acc;
-			}, {});
-			const existing = await getAllExistingItemsForContract(contract.contract_id);
+				const items = await db.run(`SELECT * FROM syndication.get_content_es(${getQuery})`);
 
-			const response = items.map(item => {
-				const data = RESOLVE_PROPERTIES.reduce((acc, prop) => {
-					acc[prop] = resolve[prop](item[prop] || contentItemsMap[item.content_id][prop], prop, tidy(item, contentItemsMap[item.content_id]), existing[item.id] || {}, contract);
+				items.forEach(item => enrich(item));
+
+				const contentItems = await getContent(items.map(({ content_id }) => content_id));
+				const contentItemsMap = contentItems.reduce((acc, item) => {
+					acc[item.id] = item;
+
+					// this is for backwards/forwards support with Content API/Elastic Search
+					if (item.id.includes('/')) {
+						acc[item.id.split('/').pop()] = item;
+					}
 
 					return acc;
 				}, {});
+				const existing = await getAllExistingItemsForContract(contract.contract_id);
 
-				return RESOLVE_PROPERTIES_ES.reduce((acc, prop) => {
-					acc[prop] = resolveES[prop](item[prop], prop, item, existing[item.id] || {}, contract);
+				const response = items.map(item => {
+					const data = RESOLVE_PROPERTIES.reduce((acc, prop) => {
+						acc[prop] = resolve[prop](item[prop] || contentItemsMap[item.content_id][prop], prop, tidy(item, contentItemsMap[item.content_id]), existing[item.id] || {}, contract);
 
-					return acc;
-				}, data);
-			});
+						return acc;
+					}, {});
 
-			response.forEach(item => messageCode(item, contract));
+					return RESOLVE_PROPERTIES_ES.reduce((acc, prop) => {
+						acc[prop] = resolveES[prop](item[prop], prop, item, existing[item.id] || {}, contract);
 
-			res.json(response);
+						return acc;
+					}, data);
+				});
 
-			res.status(200);
+				response.forEach(item => messageCode(item, contract));
 
-			next();
+				res.json(response);
 
-			return;
+				res.status(200);
+
+				next();
+
+				return;
+			}
 	}
 
 	res.sendStatus(403);
