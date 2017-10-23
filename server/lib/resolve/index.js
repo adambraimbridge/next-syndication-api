@@ -5,6 +5,7 @@ exports.canDownload = require('./canDownload');
 exports.canBeSyndicated = require('./canBeSyndicated');
 exports.downloaded = require('./downloaded');
 exports.embargoPeriod = require('./embargoPeriod');
+exports.lang = require('./lang');
 exports.publishedDate = require('./publishedDate');
 exports.publishedDateDisplay = require('./publishedDateDisplay');
 exports.saved = require('./saved');
