@@ -64,7 +64,7 @@ module.exports = exports = async (req, res, next) => {
 		history.items = history.items.map(item => RESOLVE_PROPERTIES.reduce((acc, prop) => {
 			let contentItem = contentItemsMap[item.content_id] || contentItemsMap[item.id] || {};
 
-			acc[prop] = resolve[prop](contentItem[prop] || item[prop], prop, contentItem, item, CONTRACT);
+			acc[prop] = resolve[prop](Object.prototype.hasOwnProperty.call(item, prop) ? item[prop] : contentItem[prop], prop, contentItem, item, CONTRACT);
 
 			if (!contentItemsMap[item.content_id] && !contentItemsMap[item.id]) {
 				acc.notAvailable = true;
