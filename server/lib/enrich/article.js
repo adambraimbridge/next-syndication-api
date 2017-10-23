@@ -17,10 +17,19 @@ const RE_BAD_CHARS = /[^A-Za-z0-9_]/gm;
 const RE_SPACE = /\s/gm;
 
 module.exports = exports = function article(content, format) {
-	content.content_id = path.basename(content.id);
-	content.content_type = CONTENT_TYPE_ALIAS[content.type] || content.type;
+	if (!content.content_id) {
+		content.content_id = path.basename(content.id);
+	}
+
+	if (!content.content_type) {
+		content.content_type = CONTENT_TYPE_ALIAS[content.type] || content.type;
+	}
 
 	content.extension = DOWNLOAD_ARTICLE_FORMATS[format] || 'docx';
+
+	if (content.body && !content.bodyHTML) {
+		content.bodyHTML = content.body;
+	}
 
 	if (content.bodyHTML) {
 		content.document = formatArticleXML(`<body>${content.bodyHTML}</body>`);
