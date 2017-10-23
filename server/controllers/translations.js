@@ -8,9 +8,11 @@ const getAllExistingItemsForContract = require('../lib/get-all-existing-items-fo
 const getContent = require('../lib/get-content');
 const enrich = require('../lib/enrich');
 const resolve = require('../lib/resolve');
+const resolveES = require('../lib/resolve/lang/es');
 const messageCode = require('../lib/resolve/messageCode');
 
 const RESOLVE_PROPERTIES = Object.keys(resolve);
+const RESOLVE_PROPERTIES_ES = Object.keys(resolveES);
 
 const { TRANSLATIONS } = require('config');
 
@@ -22,7 +24,9 @@ module.exports = exports = async (req, res, next) => {
 		lang = TRANSLATIONS.DEFAULT_LANGUAGE,
 		limit = TRANSLATIONS.PAGINATION.DEFAULT_LIMIT,
 		offset = 0,
-		query
+		order,
+		query,
+		sort
 	} } = req;
 
 	const { locals } = res;
@@ -54,44 +58,72 @@ module.exports = exports = async (req, res, next) => {
 						content_areas['Spanish weekend'] = true;
 					}
 				}
+			}
 
-				const items = await db.run(`SELECT * FROM syndication.get_content_es(
-					${typeof query === 'string' ? `query => $text$${query.trim()}$text$, ` : ''}
-					content_areas => ARRAY[$text$${Object.keys(content_areas).join('$text$::syndication.enum_content_area_es, $text$')}$text$::syndication.enum_content_area_es],
-					_offset => ${offset}::integer,
-					_limit => ${limit}::integer)`);
+			let getQuery = `content_areas => ARRAY[$text$${Object.keys(content_areas).join('$text$::syndication.enum_content_area_es, $text$')}$text$::syndication.enum_content_area_es],
+_offset => ${offset}::integer,
+_limit => ${limit}::integer`;
 
-				items.forEach(item => enrich(item));
+			if (typeof query === 'string' && query.trim().length) {
+				getQuery = `query => $text$${query.trim()}$text$,
+${getQuery}`;
+			}
+			else if (typeof sort === 'string' && sort.trim().length) {
+				let sortQuery = `sort_col => $text$${sort.trim().toLowerCase()}$text$`;
 
-				const contentItems = await getContent(items.map(({ content_id }) => content_id));
-				const contentItemsMap = contentItems.reduce((acc, item) => {
-					acc[item.id] = item;
+				if (typeof order === 'string' && order.trim().toUpperCase() === 'ASC') {
+					sortQuery = `${sortQuery},
+sort_order => $text$ASC$text$`;
+				}
+				else {
+					sortQuery = `${sortQuery},
+sort_order => $text$DESC$text$`;
+				}
 
-					// this is for backwards/forwards support with Content API/Elastic Search
-					if (item.id.includes('/')) {
-						acc[item.id.split('/').pop()] = item;
-					}
+				getQuery = `${sortQuery},
+${getQuery}`;
+			}
+
+			const items = await db.run(`SELECT * FROM syndication.get_content_es(${getQuery})`);
+
+			items.forEach(item => enrich(item));
+
+			const contentItems = await getContent(items.map(({ content_id }) => content_id));
+			const contentItemsMap = contentItems.reduce((acc, item) => {
+				acc[item.id] = item;
+
+				// this is for backwards/forwards support with Content API/Elastic Search
+				if (item.id.includes('/')) {
+					acc[item.id.split('/').pop()] = item;
+				}
+
+				return acc;
+			}, {});
+			const existing = await getAllExistingItemsForContract(contract.contract_id);
+
+			const response = items.map(item => {
+				const data = RESOLVE_PROPERTIES.reduce((acc, prop) => {
+					acc[prop] = resolve[prop](item[prop] || contentItemsMap[item.content_id][prop], prop, tidy(item, contentItemsMap[item.content_id]), existing[item.id] || {}, contract);
 
 					return acc;
 				}, {});
-				const existing = await getAllExistingItemsForContract(contract.contract_id);
 
-				const response = items.map(item => RESOLVE_PROPERTIES.reduce((acc, prop) => {
-					acc[prop] = resolve[prop](item[prop], prop, tidy(item, contentItemsMap[item.content_id]), existing[item.id] || {}, contract);
+				return RESOLVE_PROPERTIES_ES.reduce((acc, prop) => {
+					acc[prop] = resolveES[prop](item[prop], prop, item, existing[item.id] || {}, contract);
 
 					return acc;
-				}, {}));
+				}, data);
+			});
 
-				response.forEach(item => messageCode(item, contract));
+			response.forEach(item => messageCode(item, contract));
 
-				res.json(response);
+			res.json(response);
 
-				res.status(200);
+			res.status(200);
 
-				next();
+			next();
 
-				return;
-			}
+			return;
 	}
 
 	res.sendStatus(403);
