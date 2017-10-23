@@ -21,9 +21,20 @@ module.exports = exports = (doc, content) => {
 		publishedYear: publishedDate.format('YYYY'),
 		rich: content.extension !== 'plain',
 		title: content.title,
-		webUrl: content.url,
+		webUrl: content.url || content.webUrl,
 		wordCount: content.wordCount
 	};
+
+	if (content.lang && content.lang !== 'en') {
+		dict.translatedDate = moment(content.translated_date).format('DD MMMM YYYY');
+		dict.translationUrl = `https://www.ft.com/republishing/spanish/${content.content_id}`;
+
+		switch (content.lang) {
+			case 'es':
+				dict.translationLanguage = 'Spanish';
+				break;
+		}
+	}
 
 	let hd = new DOMParser().parseFromString(HD(dict));
 	let ft = new DOMParser().parseFromString(FT(dict));
