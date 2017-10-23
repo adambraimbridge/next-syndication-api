@@ -5,10 +5,7 @@ const path = require('path');
 const esClient = require('@financial-times/n-es-client');
 const { default: log } = require('@financial-times/n-logger');
 
-//const pg = require('../../db/pg');
-
 const enrich = require('./enrich');
-//const getContentById = require('./get-content-by-id');
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 

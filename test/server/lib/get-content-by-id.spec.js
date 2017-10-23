@@ -16,8 +16,6 @@ const {
 	TEST: { FIXTURES_DIRECTORY }
 } = require('config');
 
-//const underTest = require('../../../server/lib/get-content-by-id');
-
 const RE_BAD_CHARS = /[^A-Za-z0-9_]/gm;
 const RE_SPACE = /\s/gm;
 //const RE_VALID_URI = /^\/content\/([A-Za-z0-9]{8}(?:-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12})$/;
