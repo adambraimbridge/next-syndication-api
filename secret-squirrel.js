@@ -36,6 +36,7 @@ module.exports = {
 			'c3391af1-0d46-4ddc-a922-df7c49cf1552',
 			'f0e793d6-90d6-4581-9743-c905940602f5',
 			// content UUIDs
+			'52be3c0c-7831-11e7-a3e8-60495fe6ca71',
 			'd4efba32-d2ca-11e6-b06b-680c49b4b4c0',
 			'b6e54ea4-86c4-11e7-8bb1-5ba57d47eff7',
 			'b3ec55b0-7dd4-11e7-9108-edda0bcbc928',
@@ -71,6 +72,12 @@ module.exports = {
 			'fakenews-1d31-39fd-82f0-ba1822ef20d2',
 			'fakenews-ec58-4a8e-a669-5cbcc0d6a1b2',
 
+			'260b270a-723d-11e7-93ff-99f383b09ff9',
+			'32d8f4b0-5d58-434d-b578-337486e9f714',
+			'52be3c0c-7831-11e7-a3e8-60495fe6ca71',
+			'967fb202-c532-11e6-8f29-9445cac8966f',
+			'd73e2fe9-8677-4b1a-b9a9-7d72805e1a93',
+			'fa6de70c-e9b8-11e6-893c-082c54a7f539',
 			'f743871c-3499-4844-9d2b-685fcd94f9c8',
 			'f743871c-3499-4844-9d2b-685fcd94f9c7',
 			'b83df96a-67c7-3618-9fc1-db357bf775eb',
