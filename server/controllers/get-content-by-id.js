@@ -4,7 +4,10 @@ const path = require('path');
 
 const { default: log } = require('@financial-times/n-logger');
 
-const { DEFAULT_DOWNLOAD_FORMAT } = require('config');
+const {
+	DEFAULT_DOWNLOAD_FORMAT,
+	DEFAULT_DOWNLOAD_LANGUAGE
+} = require('config');
 
 const getContentById = require('../lib/get-content-by-id');
 
@@ -18,7 +21,9 @@ module.exports = exports = async (req, res, next) => {
 				|| download_format
 				|| DEFAULT_DOWNLOAD_FORMAT;
 
-	let content = await getContentById(req.params.content_id, format);
+	const lang = String(req.query.lang || DEFAULT_DOWNLOAD_LANGUAGE).toLowerCase();
+
+	let content = await getContentById(req.params.content_id, format, lang);
 
 	if (content) {
 		res.status(200);
