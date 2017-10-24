@@ -1,0 +1,38 @@
+{
+  "Records": [
+    {
+      "eventVersion": "2.0",
+      "eventTime": "1970-01-01T00:00:00.000Z",
+      "requestParameters": {
+        "sourceIPAddress": "127.0.0.1"
+      },
+      "s3": {
+        "configurationId": "testConfigRule",
+        "object": {
+          "eTag": "01234",
+          "sequencer": "0A1B2C3",
+          "key": "d4efba32-d2ca-11e6-b06b-680c49b4b4c0",
+          "size": 1024
+        },
+        "bucket": {
+          "arn": "arn:aws:s3:::FAKE_TRANSLATION_DROP_BUCKET_NAME",
+          "name": "FAKE_TRANSLATION_DROP_BUCKET_NAME",
+          "ownerIdentity": {
+            "principalId": "EXAMPLE"
+          }
+        },
+        "s3SchemaVersion": "1.0"
+      },
+      "responseElements": {
+        "x-amz-id-2": "EXAMPLE123/5678/ABC",
+        "x-amz-request-id": "EXAMPLE123"
+      },
+      "awsRegion": "eu-west-1",
+      "eventName": "ObjectDelete",
+      "userIdentity": {
+        "principalId": "EXAMPLE"
+      },
+      "eventSource": "aws:s3"
+    }
+  ]
+}
