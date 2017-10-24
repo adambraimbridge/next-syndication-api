@@ -55,7 +55,7 @@ module.exports = exports = async (req, res, next) => {
 
 		Object.assign(content, state);
 
-		messageCode(content, contract)
+		messageCode(content, contract);
 
 		log.info(`${MODULE_ID} SUCCESS => `, content);
 
