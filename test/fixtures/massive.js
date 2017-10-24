@@ -29,8 +29,12 @@ module.exports = exports = function () {
 		}
 
 		db.syndication = {
+			delete_content_es: sinon.stub(),
 			delete_save_history_by_contract_id: sinon.stub(),
 			get_downloads_by_contract_id: sinon.stub(),
+			get_content_es: sinon.stub(),
+			get_content_es_by_id: sinon.stub(),
+			get_content_total_es: sinon.stub(),
 			get_contract_data: sinon.stub(),
 			get_contributor_purchase: sinon.stub(),
 			get_health_contracts: sinon.stub(),
@@ -41,6 +45,7 @@ module.exports = exports = function () {
 			get_user: sinon.stub(),
 			upsert: sinon.stub(),
 			upsert_content: sinon.stub(),
+			upsert_content_es: sinon.stub(),
 			upsert_contract: sinon.stub(),
 			upsert_contract_asset: sinon.stub(),
 			upsert_contract_asset_item: sinon.stub(),
