@@ -89,7 +89,9 @@ module.exports = exports = async (event, message, response, subscriber) => {
 				break;
 		}
 
-		await subscriber.ack(message);
+		if (process.env.NODE_ENV === 'production') {
+			await subscriber.ack(message);
+		}
 	}
 	catch (e) {
 		log.error(`${MODULE_ID} => `, e);
