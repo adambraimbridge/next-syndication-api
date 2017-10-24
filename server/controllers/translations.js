@@ -107,7 +107,7 @@ ${getQuery}`;
 
 				const response = items.map(item => {
 					const data = RESOLVE_PROPERTIES.reduce((acc, prop) => {
-						acc[prop] = resolve[prop](item[prop] || contentItemsMap[item.content_id][prop], prop, tidy(item, contentItemsMap[item.content_id]), existing[item.id] || {}, contract);
+						acc[prop] = resolve[prop](item[prop] || contentItemsMap[item.content_id][prop], prop, tidy(item, contentItemsMap[item.content_id]), existing[item.content_id] || existing[item.id] || {}, contract);
 
 						return acc;
 					}, {});
