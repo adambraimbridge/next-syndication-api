@@ -22,7 +22,7 @@ const __proto__ = Object.getPrototypeOf(new AWS.S3({}));
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
-describe.only(MODULE_ID, function () {
+describe(MODULE_ID, function () {
 	let underTest;
 	let S3Object;
 	let S3Promise;
