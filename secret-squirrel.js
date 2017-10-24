@@ -15,6 +15,7 @@ module.exports = {
 			'http(?:s?):\/\/.*',
 			'\/content\/.*',
 			// _ids
+			'167e9de0f286d5d771a89b864c053ea8',
 			'9807a4b6dcb3ce1188593759dd6818cd',
 			'f55885427fa5f8c3e2b90204a6e6b0c7',
 			'4eff4aba81093b44d2a71c36fc8e9898',
@@ -27,6 +28,7 @@ module.exports = {
 			'8d1beddb5cc7ed98a61fc28934871b35',
 			'ee0981e4bebd818374a6c1416029656f',
 			// user UUIDs
+			'f74e5115-922b-409f-a82f-707a0c85e155',
 			'8ef593a8-eef6-448c-8560-9ca8cdca80a5',
 			'8ef593a8-eef6-448c-8560-9ca8cdca80a6',
 			'b2697f93-52d3-4d42-8409-bdf91b09e894',
@@ -34,6 +36,8 @@ module.exports = {
 			'c3391af1-0d46-4ddc-a922-df7c49cf1552',
 			'f0e793d6-90d6-4581-9743-c905940602f5',
 			// content UUIDs
+			'd4efba32-d2ca-11e6-b06b-680c49b4b4c0',
+			'b6e54ea4-86c4-11e7-8bb1-5ba57d47eff7',
 			'b3ec55b0-7dd4-11e7-9108-edda0bcbc928',
 			'02c03200-86dc-11e7-bf50-e1c239b45787',
 			'491cf75e-51d2-11e7-a1f2-db19572361bb',
@@ -67,6 +71,12 @@ module.exports = {
 			'fakenews-1d31-39fd-82f0-ba1822ef20d2',
 			'fakenews-ec58-4a8e-a669-5cbcc0d6a1b2',
 
+			'f743871c-3499-4844-9d2b-685fcd94f9c8',
+			'f743871c-3499-4844-9d2b-685fcd94f9c7',
+			'b83df96a-67c7-3618-9fc1-db357bf775eb',
+			'8a9d1cd8-f4da-38d6-a4eb-195d6a41d902',
+			'8a086a54-ea48-3a52-bd3c-5821430c2132',
+			'5ea997c8-1de2-3add-8e63-8639fc2459c9',
 			'0f22b715-20dc-498c-a548-907bbf337ee4',
 			'e3e9ac6a-5f2d-11e7-8814-0ac7eb84e5f1',
 			'9f4698fc-5fe6-11e7-91a7-502f7ee26895',
