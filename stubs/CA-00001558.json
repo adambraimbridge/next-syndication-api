@@ -20,7 +20,7 @@
       "maxPermittedOnlineUsagePeriod": "Week",
       "maxPermittedOnlineUsage": 10000000,
       "embargoPeriod": 0,
-      "contentSet": "FT.com",
+      "contentSet": "FT.com;Spanish content;Spanish Weekend",
       "assetName": "FT Article"
     },
     {
@@ -30,7 +30,7 @@
       "maxPermittedOnlineUsagePeriod": "Week",
       "maxPermittedOnlineUsage": 10000000,
       "embargoPeriod": 0,
-      "contentSet": "FT.com",
+      "contentSet": "FT.com;Spanish content;Spanish Weekend",
       "assetName": "Video"
     },
     {
@@ -40,7 +40,7 @@
       "maxPermittedOnlineUsagePeriod": "Week",
       "maxPermittedOnlineUsage": 10000000,
       "embargoPeriod": 0,
-      "contentSet": "FT.com",
+      "contentSet": "FT.com;Spanish content;Spanish Weekend",
       "assetName": "Podcast"
     }
   ]
