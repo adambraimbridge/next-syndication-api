@@ -27,8 +27,10 @@ module.exports = exports = async (content_id, format, lang) => {
 			[
 				'id', 'canBeSyndicated',
 				'firstPublishedDate', 'publishedDate',
-				'webUrl'
+				'url', 'webUrl'
 			].forEach(prop => content[prop] = contentEN[prop]);
+
+			content.lang = lang;
 		}
 		else {
 			content = await esClient.get(content_id);

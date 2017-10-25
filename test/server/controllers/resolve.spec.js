@@ -56,7 +56,8 @@ describe(MODULE_ID, function () {
 		'last_modified': '2017-08-22T13:32:50.177Z',
 		'id': 'c7923fba-1d31-39fd-82f0-ba1822ef20d2',
 		'date': '22 August 2017',
-		'published': '15 September 2017'
+		'published': '15 September 2017',
+		'iso_lang_code': 'en'
 	}, {
 		'_id': '6feabf0d4eed16682bfbd6d3560a45ee',
 		'contract_id': 'FTS-14029674',
@@ -76,7 +77,8 @@ describe(MODULE_ID, function () {
 		'last_modified': '2017-08-22T12:35:11.895Z',
 		'id': 'b59dff10-3f7e-11e7-9d56-25f963e998b2',
 		'date': '22 August 2017',
-		'published': '15 September 2017'
+		'published': '15 September 2017',
+		'iso_lang_code': 'en'
 	}, {
 		'_id': '8d1beddb5cc7ed98a61fc28934871b35',
 		'contract_id': 'FTS-14029674',
@@ -95,7 +97,8 @@ describe(MODULE_ID, function () {
 		'last_modified': '2017-08-22T10:54:55.376Z',
 		'id': 'c7923fba-1d31-39fd-82f0-ba1822ef20d2',
 		'date': '22 August 2017',
-		'published': '13 September 2017'
+		'published': '13 September 2017',
+		'iso_lang_code': 'en'
 	}];
 	let savedItems = [{
 		'_id': '8d1beddb5cc7ed98a61fc28934871b35',
@@ -115,7 +118,8 @@ describe(MODULE_ID, function () {
 		'last_modified': '2017-08-22T10:54:55.376Z',
 		'id': 'c7923fba-1d31-39fd-82f0-ba1822ef20d2',
 		'date': '22 August 2017',
-		'published': '20 June 2017'
+		'published': '20 June 2017',
+		'iso_lang_code': 'en'
 	}, {
 		'_id': 'ee0981e4bebd818374a6c1416029656f',
 		'contract_id': 'FTS-14029674',
@@ -134,7 +138,8 @@ describe(MODULE_ID, function () {
 		'last_modified': '2017-08-22T10:48:04.301Z',
 		'id': 'dbe4928a-5bec-11e7-b553-e2df1b0c3220',
 		'date': '13 September 2017',
-		'published': '13 September 2017'
+		'published': '13 September 2017',
+		'iso_lang_code': 'en'
 	}];
 
 	let allItems = downloadedItems.reduce((acc, item) => {
@@ -242,6 +247,7 @@ describe(MODULE_ID, function () {
 			downloaded: true,
 			embargoPeriod: null,
 			id: '42ad255a-99f9-11e7-b83c-9588e51488a0',
+			lang: 'en',
 			messageCode: 'MSG_2100',
 			publishedDate: '2017-09-15T10:38:16.000Z',
 			publishedDateDisplay: '15th Sep 2017',
@@ -255,6 +261,7 @@ describe(MODULE_ID, function () {
 			downloaded: true,
 			embargoPeriod: null,
 			id: 'ef4c49fe-980e-11e7-b83c-9588e51488a0',
+			lang: 'en',
 			messageCode: 'MSG_2100',
 			publishedDate: '2017-09-15T04:01:25.000Z',
 			publishedDateDisplay: '15th Sep 2017',
@@ -268,6 +275,7 @@ describe(MODULE_ID, function () {
 			downloaded: true,
 			embargoPeriod: null,
 			id: 'b16fce7e-3c92-48a3-ace0-d1af3fce71af',
+			lang: 'en',
 			messageCode: 'MSG_2100',
 			publishedDate: '2017-09-13T12:15:43.662Z',
 			publishedDateDisplay: '13th Sep 2017',
@@ -281,6 +289,7 @@ describe(MODULE_ID, function () {
 			downloaded: false,
 			embargoPeriod: null,
 			id: 'a1af0574-eafb-41bd-aa4f-59aa2cd084c2',
+			lang: 'en',
 			messageCode: 'MSG_2000',
 			publishedDate: '2017-09-13T17:10:52.586Z',
 			publishedDateDisplay: '13th Sep 2017',
@@ -294,6 +303,7 @@ describe(MODULE_ID, function () {
 			downloaded: false,
 			embargoPeriod: null,
 			id: '98b46b5f-17d3-40c2-8eaa-082df70c5f01',
+			lang: 'en',
 			messageCode: 'MSG_5000',
 			publishedDate: '2017-09-15T04:01:00.000Z',
 			publishedDateDisplay: '15th Sep 2017',
@@ -307,6 +317,7 @@ describe(MODULE_ID, function () {
 			downloaded: false,
 			embargoPeriod: null,
 			id: '93991a3c-0436-41bb-863e-61242e09859c',
+			lang: 'en',
 			messageCode: 'MSG_5000',
 			publishedDate: '2017-09-15T04:00:00.000Z',
 			publishedDateDisplay: '15th Sep 2017',
