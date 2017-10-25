@@ -19,7 +19,9 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 
 module.exports = exports = async (req, res, next) => {
 	try {
-		const lang = String(req.query.lang || DEFAULT_DOWNLOAD_LANGUAGE).toLowerCase();
+		const referrer = String(req.get('referrer'));
+
+		const lang = String(req.query.lang || (referrer.includes('/republishing/spanish') ? 'es' : DEFAULT_DOWNLOAD_LANGUAGE)).toLowerCase();
 
 		const content = await getContentById(req.params.content_id, DEFAULT_DOWNLOAD_FORMAT, lang);
 
@@ -47,7 +49,7 @@ module.exports = exports = async (req, res, next) => {
 				tracking: {
 					cookie: req.headers.cookie,
 					ip_address: req.ip,
-					referrer: req.get('referrer'),
+					referrer: referrer,
 					session: req.cookies.FTSession,
 					spoor_id: req.cookies['spoor-id'],
 					url: req.originalUrl,
@@ -73,7 +75,6 @@ module.exports = exports = async (req, res, next) => {
 
 		log.info(`${MODULE_ID} => ${items.length} items deleted for contract#${syndication_contract.id}; content#${content.id};`, items);
 
-		const referrer = String(req.get('referrer'));
 		const requestedWith = String(req.get('x-requested-with')).toLowerCase();
 
 		if (referrer.includes('/republishing/save') && (requestedWith !== 'xmlhttprequest' && !requestedWith.includes('fetch'))) {

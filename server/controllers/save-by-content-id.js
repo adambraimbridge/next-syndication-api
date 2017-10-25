@@ -31,7 +31,9 @@ module.exports = exports = async (req, res, next) => {
 					|| download_format
 					|| DEFAULT_DOWNLOAD_FORMAT;
 
-		const lang = String(req.query.lang || DEFAULT_DOWNLOAD_LANGUAGE).toLowerCase();
+		const referrer = String(req.get('referrer'));
+
+		const lang = String(req.query.lang || (referrer.includes('/republishing/spanish') ? 'es' : DEFAULT_DOWNLOAD_LANGUAGE)).toLowerCase();
 
 		const content = await getContentById(req.params.content_id, format, lang);
 
@@ -59,7 +61,7 @@ module.exports = exports = async (req, res, next) => {
 				tracking: {
 					cookie: req.headers.cookie,
 					ip_address: req.ip,
-					referrer: req.get('referrer'),
+					referrer: referrer,
 					session: req.cookies.FTSession,
 					spoor_id: req.cookies['spoor-id'],
 					url: req.originalUrl,

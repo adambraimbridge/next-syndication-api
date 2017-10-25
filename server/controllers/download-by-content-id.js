@@ -29,7 +29,10 @@ module.exports = exports = async (req, res, next) => {
 				|| download_format
 				|| DEFAULT_DOWNLOAD_FORMAT;
 
-	const lang = String(req.query.lang || DEFAULT_DOWNLOAD_LANGUAGE).toLowerCase();
+
+	const referrer = String(req.get('referrer'));
+
+	const lang = String(req.query.lang || (referrer.includes('/republishing/spanish') ? 'es' : DEFAULT_DOWNLOAD_LANGUAGE)).toLowerCase();
 
 	const content = await getContentById(req.params.content_id, format, lang);
 
