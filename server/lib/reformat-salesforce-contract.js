@@ -59,12 +59,13 @@ module.exports = exports = SFContract => {
 function formatAsset(item) {
 	return {
 		asset_class: item.assetType,
+		asset_id: item.assetId,
 		asset_type: item.assetName,
 		content_type: ASSET_TYPE_TO_CONTENT_TYPE[item.assetName],
 		product: item.productName,
-		print_usage_period: item.maxPermittedPrintUsagePeriod,
+		print_usage_period: item.maxPermittedPrintUsagePeriod || 'Year',
 		print_usage_limit: item.maxPermittedPrintUsage,
-		online_usage_period: item.maxPermittedOnlineUsagePeriod,
+		online_usage_period: item.maxPermittedOnlineUsagePeriod || 'Year',
 		online_usage_limit: item.maxPermittedOnlineUsage,
 		embargo_period: item.embargoPeriod || 0,
 		content_set: item.contentSet,
