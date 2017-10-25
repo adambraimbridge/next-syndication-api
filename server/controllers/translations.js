@@ -59,9 +59,7 @@ module.exports = exports = async (req, res, next) => {
 					}
 				}
 
-				let getQuery = `content_areas => ARRAY[$text$${Object.keys(content_areas).join('$text$::syndication.enum_content_area_es, $text$')}$text$::syndication.enum_content_area_es],
-_offset => ${offset}::integer,
-_limit => ${limit}::integer`;
+				let getQuery = `content_areas => ARRAY[$text$${Object.keys(content_areas).join('$text$::syndication.enum_content_area_es, $text$')}$text$::syndication.enum_content_area_es]`;
 				let getTotalQuery = getQuery + '';
 
 				if (typeof query === 'string' && query.trim().length) {
@@ -84,6 +82,10 @@ sort_order => $text$DESC$text$`;
 					getQuery = `${sortQuery},
 ${getQuery}`;
 				}
+
+				getQuery = `${getQuery},
+_offset => ${offset}::integer,
+_limit => ${limit}::integer`;
 
 				const items = await db.run(`SELECT * FROM syndication.get_content_es(${getQuery})`);
 
