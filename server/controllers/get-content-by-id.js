@@ -21,7 +21,7 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 
 module.exports = exports = async (req, res, next) => {
 
-	const { locals: { $DB: db, contract, user } } = res;
+	const { locals: { $DB: db, allowed, contract, user } } = res;
 	const { download_format } = user;
 
 	const format = req.query.format
@@ -31,6 +31,17 @@ module.exports = exports = async (req, res, next) => {
 	const lang = String(req.query.lang || DEFAULT_DOWNLOAD_LANGUAGE).toLowerCase();
 
 	let content = await getContentById(req.params.content_id, format, lang);
+
+	switch (lang) {
+		case 'es':
+			const content_area = content.content_area.toLowerCase().split(' ').join('_');
+
+			if (allowed[content_area] !== true) {
+				res.sendStatus(403);
+
+				return;
+			}
+	}
 
 	const [{ get_content_state_for_contract: state }] = await db.syndication.get_content_state_for_contract([contract.contract_id, req.params.content_id]);
 
