@@ -31,6 +31,8 @@ module.exports = exports = async (content_id, format, lang) => {
 			].forEach(prop => content[prop] = contentEN[prop]);
 
 			content.lang = lang;
+
+			content.canBeSyndicated = 'yes';
 		}
 		else {
 			content = await esClient.get(content_id);
