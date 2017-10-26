@@ -6,10 +6,7 @@ const { default: log } = require('@financial-times/n-logger');
 
 const getContent = require('../lib/get-content');
 const getHistoryByContractID  = require('../lib/get-history-by-contract-id');
-const resolve = require('../lib/resolve');
-const messageCode = require('../lib/resolve/messageCode');
-
-const RESOLVE_PROPERTIES = Object.keys(resolve);
+const syndicate = require('../lib/syndicate-content');
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
@@ -49,31 +46,14 @@ module.exports = exports = async (req, res, next) => {
 
 		let history = await getHistoryByContractID(options);
 
-		const contentItems = await getContent(history.items.map(({ id }) => id));
-		const contentItemsMap = contentItems.reduce((acc, item) => {
-			acc[item.id] = item;
+		const contentItemsMap = await getContent(history.items.map(({ id }) => id), true);
 
-			// this is for backwards/forwards support with Content API/Elastic Search
-			if (item.id.includes('/')) {
-				acc[item.id.split('/').pop()] = item;
-			}
-
-			return acc;
-		}, {});
-
-		history.items = history.items.map(item => RESOLVE_PROPERTIES.reduce((acc, prop) => {
-			let contentItem = contentItemsMap[item.content_id] || contentItemsMap[item.id] || {};
-
-			acc[prop] = resolve[prop](Object.prototype.hasOwnProperty.call(item, prop) ? item[prop] : contentItem[prop], prop, contentItem, item, CONTRACT);
-
-			if (!contentItemsMap[item.content_id] && !contentItemsMap[item.id]) {
-				acc.notAvailable = true;
-			}
-
-			return acc;
-		}, item));
-
-		history.items.forEach(item => messageCode(item, CONTRACT));
+		history.items = history.items.map(item => syndicate({
+			contract: CONTRACT,
+			includeBody: false,
+			item,
+			src: contentItemsMap[item.id] || contentItemsMap[item.content_id]
+		}));
 
 		log.debug(`${MODULE_ID} => Retrieved ${history.items.length} items in ${Date.now() - START}ms`);
 
