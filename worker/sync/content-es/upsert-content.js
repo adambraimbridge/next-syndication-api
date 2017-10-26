@@ -79,11 +79,19 @@ module.exports = exports = async (event, message, response, subscriber) => {
 				try {
 					const item_en = await getContentById(item.content_id);
 
-					item.published_date = new Date(item_en.firstPublishedDate || item_en.publishedDate);
+					if (!item_en) {
+						await notifyError({
+							error: { message: `ElasticSearch could not find content with ID: ${item.content_id}` },
+							file: FILE_NAME
+						});
+					}
+					else {
+						item.published_date = new Date(item_en.firstPublishedDate || item_en.publishedDate);
 
-					await db.syndication.upsert_content_es([item]);
+						await db.syndication.upsert_content_es([item]);
 
-					log.info(`${MODULE_ID} UPSERTING => `, JSON.stringify(item, null, 4));
+						log.info(`${MODULE_ID} UPSERTING => `, JSON.stringify(item, null, 4));
+					}
 				}
 				catch (error) {
 					await notifyError({ error, file: FILE_NAME });
