@@ -53,7 +53,7 @@ describe(MODULE_ID, function () {
 				contract_date: `${moment(contractResponse.start_date).format('DD/MM/YY')} - ${moment(contractResponse.end_date).format('DD/MM/YY')}`
 			});
 
-			expected.assets[0] = expected.assetsMap['FT Article'] = expected.assetsMap['article'] = Object.assign(JSON.parse(JSON.stringify(expected.assetsMap['article'])), {
+			expected.items[0] = expected.itemsMap['FT Article'] = expected.itemsMap['article'] = Object.assign(JSON.parse(JSON.stringify(expected.itemsMap['article'])), {
 				current_downloads: {
 					day: 0,
 					month: 0,
@@ -63,7 +63,7 @@ describe(MODULE_ID, function () {
 				}
 			});
 
-			expected.assets[1] = expected.assetsMap['Video'] = expected.assetsMap['video'] = Object.assign(JSON.parse(JSON.stringify(expected.assetsMap['video'])), {
+			expected.items[1] = expected.itemsMap['Video'] = expected.itemsMap['video'] = Object.assign(JSON.parse(JSON.stringify(expected.itemsMap['video'])), {
 				current_downloads: {
 					day: 0,
 					month: 0,
@@ -73,7 +73,7 @@ describe(MODULE_ID, function () {
 				}
 			});
 
-			expected.assets[2] = expected.assetsMap['Podcast'] = expected.assetsMap['podcast'] = Object.assign(JSON.parse(JSON.stringify(expected.assetsMap['podcast'])), {
+			expected.items[2] = expected.itemsMap['Podcast'] = expected.itemsMap['podcast'] = Object.assign(JSON.parse(JSON.stringify(expected.itemsMap['podcast'])), {
 				current_downloads: {
 					day: 0,
 					month: 0,
