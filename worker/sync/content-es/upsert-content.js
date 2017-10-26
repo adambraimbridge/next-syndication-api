@@ -5,6 +5,7 @@ const path = require('path');
 const { default: log } = require('@financial-times/n-logger');
 
 const AWS = require('aws-sdk');
+const Slack = require('node-slack');
 
 const pg = require('../../../db/pg');
 const enrich = require('../../../server/lib/enrich');
@@ -13,7 +14,10 @@ const getContentById = require('../../../server/lib/get-content-by-id');
 const {
 	AWS_ACCESS_KEY,
 	AWS_REGION = 'eu-west-1',
-	AWS_SECRET_ACCESS_KEY
+	AWS_SECRET_ACCESS_KEY,
+	SLACK: {
+		INCOMING_HOOK_URL_T9N: SLACK_INCOMING_HOOK_URL_T9N
+	}
 } = require('config');
 
 const S3 = new AWS.S3({
@@ -72,13 +76,18 @@ module.exports = exports = async (event, message, response, subscriber) => {
 
 				item.word_count = item.wordCount;
 
-				const item_en = await getContentById(item.content_id);
+				try {
+					const item_en = await getContentById(item.content_id);
 
-				item.published_date = new Date(item_en.firstPublishedDate || item_en.publishedDate);
+					item.published_date = new Date(item_en.firstPublishedDate || item_en.publishedDate);
 
-				await db.syndication.upsert_content_es([item]);
+					await db.syndication.upsert_content_es([item]);
 
-				log.info(`${MODULE_ID} UPSERTING => `, JSON.stringify(item, null, 4));
+					log.info(`${MODULE_ID} UPSERTING => `, JSON.stringify(item, null, 4));
+				}
+				catch (error) {
+					await notifyError({ error, file: FILE_NAME });
+				}
 
 				break;
 			case 'deleted':
@@ -97,3 +106,30 @@ module.exports = exports = async (event, message, response, subscriber) => {
 		log.error(`${MODULE_ID} => `, e);
 	}
 };
+
+async function notifyError ({ error, file }) {
+	const slack = new Slack(SLACK_INCOMING_HOOK_URL_T9N);
+
+	const message = {
+		mrkdwn: true,
+		text: `Error with file: *${file}*
+\`\`\`
+`
+	};
+
+	if (Object.prototype.toString.call(error) !== '[object String]') {
+		if (error instanceof Error) {
+			message.text += JSON.stringify(error.stack, null, 2);
+		}
+		else {
+			message.text += JSON.stringify(error, null, 2);
+		}
+	}
+	else {
+		message.text += error;
+	}
+
+	message.text += '\n```';
+
+	return slack.send(message);
+}
