@@ -8,10 +8,7 @@ const flagIsOn = require('../helpers/flag-is-on');
 
 const getContent = require('../lib/get-content');
 const getAllExistingItemsForContract = require('../lib/get-all-existing-items-for-contract');
-const resolve = require('../lib/resolve');
-const messageCode = require('../lib/resolve/messageCode');
-
-const RESOLVE_PROPERTIES = Object.keys(resolve);
+const syndicate = require('../lib/syndicate-content');
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
@@ -51,17 +48,13 @@ module.exports = exports = async (req, res, next) => {
 
 	const existing = await getAllExistingItemsForContract(contract.contract_id);
 
-	const response = items.map(item => RESOLVE_PROPERTIES.reduce((acc, prop) => {
-		acc[prop] = resolve[prop](item[prop], prop, item, existing[item.id], contract);
-
-		return acc;
-	}, {}));
-
-	response.forEach(item => messageCode(item, contract));
-
-	if (req.query.test === 'messaging') {
-		addTestStuff(response);
-	}
+	const response = items.map(src => syndicate({
+		contract,
+		existing: existing[src.id],
+		includeBody: false,
+		item: {},
+		src
+	}));
 
 	log.info(`${MODULE_ID} SUCCESS => `, response);
 
@@ -92,23 +85,4 @@ function showItem(item, flags) {
 	if (type === 'placeholder') {
 		return flagIsOn(flags.syndicationDownloadPlaceholder);
 	}
-}
-
-function addTestStuff(response) {
-	[
-		['canBeSyndicated', 'no'],
-		['canBeSyndicated', 'verify'],
-		['canBeSyndicated', 'withContributorPayment'],
-		['canBeSyndicated', 'yes'],
-		['canBeSyndicated', null],
-		['canDownload', 1],
-		['canDownload', 0],
-		['canDownload', -1],
-		['downloaded', true],
-		['downloaded', false],
-		['saved', true],
-		['saved', false]
-	].forEach(([key, val], i) => response[i][key] = val);
-
-	return response;
 }

@@ -9,13 +9,8 @@ const {
 	DEFAULT_DOWNLOAD_LANGUAGE
 } = require('config');
 
-const resolve = require('../lib/resolve');
-const resolveES = require('../lib/resolve/lang/es');
-const messageCode = require('../lib/resolve/messageCode');
+const syndicate = require('../lib/syndicate-content');
 const getContentById = require('../lib/get-content-by-id');
-
-const RESOLVE_PROPERTIES = Object.keys(resolve);
-const RESOLVE_PROPERTIES_ES = Object.keys(resolveES);
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
@@ -46,27 +41,14 @@ module.exports = exports = async (req, res, next) => {
 	const [{ get_content_state_for_contract: state }] = await db.syndication.get_content_state_for_contract([contract.contract_id, req.params.content_id]);
 
 	if (content) {
-		content = RESOLVE_PROPERTIES.reduce((acc, prop) => {
-			acc[prop] = resolve[prop](content[prop], prop, content, content || {}, contract);
-
-			return acc;
-		}, content);
-
-		if (lang === 'es') {
-			content = RESOLVE_PROPERTIES_ES.reduce((acc, prop) => {
-				acc[prop] = resolveES[prop](content[prop], prop, content, content || {}, contract);
-
-				return acc;
-			}, content);
-		}
+		content = syndicate({
+			contract,
+			item: content,
+			src: content,
+			state
+		});
 
 		res.status(200);
-
-		content = cleanup(content);
-
-		Object.assign(content, state);
-
-		messageCode(content, contract);
 
 		log.info(`${MODULE_ID} SUCCESS => `, content);
 
@@ -78,14 +60,3 @@ module.exports = exports = async (req, res, next) => {
 		res.sendStatus(404);
 	}
 };
-
-const REMOVE_PROPERTIES = [
-	'document',
-	'download'
-];
-
-function cleanup(content) {
-	REMOVE_PROPERTIES.forEach(property => delete content[property]);
-
-	return content;
-}

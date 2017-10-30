@@ -1,22 +1,11 @@
 'use strict';
 
-//const path = require('path');
-
-//const { default: log } = require('@financial-times/n-logger');
-
 const getAllExistingItemsForContract = require('../lib/get-all-existing-items-for-contract');
 const getContent = require('../lib/get-content');
 const enrich = require('../lib/enrich');
-const resolve = require('../lib/resolve');
-const resolveES = require('../lib/resolve/lang/es');
-const messageCode = require('../lib/resolve/messageCode');
-
-const RESOLVE_PROPERTIES = Object.keys(resolve);
-const RESOLVE_PROPERTIES_ES = Object.keys(resolveES);
+const syndicate = require('../lib/syndicate-content');
 
 const { TRANSLATIONS } = require('config');
-
-//const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
 	let { query: {
@@ -92,36 +81,23 @@ _limit => ${limit}::integer`;
 				const [{ get_content_total_es }] = await db.run(`SELECT * FROM syndication.get_content_total_es(${getTotalQuery})`);
 				const total = parseInt(get_content_total_es, 10);
 
-				items.forEach(item => enrich(item));
+				items.forEach(item => {
+					enrich(item);
 
-				const contentItems = await getContent(items.map(({ content_id }) => content_id));
-				const contentItemsMap = contentItems.reduce((acc, item) => {
-					acc[item.id] = item;
-
-					// this is for backwards/forwards support with Content API/Elastic Search
-					if (item.id.includes('/')) {
-						acc[item.id.split('/').pop()] = item;
-					}
-
-					return acc;
-				}, {});
-				const existing = await getAllExistingItemsForContract(contract.contract_id);
-
-				const response = items.map(item => {
-					const data = RESOLVE_PROPERTIES.reduce((acc, prop) => {
-						acc[prop] = resolve[prop](item[prop] || contentItemsMap[item.content_id][prop], prop, tidy(item, contentItemsMap[item.content_id]), existing[item.content_id] || existing[item.id] || {}, contract);
-
-						return acc;
-					}, {});
-
-					return RESOLVE_PROPERTIES_ES.reduce((acc, prop) => {
-						acc[prop] = resolveES[prop](item[prop], prop, item, existing[item.id] || {}, contract);
-
-						return acc;
-					}, data);
+					item.lang = lang;
 				});
 
-				response.forEach(item => messageCode(item, contract));
+				const contentItemsMap = await getContent(items.map(({ content_id }) => content_id), true);
+
+				const existing = await getAllExistingItemsForContract(contract.contract_id);
+
+				const response = items.map(item => syndicate({
+					contract,
+					existing: existing[item.content_id],
+					includeBody: false,
+					item,
+					src: contentItemsMap[item.content_id]
+				}));
 
 				res.json({ items: response, total });
 
@@ -135,16 +111,3 @@ _limit => ${limit}::integer`;
 
 	res.sendStatus(403);
 };
-
-function tidy(item, contentItem) {
-	delete item.search;
-
-	if (!contentItem.translations) {
-		contentItem.translations = {};
-	}
-	if (!contentItem.translations.es) {
-		contentItem.translations.es = item;
-	}
-
-	return contentItem;
-}

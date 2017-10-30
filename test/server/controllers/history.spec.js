@@ -196,6 +196,16 @@ describe(MODULE_ID, function () {
 		'fileName': 'FT_Theresa_May_'
 	} ];
 
+	const contentItemsMap = contentItems.reduce((acc, item) => {
+		acc[item.id] = item;
+
+		if (item.id.includes('/')) {
+			acc[item.id.split('/').pop()] = item;
+		}
+
+		return acc;
+	}, {});
+
 	require(path.resolve(`${FIXTURES_DIRECTORY}/massive`))();
 
 	describe('default call', function () {
@@ -217,7 +227,7 @@ describe(MODULE_ID, function () {
 			});
 
 			underTest = proxyquire('../../../server/controllers/history', {
-				'../lib/get-content': sinon.stub().resolves(contentItems),
+				'../lib/get-content': sinon.stub().resolves(contentItemsMap),
 				'../lib/get-history-by-contract-id': getHistoryByContractID
 			});
 
@@ -337,7 +347,7 @@ describe(MODULE_ID, function () {
 			});
 
 			underTest = proxyquire('../../../server/controllers/history', {
-				'../lib/get-content': sinon.stub().resolves(contentItems),
+				'../lib/get-content': sinon.stub().resolves(contentItemsMap),
 				'../lib/get-history-by-contract-id': getHistoryByContractID
 			});
 
@@ -458,7 +468,7 @@ describe(MODULE_ID, function () {
 			});
 
 			underTest = proxyquire('../../../server/controllers/history', {
-				'../lib/get-content': sinon.stub().resolves(contentItems),
+				'../lib/get-content': sinon.stub().resolves(contentItemsMap),
 				'../lib/get-history-by-contract-id': getHistoryByContractID
 			});
 
@@ -579,7 +589,7 @@ describe(MODULE_ID, function () {
 			});
 
 			underTest = proxyquire('../../../server/controllers/history', {
-				'../lib/get-content': sinon.stub().resolves(contentItems),
+				'../lib/get-content': sinon.stub().resolves(contentItemsMap),
 				'../lib/get-history-by-contract-id': getHistoryByContractID
 			});
 

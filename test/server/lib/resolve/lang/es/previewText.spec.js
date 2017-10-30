@@ -18,7 +18,7 @@ const underTest = require('../../../../../../server/lib/resolve/lang/es/previewT
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
 
-describe(MODULE_ID, function () {
+describe.skip(MODULE_ID, function () {
 	it('returns the first paragraph if it is <= 105 characters', function() {
 		const content = require(path.resolve(`${FIXTURES_DIRECTORY}/content/es/52be3c0c-7831-11e7-a3e8-60495fe6ca71.json`));
 
