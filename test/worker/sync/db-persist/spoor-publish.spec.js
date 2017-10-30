@@ -58,6 +58,7 @@ describe(MODULE_ID, function () {
 				content_id: 'http://www.ft.com/thing/abc',
 				contract_id: 'syndication',
 				download_format: 'docx',
+				iso_lang_code: 'en',
 				licence_id: 'foo',
 				state: 'saved',
 				time: new Date(),
@@ -90,6 +91,7 @@ describe(MODULE_ID, function () {
 		data.context.article_id = event.content_id.split('/').pop();
 		data.context.contractID = event.contract_id;
 		data.context.appVersion = PACKAGE.version;
+		data.context.languageVersion = 'en';
 		data.context.message = messageCode({
 			canDownload: 1,
 			canBeSyndicated: 'yes',

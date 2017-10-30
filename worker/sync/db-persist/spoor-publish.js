@@ -42,6 +42,7 @@ module.exports = exports = async (event) => {
 		data.context.article_id = event.content_id.split('/').pop();
 		data.context.contractID = event.contract_id;
 		data.context.appVersion = PACKAGE.version;
+		data.context.languageVersion = event.iso_lang_code;
 		data.context.message = event.message_code;
 		data.context.referrer = event.tracking.referrer;
 		data.context.route_id = event._id;
