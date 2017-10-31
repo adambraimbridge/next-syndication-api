@@ -212,6 +212,8 @@
       <p>You have reached your download limit for articles. Please contact your Account Manager to increase your limit.</p>
     MSG_4200: >
       <p>Your contract does not allow {{type}}s to be downloaded. Please contact your Account Manager to change this.</p>
+    MSG_4300: >
+      <p>Report contains multiple articles. Please view each article individually for republishing rights.</p>
     MSG_5000: >
       <p>Sorry, an error has occurred. Please try signing out and then in again. If error persists, please contact your Account Manager.</p>
     MSG_5100: >
