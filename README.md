@@ -25,6 +25,10 @@ You will need to install PostgreSQL, either using homebrew, docker or from sourc
 
 Once you have PostgreSQL installed, if you are not using the [shell script](https://github.com/constantology/n-dev-mode/blob/master/project/syndication), you can import the DB schema by following the instructions in [next-syndication-db-schema](https://github.com/Financial-Times/next-syndication-db-schema). 
 
+## Salesforce dependency
+
+Since all contracts live in the production salesforce environment, in order to test locally you will need to use the production `SALESFORCE_*` environment variables rather than the development ones.
+
 ## Run locally
 
 If you've used the shell script or if you've checked out, installed and built all projects related to the syndication/republishing tool — in the same directory — and want to run all projects easily, you can do so from within the `next-syndication-api`, you will need to:
