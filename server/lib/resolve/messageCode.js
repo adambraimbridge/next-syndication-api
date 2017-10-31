@@ -32,6 +32,8 @@ module.exports = exports = (item, contract) => {
 const ERROR_CODE = 'MSG_5000';
 
 const MESSAGE_CODE_RULES = exports.MESSAGE_CODE_RULES = {
+	MSG_4300: (item) =>
+		(item.type === 'package'),
 	MSG_4050: (item) =>
 		(item.notAvailable === true),
 	MSG_2000: (item, contract) =>

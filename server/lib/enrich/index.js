@@ -27,3 +27,4 @@ module.exports = exports = function enrich(content, format) {
 exports.article = require('./article');
 exports.podcast = require('./podcast');
 exports.video = require('./video');
+exports.package = require('./package');

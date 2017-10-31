@@ -17,4 +17,6 @@ node_modules
 public/*
 tmp/*
 
+health/history/
+
 next-syndication-api-*.json

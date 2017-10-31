@@ -68,18 +68,15 @@ module.exports = exports = async (req, res, next) => {
 function showItem(item, flags) {
 	let { type } = item;
 
+	// TODO: revisit if it's still needed
 	type = type.split('/').pop().toLowerCase();
 
-	if (type === 'article') {
+	if (type === 'article' || type === 'package') {
 		return true;
 	}
 
 	if (type === 'mediaresource' || type === 'video' || type === 'podcast') {
 		return flagIsOn(flags.syndicationDownloadMediaResource);
-	}
-
-	if (type === 'package') {
-		return flagIsOn(flags.syndicationDownloadPackage);
 	}
 
 	if (type === 'placeholder') {
