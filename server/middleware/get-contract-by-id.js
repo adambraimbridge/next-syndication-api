@@ -22,7 +22,7 @@ module.exports = exports = async (req, res, next) => {
 		if (MAINTENANCE_MODE !== true) {
 			const contract = locals.contract = await getContractByID(syndication_contract.id, locals);
 
-			locals.allowed = contract.items.reduce((acc, { assets }) => {
+			locals.allowed = locals.contract.allowed = contract.items.reduce((acc, { assets }) => {
 				[
 					['ft.com', 'ft_com'],
 					['spanish content', 'spanish_content'],
