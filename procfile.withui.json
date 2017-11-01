@@ -25,5 +25,31 @@
     "interpreter_args": "--harmony --preserve-symlinks --require ./server/env.js --trace-deprecation --trace-warnings --zero-fill-buffers",
     "name": "crons",
     "script": "./worker/crons/index.js"
+  }, {
+    "cwd": "../next-syn-contract",
+    "env": {
+      "NEXT_APP_SHELL": "local",
+      "NODE_ENV": "development",
+      "PORT": 3984
+    },
+    "exec_mode": "cluster",
+    "instance_var": "SYNDICATION_WEB_CONTRACT_ID",
+    "instances": 4,
+    "interpreter_args": "--harmony --preserve-symlinks --require ../next-syndication-api/server/env.js --trace-deprecation --trace-warnings --zero-fill-buffers",
+    "name": "syndication-web-contract",
+    "script": "./server/app.js"
+  }, {
+    "cwd": "../next-syn-list",
+    "env": {
+      "NEXT_APP_SHELL": "local",
+      "NODE_ENV": "development",
+      "PORT": 3566
+    },
+    "exec_mode": "cluster",
+    "instance_var": "SYNDICATION_WEB_HISTORY_ID",
+    "instances": 4,
+    "interpreter_args": "--harmony --preserve-symlinks --require ../next-syndication-api/server/env.js --trace-deprecation --trace-warnings --zero-fill-buffers",
+    "name": "syndication-web-history",
+    "script": "./server/app.js"
   } ]
 }
