@@ -12,12 +12,14 @@ const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(p
 
 describe(MODULE_ID, function () {
 	it('returns `yes`', function() {
-		expect(underTest('yes')).to.equal('yes');
+		expect(underTest('yes', 'canBeSyndicated', { content_area: 'Spanish content' }, {}, { allowed: { spanish_content: true }})).to.equal('yes');
 
-		expect(underTest('Spanish content')).to.equal('yes');
+		expect(underTest('yes', 'canBeSyndicated', {}, { content_area: 'Spanish weekend' }, { allowed: { spanish_weekend: true }})).to.equal('yes');
+	});
 
-		expect(underTest({})).to.equal('yes');
+	it('returns `verify`', function() {
+		expect(underTest('yes', 'canBeSyndicated', { content_area: 'Spanish content' }, {}, { allowed: { spanish_weekend: true }})).to.equal('verify');
 
-		expect(underTest()).to.equal('yes');
+		expect(underTest('yes', 'canBeSyndicated', {}, { content_area: 'Spanish weekend' }, { allowed: { spanish_content: true }})).to.equal('verify');
 	});
 });
