@@ -27,16 +27,16 @@ module.exports = exports = async (req, res, next) => {
 
 	let content = await getContentById(req.params.content_id, format, lang);
 
-	switch (lang) {
-		case 'es':
-			const content_area = content.content_area.toLowerCase().split(' ').join('_');
-
-			if (allowed[content_area] !== true) {
-				res.sendStatus(403);
-
-				return;
-			}
-	}
+//	switch (lang) {
+//		case 'es':
+//			const content_area = content.content_area.toLowerCase().split(' ').join('_');
+//
+//			if (allowed[content_area] !== true) {
+//				res.sendStatus(403);
+//
+//				return;
+//			}
+//	}
 
 	const [{ get_content_state_for_contract: state }] = await db.syndication.get_content_state_for_contract([contract.contract_id, req.params.content_id]);
 
