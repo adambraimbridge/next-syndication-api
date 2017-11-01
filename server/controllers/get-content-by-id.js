@@ -16,7 +16,7 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 
 module.exports = exports = async (req, res, next) => {
 
-	const { locals: { $DB: db, allowed, contract, user } } = res;
+	const { locals: { $DB: db, /*allowed,*/ contract, user } } = res;
 	const { download_format } = user;
 
 	const format = req.query.format
