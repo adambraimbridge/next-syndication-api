@@ -70,6 +70,7 @@
     migration: "0 */5 * * * *"
 
   DB:
+    DATE_FORMAT: YYYY-MM-DD HH:mm:ss.SSSS+00
     BACKUP:
       bucket:
         directory: development/backup
