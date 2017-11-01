@@ -209,9 +209,11 @@
     MSG_4050: >
       <p>Sorry, this content is no longer available.</p>
     MSG_4100: >
-      <p>You have reached your download limit for articles. Please contact your Account Manager to increase your limit.</p>
+      <p>You have reached your download limit for {{type}}s. Please contact your Account Manager to increase your limit.</p>
     MSG_4200: >
       <p>Your contract does not allow {{type}}s to be downloaded. Please contact your Account Manager to change this.</p>
+    MSG_4250: >
+      <p>You do not have rights to republish this type of content. Please contact your Account Manager for further details.</p>
     MSG_4300: >
       <p>Report contains multiple articles. Please view each article individually for republishing rights.</p>
     MSG_5000: >
