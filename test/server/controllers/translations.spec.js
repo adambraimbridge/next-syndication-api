@@ -44,6 +44,7 @@ describe(MODULE_ID, function () {
 		let user_id;
 
 		afterEach(function () {
+			delete contractResponse.allowed;
 		});
 
 		beforeEach(function () {
@@ -96,12 +97,16 @@ describe(MODULE_ID, function () {
 			res.json = sinon.stub();
 			next = sinon.stub();
 
+			const allowed = {
+				contributor_content: true,
+				spanish_content: false,
+				spanish_weekend: false
+			};
+
+			contractResponse.allowed = allowed;
+
 			res.locals = {
-				allowed: {
-					contributor_content: true,
-					spanish_content: false,
-					spanish_weekend: false
-				},
+				allowed,
 				contract: contractResponse,
 				flags: {
 					syndication: true,
@@ -135,7 +140,7 @@ describe(MODULE_ID, function () {
 	});
 
 	describe('default call', function () {
-		let contentAreas;
+//		let contentAreas;
 		let db;
 		let next;
 		let getAllExistingItemsForContract;
@@ -144,6 +149,7 @@ describe(MODULE_ID, function () {
 		let user_id;
 
 		afterEach(function () {
+			delete contractResponse.allowed;
 		});
 
 		beforeEach(function () {
@@ -200,14 +206,18 @@ describe(MODULE_ID, function () {
 			res.json = sinon.stub();
 			next = sinon.stub();
 
+			const allowed = {
+				contributor_content: true,
+				spanish_content: true,
+				spanish_weekend: true
+			};
+
+			contractResponse.allowed = allowed;
+
 			res.locals = {
 				$DB: db,
 				contract: contractResponse,
-				allowed: {
-					contributor_content: true,
-					spanish_content: true,
-					spanish_weekend: true
-				},
+				allowed,
 				flags: {
 					syndication: true,
 					syndicationNew: 'on',
@@ -231,14 +241,14 @@ describe(MODULE_ID, function () {
 
 			next = sinon.stub();
 
-			contentAreas = [];
-
-			if (res.locals.allowed.spanish_content === true) {
-				contentAreas.push('Spanish content');
-			}
-			if (res.locals.allowed.spanish_weekend === true) {
-				contentAreas.push('Spanish weekend');
-			}
+//			contentAreas = [];
+//
+//			if (res.locals.allowed.spanish_content === true) {
+//				contentAreas.push('Spanish content');
+//			}
+//			if (res.locals.allowed.spanish_weekend === true) {
+//				contentAreas.push('Spanish weekend');
+//			}
 		});
 
 		it('db.run called to get syndication.content_es', async function () {
@@ -248,8 +258,8 @@ describe(MODULE_ID, function () {
 
 			const query = call.args[0];
 
-			expect(query).to.include('get_content_es');
-			expect(query).to.include(`content_areas => ARRAY[$text$${contentAreas.join('$text$::syndication.enum_content_area_es, $text$')}$text$::syndication.enum_content_area_es]`);
+			expect(query).to.include('search_content_es');
+//			expect(query).to.include(`content_areas => ARRAY[$text$${contentAreas.join('$text$::syndication.enum_content_area_es, $text$')}$text$::syndication.enum_content_area_es]`);
 			expect(query).to.include('_offset => 0');
 			expect(query).to.include(`_limit => ${TRANSLATIONS.PAGINATION.DEFAULT_LIMIT}`);
 		});
@@ -261,8 +271,8 @@ describe(MODULE_ID, function () {
 
 			const query = call.args[0];
 
-			expect(query).to.include('get_content_total_es');
-			expect(query).to.include(`content_areas => ARRAY[$text$${contentAreas.join('$text$::syndication.enum_content_area_es, $text$')}$text$::syndication.enum_content_area_es]`);
+			expect(query).to.include('search_content_total_es');
+//			expect(query).to.include(`content_areas => ARRAY[$text$${contentAreas.join('$text$::syndication.enum_content_area_es, $text$')}$text$::syndication.enum_content_area_es]`);
 			expect(query).to.not.include('_offset => 0');
 			expect(query).to.not.include(`_limit => ${TRANSLATIONS.PAGINATION.DEFAULT_LIMIT}`);
 		});
@@ -290,7 +300,7 @@ describe(MODULE_ID, function () {
 	});
 
 	describe('with custom offset and limit', function () {
-		let contentAreas;
+//		let contentAreas;
 		let db;
 		let next;
 		let getAllExistingItemsForContract;
@@ -299,6 +309,7 @@ describe(MODULE_ID, function () {
 		let user_id;
 
 		afterEach(function () {
+			delete contractResponse.allowed;
 		});
 
 		beforeEach(function () {
@@ -355,14 +366,18 @@ describe(MODULE_ID, function () {
 			res.json = sinon.stub();
 			next = sinon.stub();
 
+			const allowed = {
+				contributor_content: true,
+				spanish_content: true,
+				spanish_weekend: true
+			};
+
+			contractResponse.allowed = allowed;
+
 			res.locals = {
 				$DB: db,
 				contract: contractResponse,
-				allowed: {
-					contributor_content: true,
-					spanish_content: true,
-					spanish_weekend: true
-				},
+				allowed,
 				flags: {
 					syndication: true,
 					syndicationNew: 'on',
@@ -386,14 +401,14 @@ describe(MODULE_ID, function () {
 
 			next = sinon.stub();
 
-			contentAreas = [];
-
-			if (res.locals.allowed.spanish_content === true) {
-				contentAreas.push('Spanish content');
-			}
-			if (res.locals.allowed.spanish_weekend === true) {
-				contentAreas.push('Spanish weekend');
-			}
+//			contentAreas = [];
+//
+//			if (res.locals.allowed.spanish_content === true) {
+//				contentAreas.push('Spanish content');
+//			}
+//			if (res.locals.allowed.spanish_weekend === true) {
+//				contentAreas.push('Spanish weekend');
+//			}
 		});
 
 		it('db.run called to get syndication.content_es', async function () {
@@ -403,8 +418,8 @@ describe(MODULE_ID, function () {
 
 			const query = call.args[0];
 
-			expect(query).to.include('get_content_es');
-			expect(query).to.include(`content_areas => ARRAY[$text$${contentAreas.join('$text$::syndication.enum_content_area_es, $text$')}$text$::syndication.enum_content_area_es]`);
+			expect(query).to.include('search_content_es');
+//			expect(query).to.include(`content_areas => ARRAY[$text$${contentAreas.join('$text$::syndication.enum_content_area_es, $text$')}$text$::syndication.enum_content_area_es]`);
 			expect(query).to.include(`_offset => ${req.query.offset}`);
 			expect(query).to.include(`_limit => ${req.query.limit}`);
 		});
@@ -416,8 +431,8 @@ describe(MODULE_ID, function () {
 
 			const query = call.args[0];
 
-			expect(query).to.include('get_content_total_es');
-			expect(query).to.include(`content_areas => ARRAY[$text$${contentAreas.join('$text$::syndication.enum_content_area_es, $text$')}$text$::syndication.enum_content_area_es]`);
+			expect(query).to.include('search_content_total_es');
+//			expect(query).to.include(`content_areas => ARRAY[$text$${contentAreas.join('$text$::syndication.enum_content_area_es, $text$')}$text$::syndication.enum_content_area_es]`);
 			expect(query).to.not.include(`_offset => ${req.query.offset}`);
 			expect(query).to.not.include(`_limit => ${req.query.limit}`);
 		});
@@ -445,7 +460,7 @@ describe(MODULE_ID, function () {
 	});
 
 	describe('with custom content areas', function () {
-		let contentAreas;
+//		let contentAreas;
 		let db;
 		let next;
 		let getAllExistingItemsForContract;
@@ -454,6 +469,7 @@ describe(MODULE_ID, function () {
 		let user_id;
 
 		afterEach(function () {
+			delete contractResponse.allowed;
 		});
 
 		beforeEach(function () {
@@ -511,14 +527,19 @@ describe(MODULE_ID, function () {
 			res.json = sinon.stub();
 			next = sinon.stub();
 
+
+			const allowed = {
+				contributor_content: true,
+				spanish_content: true,
+				spanish_weekend: true
+			};
+
+			contractResponse.allowed = allowed;
+
 			res.locals = {
 				$DB: db,
 				contract: contractResponse,
-				allowed: {
-					contributor_content: true,
-					spanish_content: true,
-					spanish_weekend: true
-				},
+				allowed,
 				flags: {
 					syndication: true,
 					syndicationNew: 'on',
@@ -542,14 +563,14 @@ describe(MODULE_ID, function () {
 
 			next = sinon.stub();
 
-			contentAreas = [];
-
-			if (res.locals.allowed.spanish_content === true) {
-				contentAreas.push('Spanish content');
-			}
-			if (res.locals.allowed.spanish_weekend === true) {
-				contentAreas.push('Spanish weekend');
-			}
+//			contentAreas = [];
+//
+//			if (res.locals.allowed.spanish_content === true) {
+//				contentAreas.push('Spanish content');
+//			}
+//			if (res.locals.allowed.spanish_weekend === true) {
+//				contentAreas.push('Spanish weekend');
+//			}
 		});
 
 		it('db.run called to get syndication.content_es', async function () {
@@ -559,8 +580,8 @@ describe(MODULE_ID, function () {
 
 			const query = call.args[0];
 
-			expect(query).to.include('get_content_es');
-			expect(query).to.include('content_areas => ARRAY[$text$Spanish content$text$::syndication.enum_content_area_es]');
+			expect(query).to.include('search_content_es');
+//			expect(query).to.include('content_areas => ARRAY[$text$Spanish content$text$::syndication.enum_content_area_es]');
 			expect(query).to.include(`_offset => ${req.query.offset}`);
 			expect(query).to.include(`_limit => ${req.query.limit}`);
 		});
@@ -572,8 +593,8 @@ describe(MODULE_ID, function () {
 
 			const query = call.args[0];
 
-			expect(query).to.include('get_content_total_es');
-			expect(query).to.include('content_areas => ARRAY[$text$Spanish content$text$::syndication.enum_content_area_es]');
+			expect(query).to.include('search_content_total_es');
+//			expect(query).to.include('content_areas => ARRAY[$text$Spanish content$text$::syndication.enum_content_area_es]');
 			expect(query).to.not.include(`_offset => ${req.query.offset}`);
 			expect(query).to.not.include(`_limit => ${req.query.limit}`);
 		});
@@ -601,7 +622,7 @@ describe(MODULE_ID, function () {
 	});
 
 	describe('with a query', function () {
-		let contentAreas;
+//		let contentAreas;
 		let db;
 		let next;
 		let getAllExistingItemsForContract;
@@ -610,6 +631,7 @@ describe(MODULE_ID, function () {
 		let user_id;
 
 		afterEach(function () {
+			delete contractResponse.allowed;
 		});
 
 		beforeEach(function () {
@@ -651,7 +673,7 @@ describe(MODULE_ID, function () {
 //					'offset': 0,
 					'order': 'asc',
 					'query': 'telefone',
-					'sort': 'published_date'
+					'sort': 'published'
 				},
 				'url': '/syndication/translations?lang=es'
 			});
@@ -666,14 +688,18 @@ describe(MODULE_ID, function () {
 			res.json = sinon.stub();
 			next = sinon.stub();
 
+			const allowed = {
+				contributor_content: true,
+				spanish_content: true,
+				spanish_weekend: true
+			};
+
+			contractResponse.allowed = allowed;
+
 			res.locals = {
 				$DB: db,
 				contract: contractResponse,
-				allowed: {
-					contributor_content: true,
-					spanish_content: true,
-					spanish_weekend: true
-				},
+				allowed,
 				flags: {
 					syndication: true,
 					syndicationNew: 'on',
@@ -697,14 +723,14 @@ describe(MODULE_ID, function () {
 
 			next = sinon.stub();
 
-			contentAreas = [];
-
-			if (res.locals.allowed.spanish_content === true) {
-				contentAreas.push('Spanish content');
-			}
-			if (res.locals.allowed.spanish_weekend === true) {
-				contentAreas.push('Spanish weekend');
-			}
+//			contentAreas = [];
+//
+//			if (res.locals.allowed.spanish_content === true) {
+//				contentAreas.push('Spanish content');
+//			}
+//			if (res.locals.allowed.spanish_weekend === true) {
+//				contentAreas.push('Spanish weekend');
+//			}
 		});
 
 		it('db.run called to get syndication.content_es', async function () {
@@ -714,11 +740,11 @@ describe(MODULE_ID, function () {
 
 			const query = call.args[0];
 
-			expect(query).to.include('get_content_es');
-			expect(query).to.include(`content_areas => ARRAY[$text$${contentAreas.join('$text$::syndication.enum_content_area_es, $text$')}$text$::syndication.enum_content_area_es]`);
+			expect(query).to.include('search_content_es');
+//			expect(query).to.include(`content_areas => ARRAY[$text$${contentAreas.join('$text$::syndication.enum_content_area_es, $text$')}$text$::syndication.enum_content_area_es]`);
 			expect(query).to.include(`query => $text$${req.query.query}$text$`);
-			expect(query).to.not.include('sort_col =>');
-			expect(query).to.not.include('sort_order =>');
+			expect(query).to.include('sort_col => $text$published_date$text$');
+			expect(query).to.include('sort_dir => $text$ASC$text$');
 			expect(query).to.include('_offset => 0');
 			expect(query).to.include(`_limit => ${TRANSLATIONS.PAGINATION.DEFAULT_LIMIT}`);
 		});
@@ -730,11 +756,11 @@ describe(MODULE_ID, function () {
 
 			const query = call.args[0];
 
-			expect(query).to.include('get_content_total_es');
-			expect(query).to.include(`content_areas => ARRAY[$text$${contentAreas.join('$text$::syndication.enum_content_area_es, $text$')}$text$::syndication.enum_content_area_es]`);
+			expect(query).to.include('search_content_total_es');
+//			expect(query).to.include(`content_areas => ARRAY[$text$${contentAreas.join('$text$::syndication.enum_content_area_es, $text$')}$text$::syndication.enum_content_area_es]`);
 			expect(query).to.include(`query => $text$${req.query.query}$text$`);
-			expect(query).to.not.include('sort_col =>');
-			expect(query).to.not.include('sort_order =>');
+			expect(query).to.not.include('sort_col => $text$published_date$text$');
+			expect(query).to.not.include('sort_dir => $text$ASC$text$');
 			expect(query).to.not.include('_offset => 0');
 			expect(query).to.not.include(`_limit => ${TRANSLATIONS.PAGINATION.DEFAULT_LIMIT}`);
 		});
@@ -762,7 +788,7 @@ describe(MODULE_ID, function () {
 	});
 
 	describe('with a custom sort column and sort order', function () {
-		let contentAreas;
+//		let contentAreas;
 		let db;
 		let next;
 		let getAllExistingItemsForContract;
@@ -771,6 +797,7 @@ describe(MODULE_ID, function () {
 		let user_id;
 
 		afterEach(function () {
+			delete contractResponse.allowed;
 		});
 
 		beforeEach(function () {
@@ -812,7 +839,7 @@ describe(MODULE_ID, function () {
 //					'offset': 0,
 					'order': 'asc',
 //					'query': 'telefone',
-					'sort': 'byline'
+					'sort': 'published'
 				},
 				'url': '/syndication/translations?lang=es'
 			});
@@ -827,14 +854,18 @@ describe(MODULE_ID, function () {
 			res.json = sinon.stub();
 			next = sinon.stub();
 
+			const allowed = {
+				contributor_content: true,
+				spanish_content: true,
+				spanish_weekend: true
+			};
+
+			contractResponse.allowed = allowed;
+
 			res.locals = {
 				$DB: db,
 				contract: contractResponse,
-				allowed: {
-					contributor_content: true,
-					spanish_content: true,
-					spanish_weekend: true
-				},
+				allowed,
 				flags: {
 					syndication: true,
 					syndicationNew: 'on',
@@ -858,14 +889,14 @@ describe(MODULE_ID, function () {
 
 			next = sinon.stub();
 
-			contentAreas = [];
-
-			if (res.locals.allowed.spanish_content === true) {
-				contentAreas.push('Spanish content');
-			}
-			if (res.locals.allowed.spanish_weekend === true) {
-				contentAreas.push('Spanish weekend');
-			}
+//			contentAreas = [];
+//
+//			if (res.locals.allowed.spanish_content === true) {
+//				contentAreas.push('Spanish content');
+//			}
+//			if (res.locals.allowed.spanish_weekend === true) {
+//				contentAreas.push('Spanish weekend');
+//			}
 		});
 
 		it('db.run called to get syndication.content_es', async function () {
@@ -875,10 +906,10 @@ describe(MODULE_ID, function () {
 
 			const query = call.args[0];
 
-			expect(query).to.include('get_content_es');
-			expect(query).to.include(`content_areas => ARRAY[$text$${contentAreas.join('$text$::syndication.enum_content_area_es, $text$')}$text$::syndication.enum_content_area_es]`);
-			expect(query).to.include(`sort_col => $text$${req.query.sort}$text$`);
-			expect(query).to.include('sort_order => $text$ASC$text$');
+			expect(query).to.include('search_content_es');
+//			expect(query).to.include(`content_areas => ARRAY[$text$${contentAreas.join('$text$::syndication.enum_content_area_es, $text$')}$text$::syndication.enum_content_area_es]`);
+			expect(query).to.include('sort_col => $text$published_date$text$');
+			expect(query).to.include('sort_dir => $text$ASC$text$');
 			expect(query).to.include('_offset => 0');
 			expect(query).to.include(`_limit => ${TRANSLATIONS.PAGINATION.DEFAULT_LIMIT}`);
 		});
@@ -890,10 +921,10 @@ describe(MODULE_ID, function () {
 
 			const query = call.args[0];
 
-			expect(query).to.include('get_content_total_es');
-			expect(query).to.include(`content_areas => ARRAY[$text$${contentAreas.join('$text$::syndication.enum_content_area_es, $text$')}$text$::syndication.enum_content_area_es]`);
-			expect(query).to.not.include(`sort_col => $text$${req.query.sort}$text$`);
-			expect(query).to.not.include('sort_order => $text$ASC$text$');
+			expect(query).to.include('search_content_total_es');
+//			expect(query).to.include(`content_areas => ARRAY[$text$${contentAreas.join('$text$::syndication.enum_content_area_es, $text$')}$text$::syndication.enum_content_area_es]`);
+			expect(query).to.not.include('sort_col => $text$published_date$text$');
+			expect(query).to.not.include('sort_dir => $text$ASC$text$');
 			expect(query).to.not.include('_offset => 0');
 			expect(query).to.not.include(`_limit => ${TRANSLATIONS.PAGINATION.DEFAULT_LIMIT}`);
 		});
