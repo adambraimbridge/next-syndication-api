@@ -29,13 +29,14 @@ describe(MODULE_ID, function () {
 	const messageItemMap = {
 		MSG_2000: { canBeSyndicated: 'yes', downloaded: false },
 		MSG_2100: { canBeSyndicated: 'yes', downloaded: true },
-		MSG_2200: { canBeSyndicated: 'verify' },
+		MSG_2200: { canBeSyndicated: 'verify', canDownload: -1 },
 //		MSG_2300: { canBeSyndicated: 'withContributorPayment' },
 		MSG_2320: { canBeSyndicated: 'withContributorPayment', downloaded: false },
 		MSG_2340: { canBeSyndicated: 'withContributorPayment', downloaded: true },
 		MSG_4000: { canBeSyndicated: 'no' },
 		MSG_4100: { canDownload: -1 },
-		MSG_4200: { canDownload: 0 },
+		MSG_4200: { canDownload: 0, lang: 'en' },
+		MSG_4250: { canDownload: 0, lang: 'es' },
 		MSG_5000: {}
 	};
 
