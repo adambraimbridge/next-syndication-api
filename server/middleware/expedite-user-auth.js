@@ -17,14 +17,26 @@ module.exports = exports = async (req, res, next) => {
 		$DB: db,
 		FT_User,
 		MAINTENANCE_MODE,
+		flags,
 		userUuid
 	} } = res;
 
 	if (MAINTENANCE_MODE !== true) {
 		try {
-			const [mu] = await db.run(`SELECT * FROM syndication.get_migrated_user($text$${userUuid}$text$);`);
+			let expedite = false;
 
-			if (mu && mu.user_id !== null) {
+			if (flags.syndicationMigrationComplete) {
+				expedite = true;
+			}
+			else {
+				const [mu] = await db.run(`SELECT * FROM syndication.get_migrated_user($text$${userUuid}$text$);`);
+
+				if (mu && mu.user_id !== null) {
+					expedite = true;
+				}
+			}
+
+			if (expedite === true) {
 				const [user] = await db.syndication.get_user([userUuid]);
 
 				if (Date.now() - user.last_modified < SALESFORCE_REFRESH_CONTRACT_PERIOD) {

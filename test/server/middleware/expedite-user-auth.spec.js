@@ -33,6 +33,7 @@ describe(MODULE_ID, function () {
 			user_id: userResponse.user_id
 		}]);
 		db.syndication.get_user.resolves([userResponse]);
+		db.syndication.get_migrated_user.resolves([userResponse]);
 
 		sandbox = sinon.sandbox.create();
 		mocks = {
@@ -48,6 +49,7 @@ describe(MODULE_ID, function () {
 					FT_User: {
 						USERID: '1234567890'
 					},
+					flags: {},
 					userUuid: userResponse.user_id
 				}
 			}

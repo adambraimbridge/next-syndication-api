@@ -27,11 +27,23 @@ module.exports = exports = async (req, res, next) => {
 		return;
 	}
 
-	const [mu] = await db.syndication.get_migrated_user([userUuid, contract.contract_id]);
-
-	if ((mu && mu.user_id !== null) || (user.user_id && flagIsOn(flags.syndicationRedux))) {
+	if (flags.syndicationMigrationComplete) {
 		isNewSyndicationUser = true;
+	}
+	else {
+		const [mu] = await db.syndication.get_migrated_user([userUuid, contract.contract_id]);
 
+		if (mu && mu.user_id !== null) {
+			isNewSyndicationUser = true;
+		}
+		else {
+			if (user.user_id && flagIsOn(flags.syndicationRedux)) {
+				isNewSyndicationUser = true;
+			}
+		}
+	}
+
+	if (isNewSyndicationUser === true) {
 		res.set('FT-New-Syndication-User', 'true');
 
 		log.info(`${MODULE_ID}`, { isNewSyndicationUser });
