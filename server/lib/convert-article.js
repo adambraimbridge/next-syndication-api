@@ -17,6 +17,10 @@ module.exports = exports = ({ source, sourceFormat = 'html', targetFormat = 'doc
 		'--to', targetFormat
 	];
 
+	if (targetFormat === 'plain') {
+		args.push('--wrap', 'none');
+	}
+
 	return new Promise((resolve, reject) => {
 		let cmd = spawn(CONVERT_FORMAT_COMMAND, args);
 
