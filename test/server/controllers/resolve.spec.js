@@ -298,13 +298,13 @@ describe(MODULE_ID, function () {
 			type: 'video',
 			wordCount: undefined
 		}, {
-			canBeSyndicated: undefined,
+			canBeSyndicated: 'yes',
 			canDownload: 1,
 			downloaded: false,
 			embargoPeriod: null,
 			id: '98b46b5f-17d3-40c2-8eaa-082df70c5f01',
 			lang: 'en',
-			messageCode: 'MSG_5000',
+			messageCode: 'MSG_2000',
 			publishedDate: '2017-09-15T04:01:00.000Z',
 			publishedDateDisplay: '15th Sep 2017',
 			saved: false,
@@ -312,13 +312,13 @@ describe(MODULE_ID, function () {
 			type: 'podcast',
 			wordCount: undefined
 		}, {
-			canBeSyndicated: undefined,
+			canBeSyndicated: 'yes',
 			canDownload: 1,
 			downloaded: false,
 			embargoPeriod: null,
 			id: '93991a3c-0436-41bb-863e-61242e09859c',
 			lang: 'en',
-			messageCode: 'MSG_5000',
+			messageCode: 'MSG_2000',
 			publishedDate: '2017-09-15T04:00:00.000Z',
 			publishedDateDisplay: '15th Sep 2017',
 			saved: false,
