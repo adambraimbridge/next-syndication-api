@@ -105,6 +105,7 @@
     plain: plain
     text: plain
     txt: plain
+    xml: xml
   DOWNLOAD_ARTICLE_EXTENSION_OVERRIDES:
     plain: txt
   DOWNLOAD_FILENAME_PREFIX: FT_
