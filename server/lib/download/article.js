@@ -9,7 +9,9 @@ const { DOWNLOAD_ARCHIVE_EXTENSION } = require('config');
 const Archiver = require('archiver/lib/core');
 const ArchiveType = require(`archiver/lib/plugins/${DOWNLOAD_ARCHIVE_EXTENSION}`);
 
+const articleToXML = require('../../views/article-to-xml');
 const convertArticle = require('../convert-article');
+const formatArticleXML = require('../format-article-xml');
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
@@ -92,15 +94,25 @@ module.exports = exports = class ArticleDownload extends Archiver {
 		}
 
 		try {
-			const file = await convertArticle({
-				source: content[format === 'plain' ? 'bodyHTML__PLAIN' : 'bodyHTML__CLEAN'],
-				sourceFormat: 'html',
-				targetFormat: format
-			});
+			if (format === 'xml') {
+				const xmlDoc = formatArticleXML(`<body>${content.bodyHTML}</body>`);
+
+				content.bodyXML__CLEAN = xmlDoc.getElementsByTagName('body')[0].toString();
+				content.bodyXML__CLEAN = content.bodyXML__CLEAN.substring(content.bodyXML__CLEAN.indexOf('>') + 1, content.bodyXML__CLEAN.lastIndexOf('<'));
+
+				this.file = articleToXML(content);
+			}
+			else {
+				this.file = await convertArticle({
+					source: content[format === 'plain' ? 'bodyHTML__PLAIN' : 'bodyHTML__CLEAN'],
+					sourceFormat: 'html',
+					targetFormat: format
+				});
+			}
 
 			log.info(`${MODULE_ID} ArticleConversionSuccess => ${content.id} in ${Date.now() - this.START}ms`);
 
-			return this.file = file;
+			return this.file;
 		}
 		catch (e) {
 			log.error(`${MODULE_ID} ArticleConversionError => ${content.id}`, {
