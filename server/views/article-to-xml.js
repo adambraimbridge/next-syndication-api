@@ -9,6 +9,9 @@ module.exports = exports = (content) => {
 		</head>
 		<body>
 			<body.head>
+				<hedline>
+					<hl1>${content.title}</hl1>
+				</hedline>
 				<byline>
 					<bytag>${content.byline}</bytag>
 				</byline>
