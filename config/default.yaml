@@ -67,7 +67,8 @@
   CRON:
     backup_database: "0 7 * * * *"
     backup_redshift: "0 0 7 * * *"
-    migration: "0 */5 * * * *"
+    legacy_downloads: "0 0 */6 * * *"
+    migration: "0 */15 * * * *"
 
   DB:
     DATE_FORMAT: YYYY-MM-DD HH:mm:ss.SSSS+00
@@ -134,6 +135,11 @@
       user_email: User
       published_date: Publication Date
       time: Saved Date
+    legacy_download_history:
+      user_email: User
+      time: Download Date
+      published_date: Publication Date
+      title: Item
 
   FEATURE_FLAGS:
     - syndication
@@ -171,6 +177,8 @@
     number: N
     object: M
     string: S
+
+  LEGACY_DOWNLOAD_HISTORY_SPREADSHEET_DATE_FORMAT: DD/MM/YYYY HH:mm
 
   LICENCE_ITEMS_ARRAY_PROPERTY: accessLicences
 
@@ -265,7 +273,6 @@
         - content_url
         - title
 
-
   SALESFORCE:
     API_VERSION: v34.0
     BASE_URI: SCRMContract
@@ -297,6 +304,12 @@
       contractid: contract_id
       userid: user_id
       lastupdated: last_updated
+    legacy_download_history:
+      contractid: contract_id
+      useremail: user_email
+      time: time
+      publisheddate: published_date
+      title: title
 
   STUB_FLAGS: false
 
