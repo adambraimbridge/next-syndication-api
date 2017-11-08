@@ -75,7 +75,7 @@
     DATE_FORMAT: YYYY-MM-DD HH:mm:ss.SSSS+00
     BACKUP:
       bucket:
-        directory: production
+        directory: development/backup
         encryption_type: AES256
       date_format: YYYY-MM-DD[T]HH.00
       program: pg_dump

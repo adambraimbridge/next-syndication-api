@@ -13,7 +13,8 @@ const {
 	AWS_REGION = 'eu-west-1',
 	AWS_SECRET_ACCESS_KEY,
 	DB,
-	DOWNLOAD_ARCHIVE_EXTENSION
+	DOWNLOAD_ARCHIVE_EXTENSION,
+	REDSHIFT
 } = require('config');
 
 const S3 = new AWS.S3({
@@ -25,13 +26,11 @@ const S3 = new AWS.S3({
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async () => {
-	const START = Date.now();
-	const time = moment().format(DB.BACKUP.date_format);
-
 	try {
 		log.info(`${MODULE_ID} | Running tidy-bucket`);
 
 		await tidyBackups();
+		await tidyRedshift();
 
 		log.info(`${MODULE_ID} | Finished tidy-bucket`);
 	}
@@ -53,26 +52,12 @@ async function tidyBackups() {
 	});
 
 	if (keys.length) {
-		console.log(JSON.stringify(keys, null, 4));
-
-		let chunks = keys.reduce((acc, item) => {
-			if (!acc.length || acc[acc.length - 1].length >= 100) {
-				acc.push([]);
-			}
-
-			acc[acc.length - 1].push(item);
-
-			return acc;
-		}, []);
-
-		const responses = await Promise.all(keys.map(async item => {
+		await Promise.all(keys.map(async item => {
 			return await S3.deleteObject({
 				Bucket: DB.BACKUP.bucket.id,
 				Key: item.Key
 			}).promise();
 		}));
-
-		console.log(JSON.stringify(responses.map(({ data }) => data), null, 4));
 	}
 }
 
@@ -89,9 +74,7 @@ async function _tidyBackups({ maxKeepHour, maxKeepDay, continueFrom, keys }) {
 
 	const res = await S3.listObjectsV2(params).promise();
 
-//	console.log(res.Contents);
-
-	for (let [index, item] of res.Contents.entries()) {
+	for (let [, item] of res.Contents.entries()) {
 		const date = moment(item.Key.substring(item.Key.indexOf('.') + 1, item.Key.lastIndexOf('.')), DB.BACKUP.date_format);
 
 		if (date.isBefore(maxKeepDay)) {
@@ -116,4 +99,51 @@ async function _tidyBackups({ maxKeepHour, maxKeepDay, continueFrom, keys }) {
 
 
 async function tidyRedshift() {
+	const now = moment();
+	const maxKeepDay = now.clone().subtract(30, 'days');
+	const keys = [];
+
+	await _tidyRedshift({
+		maxKeepDay,
+		keys
+	});
+
+	if (keys.length) {
+		await Promise.all(keys.map(async item => {
+			return await S3.deleteObject({
+				Bucket: REDSHIFT.bucket.id,
+				Key: item.Key
+			}).promise();
+		}));
+	}
+}
+
+async function _tidyRedshift({ maxKeepDay, continueFrom, keys }) {
+	const params = {
+		Bucket: REDSHIFT.bucket.id,
+		MaxKeys: 1000,
+		Prefix: `${REDSHIFT.bucket.directory}`
+	};
+
+	if (continueFrom) {
+		params.StartAfter = continueFrom;
+	}
+
+	const res = await S3.listObjectsV2(params).promise();
+
+	for (let [, item] of res.Contents.entries()) {
+		const date = moment(item.Key.substring(item.Key.indexOf('.') + 1, item.Key.lastIndexOf('.')), DB.BACKUP.date_format);
+
+		if (date.isBefore(maxKeepDay)) {
+			keys.push({ Key: item.Key });
+		}
+	}
+
+	if (res.IsTruncated === true) {
+		await _tidyBackups({
+			maxKeepDay,
+			continueFrom: res.Contents[res.Contents.length - 1].Key,
+			keys
+		});
+	}
 }
