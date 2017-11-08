@@ -69,12 +69,13 @@
     backup_redshift: "0 0 7 * * *"
     legacy_downloads: "0 0 */6 * * *"
     migration: "0 */15 * * * *"
+    tidy_bucket: "0 0 2 * * *"
 
   DB:
     DATE_FORMAT: YYYY-MM-DD HH:mm:ss.SSSS+00
     BACKUP:
       bucket:
-        directory: development/backup
+        directory: production
         encryption_type: AES256
       date_format: YYYY-MM-DD[T]HH.00
       program: pg_dump

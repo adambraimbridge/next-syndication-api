@@ -10,6 +10,7 @@ exports.backup = require('./backup');
 exports.legacy_downloads = require('./legacy_downloads');
 exports.migration = require('./migration');
 exports.redshift = require('./redshift');
+exports.tidyBucket = require('./tidy-bucket');
 
 createKey().then(() => {});
 
