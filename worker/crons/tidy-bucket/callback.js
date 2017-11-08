@@ -5,7 +5,6 @@ const path = require('path');
 const { default: log } = require('@financial-times/n-logger');
 
 const AWS = require('aws-sdk');
-const mime = require('mime-types');
 const moment = require('moment');
 
 const {
@@ -13,7 +12,6 @@ const {
 	AWS_REGION = 'eu-west-1',
 	AWS_SECRET_ACCESS_KEY,
 	DB,
-	DOWNLOAD_ARCHIVE_EXTENSION,
 	REDSHIFT
 } = require('config');
 
