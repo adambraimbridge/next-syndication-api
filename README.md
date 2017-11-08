@@ -29,6 +29,12 @@ Once you have PostgreSQL installed, if you are not using the [shell script](http
 
 Since all contracts live in the production salesforce environment, in order to test locally you will need to use the production `SALESFORCE_*` environment variables rather than the development ones.
 
+### Setting yourself up on a contract
+
+In order to see the syndication icons, you need to belong to a licence with a syndication contract.
+
+Use this link to get set up on the complimentary access licence: https://join.ft.com/4ec865b6-a757-4869-ad0c-e80807c82989  
+
 ## Run locally
 
 If you've used the shell script or if you've checked out, installed and built all projects related to the syndication/republishing tool — in the same directory — and want to run all projects easily, you can do so from within the `next-syndication-api`, you will need to:
@@ -84,3 +90,10 @@ If the last line of your output looks more like this:
 Then you can't connect to the mail server.
 
 Try turning wifi off on your phone to tether your computer to your phone's 4G connection and you should find it now works.
+
+
+## Maintenance mode
+
+To turn maintenance mode on, simply turn the `syndicationMaintenance` flag on for everyone.
+
+Conversely, turn it off again to turn maintenance mode off.
