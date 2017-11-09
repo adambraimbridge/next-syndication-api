@@ -571,24 +571,25 @@ Returns a Buffer with `content-disposition: attachment`.
 
 ### POST /syndication/download-format
 
+If a valid `format` is given, updates the user's preferred download format. 
+
 #### Example Request
 
 ```shell
 
     curl -X POST \
-        https://www.ft.com/syndication/ \
+        https://www.ft.com/syndication/downlaad-format \
         -H 'content-type: application/json' \
-        -H 'cookie: $USERS_COOKIE_GOES_HERE';
+        -H 'cookie: $USERS_COOKIE_GOES_HERE'
+        -d '{
+            "format": "docx"
+        }';
 
 ```
 
 #### Example Response
 
-```json
-
-
-
-``` 
+This endpoint returns a `204` when successfully updated.
 
 ## Endpoints (private)
 
