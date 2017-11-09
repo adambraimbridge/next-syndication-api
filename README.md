@@ -55,6 +55,32 @@ This will start the `next-syndication-api` the associated worker processes and t
 
 You can also run `make run-monit` to bring up the [PM2 process monitor](https://www.npmjs.com/package/pm2#cpu--memory-monitoring).
 
+### Configuration
+
+This project and the [next-syndication-dL](https://github.com/Financial-Times/next-syndication-dl) project both use standard next environment variables for storing secrets in vault.
+
+Though a lot of config for these projects is not secret, so rather than pollute vault with generic configuration, a layer has been added on top of the standard environment variables.
+
+Both projects use a library called [config](https://www.npmjs.com/package/config) for which you define a `config/default.yaml` file which can be overlaid by other config files based on naming conventions like `config/${NODE_ENV}.yaml` and/or `config/${require('os').hostname()}.yaml` see the [config module documentation for File Load Order](https://github.com/lorenwest/node-config/wiki/Configuration-Files#file-load-order) for more information. 
+
+All secrets are added to the [generic config](https://github.com/Financial-Times/next-syndication-api/tree/master/config) using the [Custom Environment Variables](https://github.com/lorenwest/node-config/wiki/Environment-Variables#custom-environment-variables) feature provided by the config library, so as to keep in line with `next`'s architecture and maintain no leaking of secrets throughout environments. 
+
+#### next-syndication-dl
+
+You will notice that [next-syndication-dl](https://github.com/Financial-Times/next-syndication-dl) does not have its own `config` directory. 
+
+Don't worry, this is by design: the `config` directory and the `pandoc-dpkg` directories are both symlinked to the root of the project by the `make install` task.
+
+### pandoc-dpkg ... or What the hell is this? 
+
+[pandoc](https://pandoc.org/MANUAL.html) is the command line program that we use to turn our article from HTML into either plain text (`.txt`) or an open office document (`.docx`).
+
+Considering its small file size: including the program as part of the project was much simpler than having to go through the rigmarole of trying to automate deployments of a heroku app with a custom add-on. 
+
+The original proof of concept version of the `next-syndication-api` used a separate stand-alone heroku app with the `pandoc` add-on. 
+
+While there is nothing wrong with this approach, it makes things less confusing and more "performant" now that we can run the program on each dyno running the `next-syndication-api`; rather than a single dyno running any and all calls to the `pandoc` program.  
+
 ### Emails
 
 Emails are sent by the `db-persist` worker using nodemailer and gmail. 
