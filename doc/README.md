@@ -1,9 +1,11 @@
 # API
 
 ## Authentication
+
 The user facing API has no extra authentication for syndication, it is all handled via FT's standard sign in and uses the user-agent's cookie.
 
 ### Masquerading
+
 Aside from saving and downloading content, you can masquerade as a different contract by passing `contract_id=${VALID_CONTRACT_NUMBER}` in the query string of any __public__ endpoint defined that uses contract information.
 
 This works locally for anyone. In production it currently only works for `christos constandinou`'s UUID. Since he was the only developer on this project from start till his leaving date and since there was never any requirement to be able to masquerade as different users and/or contracts, this was added as a quick way of checking contracts. __You will definitely want to replace his UUID__ with your own and/or whoever is supporting production. At the same time, __it would definitely be worth implementing an *actual solution*!__. 
@@ -593,14 +595,109 @@ This endpoint returns a `204` when successfully updated.
 
 ## Endpoints (private)
 
+The endpoints defined here are only able to be run in production by `christos constandinou`'s UUID. Since he was the only developer on this project from start till his leaving date and since there was never any requirements for the below. __You will definitely want to replace his UUID__ with your own and/or whoever is supporting production. At the same time, __it would definitely be worth implementing an *actual solution*!__.
+
 ### GET /syndication/migrate
+
+This endpoint can be deprecated once the migration is complete and exists as a way of arbitrarily executing the migration cron task. E.g. If you made a mistake with a contract's legacy download count and you want to fix it immediately, you could update the spreadsheet and then call this endpoint to have the change propagated immediately.
+
+#### Example Request
+
+```shell
+
+    curl -X GET \
+        https://www.ft.com/syndication/migrate \
+        -H 'content-type: application/json' \
+        -H 'cookie: $USERS_COOKIE_GOES_HERE';
+
+```
+
+#### Example Response
+
+This endpoint returns a:
+`200` and will update the `syndication-migration` slack channel when data was successfully mnigrated.
+`204` when run without error but no changes were detected.
 
 ### GET /syndication/reload
 
+Reloads all computed tables. I.e. calls the `syndication.reload_all()` stored procedure.
+
+This can be handy to have in the unlikely case where the DB's computed tables become insanely out of sync. 
+
+#### Example Request
+
+```shell
+
+    curl -X GET \
+        https://www.ft.com/syndication/reload \
+        -H 'content-type: application/json' \
+        -H 'cookie: $USERS_COOKIE_GOES_HERE';
+
+```
+
+#### Example Response
+
+This endpoint returns a `204` when successfully complete.
+
 ## Endpoints (non-production)
+
+These endpoints exist as wrappers to the functionality contained in the cron workers.
+
+They are not available in production and are strictly for you to functionally test the cron callbacks work.
 
 ### GET /syndication/backup
 
+Runs the DB backup and uploads it to S3.
+
+#### Example Request
+
+```shell
+
+    curl -X GET \
+        https://www.ft.com/syndication/backup \
+        -H 'content-type: application/json' \
+        -H 'cookie: $USERS_COOKIE_GOES_HERE';
+
+```
+
+#### Example Response
+
+This endpoint returns a `204` when successfully complete.
+
 ### GET /syndication/legacy_downloads
 
+Ingests the legacy downloads from the legacy downloads google sheet.
+
+#### Example Request
+
+```shell
+
+    curl -X GET \
+        https://www.ft.com/syndication/legacy_downloads \
+        -H 'content-type: application/json' \
+        -H 'cookie: $USERS_COOKIE_GOES_HERE';
+
+```
+
+#### Example Response
+
+This endpoint returns a `204` when successfully complete.
+
 ### GET /syndication/redshift
+
+Creates the redshift CSVs and uploads the to S3.
+
+#### Example Request
+
+```shell
+
+    curl -X GET \
+        https://www.ft.com/syndication/redshift \
+        -H 'content-type: application/json' \
+        -H 'cookie: $USERS_COOKIE_GOES_HERE';
+
+```
+
+#### Example Response
+
+This endpoint returns a `204` when successfully complete.
