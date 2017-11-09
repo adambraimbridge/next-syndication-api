@@ -34,7 +34,9 @@ function decorateContract(contract) {
 			acc[asset.asset_type] =
 			acc[asset.content_type] = asset;
 
-			asset.content = asset.content_areas.join('; ');
+			if (Array.isArray(asset.content_areas)) {
+				asset.content = asset.content_areas.join('; ');
+			}
 
 			return acc;
 		}, {});
