@@ -210,7 +210,7 @@ This would very easily exceed the 2,083 character URI limit.
 
 Currently this only supports `lang=es` and is used to display spanish content and perform searches on `/republishing/spanish`.
 
-Supported query params are:
+#### Supported query params are:
 
 Query Param | Type | Description
 ------------ | ------------- | -------------
@@ -306,7 +306,7 @@ limit | Integer | __OPTIONAL__. Defaults to `50`. The max number of items to ret
 
 Returns a single content item. This is used to return content for the Spanish article page — `/republishing/spanish/:content_uuid`.
 
-Supported query params are:
+#### Supported query params are:
 
 Query Param | Type | Description
 ------------ | ------------- | -------------
@@ -370,7 +370,7 @@ lang | enum(en, es) | __OPTIONAL__. The language to return content in. Will only
 
 Saves a content item against the user's contract.
 
-Supported query params are:
+#### Supported query params are:
 
 Query Param | Type | Description
 ------------ | ------------- | -------------
@@ -398,7 +398,7 @@ If a content item has been saved against a contract, calling this endpoint will 
 
 The reason this is aliased as a `GET` is because `next-router` does not proxy `DELETE` requests.
 
-Supported query params are:
+#### Supported query params are:
 
 Query Param | Type | Description
 ------------ | ------------- | -------------
@@ -423,7 +423,11 @@ This endpoint returns a `204` when successfully unsaved.
 
 Initiates a download for the given content UUID, see [doc/05 Download.png](https://github.com/Financial-Times/next-syndication-api/blob/master/doc/05%20Download.png) for details.
 
-Supported query params are:
+#### IMPORTANT
+
+Remember in production this will be running from: `https://dl.syndication.ft.com/syndication/download/:content_uuid`.
+
+#### Supported query params are:
 
 Query Param | Type | Description
 ------------ | ------------- | -------------
@@ -449,7 +453,7 @@ Returns a ReadableStream with `content-disposition: attachment`.
 
 Returns the saved or download history for the user's contract.
 
-Supported query params are:
+#### Supported query params are:
 
 Query Param | Type | Description
 ------------ | ------------- | -------------
@@ -550,7 +554,7 @@ limit | Integer | __OPTIONAL__. Defaults to `50`. The max number of items to ret
 
 This is exactly like `/syndication/history` defined above, only it returns a CSV which is downloaded by the user-agent. 
 
-Supported query params are:
+#### Supported query params are:
 
 Query Param | Type | Description
 ------------ | ------------- | -------------
