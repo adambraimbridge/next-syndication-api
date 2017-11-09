@@ -45,7 +45,7 @@ const MESSAGE_CODE_RULES = exports.MESSAGE_CODE_RULES = {
 	MSG_2100: (item, contract) =>
 		(item.downloaded === true && !MESSAGE_CODE_RULES.MSG_2300(item, contract) && !MESSAGE_CODE_RULES.MSG_2340(item, contract)),
 	MSG_2200: (item) =>
-		(item.canBeSyndicated === 'verify' && item.canDownload < 0),
+		(item.canBeSyndicated === 'verify'),// && item.type !== 'package'),
 	MSG_2300: (item, contract) =>
 		(item.canBeSyndicated === 'withContributorPayment' && !MESSAGE_CODE_RULES.MSG_2320(item, contract) && !MESSAGE_CODE_RULES.MSG_2340(item, contract)),
 	MSG_2320: (item, contract) =>
