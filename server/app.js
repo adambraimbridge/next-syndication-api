@@ -99,6 +99,8 @@ app.post(`${BASE_URI_PATH}/download-format`, middleware, require('./controllers/
 app.get(`${BASE_URI_PATH}/migrate`, middleware, require('./controllers/migrate'));
 // force reload all computed tables in the DB
 app.get(`${BASE_URI_PATH}/reload`, middleware, require('./controllers/reload'));
+// force ingest of legacy_downloads
+app.get(`${BASE_URI_PATH}/legacy_downloads`, middleware, require('./controllers/legacy_downloads'));
 
 if (process.env.NODE_ENV !== 'production') {
 	app.get(`${BASE_URI_PATH}/backup`, middleware, require('./controllers/backup'));
