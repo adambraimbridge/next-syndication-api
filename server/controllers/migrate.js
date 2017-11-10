@@ -10,17 +10,20 @@ const { THE_GOOGLE: { AUTH_FILE_NAME } } = require('config');
 
 const statAsync = util.promisify(stat);
 
+const ACL = {
+	user: false,
+	superuser: false,
+	superdooperuser: true,
+	superdooperstormtrooperuser: true
+};
+
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
 	try {
-		const authorized = {
-			'8ef593a8-eef6-448c-8560-9ca8cdca80a5': true,
-			'f74e5115-922b-409f-a82f-707a0c85e155': true
-		};
+		const { locals: { user } } = res;
 
-		if (authorized[res.locals.userUuid] !== true) {
-
+		if (!user || ACL[user.role] !== true) {
 			res.sendStatus(401);
 
 			return;
