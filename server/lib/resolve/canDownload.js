@@ -18,7 +18,8 @@ module.exports = exports = (val, prop, item, existing, contract) => {
 		}
 
 		if (asset.download_limit > -1) {
-			if (asset.download_limit - asset.current_downloads.total > 0) {
+			const downloaded_total = asset.current_downloads.total + (asset.legacy_download_count || 0)
+			if (asset.download_limit - downloaded_total > 0) {
 				return 1;
 			}
 			else {

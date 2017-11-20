@@ -34,4 +34,8 @@ describe(MODULE_ID, function () {
 	it('returns -1', function() {
 		expect(underTest(undefined, 'canDownload', { type: 'http://www.ft.com/ontology/content/Video' }, null, { itemsMap: { video: { download_limit: 10, current_downloads: { total: 10 } } } })).to.equal(-1);
 	});
+
+	it('returns -1 with legacy_download_count taken into account', function() {
+		expect(underTest(undefined, 'canDownload', { type: 'http://www.ft.com/ontology/content/Video' }, null, { itemsMap: { video: { legacy_download_count: 9, download_limit: 10, current_downloads: { total: 1 } } } })).to.equal(-1);
+	});
 });
