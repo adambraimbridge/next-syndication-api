@@ -29,8 +29,6 @@ const S3 = new AWS.S3({
 //const statAsync = util.promisify(stat);
 const writeFileAsync = util.promisify(writeFile);
 
-const RE_QUOTES = /"/gm;
-
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async () => {
@@ -95,8 +93,14 @@ function safe(value) {
 
 		case '[object Array]':
 		case '[object Object]':
-			value = JSON.stringify(value).replace(RE_QUOTES, '\"');
+			value = JSON.stringify(value);
 			break;
+	}
+
+	if (String(value).includes('"')) {
+		// remove all the double quotes in a string as it can
+		// mess up the csv formatting
+		value = value.replace(/"/gm, '\"');
 	}
 
 	if (String(value).includes(',')) {
