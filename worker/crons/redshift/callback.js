@@ -103,6 +103,12 @@ function safe(value) {
 		value = value.replace(/"/g, '');
 	}
 
+	if (String(value).includes('\n')) {
+		// remove any newlines in a string as it can
+		// mess up the csv formatting
+		value = value.replace(/\n/g, '');
+	}
+
 	if (String(value).includes(',')) {
 		return `"${value}"`;
 	}
