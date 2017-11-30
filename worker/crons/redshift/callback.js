@@ -100,7 +100,7 @@ function safe(value) {
 	if (String(value).includes('"')) {
 		// remove all the double quotes in a string as it can
 		// mess up the csv formatting
-		value = value.replace(/"/gm, '\"');
+		value = value.replace(/"/g, '');
 	}
 
 	if (String(value).includes(',')) {
