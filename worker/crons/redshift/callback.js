@@ -103,10 +103,11 @@ function safe(value) {
 		value = value.replace(/"/g, '');
 	}
 
-	if (String(value).includes('\n')) {
-		// remove any newlines in a string as it can
+	const NEWLINES = /\n|\r/g
+	if (NEWLINES.test(String(value))) {
+		// remove any newlines or carriage returns in a string as it can
 		// mess up the csv formatting
-		value = value.replace(/\n/g, '');
+		value = value.replace(NEWLINES, '');
 	}
 
 	if (String(value).includes(',')) {
