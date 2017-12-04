@@ -5,6 +5,9 @@
     "_id": {
       "type": "string"
     },
+    "canDownload": {
+      "type": "number"
+    },
     "content_id": {
       "format": "uri",
       "type": "string"

@@ -55,6 +55,7 @@ describe(MODULE_ID, function () {
 	it('publishes a message queue event to spoor', async function () {
 		const event = (new MessageQueueEvent({
 			event: {
+				canDownload: 1,
 				content_id: 'http://www.ft.com/thing/abc',
 				contract_id: 'syndication',
 				download_format: 'docx',

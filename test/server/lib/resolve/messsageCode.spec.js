@@ -27,7 +27,7 @@ describe(MODULE_ID, function () {
 	});
 
 	const messageItemMap = {
-		MSG_2000: { canBeSyndicated: 'yes', downloaded: false },
+		MSG_2000: { canBeSyndicated: 'yes', downloaded: false, canDownload: 1 },
 		MSG_2100: { canBeSyndicated: 'yes', downloaded: true },
 		MSG_2200: { canBeSyndicated: 'verify', canDownload: -1 },
 //		MSG_2300: { canBeSyndicated: 'withContributorPayment' },
