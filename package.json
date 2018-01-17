@@ -39,8 +39,8 @@
     "xmldom": "^0.1.27"
   },
   "devDependencies": {
-    "@financial-times/n-gage": "^1.13.0",
-    "@financial-times/n-heroku-tools": "^6.29.3",
+    "@financial-times/n-gage": "^1.19.0",
+    "@financial-times/n-heroku-tools": "^7.0.0",
     "chai": "^4.0.2",
     "coveralls": "^2.13.1",
     "decompress": "^4.2.0",
