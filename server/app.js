@@ -59,6 +59,8 @@ const middleware = [
 	routeMaintenanceMode
 ];
 
+app.get('/__gtg', (req, res) => res.sendStatus(200));
+
 app.get(`${BASE_URI_PATH}/__gtg`, (req, res) => res.sendStatus(200));
 
 // this is here to stop weird error logs, we can't find what exactly is pinging this endpoint
