@@ -16,8 +16,7 @@ coverage-report:
 	@$(DONE)
 
 deploy:
-	nht configure --vault
-	nht deploy --skip-gtg
+	nht ship
 
 install-clean:
 # delete the package-lock.json here so n-gage can install correctly
@@ -29,7 +28,7 @@ kill-all:
 	./node_modules/.bin/pm2 kill
 
 provision:
-	nht float --master --no-destroy --skip-gtg --testapp ${TEST_APP} --vault
+	nht float --master --no-destroy --testapp ${TEST_APP} --vault
 
 run:
 	nht run --local --https
