@@ -88,9 +88,6 @@ describe(MODULE_ID, function () {
 		res.sendStatus = sinon.stub();
 
 		res.locals = {
-			FT_User: {
-				USERID: '1234567890'
-			},
 			licence: { id: 'xyz' },
 			syndication_contract: {
 				id: 'lmno'

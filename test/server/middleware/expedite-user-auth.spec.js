@@ -46,9 +46,6 @@ describe(MODULE_ID, function () {
 			res: {
 				locals: {
 					$DB: db,
-					FT_User: {
-						USERID: '1234567890'
-					},
 					flags: {},
 					userUuid: userResponse.user_id
 				}

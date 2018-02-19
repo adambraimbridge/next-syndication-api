@@ -84,9 +84,6 @@ describe(MODULE_ID, function () {
 			});
 
 			res.locals = {
-				FT_User: {
-					USERID: '1234567890'
-				},
 				contract: {
 					download_formats: {
 						abc: 'docx'
@@ -147,7 +144,7 @@ describe(MODULE_ID, function () {
 					'ft-vanity-url': `/syndication/download/${CONTENT_ID}?format%3Ddocx`,
 					'ft-flags-next-flags': '',
 					'ft-flags': '-',
-					'cookie': 'FTSession;spoor-id;FT_User=USERID=1234567890',
+					'cookie': 'FTSession;spoor-id',
 					'accept-language': 'en-GB,en-US;q=0.8,en;q=0.6',
 					'accept-encoding': 'gzip, deflate, sdch, br',
 					'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -155,7 +152,6 @@ describe(MODULE_ID, function () {
 				},
 				'cookies': {
 					'FTSession': 'FTSession',
-					'FT_User': 'USERID=1234567890',
 					'spoor-id': 'spoor-id'
 				},
 				'hostname': 'localhost',
@@ -178,9 +174,6 @@ describe(MODULE_ID, function () {
 			});
 
 			res.locals = {
-				FT_User: {
-					USERID: '1234567890'
-				},
 				contract: {
 					download_formats: {
 						abc: 'docx'
