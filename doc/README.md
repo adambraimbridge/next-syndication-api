@@ -8,11 +8,11 @@ The user facing API has no extra authentication for syndication, it is all handl
 
 Aside from saving and downloading content, you can masquerade as a different contract by passing `contract_id=${VALID_CONTRACT_NUMBER}` in the query string of any __public__ endpoint defined that uses contract information.
 
-This works locally for anyone. In production it currently only works for `christos constandinou`'s UUID. Since he was the only developer on this project from start till his leaving date and since there was never any requirement to be able to masquerade as different users and/or contracts, this was added as a quick way of checking contracts. __You will definitely want to replace his UUID__ with your own and/or whoever is supporting production. At the same time, __it would definitely be worth implementing an *actual solution*!__. 
+This works locally for anyone. In production it currently only works for `christos constandinou`'s UUID. Since he was the only developer on this project from start till his leaving date and since there was never any requirement to be able to masquerade as different users and/or contracts, this was added as a quick way of checking contracts. __You will definitely want to replace his UUID__ with your own and/or whoever is supporting production. At the same time, __it would definitely be worth implementing an *actual solution*!__.
 
-See [server/middleware/masquerade.js](https://github.com/Financial-Times/next-syndication-api/blob/master/server/middleware/masquerade.js#L6) for implementation — cough...🤧 hack 😅 — details... 
+See [server/middleware/masquerade.js](https://github.com/Financial-Times/next-syndication-api/blob/master/server/middleware/masquerade.js#L6) for implementation — cough...🤧 hack 😅 — details...
 
-This also works for the `/republishing/contract` endpoint and can be handy for viewing contract details when debugging.  
+This also works for the `/republishing/contract` endpoint and can be handy for viewing contract details when debugging.
 
 ## Endpoints (public)
 
@@ -54,14 +54,13 @@ This is the first endpoint called by the [n-syndication](https://github.com/Fina
         "surname": "average",
         "download_format": "docx",
         "last_modified": "2017-11-09T09:33:14.391Z",
-        "passport_id": "0123456789"
     }
 
-``` 
+```
 
 ### GET /syndication/contract-status
 
-Returns information about the contract the requesting user is on. This is the information shown on the contract details page — `/republishing/contract`. 
+Returns information about the contract the requesting user is on. This is the information shown on the contract details page — `/republishing/contract`.
 
 #### Example Request
 
@@ -141,15 +140,15 @@ Returns information about the contract the requesting user is on. This is the in
         "MY_DOWNLOAD_FORMAT": "docx"
     }
 
-``` 
+```
 
 ### POST /syndication/resolve
 
 This endpoint is called by the [n-syndication](https://github.com/Financial-Times/n-syndication) module — passing all the content UUIDs it can find on a given page — to get syndication data back for each content UUID it has sent.
 
-The reason this is a `POST` and not a `GET` is because some pages, e.g. the `next-front-page` can have upwards of 50 items to display syndication icons for. 
+The reason this is a `POST` and not a `GET` is because some pages, e.g. the `next-front-page` can have upwards of 50 items to display syndication icons for.
 
-This would very easily exceed the 2,083 character URI limit. 
+This would very easily exceed the 2,083 character URI limit.
 
 #### Example Request
 
@@ -204,7 +203,7 @@ This would very easily exceed the 2,083 character URI limit.
     ]
 
 
-``` 
+```
 
 ### GET /syndication/translations
 
@@ -222,8 +221,8 @@ from | Date(YYYY-MM-DD) | __OPTIONAL__. Only return results whose `field` date i
 to | Date(YYYY-MM-DD) | __OPTIONAL__. Only return results whose `field` date is on or before this date, inclusive.
 sort | enum(translated, published, relevance) | __OPTIONAL__. Defaults to `translated` is no `query` is given and `relevance` if a `query` is.
 order | enum(desc, asc) | __OPTIONAL__. Defaults to `desc`.
-offset | Integer | __OPTIONAL__. Defaults to `0`. The index to return results from. 
-limit | Integer | __OPTIONAL__. Defaults to `50`. The max number of items to return. 
+offset | Integer | __OPTIONAL__. Defaults to `0`. The index to return results from.
+limit | Integer | __OPTIONAL__. Defaults to `50`. The max number of items to return.
 
 #### Example Request
 
@@ -300,7 +299,7 @@ limit | Integer | __OPTIONAL__. Defaults to `50`. The max number of items to ret
         "total": 7
     }
 
-``` 
+```
 
 ### GET /syndication/content/:content_uuid
 
@@ -364,7 +363,7 @@ lang | enum(en, es) | __OPTIONAL__. The language to return content in. Will only
         "messageCode": "MSG_2000"
     }
 
-``` 
+```
 
 ### GET /syndication/save/:content_uuid
 
@@ -394,7 +393,7 @@ This endpoint returns a `204` when successfully saved.
 ### DELETE /syndication/save/:content_uuid`
 aliased as `GET /syndication/unsave/:content_uuid`
 
-If a content item has been saved against a contract, calling this endpoint will flag it as deleted in the DB. So it will no longer be shown in the contract's `Saved Items`. 
+If a content item has been saved against a contract, calling this endpoint will flag it as deleted in the DB. So it will no longer be shown in the contract's `Saved Items`.
 
 The reason this is aliased as a `GET` is because `next-router` does not proxy `DELETE` requests.
 
@@ -458,8 +457,8 @@ Returns the saved or download history for the user's contract.
 Query Param | Type | Description
 ------------ | ------------- | -------------
 type | enum(downloads, saved) | __OPTIONAL__. Defaults to `downloads` Whether to return download or save history.
-offset | Integer | __OPTIONAL__. Defaults to `0`. The index to return results from. 
-limit | Integer | __OPTIONAL__. Defaults to `50`. The max number of items to return. 
+offset | Integer | __OPTIONAL__. Defaults to `0`. The index to return results from.
+limit | Integer | __OPTIONAL__. Defaults to `50`. The max number of items to return.
 
 #### Example Request
 
@@ -548,11 +547,11 @@ limit | Integer | __OPTIONAL__. Defaults to `50`. The max number of items to ret
         "total": 30
     }
 
-``` 
+```
 
 ### GET /syndication/export
 
-This is exactly like `/syndication/history` defined above, only it returns a CSV which is downloaded by the user-agent. 
+This is exactly like `/syndication/history` defined above, only it returns a CSV which is downloaded by the user-agent.
 
 #### Supported query params are:
 
@@ -577,7 +576,7 @@ Returns a Buffer with `content-disposition: attachment`.
 
 ### POST /syndication/download-format
 
-If a valid `format` is given, updates the user's preferred download format. 
+If a valid `format` is given, updates the user's preferred download format.
 
 #### Example Request
 
@@ -626,7 +625,7 @@ This endpoint returns a:
 
 Reloads all computed tables. I.e. calls the `syndication.reload_all()` stored procedure.
 
-This can be handy to have in the unlikely case where the DB's computed tables become insanely out of sync. 
+This can be handy to have in the unlikely case where the DB's computed tables become insanely out of sync.
 
 #### Example Request
 

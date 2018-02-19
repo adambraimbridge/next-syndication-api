@@ -60,7 +60,6 @@ describe(MODULE_ID, function () {
 					email: 'foo@bar.com',
 					first_name: 'foo',
 					id: 'bar',
-					passport_id: '1234567890',
 					lastName: 'bar'
 				}
 			}

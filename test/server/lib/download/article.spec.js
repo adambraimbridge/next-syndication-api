@@ -132,7 +132,6 @@ describe(MODULE_ID, function () {
 						email: USER.email,
 						first_name: USER.first_name,
 						id: USER.user_id,
-						passport_id: USER.passport_id,
 						surname: USER.surname
 					}
 				}

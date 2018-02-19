@@ -76,7 +76,6 @@ describe(MODULE_ID, function () {
 					email: 'foo@bar.com',
 					first_name: 'foo',
 					id: 'bar',
-					passport_id: '1234567890',
 					lastName: 'bar'
 				}
 			}
@@ -118,7 +117,6 @@ describe(MODULE_ID, function () {
 
 		data.user = {
 			ft_session: event.tracking.session,
-			passport_id: event.user.passport_id
 		};
 
 		const NODE_ENV = process.env.NODE_ENV;

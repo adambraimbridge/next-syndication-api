@@ -99,7 +99,6 @@ describe(MODULE_ID, function () {
 				email: 'foo@bar.com',
 				first_name: 'foo',
 				user_id: 'abc',
-				passport_id: '1234567890',
 				surname: 'bar'
 			},
 			userUuid: 'abc'
@@ -121,7 +120,6 @@ describe(MODULE_ID, function () {
 				email: res.locals.user.email,
 				first_name: res.locals.user.first_name,
 				id: res.locals.user.user_id,
-				passport_id: res.locals.FT_User.USERID,
 				surname: res.locals.user.surname
 			});
 			expect(res.locals.__event).to.have.property('licence_id').and.to.equal(res.locals.licence.id);

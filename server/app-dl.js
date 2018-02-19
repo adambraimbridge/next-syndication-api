@@ -16,7 +16,6 @@ const accessControl = require('./middleware/access-control');
 const cache = require('./middleware/cache');
 const checkIfNewSyndicationUser = require('./middleware/check-if-new-syndication-user');
 const db = require('./middleware/db');
-const decodeCookieFTUser = require('./middleware/decode-cookie-ft-user');
 const decodeSession = require('./middleware/decode-session');
 const expediteUserAuth = require('./middleware/expedite-user-auth');
 const flagMaintenanceMode = require('./middleware/flag-maintenance-mode');
@@ -41,7 +40,6 @@ const middleware = [
 	flagMaintenanceMode,
 	db,
 	decodeSession,
-	decodeCookieFTUser,
 	expediteUserAuth,
 	getSyndicationLicenceForUser,
 	getUserAccessAuthToken,

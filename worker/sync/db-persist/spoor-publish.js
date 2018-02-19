@@ -67,7 +67,6 @@ module.exports = exports = async (event) => {
 
 		data.user = {
 			ft_session: event.tracking.session,
-			passport_id: event.user.passport_id
 		};
 
 		const headers = JSON.parse(JSON.stringify(TRACKING.HEADERS));

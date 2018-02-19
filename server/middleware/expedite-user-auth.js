@@ -15,7 +15,6 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 module.exports = exports = async (req, res, next) => {
 	const { locals: {
 		$DB: db,
-		FT_User,
 		MAINTENANCE_MODE,
 		flags,
 		userUuid
@@ -46,10 +45,6 @@ module.exports = exports = async (req, res, next) => {
 					res.locals.EXPEDITED_USER_AUTH = true;
 
 					log.info(`${MODULE_ID} => true`);
-
-					if (FT_User) {
-						user.passport_id = FT_User.USERID || user.user_id;
-					}
 				}
 			}
 		}

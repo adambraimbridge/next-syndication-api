@@ -137,9 +137,6 @@
         "id": {
           "type": "string"
         },
-        "passport_id": {
-          "type": "string"
-        },
         "surname": {
           "type": "string"
         }
@@ -147,7 +144,6 @@
       "required": [
         "email",
         "first_name",
-        "passport_id",
         "surname",
         "id"
       ],
