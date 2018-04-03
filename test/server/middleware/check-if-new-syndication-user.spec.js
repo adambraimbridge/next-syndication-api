@@ -43,7 +43,6 @@ describe(MODULE_ID, function () {
 					$DB: db,
 					contract: contractResponse,
 					flags: {
-						syndicationNewOverride: false,
 						syndicationRedux: false
 					},
 					user: {
