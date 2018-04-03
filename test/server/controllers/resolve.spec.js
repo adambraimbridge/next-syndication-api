@@ -208,9 +208,7 @@ describe(MODULE_ID, function () {
 		res.locals = {
 			$DB: initDB([]),
 			contract: contractResponse,
-			flags: {
-				syndicationDownloadMediaResource: true
-			},
+			flags: {},
 			licence: { id: 'xyz' },
 			syndication_contract: {
 				id: 'lmno'
