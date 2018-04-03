@@ -83,8 +83,7 @@ describe(MODULE_ID, function () {
 				$DB: db,
 				contract: contractResponse,
 				flags: {
-					syndication: true,
-					syndicationRedux: 'on'
+					syndication: true
 				},
 				licence: { id: 'xyz' },
 				syndication_contract: {

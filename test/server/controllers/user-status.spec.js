@@ -85,8 +85,8 @@ describe(MODULE_ID, function () {
 				} ]
 			},
 			flags: {
-				syndication: true,
-				syndicationRedux: 'on'
+				syndication: true
+
 			},
 			licence: { id: 'xyz' },
 			isNewSyndicationUser: true,
@@ -113,8 +113,7 @@ describe(MODULE_ID, function () {
 				version: PACKAGE.version
 			},
 			features: {
-				syndication: true,
-				syndicationRedux: true
+				syndication: true
 			},
 			allowed: {
 				contributor_content: true,

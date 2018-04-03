@@ -36,11 +36,6 @@ module.exports = exports = async (req, res, next) => {
 		if (mu && mu.user_id !== null) {
 			isNewSyndicationUser = true;
 		}
-		else {
-			if (user.user_id && flagIsOn(flags.syndicationRedux)) {
-				isNewSyndicationUser = true;
-			}
-		}
 	}
 
 	if (isNewSyndicationUser === true) {

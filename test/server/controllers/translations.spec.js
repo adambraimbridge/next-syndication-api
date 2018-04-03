@@ -109,8 +109,7 @@ describe(MODULE_ID, function () {
 				allowed,
 				contract: contractResponse,
 				flags: {
-					syndication: true,
-					syndicationRedux: 'on'
+					syndication: true
 				},
 				licence: {
 					id: 'c3391af1-0d46-4ddc-a922-df7c49cf1552',
@@ -218,8 +217,7 @@ describe(MODULE_ID, function () {
 				contract: contractResponse,
 				allowed,
 				flags: {
-					syndication: true,
-					syndicationRedux: 'on'
+					syndication: true
 				},
 				licence: {
 					id: 'c3391af1-0d46-4ddc-a922-df7c49cf1552',
@@ -377,8 +375,7 @@ describe(MODULE_ID, function () {
 				contract: contractResponse,
 				allowed,
 				flags: {
-					syndication: true,
-					syndicationRedux: 'on'
+					syndication: true
 				},
 				licence: {
 					id: 'c3391af1-0d46-4ddc-a922-df7c49cf1552',
@@ -538,8 +535,7 @@ describe(MODULE_ID, function () {
 				contract: contractResponse,
 				allowed,
 				flags: {
-					syndication: true,
-					syndicationRedux: 'on'
+					syndication: true
 				},
 				licence: {
 					id: 'c3391af1-0d46-4ddc-a922-df7c49cf1552',
@@ -697,8 +693,7 @@ describe(MODULE_ID, function () {
 				contract: contractResponse,
 				allowed,
 				flags: {
-					syndication: true,
-					syndicationRedux: 'on'
+					syndication: true
 				},
 				licence: {
 					id: 'c3391af1-0d46-4ddc-a922-df7c49cf1552',
@@ -862,8 +857,7 @@ describe(MODULE_ID, function () {
 				contract: contractResponse,
 				allowed,
 				flags: {
-					syndication: true,
-					syndicationRedux: 'on'
+					syndication: true
 				},
 				licence: {
 					id: 'c3391af1-0d46-4ddc-a922-df7c49cf1552',

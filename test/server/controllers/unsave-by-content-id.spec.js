@@ -104,8 +104,7 @@ describe(MODULE_ID, function () {
 					USERID: '1234567890'
 				},
 				flags: {
-					syndication: true,
-					syndicationRedux: 'on'
+					syndication: true
 				},
 				licence: { id: 'xyz' },
 				syndication_contract: {
@@ -219,8 +218,7 @@ describe(MODULE_ID, function () {
 					USERID: '1234567890'
 				},
 				flags: {
-					syndication: true,
-					syndicationRedux: 'on'
+					syndication: true
 				},
 				licence: { id: 'xyz' },
 				syndication_contract: {
