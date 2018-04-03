@@ -88,7 +88,6 @@ describe(MODULE_ID, function () {
 					contract: contractResponse,
 					flags: {
 						syndication: true,
-						syndicationNew: 'on',
 						syndicationRedux: 'on'
 					},
 					licence: { id: 'xyz' },
@@ -175,7 +174,6 @@ describe(MODULE_ID, function () {
 					contract: contractResponse,
 					flags: {
 						syndication: true,
-						syndicationNew: 'on',
 						syndicationRedux: 'on'
 					},
 					licence: { id: 'xyz' },
