@@ -4,8 +4,6 @@ const path = require('path');
 
 const { default: log } = require('@financial-times/n-logger');
 
-const flagIsOn = require('../helpers/flag-is-on');
-
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
@@ -17,7 +15,6 @@ module.exports = exports = async (req, res, next) => {
 		MAINTENANCE_MODE,
 		contract,
 		flags,
-		user,
 		userUuid
 	} } = res;
 
