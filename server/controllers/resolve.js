@@ -76,7 +76,7 @@ function showItem(item, flags) {
 	}
 
 	if (type === 'mediaresource' || type === 'video' || type === 'podcast') {
-		return flagIsOn(flags.syndicationDownloadMediaResource);
+		return true;
 	}
 
 	if (type === 'placeholder') {

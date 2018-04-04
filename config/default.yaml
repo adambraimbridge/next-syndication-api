@@ -144,7 +144,6 @@
 
   FEATURE_FLAGS:
     - syndication
-    - syndicationDownloadMediaResource
     - syndicationRedux
   FORMAT_ARTICLE_CLEAN_ELEMENTS:
     - a
