@@ -11,8 +11,6 @@ const {
 	SYNDICATION_PRODUCT_CODE
 } = require('config');
 
-const skipChecks = require('../helpers/skip-checks');
-
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
@@ -20,7 +18,6 @@ module.exports = exports = async (req, res, next) => {
 		const { locals: {
 			$DB: db,
 			EXPEDITED_USER_AUTH,
-			flags,
 			MAINTENANCE_MODE,
 			userUuid
 		} } = res;
@@ -73,7 +70,8 @@ module.exports = exports = async (req, res, next) => {
 		}
 
 		if (!sessionRes.ok) {
-			if (skipChecks(flags)) {
+			const isProduction = process.env.NODE_ENV === 'production';
+			if (!isProduction) {
 				next();
 
 				return;

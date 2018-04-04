@@ -101,8 +101,7 @@ describe(MODULE_ID, function () {
 			res.locals = {
 				$DB: db,
 				flags: {
-					syndication: true,
-					syndicationRedux: 'on'
+					syndication: true
 				},
 				licence: { id: 'xyz' },
 				syndication_contract: {
@@ -213,8 +212,7 @@ describe(MODULE_ID, function () {
 			res.locals = {
 				$DB: db,
 				flags: {
-					syndication: true,
-					syndicationRedux: 'on'
+					syndication: true
 				},
 				licence: { id: 'xyz' },
 				syndication_contract: {

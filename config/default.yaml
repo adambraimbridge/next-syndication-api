@@ -144,7 +144,6 @@
 
   FEATURE_FLAGS:
     - syndication
-    - syndicationRedux
   FORMAT_ARTICLE_CLEAN_ELEMENTS:
     - a
     - ft-concept

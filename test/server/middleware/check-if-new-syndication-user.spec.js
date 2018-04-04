@@ -42,9 +42,7 @@ describe(MODULE_ID, function () {
 				locals: {
 					$DB: db,
 					contract: contractResponse,
-					flags: {
-						syndicationRedux: false
-					},
+					flags: {},
 					user: {
 						user_id: user_id,
 						email: 'christos.constandinou@ft.com',

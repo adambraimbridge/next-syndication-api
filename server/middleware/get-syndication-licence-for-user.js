@@ -17,8 +17,6 @@ const {
 	}
 } = require('config');
 
-const skipChecks = require('../helpers/skip-checks');
-
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
@@ -38,7 +36,8 @@ module.exports = exports = async (req, res, next) => {
 						status === 'active' && products.find(({ code }) => code === SYNDICATION_PRODUCT_CODE));
 
 		if (!syndicationLicences.length) {
-			if (!skipChecks(res.locals.flags)) {
+			const isProduction = process.env.NODE_ENV === 'production';
+			if (isProduction) {
 				throw new ReferenceError(`No Syndication Licence found for user#${res.locals.userUuid} using ${URI}`);
 			}
 
