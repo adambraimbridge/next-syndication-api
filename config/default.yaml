@@ -145,7 +145,6 @@
   FEATURE_FLAGS:
     - syndication
     - syndicationDownloadMediaResource
-    - syndicationNew
     - syndicationNewOverride
     - syndicationNewUsersAwaiting
     - syndicationPlatform

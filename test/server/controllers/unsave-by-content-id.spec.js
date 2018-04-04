@@ -102,7 +102,6 @@ describe(MODULE_ID, function () {
 				$DB: db,
 				flags: {
 					syndication: true,
-					syndicationNew: 'on',
 					syndicationRedux: 'on'
 				},
 				licence: { id: 'xyz' },
@@ -215,7 +214,6 @@ describe(MODULE_ID, function () {
 				$DB: db,
 				flags: {
 					syndication: true,
-					syndicationNew: 'on',
 					syndicationRedux: 'on'
 				},
 				licence: { id: 'xyz' },

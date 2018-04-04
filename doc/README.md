@@ -37,7 +37,7 @@ This is the first endpoint called by the [n-syndication](https://github.com/Fina
 
     {
         "app": { "name": "ft-next-syndication-api", "version": "x.x.x" },
-        "features": { "syndication": true, "syndicationNew": true },
+        "features": { "syndication": true },
         "allowed": {
             "contributor_content": true,
             "ft_com": true,
