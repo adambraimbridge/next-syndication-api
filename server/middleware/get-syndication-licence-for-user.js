@@ -38,7 +38,7 @@ module.exports = exports = async (req, res, next) => {
 						status === 'active' && products.find(({ code }) => code === SYNDICATION_PRODUCT_CODE));
 
 		if (!syndicationLicences.length) {
-			if (!skipChecks(res.locals.flags)) {
+			if (!skipChecks()) {
 				throw new ReferenceError(`No Syndication Licence found for user#${res.locals.userUuid} using ${URI}`);
 			}
 

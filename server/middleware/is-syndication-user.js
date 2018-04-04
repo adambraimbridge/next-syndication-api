@@ -20,7 +20,6 @@ module.exports = exports = async (req, res, next) => {
 		const { locals: {
 			$DB: db,
 			EXPEDITED_USER_AUTH,
-			flags,
 			MAINTENANCE_MODE,
 			userUuid
 		} } = res;
@@ -73,7 +72,7 @@ module.exports = exports = async (req, res, next) => {
 		}
 
 		if (!sessionRes.ok) {
-			if (skipChecks(flags)) {
+			if (skipChecks()) {
 				next();
 
 				return;
