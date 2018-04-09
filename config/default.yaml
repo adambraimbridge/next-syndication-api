@@ -11,8 +11,6 @@
     Podcast: Podcasts
     Video: Videos
 
-  AUTH_SIGN_IN_URI: https://accounts.ft.com/login
-
   BASE_URI_FT_API: https://api.ft.com
   BASE_URI_PATH: /syndication
 
