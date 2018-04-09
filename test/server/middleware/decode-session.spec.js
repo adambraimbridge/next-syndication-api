@@ -8,7 +8,6 @@ const sinonChai = require('sinon-chai');
 const proxyquire = require('proxyquire');
 
 const {
-	AUTH_SIGN_IN_REDIRECT_PROPERTY,
 	AUTH_SIGN_IN_URI
 } = require('config');
 
@@ -68,7 +67,7 @@ describe(MODULE_ID, function () {
 
 		decodeSessionMiddleware(mocks.req, mocks.res, stubs.next);
 
-		expect(mocks.res.redirect).to.have.been.calledWith(`${AUTH_SIGN_IN_URI}?${AUTH_SIGN_IN_REDIRECT_PROPERTY}=${mocks.req.originalUrl}`);
+		expect(mocks.res.redirect).to.have.been.calledWith(`${AUTH_SIGN_IN_URI}?location=${mocks.req.originalUrl}`);
 		expect(mocks.res.locals.userUuid).to.equal(undefined);
 		expect(stubs.next).not.to.have.been.called;
 	});
