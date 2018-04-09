@@ -262,8 +262,6 @@
       publisheddate: published_date
       title: title
 
-  STUB_FLAGS: false
-
   SYNDICATION_PRODUCT_CODE: S1
 
   TIMEOUT_ARTICLE_FETCH: 10000
