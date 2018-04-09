@@ -8,7 +8,6 @@ const fetch = require('n-eager-fetch');
 
 const {
 	AUTH_API_CLIENT_ID,
-	AUTH_API_ID_PROPERTY,
 	AUTH_API_QUERY_USER: AUTH_API_QUERY,
 	BASE_URI_FT_API
 } = require('config');
@@ -28,7 +27,7 @@ module.exports = exports = async (req, res, next) => {
 	}
 
 	const query = Object.assign({
-		[AUTH_API_ID_PROPERTY]: AUTH_API_CLIENT_ID
+		'client_id': AUTH_API_CLIENT_ID
 	}, AUTH_API_QUERY);
 
 	const URI = `${BASE_URI_FT_API}/authorize?${qs.stringify(query)}`;

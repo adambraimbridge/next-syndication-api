@@ -11,7 +11,6 @@
     Podcast: Podcasts
     Video: Videos
 
-  AUTH_API_ID_PROPERTY: client_id
   AUTH_API_QUERY_LICENCE:
     redirect_uri: https://www.ft.com
     response_type: token
