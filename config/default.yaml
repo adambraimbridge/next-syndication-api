@@ -243,9 +243,6 @@
     STUB_CONTRACTS:
       - CA-00001558
 
-  SAVED_STATE_MAP:
-    saved: true
-
   SESSION_PRODUCTS_PATH: /products
   SESSION_URI: https://session-next.ft.com
 
