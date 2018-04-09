@@ -15,10 +15,6 @@
     redirect_uri: https://www.ft.com
     response_type: token
     scope: licence_data
-  AUTH_API_QUERY_USER:
-    redirect_uri: https://www.ft.com
-    response_type: token
-    scope: profile_min
 
   AUTH_SIGN_IN_REDIRECT_PROPERTY: location
   AUTH_SIGN_IN_URI: https://accounts.ft.com/login

@@ -8,7 +8,6 @@ const fetch = require('n-eager-fetch');
 
 const {
 	AUTH_API_CLIENT_ID,
-	AUTH_API_QUERY_USER: AUTH_API_QUERY,
 	BASE_URI_FT_API
 } = require('config');
 
@@ -26,11 +25,14 @@ module.exports = exports = async (req, res, next) => {
 		return;
 	}
 
-	const query = Object.assign({
-		'client_id': AUTH_API_CLIENT_ID
-	}, AUTH_API_QUERY);
+	const querystring = qs.stringify({
+		'client_id': AUTH_API_CLIENT_ID,
+		'redirect_uri': 'https://www.ft.com',
+		'response_type': 'token',
+		'scope': 'profile_min',
+	})
 
-	const URI = `${BASE_URI_FT_API}/authorize?${qs.stringify(query)}`;
+	const URI = `${BASE_URI_FT_API}/authorize?${querystring}`;
 
 	try {
 		const authRes = await fetch(URI, {
