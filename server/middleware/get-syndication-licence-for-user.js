@@ -7,7 +7,6 @@ const fetch = require('n-eager-fetch');
 
 const {
 	ALS_API_KEY,
-	API_KEY_HEADER_NAME,
 	BASE_URI_FT_API,
 	SYNDICATION_PRODUCT_CODE,
 	TEST: {
@@ -21,7 +20,7 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 module.exports = exports = async (req, res, next) => {
 	const URI = `${BASE_URI_FT_API}/licences?userid=${res.locals.userUuid}`;
 	const headers = {
-		[API_KEY_HEADER_NAME]: ALS_API_KEY
+		'X-Api-Key': ALS_API_KEY
 	};
 
 	try {

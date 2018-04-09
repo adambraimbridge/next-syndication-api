@@ -3,8 +3,6 @@
 
   AWS_REGION: eu-west-1
 
-  API_KEY_HEADER_NAME: X-Api-Key
-
   ASSET_TYPE_TO_CONTENT_TYPE:
     FT Article: article
     Podcast: podcast
