@@ -12,7 +12,6 @@ const { expect } = chai;
 chai.use(sinonChai);
 
 const {
-	SESSION_PRODUCTS_PATH,
 	SESSION_URI,
 	SYNDICATION_PRODUCT_CODE,
 	TEST: { FIXTURES_DIRECTORY }
@@ -76,7 +75,7 @@ describe(MODULE_ID, function () {
 			mocks.res.locals.userUuid = 'xyz';
 
 			nock(SESSION_URI)
-				.get(SESSION_PRODUCTS_PATH)
+				.get('/products')
 				.reply(200, { uuid: 'abc', products: 'Tools,S1,P0,P1,P2' }, {});
 
 			await underTest(mocks.req, mocks.res, stubs.next);
@@ -89,7 +88,7 @@ describe(MODULE_ID, function () {
 			mocks.res.locals.userUuid = 'abc';
 
 			nock(SESSION_URI)
-				.get(SESSION_PRODUCTS_PATH)
+				.get('/products')
 				.reply(200, { uuid: 'abc', products: 'Tools,S1,P0,P1,P2' }, {});
 
 			await underTest(mocks.req, mocks.res, stubs.next);
@@ -144,7 +143,7 @@ describe(MODULE_ID, function () {
 
 		it('does not call the database', async function() {
 			nock(SESSION_URI)
-				.get(SESSION_PRODUCTS_PATH)
+				.get('/products')
 				.reply(200, { uuid: 'abc', products: 'Tools,S1,P0,P1,P2' }, {});
 
 			await underTest(mocks.req, mocks.res, stubs.next);
