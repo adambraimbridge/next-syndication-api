@@ -12,7 +12,6 @@ const SpreadSheet = require('../../../spreadsheet');
 //const getContractByID = require('../../../server/lib/get-contract-by-id');
 
 const {
-	LEGACY_DOWNLOAD_HISTORY_SPREADSHEET_DATE_FORMAT,
 	LEGACY_DOWNLOAD_HISTORY_SPREADSHEET_ID,
 //	NODE_ENV,
 //	SLACK,
@@ -38,6 +37,8 @@ module.exports = exports = async () => {
 		});
 
 		const db = await pg();
+
+		const LEGACY_DOWNLOAD_HISTORY_SPREADSHEET_DATE_FORMAT = 'DD/MM/YYYY HH:mm';
 
 		await Promise.all(ss.worksheetsMap.legacy_download_history.rows.map(async ({ mapped }) => {
 			mapped.published_date = moment(mapped.published_date, LEGACY_DOWNLOAD_HISTORY_SPREADSHEET_DATE_FORMAT).toDate();

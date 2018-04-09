@@ -146,8 +146,6 @@
     object: M
     string: S
 
-  LEGACY_DOWNLOAD_HISTORY_SPREADSHEET_DATE_FORMAT: DD/MM/YYYY HH:mm
-
   MAINTENANCE_MESSAGE: The Republishing Service is currently undergoing maintenance. Please try again later.
 
   MEDIA_RESOURCE_TYPES:
