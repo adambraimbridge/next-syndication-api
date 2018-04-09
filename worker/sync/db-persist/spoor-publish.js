@@ -39,7 +39,17 @@ module.exports = exports = async (event) => {
 			context: {
 				app: 'Syndication',
 				edition: 'uk',
-				product: 'next'
+				product: 'next',
+				id: event._id,
+				article_id: event.content_id.split('/').pop(),
+				contractID: event.contract_id,
+				appVersion: PACKAGE.version,
+				languageVersion: event.iso_lang_code,
+				message: event.message_code,
+				referrer: event.tracking.referrer,
+				route_id: event._id,
+				url: event.tracking.url,
+				syndication_content: event.content_type
 			},
 			device: {
 				spoor_session_is_new: true,
@@ -53,23 +63,10 @@ module.exports = exports = async (event) => {
 				source: PACKAGE.name,
 				version: PACKAGE.version
 			},
-			context: {
-				id: event._id,
-				article_id: event.content_id.split('/').pop(),
-				contractID: event.contract_id,
-				appVersion: PACKAGE.version,
-				languageVersion: event.iso_lang_code,
-				message: event.message_code,
-				referrer: event.tracking.referrer,
-				route_id: event._id,
-				url: event.tracking.url,
-				syndication_content: event.content_type
-			},
 			user: {
 				ft_session: event.tracking.session
 			}
 		};
-
 
 		if (event.download_format) {
 			data.context.fileformat = event.download_format;
@@ -78,7 +75,6 @@ module.exports = exports = async (event) => {
 		if (process.env.NODE_ENV !== 'production') {
 			data.context.isTestEvent = true;
 		}
-
 
 		const headers = {
 			'accept': 'application/json',
