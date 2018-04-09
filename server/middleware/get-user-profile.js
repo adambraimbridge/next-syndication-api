@@ -11,8 +11,7 @@ const pgMapColumns = require('../../db/pg/map-columns');
 const {
 	ALS_API_KEY,
 	API_KEY_HEADER_NAME,
-	BASE_URI_FT_API,
-	USER_PROFILE_DATA_PROPERTY
+	BASE_URI_FT_API
 } = require('config');
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
@@ -53,9 +52,9 @@ module.exports = exports = async (req, res, next) => {
 			throw new Error(userProfile.message || `${userProfile.errors[0].message}: ${userProfile.errors[0].errorCode}`);
 		}
 
-		log.info(`${MODULE_ID} GetUserProfileSuccess => ${URI}`, userProfile[USER_PROFILE_DATA_PROPERTY]);
+		log.info(`${MODULE_ID} GetUserProfileSuccess => ${URI}`, userProfile.user);
 
-		const user = pgMapColumns(JSON.parse(JSON.stringify(userProfile[USER_PROFILE_DATA_PROPERTY])), usersColumnMappings);
+		const user = pgMapColumns(JSON.parse(JSON.stringify(userProfile.user)), usersColumnMappings);
 
 		if (MAINTENANCE_MODE !== true) {
 			const { $DB: db } = res.locals;
