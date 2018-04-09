@@ -6,8 +6,6 @@ const { default: log } = require('@financial-times/n-logger');
 
 const pg = require('../../../db/pg');
 
-const { CONTENT_TYPE_TO_ASSET_TYPE } = require('config');
-
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (event, message, response, subscriber) => {
@@ -24,7 +22,16 @@ module.exports = exports = async (event, message, response, subscriber) => {
 			return;
 		}
 
-		event.asset_type = CONTENT_TYPE_TO_ASSET_TYPE[event.content_type];
+		const CONTENT_TYPE_TO_ASSET_TYPE_MAPPING = {
+			article: 'FT Article',
+			mediaresource: 'Video',
+			package: 'FT Article',
+			placeholder: 'FT Article',
+			podcast: 'Podcast',
+			video: 'Video',
+		};
+
+		event.asset_type = CONTENT_TYPE_TO_ASSET_TYPE_MAPPING[event.content_type];
 		event.user_id = event.user.id;
 
 		await db.syndication.upsert_history([event]);

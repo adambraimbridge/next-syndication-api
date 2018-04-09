@@ -18,14 +18,6 @@
     contentpackage: package
     mediaresource: video
 
-  CONTENT_TYPE_TO_ASSET_TYPE:
-    article: "FT Article"
-    mediaresource: "Video"
-    package: "FT Article"
-    placeholder: "FT Article"
-    podcast: "Podcast"
-    video: "Video"
-
   CONTRIBUTOR_EMAIL:
     date_display_format: HH:mma on dddd, Do MMM YYYY
     subject: FT Syndication - Contributor content download
