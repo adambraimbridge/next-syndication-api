@@ -9,8 +9,6 @@ const sinonChai = require('sinon-chai');
 const { expect } = chai;
 chai.use(sinonChai);
 
-const { MAINTENANCE_MESSAGE } = require('config');
-
 const underTest = require('../../../server/middleware/route-maintenance-mode');
 
 const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
@@ -50,7 +48,7 @@ describe(MODULE_ID, function () {
 			underTest(mocks.req, mocks.res, stubs.next);
 
 			expect(mocks.res.json).to.have.been.calledWith({
-				message: MAINTENANCE_MESSAGE
+				message: 'The Republishing Service is currently undergoing maintenance. Please try again later.'
 			});
 		});
 

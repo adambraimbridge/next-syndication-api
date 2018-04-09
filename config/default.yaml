@@ -146,8 +146,6 @@
     object: M
     string: S
 
-  MAINTENANCE_MESSAGE: The Republishing Service is currently undergoing maintenance. Please try again later.
-
   MEDIA_RESOURCE_TYPES:
     - MediaResource
     - Podcast
