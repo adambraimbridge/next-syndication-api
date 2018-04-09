@@ -9,7 +9,6 @@ const {
 	ALS_API_KEY,
 	API_KEY_HEADER_NAME,
 	BASE_URI_FT_API,
-	LICENCE_ITEMS_ARRAY_PROPERTY,
 	SYNDICATION_PRODUCT_CODE,
 	TEST: {
 		SKIP_LICENCE_ID,
@@ -28,11 +27,9 @@ module.exports = exports = async (req, res, next) => {
 	try {
 		const licenceRes = await fetch(URI, { headers });
 
-		const licences = await licenceRes.json();
+		const { accessLicences } = await licenceRes.json();
 
-		const licenceList = licences[LICENCE_ITEMS_ARRAY_PROPERTY];
-
-		let syndicationLicences = licenceList.filter(({ products = [], status }) =>
+		let syndicationLicences = accessLicences.filter(({ products = [], status }) =>
 						status === 'active' && products.find(({ code }) => code === SYNDICATION_PRODUCT_CODE));
 
 		if (!syndicationLicences.length) {
