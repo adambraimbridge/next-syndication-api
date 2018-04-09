@@ -10,8 +10,7 @@ const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 
 const {
-	TEST: { FIXTURES_DIRECTORY },
-	TRANSLATIONS
+	TEST: { FIXTURES_DIRECTORY }
 } = require('config');
 
 const httpMocks = require(path.resolve(`${FIXTURES_DIRECTORY}/node-mocks-http`));
@@ -257,7 +256,7 @@ describe(MODULE_ID, function () {
 			expect(query).to.include('search_content_es');
 //			expect(query).to.include(`content_areas => ARRAY[$text$${contentAreas.join('$text$::syndication.enum_content_area_es, $text$')}$text$::syndication.enum_content_area_es]`);
 			expect(query).to.include('_offset => 0');
-			expect(query).to.include(`_limit => ${TRANSLATIONS.PAGINATION.DEFAULT_LIMIT}`);
+			expect(query).to.include('_limit => 50');
 		});
 
 		it('db.run called to get total number of syndication.content_es items', async function () {
@@ -270,7 +269,7 @@ describe(MODULE_ID, function () {
 			expect(query).to.include('search_content_total_es');
 //			expect(query).to.include(`content_areas => ARRAY[$text$${contentAreas.join('$text$::syndication.enum_content_area_es, $text$')}$text$::syndication.enum_content_area_es]`);
 			expect(query).to.not.include('_offset => 0');
-			expect(query).to.not.include(`_limit => ${TRANSLATIONS.PAGINATION.DEFAULT_LIMIT}`);
+			expect(query).to.not.include('_limit => 50');
 		});
 
 		it('response: status', async function () {
@@ -736,7 +735,7 @@ describe(MODULE_ID, function () {
 			expect(query).to.include('sort_col => $text$published_date$text$');
 			expect(query).to.include('sort_dir => $text$ASC$text$');
 			expect(query).to.include('_offset => 0');
-			expect(query).to.include(`_limit => ${TRANSLATIONS.PAGINATION.DEFAULT_LIMIT}`);
+			expect(query).to.include('_limit => 50');
 		});
 
 		it('db.run called to get total number of syndication.content_es items', async function () {
@@ -752,7 +751,7 @@ describe(MODULE_ID, function () {
 			expect(query).to.not.include('sort_col => $text$published_date$text$');
 			expect(query).to.not.include('sort_dir => $text$ASC$text$');
 			expect(query).to.not.include('_offset => 0');
-			expect(query).to.not.include(`_limit => ${TRANSLATIONS.PAGINATION.DEFAULT_LIMIT}`);
+			expect(query).to.not.include('_limit => 50');
 		});
 
 		it('response: status', async function () {
@@ -899,7 +898,7 @@ describe(MODULE_ID, function () {
 			expect(query).to.include('sort_col => $text$published_date$text$');
 			expect(query).to.include('sort_dir => $text$ASC$text$');
 			expect(query).to.include('_offset => 0');
-			expect(query).to.include(`_limit => ${TRANSLATIONS.PAGINATION.DEFAULT_LIMIT}`);
+			expect(query).to.include('_limit => 50');
 		});
 
 		it('db.run called to get total number of syndication.content_es items', async function () {
@@ -914,7 +913,7 @@ describe(MODULE_ID, function () {
 			expect(query).to.not.include('sort_col => $text$published_date$text$');
 			expect(query).to.not.include('sort_dir => $text$ASC$text$');
 			expect(query).to.not.include('_offset => 0');
-			expect(query).to.not.include(`_limit => ${TRANSLATIONS.PAGINATION.DEFAULT_LIMIT}`);
+			expect(query).to.not.include('_limit => 50');
 		});
 
 		it('response: status', async function () {

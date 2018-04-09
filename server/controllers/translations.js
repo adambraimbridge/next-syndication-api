@@ -8,8 +8,7 @@ const enrich = require('../lib/enrich');
 const syndicate = require('../lib/syndicate-content');
 
 const {
-	DB: { DATE_FORMAT: DB_DATE_FORMAT },
-	TRANSLATIONS
+	DB: { DATE_FORMAT: DB_DATE_FORMAT }
 } = require('config');
 
 module.exports = exports = async (req, res, next) => {
@@ -17,8 +16,8 @@ module.exports = exports = async (req, res, next) => {
 		area,
 		field,
 		from: date_from,
-		lang = TRANSLATIONS.DEFAULT_LANGUAGE,
-		limit = TRANSLATIONS.PAGINATION.DEFAULT_LIMIT,
+		lang = 'es',
+		limit = 50,
 		offset = 0,
 		order,
 		query,
