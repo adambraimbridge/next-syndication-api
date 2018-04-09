@@ -146,11 +146,6 @@
     object: M
     string: S
 
-  MEDIA_RESOURCE_TYPES:
-    - MediaResource
-    - Podcast
-    - Video
-
   MESSAGES:
     DATE_FORMAT: Do MMM YYYY
     EMBARGO: >
