@@ -243,8 +243,6 @@
     STUB_CONTRACTS:
       - CA-00001558
 
-  SESSION_URI: https://session-next.ft.com
-
   SPREADSHEET_MAPPINGS:
     contracts:
       licenceename: licencee_name

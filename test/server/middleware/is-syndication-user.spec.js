@@ -12,7 +12,6 @@ const { expect } = chai;
 chai.use(sinonChai);
 
 const {
-	SESSION_URI,
 	SYNDICATION_PRODUCT_CODE,
 	TEST: { FIXTURES_DIRECTORY }
 } = require('config');
@@ -74,7 +73,7 @@ describe(MODULE_ID, function () {
 		it('should send an unauthorised status code if the session service UUID does not match the session UUID', async function () {
 			mocks.res.locals.userUuid = 'xyz';
 
-			nock(SESSION_URI)
+			nock('https://session-next.ft.com')
 				.get('/products')
 				.reply(200, { uuid: 'abc', products: 'Tools,S1,P0,P1,P2' }, {});
 
@@ -87,7 +86,7 @@ describe(MODULE_ID, function () {
 		it(`should continue on if the session service products does contain ${SYNDICATION_PRODUCT_CODE} and the session service UUID matches the session UUID`, async function () {
 			mocks.res.locals.userUuid = 'abc';
 
-			nock(SESSION_URI)
+			nock('https://session-next.ft.com')
 				.get('/products')
 				.reply(200, { uuid: 'abc', products: 'Tools,S1,P0,P1,P2' }, {});
 
@@ -142,7 +141,7 @@ describe(MODULE_ID, function () {
 		});
 
 		it('does not call the database', async function() {
-			nock(SESSION_URI)
+			nock('https://session-next.ft.com')
 				.get('/products')
 				.reply(200, { uuid: 'abc', products: 'Tools,S1,P0,P1,P2' }, {});
 

@@ -6,7 +6,6 @@ const { default: log } = require('@financial-times/n-logger');
 const fetch = require('n-eager-fetch');
 
 const {
-	SESSION_URI,
 	SYNDICATION_PRODUCT_CODE
 } = require('config');
 
@@ -48,7 +47,7 @@ module.exports = exports = async (req, res, next) => {
 		}
 
 		const headers = { cookie: req.headers.cookie };
-		const sessionRes = await fetch(`${SESSION_URI}/products`, { headers });
+		const sessionRes = await fetch('https://session-next.ft.com/products', { headers });
 
 		if (sessionRes.ok) {
 			const session = await sessionRes.json();
