@@ -11,7 +11,6 @@ const MessageQueueEvent = require('../../../../queue/message-queue-event');
 const messageCode = require('../../../../server/lib/resolve/messageCode');
 
 const {
-	TRACKING,
 	TEST: { FIXTURES_DIRECTORY }
 } = require('config');
 
@@ -83,41 +82,44 @@ describe(MODULE_ID, function () {
 
 		const message = { data: event };
 
-		const data = JSON.parse(JSON.stringify(TRACKING.DATA));
-
-		data.action = 'save-for-later-downloads-page';
-
-		data.context.id = event._id;
-		data.context.article_id = event.content_id.split('/').pop();
-		data.context.contractID = event.contract_id;
-		data.context.appVersion = PACKAGE.version;
-		data.context.languageVersion = 'en';
-		data.context.message = messageCode({
-			canDownload: 1,
-			canBeSyndicated: 'yes',
-			downloaded: false
-		}, contractResponse);
-		data.context.referrer = event.tracking.referrer;
-		data.context.route_id = event._id;
-		data.context.url = event.tracking.url;
-
+		const data = {
+			action: 'save-for-later-downloads-page',
+			category: 'syndication',
+			context: {
+				app: 'Syndication',
+				edition: 'uk',
+				product: 'next',
+				id: event._id,
+				article_id: event.content_id.split('/').pop(),
+				contractID: event.contract_id,
+				appVersion: PACKAGE.version,
+				languageVersion: 'en',
+				message: messageCode({ canDownload: 1, canBeSyndicated: 'yes', downloaded: false }, contractResponse),
+				referrer: event.tracking.referrer,
+				route_id: event._id,
+				url: event.tracking.url,
+				syndication_content: event.content_type
+			},
+			device: {
+				spoor_session_is_new: true,
+				ip: event.tracking.ip_address,
+				spoor_id: event.tracking.spoor_id,
+				spoor_session: event._id
+			},
+			system: {
+				api_key: 'qUb9maKfKbtpRsdp0p2J7uWxRPGJEP',
+				product: 'Syndication',
+				source: PACKAGE.name,
+				version: PACKAGE.version
+			},
+			user: {
+				ft_session: event.tracking.session
+			}
+		};
 
 		if (event.download_format) {
 			data.context.fileformat = event.download_format;
 		}
-
-		data.context.syndication_content = event.content_type;
-
-		data.device.ip = event.tracking.ip_address;
-		data.device.spoor_id = event.tracking.spoor_id;
-		data.device.spoor_session = event._id;
-
-		data.system.source = PACKAGE.name;
-		data.system.version = PACKAGE.version;
-
-		data.user = {
-			ft_session: event.tracking.session,
-		};
 
 		const NODE_ENV = process.env.NODE_ENV;
 
@@ -125,16 +127,18 @@ describe(MODULE_ID, function () {
 
 		await underTest(event, message, {}, subscriber);
 
-		expect(fetchStub).to.be.calledWith(TRACKING.URI, {
+		expect(fetchStub).to.be.calledWith('https://spoor-api.ft.com/ingest', {
 			body: JSON.stringify(data),
-			headers: Object.assign({
+			headers: {
 				'content-Length': new Buffer(JSON.stringify(data)).length,
 				'cookie': event.tracking.cookie,
 				'spoor-id': event.tracking.spoor_id,
 				'spoor-ticket': event._id,
-				'user-agent': event.tracking.user_agent
-			}, TRACKING.HEADERS),
-			method: TRACKING.METHOD
+				'user-agent': event.tracking.user_agent,
+				'accept': 'application/json',
+				'content-type': 'application/json'
+			},
+			method: 'POST'
 		});
 
 		process.env.NODE_ENV = NODE_ENV;

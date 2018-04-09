@@ -271,24 +271,6 @@
     FIXTURES_DIRECTORY: ./test/fixtures
     TEMP_FILES_DIRECTORY: ./test/temp
 
-  TRACKING:
-    DATA:
-      category: syndication
-      context:
-        app: Syndication
-        edition: uk
-        product: next
-      device:
-        spoor_session_is_new: true
-      system:
-        api_key: qUb9maKfKbtpRsdp0p2J7uWxRPGJEP
-        product: Syndication
-    HEADERS:
-      accept: application/json
-      content-type: application/json
-    METHOD: POST
-    URI: https://spoor-api.ft.com/ingest
-
   TRANSLATIONS:
     DEFAULT_LANGUAGE: es
     PAGINATION:

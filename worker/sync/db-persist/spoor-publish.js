@@ -6,8 +6,7 @@ const { default: log } = require('@financial-times/n-logger');
 const fetch = require('n-eager-fetch');
 
 const {
-	DOWNLOAD_STATE_MAP,
-	TRACKING
+	DOWNLOAD_STATE_MAP
 } = require('config');
 
 const pg = require('../../../db/pg');
@@ -34,53 +33,67 @@ module.exports = exports = async (event) => {
 
 		event.message_code = messageCode(event, contract);
 
-		const data = JSON.parse(JSON.stringify(TRACKING.DATA));
+		const data = {
+			action: getTrackingAction(event.state, event.tracking.referrer),
+			category: 'syndication',
+			context: {
+				app: 'Syndication',
+				edition: 'uk',
+				product: 'next'
+			},
+			device: {
+				spoor_session_is_new: true,
+				ip: event.tracking.ip_address,
+				spoor_id: event.tracking.spoor_id,
+				spoor_session: event._id
+			},
+			system: {
+				api_key: 'qUb9maKfKbtpRsdp0p2J7uWxRPGJEP',
+				product: 'Syndication',
+				source: PACKAGE.name,
+				version: PACKAGE.version
+			},
+			context: {
+				id: event._id,
+				article_id: event.content_id.split('/').pop(),
+				contractID: event.contract_id,
+				appVersion: PACKAGE.version,
+				languageVersion: event.iso_lang_code,
+				message: event.message_code,
+				referrer: event.tracking.referrer,
+				route_id: event._id,
+				url: event.tracking.url,
+				syndication_content: event.content_type
+			},
+			user: {
+				ft_session: event.tracking.session
+			}
+		};
 
-		data.action = getTrackingAction(event.state, event.tracking.referrer);
-
-		data.context.id = event._id;
-		data.context.article_id = event.content_id.split('/').pop();
-		data.context.contractID = event.contract_id;
-		data.context.appVersion = PACKAGE.version;
-		data.context.languageVersion = event.iso_lang_code;
-		data.context.message = event.message_code;
-		data.context.referrer = event.tracking.referrer;
-		data.context.route_id = event._id;
-		data.context.url = event.tracking.url;
 
 		if (event.download_format) {
 			data.context.fileformat = event.download_format;
 		}
 
-		data.context.syndication_content = event.content_type;
-
 		if (process.env.NODE_ENV !== 'production') {
 			data.context.isTestEvent = true;
 		}
 
-		data.device.ip = event.tracking.ip_address;
-		data.device.spoor_id = event.tracking.spoor_id;
-		data.device.spoor_session = event._id;
 
-		data.system.source = PACKAGE.name;
-		data.system.version = PACKAGE.version;
-
-		data.user = {
-			ft_session: event.tracking.session,
+		const headers = {
+			'accept': 'application/json',
+			'content-type': 'application/json',
+			'content-Length': new Buffer(JSON.stringify(data)).length,
+			'cookie': event.tracking.cookie,
+			'spoor-id': event.tracking.spoor_id,
+			'spoor-ticket': event._id,
+			'user-agent': event.tracking.user_agent,
 		};
 
-		const headers = JSON.parse(JSON.stringify(TRACKING.HEADERS));
-
-		headers['content-Length'] = new Buffer(JSON.stringify(data)).length;
-		headers.cookie = event.tracking.cookie;
-		headers['spoor-id'] = event.tracking.spoor_id;
-		headers['spoor-ticket'] = event._id;
-		headers['user-agent'] = event.tracking.user_agent;
-
 		if (process.env.NODE_ENV === 'production') {
-			let res = await fetch(TRACKING.URI, {
+			let res = await fetch('https://spoor-api.ft.com/ingest', {
 				headers,
-				method: TRACKING.METHOD,
+				method: 'POST',
 				body: JSON.stringify(data)
 			});
 
