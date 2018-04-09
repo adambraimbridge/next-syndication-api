@@ -10,8 +10,6 @@ process.env.TZ = 'UTC';
 const express = require('@financial-times/n-express');
 const cookieParser = require('cookie-parser');
 
-const { BASE_URI_PATH = '/syndication' } = require('config');
-
 const accessControl = require('./middleware/access-control');
 const cache = require('./middleware/cache');
 const checkIfNewSyndicationUser = require('./middleware/check-if-new-syndication-user');
@@ -49,7 +47,7 @@ const middleware = [
 	routeMaintenanceMode
 ];
 
-app.get(`${BASE_URI_PATH}/__gtg`, (req, res) => res.sendStatus(200));
+app.get('/syndication/__gtg', (req, res) => res.sendStatus(200));
 
 // download a content item for a contract
-app.get(`${BASE_URI_PATH}/download/:content_id`, middleware, require('./controllers/download-by-content-id'));
+app.get('/syndication/download/:content_id', middleware, require('./controllers/download-by-content-id'));
