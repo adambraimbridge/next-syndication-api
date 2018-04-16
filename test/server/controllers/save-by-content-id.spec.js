@@ -11,8 +11,6 @@ const sinonChai = require('sinon-chai');
 
 const {
 	BASE_URI_FT_API,
-	SESSION_PRODUCTS_PATH,
-	SESSION_URI,
 	TEST: { FIXTURES_DIRECTORY }
 } = require('config');
 
@@ -37,8 +35,8 @@ describe(MODULE_ID, function () {
 	require(path.resolve(`${FIXTURES_DIRECTORY}/massive`))();
 
 	before(function () {
-		nock(SESSION_URI)
-			.get(SESSION_PRODUCTS_PATH)
+		nock('https://session-next.ft.com')
+			.get('/products')
 			.reply(200, { uuid: 'abc', products: 'Tools,S1,P0,P1,P2' }, {});
 
 		nock(BASE_URI_FT_API)

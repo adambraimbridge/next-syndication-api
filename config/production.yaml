@@ -23,5 +23,3 @@
 
   SALESFORCE:
     ENVIRONMENT: production
-
-  STUB_FLAGS: false

@@ -7,11 +7,6 @@ const Decoder = require('@financial-times/session-decoder-js');
 
 const decoder = new Decoder(process.env.SESSION_PUBLIC_KEY);
 
-const {
-	AUTH_SIGN_IN_REDIRECT_PROPERTY,
-	AUTH_SIGN_IN_URI
-} = require('config');
-
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = (req, res, next) => {
@@ -21,7 +16,7 @@ module.exports = exports = (req, res, next) => {
 	log.info(`${MODULE_ID}`, { gotSessionToken: !!sessionToken });
 
 	if (!sessionToken || !sessionSecureToken) {
-		res.redirect(`${AUTH_SIGN_IN_URI}?${AUTH_SIGN_IN_REDIRECT_PROPERTY}=${req.originalUrl}`);
+		res.redirect(`https://accounts.ft.com/login?location=${req.originalUrl}`);
 
 		return;
 	}

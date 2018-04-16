@@ -1,6 +1,6 @@
 'use strict';
 
-const { MEDIA_RESOURCE_TYPES } = require('config');
+const MEDIA_RESOURCE_TYPES = [ 'MediaResource', 'Podcast', 'Video' ];
 
 const RE_MEDIA_RESOURCE = new RegExp(`(${MEDIA_RESOURCE_TYPES.join('|')})$`, 'i');
 

@@ -7,9 +7,7 @@ const fetch = require('n-eager-fetch');
 
 const {
 	apikey: API_KEY,
-	API_KEY_HEADER_NAME,
-	BASE_URI_FT_API,
-	TIMEOUT_ARTICLE_FETCH
+	BASE_URI_FT_API
 } = require('config');
 
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
@@ -23,9 +21,9 @@ module.exports = exports = async content_id => {
 
 	try {
 		const res = await fetch(ARTICLE_URI, {
-			timeout: TIMEOUT_ARTICLE_FETCH,
+			timeout: 10000,
 			headers: {
-				[API_KEY_HEADER_NAME]: API_KEY
+				'X-Api-Key': API_KEY
 			}
 		});
 

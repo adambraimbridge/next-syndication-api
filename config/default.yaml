@@ -1,10 +1,6 @@
 ---
   PORT: 3255
 
-  AWS_REGION: eu-west-1
-
-  API_KEY_HEADER_NAME: X-Api-Key
-
   ASSET_TYPE_TO_CONTENT_TYPE:
     FT Article: article
     Podcast: podcast
@@ -15,35 +11,12 @@
     Podcast: Podcasts
     Video: Videos
 
-  AUTH_API_ID_PROPERTY: client_id
-  AUTH_API_QUERY_LICENCE:
-    redirect_uri: https://www.ft.com
-    response_type: token
-    scope: licence_data
-  AUTH_API_QUERY_USER:
-    redirect_uri: https://www.ft.com
-    response_type: token
-    scope: profile_min
-
-  AUTH_SIGN_IN_REDIRECT_PROPERTY: location
-  AUTH_SIGN_IN_URI: https://accounts.ft.com/login
-  AUTH_SIGN_OUT_URI: https://accounts.ft.com/logout
-
   BASE_URI_FT_API: https://api.ft.com
-  BASE_URI_PATH: /syndication
 
   CONTENT_TYPE_ALIAS:
     content: article
     contentpackage: package
     mediaresource: video
-
-  CONTENT_TYPE_TO_ASSET_TYPE:
-    article: "FT Article"
-    mediaresource: "Video"
-    package: "FT Article"
-    placeholder: "FT Article"
-    podcast: "Podcast"
-    video: "Video"
 
   CONTRIBUTOR_EMAIL:
     date_display_format: HH:mma on dddd, Do MMM YYYY
@@ -173,17 +146,6 @@
     object: M
     string: S
 
-  LEGACY_DOWNLOAD_HISTORY_SPREADSHEET_DATE_FORMAT: DD/MM/YYYY HH:mm
-
-  LICENCE_ITEMS_ARRAY_PROPERTY: accessLicences
-
-  MAINTENANCE_MESSAGE: The Republishing Service is currently undergoing maintenance. Please try again later.
-
-  MEDIA_RESOURCE_TYPES:
-    - MediaResource
-    - Podcast
-    - Video
-
   MESSAGES:
     DATE_FORMAT: Do MMM YYYY
     EMBARGO: >
@@ -281,12 +243,6 @@
     STUB_CONTRACTS:
       - CA-00001558
 
-  SAVED_STATE_MAP:
-    saved: true
-
-  SESSION_PRODUCTS_PATH: /products
-  SESSION_URI: https://session-next.ft.com
-
   SPREADSHEET_MAPPINGS:
     contracts:
       licenceename: licencee_name
@@ -306,11 +262,7 @@
       publisheddate: published_date
       title: title
 
-  STUB_FLAGS: false
-
   SYNDICATION_PRODUCT_CODE: S1
-
-  TIMEOUT_ARTICLE_FETCH: 10000
 
   TEST:
     SKIP_LICENCE_ID: FEATURE-FLAG-ENABLED-SYNDICATION-LICENCE
@@ -318,28 +270,3 @@
     SKIP_USER_ID: FEATURE-FLAG-ENABLED-SYNDICATION-USER
     FIXTURES_DIRECTORY: ./test/fixtures
     TEMP_FILES_DIRECTORY: ./test/temp
-
-  TRACKING:
-    DATA:
-      category: syndication
-      context:
-        app: Syndication
-        edition: uk
-        product: next
-      device:
-        spoor_session_is_new: true
-      system:
-        api_key: qUb9maKfKbtpRsdp0p2J7uWxRPGJEP
-        product: Syndication
-    HEADERS:
-      accept: application/json
-      content-type: application/json
-    METHOD: POST
-    URI: https://spoor-api.ft.com/ingest
-
-  TRANSLATIONS:
-    DEFAULT_LANGUAGE: es
-    PAGINATION:
-      DEFAULT_LIMIT: 50
-
-  USER_PROFILE_DATA_PROPERTY: user

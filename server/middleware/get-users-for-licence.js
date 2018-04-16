@@ -7,7 +7,6 @@ const fetch = require('n-eager-fetch');
 
 const {
 	ALS_API_KEY,
-	API_KEY_HEADER_NAME,
 	BASE_URI_FT_API
 } = require('config');
 
@@ -19,7 +18,7 @@ module.exports = exports = async (req, res, next) => {
 	const headers = {
 		'authorization': `Bearer ${res.locals.ACCESS_TOKEN_LICENCE}`,
 		'content-type': 'application/json',
-		[API_KEY_HEADER_NAME]: ALS_API_KEY
+		'X-Api-Key': ALS_API_KEY
 	};
 
 	const LICENCE = res.locals.licence;

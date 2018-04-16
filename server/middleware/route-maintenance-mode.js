@@ -1,7 +1,5 @@
 'use strict';
 
-const { MAINTENANCE_MESSAGE } = require('config');
-
 module.exports = exports = (req, res, next) => {
 	const { locals: {
 		MAINTENANCE_MODE
@@ -11,7 +9,7 @@ module.exports = exports = (req, res, next) => {
 		res.status(503);
 
 		res.json({
-			message: MAINTENANCE_MESSAGE
+			message: 'The Republishing Service is currently undergoing maintenance. Please try again later.'
 		});
 
 		return;

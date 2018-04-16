@@ -4,10 +4,8 @@ const util = require('util');
 
 const aws = require('aws-sdk');
 
-const { AWS_REGION = 'eu-west-1' } = require('config');
-
 const __proto__ = Object.getPrototypeOf(new aws.SQS({
-	region: AWS_REGION
+	region: 'eu-west-1'
 }));
 
 if (exports.promisified !== true) {

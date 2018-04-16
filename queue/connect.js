@@ -10,14 +10,13 @@ const AWS = require('aws-sdk');
 
 const {
 	AWS_ACCESS_KEY,
-	AWS_REGION = 'eu-west-1',
 	AWS_SECRET_ACCESS_KEY,
 	SYNDICATION_DOWNLOAD_SQS_URL: DEFAULT_QUEUE_URL
 } = require('config');
 
 const sqs = new AWS.SQS({
 	accessKeyId: AWS_ACCESS_KEY,
-	region: AWS_REGION,
+	region: 'eu-west-1',
 	secretAccessKey: AWS_SECRET_ACCESS_KEY
 });
 

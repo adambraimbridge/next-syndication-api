@@ -7,9 +7,7 @@ const fetch = require('n-eager-fetch');
 
 const {
 	ALS_API_KEY,
-	API_KEY_HEADER_NAME,
 	BASE_URI_FT_API,
-	LICENCE_ITEMS_ARRAY_PROPERTY,
 	SYNDICATION_PRODUCT_CODE,
 	TEST: {
 		SKIP_LICENCE_ID,
@@ -22,17 +20,15 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 module.exports = exports = async (req, res, next) => {
 	const URI = `${BASE_URI_FT_API}/licences?userid=${res.locals.userUuid}`;
 	const headers = {
-		[API_KEY_HEADER_NAME]: ALS_API_KEY
+		'X-Api-Key': ALS_API_KEY
 	};
 
 	try {
 		const licenceRes = await fetch(URI, { headers });
 
-		const licences = await licenceRes.json();
+		const { accessLicences } = await licenceRes.json();
 
-		const licenceList = licences[LICENCE_ITEMS_ARRAY_PROPERTY];
-
-		let syndicationLicences = licenceList.filter(({ products = [], status }) =>
+		let syndicationLicences = accessLicences.filter(({ products = [], status }) =>
 						status === 'active' && products.find(({ code }) => code === SYNDICATION_PRODUCT_CODE));
 
 		if (!syndicationLicences.length) {

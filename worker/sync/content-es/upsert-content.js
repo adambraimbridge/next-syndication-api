@@ -13,7 +13,6 @@ const getContentById = require('../../../server/lib/get-content-by-id');
 
 const {
 	AWS_ACCESS_KEY,
-	AWS_REGION = 'eu-west-1',
 	AWS_SECRET_ACCESS_KEY,
 	SLACK: {
 		INCOMING_HOOK_URL_T9N: SLACK_INCOMING_HOOK_URL_T9N
@@ -22,7 +21,7 @@ const {
 
 const S3 = new AWS.S3({
 	accessKeyId: AWS_ACCESS_KEY,
-	region: AWS_REGION,
+	region: 'eu-west-1',
 	secretAccessKey: AWS_SECRET_ACCESS_KEY
 });
 

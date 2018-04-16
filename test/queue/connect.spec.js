@@ -8,7 +8,6 @@ const AWS = require('aws-sdk');
 
 const {
 	AWS_ACCESS_KEY,
-	AWS_REGION,
 	AWS_SECRET_ACCESS_KEY
 } = require('config');
 
@@ -24,7 +23,7 @@ describe(MODULE_ID, function () {
 	it('should have the correct credentials', function () {
 		expect(underTest.config.accessKeyId).to.equal(AWS_ACCESS_KEY);
 
-		expect(underTest.config.region).to.equal(AWS_REGION);
+		expect(underTest.config.region).to.equal('eu-west-1');
 
 		expect(underTest.config.secretAccessKey).to.equal(AWS_SECRET_ACCESS_KEY);
 	});
