@@ -49,4 +49,10 @@ describe(MODULE_ID, function () {
 
 		expect(item).to.eql(require(path.resolve(`${FIXTURES_DIRECTORY}/contractProfile.json`)));
 	});
+
+	it('returns stubbed data for stubbed contracts', async function () {
+		const item = await underTest('CA-00001558');
+
+		expect(item).to.eql(require('../../../stubs/CA-00001558.json'));
+	});
 });
