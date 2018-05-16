@@ -26,6 +26,11 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 module.exports = exports = async (contractID, dontThrow) => {
 	try {
 
+		if (SALESFORCE_STUB_CONTRACTS.includes(contractID)) {
+			log.info(`${MODULE_ID} | SALESFORCE DATA STUBBED FOR CONTRACT => `, contractID);
+			return require(path.resolve(`./stubs/${contractID}.json`));
+		}
+
 		const org = nforce.createConnection({
 			apiVersion: SALESFORCE_API_VERSION,
 			autoRefresh: true,
@@ -55,13 +60,6 @@ module.exports = exports = async (contractID, dontThrow) => {
 
 		if (apexRes) {
 			if (apexRes.success === true) {
-				return apexRes;
-			}
-			else {
-				if (SALESFORCE_STUB_CONTRACTS.includes(contractID)) {
-					return require(path.resolve(`./stubs/${contractID}.json`));
-				}
-
 				return apexRes;
 			}
 		}
