@@ -7,16 +7,10 @@ const { default: log } = require('@financial-times/n-logger');
 const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
-	let isNewSyndicationUser = false;
-
-	const { locals: {
-		$DB: db,
+	const {
 		EXPEDITED_USER_AUTH,
 		MAINTENANCE_MODE,
-		contract,
-		flags,
-		userUuid
-	} } = res;
+	} = res.locals;
 
 	if (MAINTENANCE_MODE === true || EXPEDITED_USER_AUTH === true) {
 		next();
@@ -24,27 +18,11 @@ module.exports = exports = async (req, res, next) => {
 		return;
 	}
 
-	if (flags.syndicationMigrationComplete) {
-		isNewSyndicationUser = true;
-	}
-	else {
-		const [mu] = await db.syndication.get_migrated_user([userUuid, contract.contract_id]);
+	res.set('FT-New-Syndication-User', 'true');
 
-		if (mu && mu.user_id !== null) {
-			isNewSyndicationUser = true;
-		}
-	}
+	log.info(`${MODULE_ID}`, { isNewSyndicationUser: true });
 
-	if (isNewSyndicationUser === true) {
-		res.set('FT-New-Syndication-User', 'true');
+	res.locals.isNewSyndicationUser = true;
 
-		log.info(`${MODULE_ID}`, { isNewSyndicationUser });
-
-		res.locals.isNewSyndicationUser = isNewSyndicationUser;
-
-		next();
-	}
-	else {
-		res.sendStatus(401);
-	}
+	next();
 };
