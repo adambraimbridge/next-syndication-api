@@ -78,12 +78,6 @@ describe(MODULE_ID, function () {
 		sandbox.restore();
 	});
 
-	it('should call the get_migrated_user to check the user is migrated', async function () {
-		await underTest(mocks.req, mocks.res, stubs.next);
-
-		expect(db.syndication.get_migrated_user).to.have.been.calledWith([user_id, contractResponse.contract_id]);
-	});
-
 	it('should set an FT-New-Syndication-User header if the user is migrated', async function () {
 		await underTest(mocks.req, mocks.res, stubs.next);
 
