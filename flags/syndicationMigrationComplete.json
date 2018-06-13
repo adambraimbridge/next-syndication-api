@@ -1,0 +1,21 @@
+{
+  "name": "syndicationMigrationComplete",
+  "description": "Turn this on once all users have been migrated, the server will no longer checks against the syndication.migrated_users table.",
+  "owner": "pooja.naidu@ft.com",
+  "notificationRecipients": {
+    "slack": {
+      "channels": [
+        "#ft-syndikat",
+        "#syndication"
+      ],
+      "users": [
+        "@thurston.tye",
+        "@simon.legg",
+        "@christos.constandinou"
+      ]
+    }
+  },
+  "state": false,
+  "userFacing": true,
+  "expiry": "3 months"
+}
