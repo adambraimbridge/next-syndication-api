@@ -29,7 +29,8 @@ const app = module.exports = express({
 	healthChecks: [
 		require('../health/db-backups'),
 		require('../health/db-sync-state'),
-		require('../health/sqs')
+		require('../health/sqs'),
+		require('../health/error-spikes'),
 	]
 });
 
