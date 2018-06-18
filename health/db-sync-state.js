@@ -18,13 +18,16 @@ module.exports = exports = new (class DBSyncStateCheck extends nHealthCheck {
 
 		const db = await pg();
 
-		const [{ get_health_contracts: contracts }] = await db.syndication.get_health_contracts([]);
-		const [{ get_health_downloads: downloads }] = await db.syndication.get_health_downloads([]);
-		const [{ get_health_saved_items: saved_items }] = await db.syndication.get_health_saved_items([]);
+		let checkOutput = await getHealthStatus(db);
+		let ok = check(checkOutput);
 
-		const checkOutput = Object.assign({}, contracts, downloads, saved_items);
+		if (!ok) {
+			// attempt to auto fix
+			await db.syndication.reload_all();
 
-		const ok = check(checkOutput);
+			checkOutput = await getHealthStatus(db);
+			ok = check(checkOutput);
+		}
 
 		this.checkOutput = JSON.stringify(checkOutput);
 
@@ -59,12 +62,14 @@ if (process.env.NODE_ENV !== 'test') {
 	exports.start();
 }
 
-function check(item) {
-	for (let [, val] of Object.entries(item)) {
-		if (val > 0) {
-			return false;
-		}
-	}
+async function getHealthStatus(db) {
+	const [{ get_health_contracts: contracts }] = await db.syndication.get_health_contracts([]);
+	const [{ get_health_downloads: downloads }] = await db.syndication.get_health_downloads([]);
+	const [{ get_health_saved_items: saved_items }] = await db.syndication.get_health_saved_items([]);
 
-	return true;
+	return Object.assign({}, contracts, downloads, saved_items);
+}
+
+function check(item) {
+	return Object.values(item).every(value => !(value > 0))
 }
