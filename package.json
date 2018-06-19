@@ -83,7 +83,6 @@
       "server/lib/bundle-content.js",
       "server/lib/resolve/index.js",
       "server/lib/resolve/lang/es/index.js",
-      "server/middleware/log-request.js",
       "server/middleware/masquerade.js",
       "server/app.js",
       "server/app-dl.js",

@@ -21,7 +21,6 @@ const getContractById = require('./middleware/get-contract-by-id');
 const getUserAccessAuthToken = require('./middleware/get-user-access-auth-token');
 const getSyndicationLicenceForUser = require('./middleware/get-syndication-licence-for-user');
 const getUserProfile = require('./middleware/get-user-profile');
-const logRequest = require('./middleware/log-request');
 const routeMaintenanceMode = require('./middleware/route-maintenance-mode');
 
 const app = module.exports = express({
@@ -33,7 +32,6 @@ const app = module.exports = express({
 const middleware = [
 	accessControl,
 	cookieParser(),
-	logRequest,
 	cache,
 	flagMaintenanceMode,
 	db,

@@ -19,7 +19,6 @@ const getUserAccessAuthToken = require('./middleware/get-user-access-auth-token'
 const getSyndicationLicenceForUser = require('./middleware/get-syndication-licence-for-user');
 const getUserProfile = require('./middleware/get-user-profile');
 const isSyndicationUser = require('./middleware/is-syndication-user');
-const logRequest = require('./middleware/log-request');
 const masquerade = require('./middleware/masquerade');
 const routeMaintenanceMode = require('./middleware/route-maintenance-mode');
 
@@ -39,7 +38,6 @@ const middleware = [
 	bodyParser.text(),
 	bodyParser.json(),
 	bodyParser.urlencoded({ extended: true }),
-	logRequest,
 	accessControl,
 	cache,
 	flagMaintenanceMode,
@@ -111,7 +109,6 @@ if (process.env.NODE_ENV !== 'production') {
 		cookieParser(),
 		bodyParser.text(),
 		bodyParser.json(),
-		logRequest,
 		accessControl,
 		cache,
 		apiKey
