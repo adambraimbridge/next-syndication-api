@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Erasure Search Results</title>
+	<style>
+		h1 {
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+	<h1>Erasure Search Results</h1>
+	<p><a href="erasure">Go back to the erasure search form</a></p>
+
+	{{#if viewModel.uuidSearchResults}}
+		<h2>Results for uuid searches:</h2>
+		<ul>
+			{{#each viewModel.uuidSearchResults}}
+				{{#ifEquals recordsFound 0}}
+					<li>{{table}} table: 0 records found for UUID {{uuid}}</li>
+				{{else}}
+					<li><b>{{table}} table: {{recordsFound}} records found for UUID {{uuid}}</b></li>
+				{{/ifEquals}}
+			{{/each}}
+		</ul>
+	{{/if}}
+
+	{{#if viewModel.emailSearchResults}}
+		<h2>Results for email searches:</h2>
+		<ul>
+			{{#each viewModel.emailSearchResults}}
+				{{#ifEquals recordsFound 0}}
+					<li>{{table}} table: 0 records found for email {{email}}</li>
+				{{else}}
+					<li><b>{{table}} table: {{recordsFound}} records found for email {{email}}</b></li>
+				{{/ifEquals}}
+			{{/each}}
+		</ul>
+	{{/if}}
+</body>
+</html>

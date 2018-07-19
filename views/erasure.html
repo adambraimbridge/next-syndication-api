@@ -15,6 +15,11 @@
 			width: 100%;
 		}
 
+		.errors {
+			margin: 0 auto;
+			width: 42rem;
+		}
+
 		.erasure-form {
 			display: grid;
 			grid-column-gap: 2rem;
@@ -49,44 +54,41 @@
 </head>
 <body>
 	<h1>Process Erasure Requests</h1>
+
+	{{#if viewModel.invalidUuids}}
+		<div class="errors">
+			<h2>The following are invalid uuids:</h2>
+			<ul>
+				{{#each viewModel.invalidUuids}}
+					<li>{{this}}</li>
+				{{/each}}
+			</ul>
+		</div>
+	{{/if}}
+
+	{{#if viewModel.invalidEmails}}
+		<div class="errors">
+			<h2>The following are invalid emails:</h2>
+			<ul>
+				{{#each viewModel.invalidEmails}}
+					<li>{{this}}</li>
+				{{/each}}
+			</ul>
+		</div>
+	{{/if}}
+
 	<form class="erasure-form" action="erasure-search" method="POST">
 		<div class="erasure-form__emails-field">
-			<label for="email">Email(s):</label>
-			<textarea name="email" id="email"></textarea>
+			<label for="erasure-emails">Email(s):</label>
+			<textarea name="erasureEmails" id="erasure-emails">{{viewModel.erasureEmails}}</textarea>
 		</div>
 		<div class="erasure-form__uuids-field">
-			<label for="uuid">UUID(s):</label>
-			<textarea name="uuid" id="uuid"></textarea>
+			<label for="erasure-uuids">UUID(s):</label>
+			<textarea name="erasureUuids" id="erasure-uuids">{{viewModel.erasureUuids}}</textarea>
 		</div>
 		<div class="erasure-form__buttons">
 			<input class="erasure-form__submit" type="submit" />
 		</div>
 	</form>
-
-	{{#if viewModel.uuidSearchResults}}
-		<h2>Results for uuid searches:</h2>
-		<ul>
-			{{#each viewModel.uuidSearchResults}}
-				{{#ifEquals recordsFound 0}}
-					<li>{{table}} table: 0 records found for UUID {{uuid}}</li>
-				{{else}}
-					<li><b>{{table}} table: {{recordsFound}} records found for UUID {{uuid}}</b></li>
-				{{/ifEquals}}
-			{{/each}}
-		</ul>
-	{{/if}}
-
-	{{#if viewModel.emailSearchResults}}
-		<h2>Results for email searches:</h2>
-		<ul>
-			{{#each viewModel.emailSearchResults}}
-				{{#ifEquals recordsFound 0}}
-					<li>{{table}} table: 0 records found for email {{email}}</li>
-				{{else}}
-					<li><b>{{table}} table: {{recordsFound}} records found for email {{email}}</b></li>
-				{{/ifEquals}}
-			{{/each}}
-		</ul>
-	{{/if}}
 </body>
 </html>

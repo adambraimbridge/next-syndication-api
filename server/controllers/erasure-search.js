@@ -31,39 +31,65 @@ async function searchMigratedUsersTableByUuid (db, uuid, requestedBy) {
 	}
 }
 
+function getInvalidUuids (uuids) {
+	return uuids.filter(uuid => !/[a-f\d]{8}-[a-f\d]{4}-[a-f\d]{4}-[a-f\d]{4}-[a-f\d]{12}/.test(uuid));
+}
+
+function getInvalidEmails (emails) {
+	return emails.filter(email => !/[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,64}/.test(email));
+}
+
 module.exports = async (req, res, next) => {
 	const requestedBy = req.cookies.s3o_username;
 	const db = res.locals.$DB;
-	const { email, uuid } = req.body;
-	const uuidSearchResults = [];
-	const emailSearchResults = [];
+	const { erasureEmails, erasureUuids } = req.body;
 
-	log.info({ operation, requestedBy, email, uuid });
+	log.info({ operation, requestedBy, erasureEmails, erasureUuids });
 
 	try {
-		if (uuid) {
-			const uuids = uuid.split(/\r?\n/);
-			await Promise.all(uuids.map(async (uuid) => {
-				const userTableResults = await searchUserTableByUuid(db, uuid, requestedBy);
-				const migratedUserTableResults = await searchMigratedUsersTableByUuid(db, uuid, requestedBy);
-				uuidSearchResults.push(userTableResults, migratedUserTableResults);
-			}));
+		const uuids = erasureUuids === '' ? [] : erasureUuids.split(/\r?\n/);
+		const emails = erasureEmails === '' ? [] : erasureEmails.split(/\r?\n/);
+		const invalidUuids = getInvalidUuids(uuids);
+		const invalidEmails = getInvalidEmails(emails);
+
+		if (invalidEmails.length > 0 || invalidUuids.length > 0) {
+			const viewModel = {
+				uuids,
+				emails,
+				erasureEmails,
+				erasureUuids,
+				invalidEmails,
+				invalidUuids
+			};
+
+			res.render('erasure', { viewModel });
+
+		} else {
+			const uuidSearchResults = [];
+			const emailSearchResults = [];
+
+			if (erasureUuids) {
+				await Promise.all(uuids.map(async (uuid) => {
+					const userTableResults = await searchUserTableByUuid(db, uuid, requestedBy);
+					const migratedUserTableResults = await searchMigratedUsersTableByUuid(db, uuid, requestedBy);
+					uuidSearchResults.push(userTableResults, migratedUserTableResults);
+				}));
+			}
+
+			if (erasureEmails) {
+				await Promise.all(emails.map(async (email) => {
+					const userTableResults = await searchUserTableByEmail(db, email, requestedBy);
+					emailSearchResults.push(userTableResults);
+				}));
+			}
+
+			const viewModel = {
+				uuidSearchResults,
+				emailSearchResults
+			};
+
+			res.render('erasure-search-results', { viewModel });
 		}
-
-		if (email) {
-			const emails = email.split(/\r?\n/);
-			await Promise.all(emails.map(async (email) => {
-				const userTableResults = await searchUserTableByEmail(db, email, requestedBy);
-				emailSearchResults.push(userTableResults);
-			}));
-		}
-
-		const viewModel = {
-			uuidSearchResults,
-			emailSearchResults
-		};
-
-		res.render('erasure', { viewModel });
 
 	} catch (error) {
 		next(error);
