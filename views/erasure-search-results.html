@@ -9,36 +9,43 @@
 		h1 {
 			text-align: center;
 		}
+
+		.erasure-results {
+			margin: 0 auto;
+			width: 42rem;
+		}
 	</style>
 </head>
 <body>
 	<h1>Erasure Search Results</h1>
-	<p><a href="erasure">Go back to the erasure search form</a></p>
+	<div class="erasure-results">
+		<p><a href="erasure">Go back to the erasure search form</a></p>
 
-	{{#if viewModel.uuidSearchResults}}
-		<h2>Results for uuid searches:</h2>
-		<ul>
-			{{#each viewModel.uuidSearchResults}}
-				{{#ifEquals recordsFound 0}}
-					<li>{{table}} table: 0 records found for UUID {{uuid}}</li>
-				{{else}}
-					<li><b>{{table}} table: {{recordsFound}} records found for UUID {{uuid}}</b></li>
-				{{/ifEquals}}
-			{{/each}}
-		</ul>
-	{{/if}}
+		{{#if viewModel.uuidSearchResults}}
+			<h2>Results for uuid searches:</h2>
+			<ul>
+				{{#each viewModel.uuidSearchResults}}
+					{{#ifEquals recordsFound 0}}
+						<li>{{table}} table: 0 records found for UUID {{uuid}}</li>
+					{{else}}
+						<li><b>{{table}} table: {{recordsFound}} records found for UUID {{uuid}}</b></li>
+					{{/ifEquals}}
+				{{/each}}
+			</ul>
+		{{/if}}
 
-	{{#if viewModel.emailSearchResults}}
-		<h2>Results for email searches:</h2>
-		<ul>
-			{{#each viewModel.emailSearchResults}}
-				{{#ifEquals recordsFound 0}}
-					<li>{{table}} table: 0 records found for email {{email}}</li>
-				{{else}}
-					<li><b>{{table}} table: {{recordsFound}} records found for email {{email}}</b></li>
-				{{/ifEquals}}
-			{{/each}}
-		</ul>
-	{{/if}}
+		{{#if viewModel.emailSearchResults}}
+			<h2>Results for email searches:</h2>
+			<ul>
+				{{#each viewModel.emailSearchResults}}
+					{{#ifEquals recordsFound 0}}
+						<li>{{table}} table: 0 records found for email {{email}}</li>
+					{{else}}
+						<li><b>{{table}} table: {{recordsFound}} records found for email {{email}}</b></li>
+					{{/ifEquals}}
+				{{/each}}
+			</ul>
+		{{/if}}
+	</div>
 </body>
 </html>
