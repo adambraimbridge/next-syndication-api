@@ -1,46 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Process Erasure Requests</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Process Erasure Requests</title>
+	<style>
+		h1 {
+			text-align: center;
+		}
+
+		textarea {
+			height: 300px;
+			width: 100%;
+		}
+
+		.erasure-form {
+			display: grid;
+			grid-column-gap: 2rem;
+			grid-row-gap: 1rem;
+			grid-template-columns: [emails] 20rem [uuids] 20rem [end];
+			grid-template-rows: auto auto;
+			justify-content: center;
+		}
+
+		.erasure-form__emails-field {
+			grid-column: emails / uuids;
+			grid-row: 1 / 2;
+		}
+
+		.erasure-form__uuids-field {
+			grid-column: uuids / end;
+			grid-row: 1 / 2;
+		}
+
+		.erasure-form__buttons {
+			grid-column: emails / end;
+			grid-row: 2 / 3;
+			text-align: center;
+		}
+
+		.erasure-form__submit {
+			font-size: 1rem;
+			padding: 2rem .5rem;
+			width: 10rem;
+		}
+	</style>
 </head>
 <body>
-    <h1>Process Erasure Requests</h1>
-    <form action="erasure-search" method="POST">
-        <label for="email">Email:</label>
-        <input type="email" name="email" id="email" />
-        <p>and/or</p>
-        <label for="uuid">UUID:</label>
-        <input type="text" name="uuid" id="uuid" />
-        <input type="submit" />
-    </form>
+	<h1>Process Erasure Requests</h1>
+	<form class="erasure-form" action="erasure-search" method="POST">
+		<div class="erasure-form__emails-field">
+			<label for="email">Email(s):</label>
+			<textarea name="email" id="email"></textarea>
+		</div>
+		<div class="erasure-form__uuids-field">
+			<label for="uuid">UUID(s):</label>
+			<textarea name="uuid" id="uuid"></textarea>
+		</div>
+		<div class="erasure-form__buttons">
+			<input class="erasure-form__submit" type="submit" />
+		</div>
+	</form>
 
-    {{#if viewModel.uuidSearchResults}}
-        <h2>Results for the user with uuid {{viewModel.uuid}}:</h2>
-        <ul>
-            {{#each viewModel.uuidSearchResults}}
-                {{#ifEquals recordsFound 0}}
-                    <li>{{table}} table: {{recordsFound}} records</li>
-                {{else}}
-                    <li><b>{{table}} table: {{recordsFound}} records</b></li>
-                {{/ifEquals}}
-            {{/each}}
-        </ul>
-    {{/if}}
+	{{#if viewModel.uuidSearchResults}}
+		<h2>Results for uuid searches:</h2>
+		<ul>
+			{{#each viewModel.uuidSearchResults}}
+				{{#ifEquals recordsFound 0}}
+					<li>{{table}} table: 0 records found for UUID {{uuid}}</li>
+				{{else}}
+					<li><b>{{table}} table: {{recordsFound}} records found for UUID {{uuid}}</b></li>
+				{{/ifEquals}}
+			{{/each}}
+		</ul>
+	{{/if}}
 
-    {{#if viewModel.emailSearchResults}}
-        <h2>Results for the user with email {{viewModel.email}}:</h2>
-        <ul>
-            {{#each viewModel.emailSearchResults}}
-                {{#ifEquals recordsFound 0}}
-                    <li>{{table}} table: {{recordsFound}} records</li>
-                {{else}}
-                    <li><b>{{table}} table: {{recordsFound}} records</b></li>
-                {{/ifEquals}}
-            {{/each}}
-        </ul>
-    {{/if}}
+	{{#if viewModel.emailSearchResults}}
+		<h2>Results for email searches:</h2>
+		<ul>
+			{{#each viewModel.emailSearchResults}}
+				{{#ifEquals recordsFound 0}}
+					<li>{{table}} table: 0 records found for email {{email}}</li>
+				{{else}}
+					<li><b>{{table}} table: {{recordsFound}} records found for email {{email}}</b></li>
+				{{/ifEquals}}
+			{{/each}}
+		</ul>
+	{{/if}}
 </body>
 </html>
