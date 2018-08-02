@@ -20,13 +20,15 @@ module.exports = exports = async (req, res, next) => {
 	const { locals: { contract, flags } } = res;
 
 	if (!Array.isArray(body)) {
-		log.error(`${MODULE_ID} Expected \`req.body\` to be [object Array] and got \`${Object.prototype.toString.call(body)}\` instead`);
+		log.error(`${MODULE_ID} Expected \`req.body\` to be [object Array] and got \`${Object.prototype.toString.call(body)}\` instead`, {
+			referer: req.headers.referer
+		});
 
 		return res.sendStatus(400);
 	}
 
 	if (!body.length) {
-		log.error(`${MODULE_ID} \`req.body\` does not contain any content IDs`);
+		log.error(`${MODULE_ID} \`req.body\` does not contain any content IDs`, { referer: req.headers.referer } );
 
 		return res.sendStatus(400);
 	}
