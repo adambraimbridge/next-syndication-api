@@ -55,7 +55,8 @@ module.exports = exports = async (req, res, next) => {
 			error: err.stack,
 			URI,
 			headers,
-			user: res.locals.userUuid
+			user: res.locals.userUuid,
+			licenceId: LICENCE.id
 		});
 
 		if (res.locals.syndication_contract.rel !== 'complimentary') {
