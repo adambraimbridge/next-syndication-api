@@ -14,7 +14,8 @@ const db = require('./middleware/db');
 const decodeSession = require('./middleware/decode-session');
 const expediteUserAuth = require('./middleware/expedite-user-auth');
 const flagMaintenanceMode = require('./middleware/flag-maintenance-mode');
-const getContractById = require('./middleware/get-contract-by-id');
+const getContractByIdFromSession = require('./middleware/get-contract-by-id-from-session');
+const getContractByIdFromParam = require('./middleware/get-contract-by-id-from-param');
 const getUserAccessAuthToken = require('./middleware/get-user-access-auth-token');
 const getSyndicationLicenceForUser = require('./middleware/get-syndication-licence-for-user');
 const getUserProfile = require('./middleware/get-user-profile');
@@ -49,7 +50,7 @@ const middleware = [
 	getSyndicationLicenceForUser,
 	getUserAccessAuthToken,
 	getUserProfile,
-	getContractById,
+	getContractByIdFromSession,
 	checkIfNewSyndicationUser,
 	routeMaintenanceMode
 ];
@@ -113,8 +114,9 @@ if (process.env.NODE_ENV !== 'production') {
 		cache,
 		apiKey
 	];
-
+	app.post('/syndication/contracts/:contract_id/resolve', middleware, getContractByIdFromParam, require('./controllers/resolve'));
 	app.get('/syndication/contracts/:contract_id', middleware, require('./controllers/get-contract-by-id'));
+
 //	app.post('/syndication/contracts', middleware, require('./controllers/get-contracts-by-id'));
 //	app.get('/syndication/purge', middleware, require('./controllers/purge'));
 }
