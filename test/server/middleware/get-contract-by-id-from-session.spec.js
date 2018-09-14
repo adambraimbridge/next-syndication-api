@@ -43,7 +43,7 @@ describe(MODULE_ID, function () {
 
 				getContractStub = sinon.stub().resolves(contractResponse);
 
-				const underTest = proxyquire('../../../server/middleware/get-contract-by-id', {
+				const underTest = proxyquire('../../../server/middleware/get-contract-by-id-from-session', {
 					'../lib/get-contract-by-id': getContractStub
 				});
 
@@ -128,7 +128,7 @@ describe(MODULE_ID, function () {
 
 				getContractStub = sinon.stub().resolves(contractResponse);
 
-				const underTest = proxyquire('../../../server/middleware/get-contract-by-id', {
+				const underTest = proxyquire('../../../server/middleware/get-contract-by-id-from-session', {
 					'../lib/get-contract-by-id': getContractStub
 				});
 

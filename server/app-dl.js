@@ -17,7 +17,7 @@ const db = require('./middleware/db');
 const decodeSession = require('./middleware/decode-session');
 const expediteUserAuth = require('./middleware/expedite-user-auth');
 const flagMaintenanceMode = require('./middleware/flag-maintenance-mode');
-const getContractById = require('./middleware/get-contract-by-id');
+const getContractByIdFromSession = require('./middleware/get-contract-by-id-from-session');
 const getUserAccessAuthToken = require('./middleware/get-user-access-auth-token');
 const getSyndicationLicenceForUser = require('./middleware/get-syndication-licence-for-user');
 const getUserProfile = require('./middleware/get-user-profile');
@@ -40,7 +40,7 @@ const middleware = [
 	getSyndicationLicenceForUser,
 	getUserAccessAuthToken,
 	getUserProfile,
-	getContractById,
+	getContractByIdFromSession,
 	checkIfNewSyndicationUser,
 	routeMaintenanceMode
 ];

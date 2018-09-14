@@ -32,7 +32,7 @@ provision:
 	nht float --master --no-destroy --skip-gtg --testapp ${TEST_APP} --vault
 
 run:
-	nht run --local --https
+	nht run --https
 
 run-coveralls: coverage-report
 	@cat ./coverage/lcov.info | coveralls
