@@ -32,9 +32,7 @@ Since all contracts live in the production salesforce environment, in order to t
 
 ### Setting yourself up on a contract
 
-In order to see the syndication icons, you need to belong to a licence with a syndication contract.
-
-Use this link to get set up on the complimentary access licence: https://join.ft.com/4ec865b6-a757-4869-ad0c-e80807c82989  
+In order to see the syndication icons, you need to belong to a licence with a syndication contract. Email customer support and ask to be added to a staff syndication licence.
 
 ## Run locally
 
