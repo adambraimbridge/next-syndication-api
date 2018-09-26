@@ -27,10 +27,11 @@ app.listen(PORT, () => {
 module.exports = app;
 
 process.on('unhandledRejection', (reason, promise) => {
+	log.warn(reason);
 	log.warn(`${MODULE_ID} UnhandledRejection =>`, {
 		error: reason.stack || reason,
 		promise
-	});
+	}, reason);
 });
 
 process.on('unhandledPromiseRejectionWarning', (reason, promise) => {
