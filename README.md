@@ -42,7 +42,7 @@ In order to see the syndication icons, you need to belong to a licence with a sy
 
 ## Run locally
 
-If you've checked out, installed and built all projects related to the syndication/republishing tool — in the same directory — and want to run all projects easily, you can do so from within the `next-syndication-api`, you will need to:
+If you've checked out, installed and built all projects related to the syndication/republishing tool — in the same parent directory — and want to run all projects easily, you can do so from within the `next-syndication-api`, you will need to:
 
 - update your local [next-router](https://github.com/Financial-Times/next-router)'s `.env` file to include the following:
   
@@ -56,8 +56,6 @@ If you've checked out, installed and built all projects related to the syndicati
 - restart `next-router`
 - `cd` into `next-syndication-api` and `make run-local`
 - go to https://local.ft.com:5050/syndication/user-status to confirm everything is working
-
-If you see an error that port 3255 is already being used, use `lsof -n -i :3255 | grep LISTEN` to find out its PID and `ps -p THE_PID` to find out what that process is. Sometimes PM2 doesn't stop properly, and you can use `kill THE_PID` to stop it.
 
 This will start the `next-syndication-api` the associated worker processes and the republishing contract and history pages using [PM2](https://www.npmjs.com/package/pm2) and tail the logs for all HTTP servers/processes.
 
