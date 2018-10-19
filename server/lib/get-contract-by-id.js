@@ -81,27 +81,24 @@ module.exports = exports = async (contractID, locals = {}) => {
 
 	if (locals.MASQUERADING !== true && contract_data && contract_data.contract_id !== null) {
 		let last_updated = Date.now() - +contract_data.last_updated;
-
 		if (last_updated < SALESFORCE_REFRESH_CONTRACT_PERIOD) {
 			log.info(`${MODULE_ID} | Using DB version of contract#${contractID}`, contract_data);
 
 			return decorateContract(contract_data);
 		}
 	}
-
 	let contract = await getSalesforceContractByID(contractID);
-
 	if (contract.success === true) {
 		contract = reformatSalesforceContract(contract);
 		contract.last_updated = new Date();
+
 		contract = pgMapColumns(contract, contractsColumnMappings);
 
 		if (locals && locals.licence) {
 			contract.licence_id = locals.licence.id;
 		}
-
+		// If you get the error, Cannot set property '#<anonymous>' of undefined, try refreshing
 		[contract_data] = await db.syndication.upsert_contract([contract]);
-
 		[contract_data] = await db.syndication.get_contract_data([contractID]);
 
 		log.info(`${MODULE_ID} | Persisted contract#${contractID} to DB`, { contract_data });

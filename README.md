@@ -18,13 +18,19 @@ The API behind the new FT.com/republishing tool.
 
 ```
 
-Alternatively if you want to install the all projects related to the syndication/republishing tool, you can download and run this [shell script](https://github.com/constantology/n-dev-mode/blob/master/project/syndication), or alternatively, use it as a reference.  
+The other related projects are:
+* [next-syndication-db-schema](https://github.com/Financial-Times/next-syndication-db-schema) - database schema (see Database dependency below)
+* [next-syn-list](https://github.com/Financial-Times/next-syn-list) - front-end app for syndication customers (when you click the Republishing link)
+* [n-syndication](https://github.com/Financial-Times/n-syndication) - client-side library for syndication icons and overlays which you can `bower link` to an app (e.g. next-front-page) for local development
+* [next-syndication-dl](https://github.com/Financial-Times/next-syndication-dl) - downloads app, you are less likely to need to work on this though
 
 ## Database dependency
 
-You will need to install PostgreSQL, either using homebrew, docker or from source in order to run the `next-syndication-api`.
+You will need to install PostgreSQL 9.6.x, either using homebrew, docker or from source in order to run the `next-syndication-api`. Do not use PostgreSQL 10+
 
-Once you have PostgreSQL installed, if you are not using the [shell script](https://github.com/constantology/n-dev-mode/blob/master/project/syndication), you can import the DB schema by following the instructions in [next-syndication-db-schema](https://github.com/Financial-Times/next-syndication-db-schema). 
+You can import the DB schema by following the instructions in [next-syndication-db-schema](https://github.com/Financial-Times/next-syndication-db-schema).
+
+If you are using postgres in Docker, you will need to edit your `.env` file to set `DATABASE_HOST` to `192.168.99.100`
 
 ## Salesforce dependency
 
@@ -36,7 +42,7 @@ In order to see the syndication icons, you need to belong to a licence with a sy
 
 ## Run locally
 
-If you've used the shell script or if you've checked out, installed and built all projects related to the syndication/republishing tool — in the same directory — and want to run all projects easily, you can do so from within the `next-syndication-api`, you will need to:
+If you've checked out, installed and built all projects related to the syndication/republishing tool — in the same parent directory — and want to run all projects easily, you can do so from within the `next-syndication-api`, you will need to:
 
 - update your local [next-router](https://github.com/Financial-Times/next-router)'s `.env` file to include the following:
   
@@ -49,6 +55,7 @@ If you've used the shell script or if you've checked out, installed and built al
   ```
 - restart `next-router`
 - `cd` into `next-syndication-api` and `make run-local`
+- go to [https://local.ft.com:5050/syndication/user-status](https://local.ft.com:5050/syndication/user-status) to confirm everything is working
 
 This will start the `next-syndication-api` the associated worker processes and the republishing contract and history pages using [PM2](https://www.npmjs.com/package/pm2) and tail the logs for all HTTP servers/processes.
 
@@ -122,3 +129,6 @@ Try turning wifi off on your phone to tether your computer to your phone's 4G co
 To turn maintenance mode on, simply turn the `syndicationMaintenance` flag on for everyone.
 
 Conversely, turn it off again to turn maintenance mode off.
+
+## Shell script
+There was a [shell script](https://github.com/constantology/n-dev-mode/blob/master/project/syndication) but this is out of date and not maintained
