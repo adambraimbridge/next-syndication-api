@@ -55,7 +55,7 @@ If you've checked out, installed and built all projects related to the syndicati
   ```
 - restart `next-router`
 - `cd` into `next-syndication-api` and `make run-local`
-- go to https://local.ft.com:5050/syndication/user-status to confirm everything is working
+- go to [https://local.ft.com:5050/syndication/user-status](https://local.ft.com:5050/syndication/user-status) to confirm everything is working
 
 If you see an error that port 3255 is already being used, use `lsof -n -i :3255 | grep LISTEN` to find out its PID and `ps -p THE_PID` to find out what that process is. Sometimes PM2 doesn't stop properly, and you can use `kill THE_PID` to stop it.
 
