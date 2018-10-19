@@ -55,7 +55,7 @@ If you've checked out, installed and built all projects related to the syndicati
   ```
 - restart `next-router`
 - `cd` into `next-syndication-api` and `make run-local`
-- go to https://local.ft.com:5050/syndication/user-status to confirm everything is working
+- go to [https://local.ft.com:5050/syndication/user-status](https://local.ft.com:5050/syndication/user-status) to confirm everything is working
 
 This will start the `next-syndication-api` the associated worker processes and the republishing contract and history pages using [PM2](https://www.npmjs.com/package/pm2) and tail the logs for all HTTP servers/processes.
 
