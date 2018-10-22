@@ -74,7 +74,10 @@ module.exports = exports = new class SQSCheck extends nHealthCheck {
 			Attributes.total += Attributes[item];
 		});
 		// this will write lots of files to your hard drive and make the app constantly restart with nodemon if run locally
-		if (process.env.NODE_ENV !== 'development') {
+		if (
+			process.env.NODE_ENV === 'production' ||
+			process.env.NODE_ENV === 'test'
+		) {
 			await writeFileAsync(
 				path.resolve(
 					HISTORY_DIRECTORY,

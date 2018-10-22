@@ -1,6 +1,7 @@
 'use strict';
 
-const { ASSET_TYPE_TO_CONTENT_TYPE } = require('config');
+const {default: logger} = require('@financial-times/n-logger');
+const {ASSET_TYPE_TO_CONTENT_TYPE} = require('config');
 
 module.exports = exports = SFContract => {
 	const contract = {
@@ -18,41 +19,32 @@ module.exports = exports = SFContract => {
 
 	contract.assets = SFContract.assets
 		.filter(({ assetType }) => assetType !== 'Addendum')
-		.map(item => {
-			const asset = formatAsset(item);
-
+		.map(formatAsset)
+		.map(asset => {
 			asset.download_limit = SFContract[`${asset.content_type}Limit`];
-
 			return asset;
 		});
 
 	SFContract.assets
 		.filter(({ assetType }) => assetType === 'Addendum')
-		.forEach(item => {
-			const addendum = formatAsset(item);
-
-			let asset = contract.assets.find(
-				asset =>
-					asset.content_type === addendum.content_type &&
-					asset.content_set === addendum.content_set
-			);
+		.map(formatAsset)
+		.forEach(addendum => {
+			const asset = findMatchingAsset(addendum, contract);
 
 			if (!asset) {
-				asset = contract.assets.find(
-					asset => asset.content_type === addendum.content_type
+				logger.error(
+					new ReferenceError(
+						`Asset not found for Addendum: ${JSON.stringify(
+							addendum
+						)}`
+					)
 				);
-
-				if (!asset) {
-					throw new ReferenceError(
-						`Asset not found for Addendum: ${JSON.stringify(addendum)}`
-					);
-				}
+				return;
 			}
 
-			if (!Array.isArray(asset.addendums)) {
-				asset.addendums = [];
-			}
-
+			asset.addendums = Array.isArray(asset.addendums)
+				? asset.addendums
+				: [];
 			asset.addendums.push(cleanupAddendum(addendum));
 
 			if (
@@ -88,6 +80,14 @@ function formatAsset(item) {
 				: [],
 		addendums: [],
 	};
+}
+
+function findMatchingAsset(addendum, contract) {
+	let asset = contract.assets.find(asset => asset.content_type === addendum.content_type && asset.content_set === addendum.content_set);
+	if (!asset) {
+		asset = contract.assets.find(asset => asset.content_type === addendum.content_type);
+	}
+	return asset
 }
 
 function cleanupAddendum(item) {
