@@ -18,23 +18,11 @@ The API behind the new FT.com/republishing tool.
 
 ```
 
-The other related projects are:
-* [next-syndication-db-schema](https://github.com/Financial-Times/next-syndication-db-schema) - database schema (see Database dependency below)
-* [next-syn-list](https://github.com/Financial-Times/next-syn-list) - front-end app for syndication customers (when you click the Republishing link)
-* [n-syndication](https://github.com/Financial-Times/n-syndication) - client-side library for syndication icons and overlays which you can `bower link` to an app (e.g. next-front-page) for local development
-* [next-syndication-dl](https://github.com/Financial-Times/next-syndication-dl) - downloads app, you are less likely to need to work on this though
-
-## Database dependency
-
-You will need to install PostgreSQL 9.6.x, either using homebrew, docker or from source in order to run the `next-syndication-api`. Do not use PostgreSQL 10+
-
-You can import the DB schema by following the instructions in [next-syndication-db-schema](https://github.com/Financial-Times/next-syndication-db-schema).
-
-If you are using postgres in Docker, you will need to edit your `.env` file to set `DATABASE_HOST` to `192.168.99.100`
-
 ## Salesforce dependency
 
-Since all contracts live in the production salesforce environment, in order to test locally you will need to use the production `SALESFORCE_*` environment variables rather than the development ones.
+If you need to test a specific contract, since all contracts live in the production salesforce environment, in order to test certain contracts locally you will need to use the production `SALESFORCE_*` environment variables rather than the development ones (see Vault).
+
+In development mode you should be using the FT Staff contract, which is stubbed in `stubs/CA-00001558.json`
 
 ### Setting yourself up on a contract
 
@@ -42,7 +30,22 @@ In order to see the syndication icons, you need to belong to a licence with a sy
 
 ## Run locally
 
-If you've checked out, installed and built all projects related to the syndication/republishing tool — in the same parent directory — and want to run all projects easily, you can do so from within the `next-syndication-api`, you will need to:
+You WILL need:
+* [next-syndication-db-schema](https://github.com/Financial-Times/next-syndication-db-schema) - database schema (see Database dependency below)
+
+You MIGHT need:
+* [next-syn-list](https://github.com/Financial-Times/next-syn-list) - front-end app for syndication customers. If you want to work on the pages that users see when they go to `/republishing` you will need this.
+* [n-syndication](https://github.com/Financial-Times/n-syndication) - client-side library for syndication icons and overlays which you can `bower link` to an app (e.g. next-front-page) for local development.
+* [next-syndication-dl](https://github.com/Financial-Times/next-syndication-dl) - downloads app, you are less likely to need to work on this though.
+
+### Database dependency
+
+If you need to use the database locally, set up the database by following the instructions in [next-syndication-db-schema](https://github.com/Financial-Times/next-syndication-db-schema).
+
+If you are using postgres in Docker, you will need to edit your `.env` file to set `DATABASE_HOST` to `192.168.99.100`
+
+### Running
+Once you have set up the projects you want to work on, and want to run all projects easily, you can do so from within the `next-syndication-api`, you will need to:
 
 - update your local [next-router](https://github.com/Financial-Times/next-router)'s `.env` file to include the following:
   
@@ -53,15 +56,19 @@ If you've checked out, installed and built all projects related to the syndicati
      syn-list=3566
      
   ```
-- restart `next-router`
+- This API doesn't run the router, so you will need to start that manually with `cd` into `next-router` and `make run-https` unless you are also running another app like next-syn-list
 - `cd` into `next-syndication-api` and `make run-local`
+- go to `http://local.ft.com:3255/__gtg`to confirm the syndication API app is responding
+
+
+- `cd` into `next-syn-list` and run `make run`
 - go to [https://local.ft.com:5050/syndication/user-status](https://local.ft.com:5050/syndication/user-status) to confirm everything is working
 
 This will start the `next-syndication-api` the associated worker processes and the republishing contract and history pages using [PM2](https://www.npmjs.com/package/pm2) and tail the logs for all HTTP servers/processes.
 
 You can also run `make run-monit` to bring up the [PM2 process monitor](https://www.npmjs.com/package/pm2#cpu--memory-monitoring).
 
-### Configuration
+## Configuration
 
 This project and the [next-syndication-dL](https://github.com/Financial-Times/next-syndication-dl) project both use standard next environment variables for storing secrets in vault.
 
