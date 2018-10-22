@@ -1,4 +1,5 @@
 'use strict';
 
 module.exports = exports = (val, prop, item, existing) =>
-	Object.prototype.toString.call(existing) === '[object Object]' && existing.saved === true;
+	Object.prototype.toString.call(existing) === '[object Object]' &&
+	existing.saved === true;

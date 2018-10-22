@@ -13,15 +13,15 @@ const SpreadSheet = require('../../../spreadsheet');
 
 const {
 	LEGACY_DOWNLOAD_HISTORY_SPREADSHEET_ID,
-//	NODE_ENV,
-//	SLACK,
+	//	NODE_ENV,
+	//	SLACK,
 	SPREADSHEET_MAPPINGS,
-	THE_GOOGLE: {
-		AUTH_FILE_NAME
-	}
+	THE_GOOGLE: { AUTH_FILE_NAME },
 } = require('config');
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
 log.info(`${MODULE_ID} => started`);
 
@@ -33,23 +33,30 @@ module.exports = exports = async () => {
 		const ss = await SpreadSheet({
 			id: LEGACY_DOWNLOAD_HISTORY_SPREADSHEET_ID,
 			key: key,
-			mappings: SPREADSHEET_MAPPINGS
+			mappings: SPREADSHEET_MAPPINGS,
 		});
 
 		const db = await pg();
 
 		const LEGACY_DOWNLOAD_HISTORY_SPREADSHEET_DATE_FORMAT = 'DD/MM/YYYY HH:mm';
 
-		await Promise.all(ss.worksheetsMap.legacy_download_history.rows.map(async ({ mapped }) => {
-			mapped.published_date = moment(mapped.published_date, LEGACY_DOWNLOAD_HISTORY_SPREADSHEET_DATE_FORMAT).toDate();
-			mapped.time = moment(mapped.time, LEGACY_DOWNLOAD_HISTORY_SPREADSHEET_DATE_FORMAT).toDate();
-			mapped.last_modified = mapped.__last_modified__;
-			return await db.syndication.upsert_legacy_download_history([mapped]);
-		} ));
+		await Promise.all(
+			ss.worksheetsMap.legacy_download_history.rows.map(async ({ mapped }) => {
+				mapped.published_date = moment(
+					mapped.published_date,
+					LEGACY_DOWNLOAD_HISTORY_SPREADSHEET_DATE_FORMAT
+				).toDate();
+				mapped.time = moment(
+					mapped.time,
+					LEGACY_DOWNLOAD_HISTORY_SPREADSHEET_DATE_FORMAT
+				).toDate();
+				mapped.last_modified = mapped.__last_modified__;
+				return await db.syndication.upsert_legacy_download_history([mapped]);
+			})
+		);
 
 		log.info(`${MODULE_ID} => Legacy Download History complete`);
-	}
-	catch (e) {
+	} catch (e) {
 		log.error(`${MODULE_ID} => `, e);
 	}
 };

@@ -13,25 +13,26 @@ const getContractByID = require('../../../server/lib/get-contract-by-id');
 const {
 	MIGRATION_SPREADSHEET_ID,
 	NODE_ENV,
-	SALESFORCE: {
-		CRON_CONFIG: SALESFORCE_CRON_CONFIG
-	},
+	SALESFORCE: { CRON_CONFIG: SALESFORCE_CRON_CONFIG },
 	SLACK,
 	SPREADSHEET_MAPPINGS,
-	THE_GOOGLE: {
-		AUTH_FILE_NAME
-	}
+	THE_GOOGLE: { AUTH_FILE_NAME },
 } = require('config');
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
 let lastRun = Date.now();
 let salesforceQueryCount = 0;
 
 log.info(`${MODULE_ID} => started`);
 
-module.exports = exports = async (force) => {
-	if (force === true || Date.now() - lastRun >= SALESFORCE_CRON_CONFIG.MAX_TIME_PER_CALL) {
+module.exports = exports = async force => {
+	if (
+		force === true ||
+		Date.now() - lastRun >= SALESFORCE_CRON_CONFIG.MAX_TIME_PER_CALL
+	) {
 		salesforceQueryCount = 0;
 	}
 
@@ -44,7 +45,7 @@ module.exports = exports = async (force) => {
 		const ss = await SpreadSheet({
 			id: MIGRATION_SPREADSHEET_ID,
 			key: key,
-			mappings: SPREADSHEET_MAPPINGS
+			mappings: SPREADSHEET_MAPPINGS,
 		});
 
 		const contracts = await migrateContracts(ss.worksheetsMap.contracts.rows);
@@ -62,8 +63,7 @@ module.exports = exports = async (force) => {
 		}
 
 		log.info(`${MODULE_ID} => Migration complete`);
-	}
-	catch (e) {
+	} catch (e) {
 		log.error(`${MODULE_ID} => `, e);
 	}
 };
@@ -71,13 +71,18 @@ module.exports = exports = async (force) => {
 function formatSlackMessage(contracts, users) {
 	const contractsMessage = {
 		color: '#003399',
-		fallback: `Contract Migration Task: ${contracts.filter(item => !(item.error && item.error instanceof Error)).length} contracts migrated.`,
-		pretext: 'Contract Migration Task'
+		fallback: `Contract Migration Task: ${
+			contracts.filter(item => !(item.error && item.error instanceof Error))
+				.length
+		} contracts migrated.`,
+		pretext: 'Contract Migration Task',
 	};
 	const usersMessage = {
 		color: '#118833',
-		fallback: `User Migration Task: ${users.filter(item => !(item.error && item.error instanceof Error)).length} users migrated.`,
-		pretext: 'User Migration Task'
+		fallback: `User Migration Task: ${
+			users.filter(item => !(item.error && item.error instanceof Error)).length
+		} users migrated.`,
+		pretext: 'User Migration Task',
 	};
 
 	if (contracts.length) {
@@ -86,23 +91,26 @@ function formatSlackMessage(contracts, users) {
 				return {
 					title: `Error migrating contract: ${item.source.contract_id}`,
 					value: `${item.error.stack}`,
-					short: false
+					short: false,
 				};
 			}
 
 			return {
 				title: `Contract updated: ${item.contract_id}`,
-				value: `#${item.__index__ + 2} ${item.licencee_name} => ${item.content_type} updated to: ${item.legacy_download_count}.`,
-				short: false
+				value: `#${item.__index__ + 2} ${item.licencee_name} => ${
+					item.content_type
+				} updated to: ${item.legacy_download_count}.`,
+				short: false,
 			};
 		});
-	}
-	else {
-		contractsMessage.fields = [{
-			title: 'Contracts',
-			value: 'No contracts were migrated.',
-			short: false
-		}];
+	} else {
+		contractsMessage.fields = [
+			{
+				title: 'Contracts',
+				value: 'No contracts were migrated.',
+				short: false,
+			},
+		];
 	}
 
 	if (users.length) {
@@ -111,29 +119,30 @@ function formatSlackMessage(contracts, users) {
 				return {
 					title: `Error migrating user on row#${item.source.__index__ + 2}`,
 					value: `${item.error.stack}`,
-					short: false
+					short: false,
 				};
 			}
 
 			return {
 				title: `User updated on row#${item.__index__ + 2}`,
-				short: false
+				short: false,
 			};
 		});
-	}
-	else {
-		usersMessage.fields = [{
-			title: 'Users',
-			value: 'No users were migrated.',
-			short: false
-		}];
+	} else {
+		usersMessage.fields = [
+			{
+				title: 'Users',
+				value: 'No users were migrated.',
+				short: false,
+			},
+		];
 	}
 
 	const attachments = [contractsMessage, usersMessage];
 
 	return {
 		text: `Migration Task | Environment: ${NODE_ENV}`,
-		attachments
+		attachments,
 	};
 }
 
@@ -142,33 +151,49 @@ async function migrateContract(db, item) {
 	let asset_data;
 	let contract;
 	try {
-		[contract] = await db.syndication.get_contract_data([item.mapped.contract_id]);
+		[contract] = await db.syndication.get_contract_data([
+			item.mapped.contract_id,
+		]);
 
-		if ((!contract || contract.contract_id === null)) {
+		if (!contract || contract.contract_id === null) {
 			if (salesforceQueryCount < SALESFORCE_CRON_CONFIG.MAX_CALLS) {
 				++salesforceQueryCount;
 
 				contract = await getContractByID(item.mapped.contract_id);
-			}
-			else {
+			} else {
 				return {
 					error: new Error('Max Salesforce calls exceeded for this round.'),
-					source: item.mapped
+					source: item.mapped,
 				};
 			}
 		}
 
-		asset_data = contract.items.find(asset => asset.content_type === item.mapped.content_type);
+		asset_data = contract.items.find(
+			asset => asset.content_type === item.mapped.content_type
+		);
 
-		const legacy_download_count = item.mapped.legacy_download_count = parseInt(item.mapped.legacy_download_count, 10);
+		const legacy_download_count = (item.mapped.legacy_download_count = parseInt(
+			item.mapped.legacy_download_count,
+			10
+		));
 
 		if (asset_data) {
-			if (Object.prototype.toString.call(asset_data.content) === '[object String]') {
-				asset_data.content = asset_data.content.split(';').map(item => item.trim());
+			if (
+				Object.prototype.toString.call(asset_data.content) === '[object String]'
+			) {
+				asset_data.content = asset_data.content
+					.split(';')
+					.map(item => item.trim());
 			}
 
-			if (parseInt(asset_data.legacy_download_count, 10) === legacy_download_count) {
-				log.info(`${MODULE_ID} | contract asset already migrated => ${JSON.stringify(asset_data)}`);
+			if (
+				parseInt(asset_data.legacy_download_count, 10) === legacy_download_count
+			) {
+				log.info(
+					`${MODULE_ID} | contract asset already migrated => ${JSON.stringify(
+						asset_data
+					)}`
+				);
 
 				return null;
 			}
@@ -179,20 +204,36 @@ async function migrateContract(db, item) {
 				asset_data.asset_class = 'New';
 			}
 
-			[asset] = await db.syndication.upsert_contract_asset_register([item.mapped.contract_id, JSON.parse(JSON.stringify(asset_data))]);
-			[asset] = await db.syndication.upsert_contract_asset_item([item.mapped.contract_id, JSON.parse(JSON.stringify(asset_data))]);
-			[asset] = await db.syndication.upsert_contract_asset([item.mapped.contract_id, JSON.parse(JSON.stringify(asset_data))]);
+			[asset] = await db.syndication.upsert_contract_asset_register([
+				item.mapped.contract_id,
+				JSON.parse(JSON.stringify(asset_data)),
+			]);
+			[asset] = await db.syndication.upsert_contract_asset_item([
+				item.mapped.contract_id,
+				JSON.parse(JSON.stringify(asset_data)),
+			]);
+			[asset] = await db.syndication.upsert_contract_asset([
+				item.mapped.contract_id,
+				JSON.parse(JSON.stringify(asset_data)),
+			]);
 
-			log.info(`${MODULE_ID} | upserted migrated contract asset => ${JSON.stringify(asset)}`);
-		}
-		else {
+			log.info(
+				`${MODULE_ID} | upserted migrated contract asset => ${JSON.stringify(
+					asset
+				)}`
+			);
+		} else {
 			return null;
 		}
 
 		return item.mapped;
-	}
-	catch (error) {
-		log.error(`${MODULE_ID} | ERROR migrating contract asset => ${JSON.stringify(asset_data)}`, error);
+	} catch (error) {
+		log.error(
+			`${MODULE_ID} | ERROR migrating contract asset => ${JSON.stringify(
+				asset_data
+			)}`,
+			error
+		);
 
 		return { error, contract, asset_data, source: item.mapped };
 	}
@@ -201,7 +242,9 @@ async function migrateContract(db, item) {
 async function migrateContracts(rows) {
 	const db = await pg();
 
-	let items = await Promise.all(rows.map(async item => await migrateContract(db, item)));
+	let items = await Promise.all(
+		rows.map(async item => await migrateContract(db, item))
+	);
 
 	return items.filter(item => item);
 }
@@ -209,22 +252,31 @@ async function migrateContracts(rows) {
 async function migrateUser(db, item) {
 	let user;
 	try {
-		[user] = await db.syndication.get_migrated_user([item.mapped.user_id, item.mapped.contract_id]);
+		[user] = await db.syndication.get_migrated_user([
+			item.mapped.user_id,
+			item.mapped.contract_id,
+		]);
 
 		if (user && user.user_id !== null) {
-			log.info(`${MODULE_ID} | user already migrated => ${JSON.stringify(user)}`);
+			log.info(
+				`${MODULE_ID} | user already migrated => ${JSON.stringify(user)}`
+			);
 
 			return null;
 		}
 
 		[user] = await db.syndication.upsert_migrated_user([item.mapped]);
 
-		log.info(`${MODULE_ID} | upserted migrated user => ${JSON.stringify(user)}`);
+		log.info(
+			`${MODULE_ID} | upserted migrated user => ${JSON.stringify(user)}`
+		);
 
 		return item.mapped;
-	}
-	catch (error) {
-		log.error(`${MODULE_ID} | ERROR migrating user => ${JSON.stringify(user)}`, error);
+	} catch (error) {
+		log.error(
+			`${MODULE_ID} | ERROR migrating user => ${JSON.stringify(user)}`,
+			error
+		);
 
 		return { error, user, source: item.mapped };
 	}
@@ -233,7 +285,9 @@ async function migrateUser(db, item) {
 async function migrateUsers(rows) {
 	const db = await pg();
 
-	let items = await Promise.all(rows.map(async item => await migrateUser(db, item)));
+	let items = await Promise.all(
+		rows.map(async item => await migrateUser(db, item))
+	);
 
 	return items.filter(item => item);
 }

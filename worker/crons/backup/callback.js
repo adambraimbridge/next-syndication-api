@@ -1,7 +1,7 @@
 'use strict';
 
 const { exec } = require('child_process');
-const { createReadStream/*, stat*/ } = require('fs');
+const { createReadStream /*, stat*/ } = require('fs');
 const path = require('path');
 const util = require('util');
 
@@ -20,19 +20,21 @@ const {
 	AWS_ACCESS_KEY,
 	AWS_SECRET_ACCESS_KEY,
 	DB,
-	DOWNLOAD_ARCHIVE_EXTENSION
+	DOWNLOAD_ARCHIVE_EXTENSION,
 } = require('config');
 
 const S3 = new AWS.S3({
 	accessKeyId: AWS_ACCESS_KEY,
 	region: 'eu-west-1',
-	secretAccessKey: AWS_SECRET_ACCESS_KEY
+	secretAccessKey: AWS_SECRET_ACCESS_KEY,
 });
 
 const execAsync = util.promisify(exec);
 //const statAsync = util.promisify(stat);
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
 module.exports = exports = async () => {
 	const START = Date.now();
@@ -56,20 +58,29 @@ module.exports = exports = async () => {
 		const schema_flags = '--clean --create --schema-only';
 		const schema_dump_file = `${directory}/schema.syndication.${time}.sql`;
 		const data_dump_file = `${directory}/data.syndication.${time}.sql`;
-		const tables = BACKUP.tables.map(item => `--table ${BACKUP.schema}.${item}`).join(' ');
+		const tables = BACKUP.tables
+			.map(item => `--table ${BACKUP.schema}.${item}`)
+			.join(' ');
 
 		let dump_data;
 		let dump_schema;
 
 		if (uri) {
-			dump_data = `${BACKUP.program} ${uri} ${data_flags} ${tables} --file ${data_dump_file}`;
+			dump_data = `${
+				BACKUP.program
+			} ${uri} ${data_flags} ${tables} --file ${data_dump_file}`;
 
-			dump_schema = `${BACKUP.program} ${uri} ${schema_flags} --file ${schema_dump_file}`;
-		}
-		else {
-			dump_data = `${password} ${BACKUP.program} ${database} ${host} ${port} ${user_name} ${schema_flags} --file ${schema_dump_file}`;
+			dump_schema = `${
+				BACKUP.program
+			} ${uri} ${schema_flags} --file ${schema_dump_file}`;
+		} else {
+			dump_data = `${password} ${
+				BACKUP.program
+			} ${database} ${host} ${port} ${user_name} ${schema_flags} --file ${schema_dump_file}`;
 
-			dump_schema = `${password} ${BACKUP.program} ${database} ${host} ${port} ${user_name} ${data_flags} ${tables} --file ${data_dump_file}`;
+			dump_schema = `${password} ${
+				BACKUP.program
+			} ${database} ${host} ${port} ${user_name} ${data_flags} ${tables} --file ${data_dump_file}`;
 		}
 
 		await execAsync(`${dump_schema}`);
@@ -80,7 +91,7 @@ module.exports = exports = async () => {
 
 		archive.on('error', err => {
 			log.error(`${MODULE_ID} ArchiveError => `, {
-				error: err.stack || err
+				error: err.stack || err,
 			});
 		});
 
@@ -88,17 +99,24 @@ module.exports = exports = async () => {
 			log.info(`${MODULE_ID} ArchiveEnd => in ${Date.now() - START}ms`);
 		});
 
-		archive.append(createReadStream(schema_dump_file), { name: path.basename(schema_dump_file) });
+		archive.append(createReadStream(schema_dump_file), {
+			name: path.basename(schema_dump_file),
+		});
 
-		archive.append(createReadStream(data_dump_file), { name: path.basename(data_dump_file) });
+		archive.append(createReadStream(data_dump_file), {
+			name: path.basename(data_dump_file),
+		});
 
-		if (archive._state.finalize !== true && archive._state.finalizing !== true) {
+		if (
+			archive._state.finalize !== true &&
+			archive._state.finalizing !== true
+		) {
 			archive.finalize();
 		}
 
 		const file = {
 			archive,
-			file_name: `${BACKUP.schema}.${time}.${DOWNLOAD_ARCHIVE_EXTENSION}`
+			file_name: `${BACKUP.schema}.${time}.${DOWNLOAD_ARCHIVE_EXTENSION}`,
 		};
 
 		const res = await upload(file);
@@ -106,8 +124,7 @@ module.exports = exports = async () => {
 		log.info(`${MODULE_ID} | backup uploaded to s3`, res);
 
 		return file;
-	}
-	catch (e) {
+	} catch (e) {
 		log.error(`${MODULE_ID} => `, e);
 	}
 
@@ -116,7 +133,9 @@ module.exports = exports = async () => {
 
 function upload({ archive, file_name }) {
 	return new Promise((resolve, reject) => {
-		const { BACKUP: { bucket } } = DB;
+		const {
+			BACKUP: { bucket },
+		} = DB;
 
 		const client = new S3UploadStream(S3);
 
@@ -126,13 +145,13 @@ function upload({ archive, file_name }) {
 			Bucket: bucket.id,
 			ContentType: mime_type,
 			Key: `${bucket.directory}/${file_name}`,
-			ServerSideEncryption: bucket.encryption_type
+			ServerSideEncryption: bucket.encryption_type,
 		});
 
 		upload.on('error', err => reject(err));
 		upload.on('uploaded', res => resolve(res));
 
-//		upload.on('part', part => console.log(part));
+		//		upload.on('part', part => console.log(part));
 
 		archive.pipe(upload);
 	});

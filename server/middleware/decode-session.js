@@ -7,7 +7,9 @@ const Decoder = require('@financial-times/session-decoder-js');
 
 const decoder = new Decoder(process.env.SESSION_PUBLIC_KEY);
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
 module.exports = exports = (req, res, next) => {
 	const sessionToken = req.cookies.FTSession;
@@ -26,13 +28,14 @@ module.exports = exports = (req, res, next) => {
 
 		res.locals.userUuid = userUuid;
 
-		log.info(`${MODULE_ID} DecodeSessionSuccess`, { gotUserUuid: !!userUuid });
+		log.info(`${MODULE_ID} DecodeSessionSuccess`, {
+			gotUserUuid: !!userUuid,
+		});
 
 		next();
-	}
-	catch (err) {
+	} catch (err) {
 		log.error(`${MODULE_ID} DecodeSessionError`, {
-			error: err.stack
+			error: err.stack,
 		});
 
 		// Dodgy session token provided

@@ -8,16 +8,17 @@ const { EXPORT } = require('config');
 
 const RE_QUOTES = /"/gm;
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
 	const START = Date.now();
 
 	try {
-		const { locals: {
-			$DB: db,
-			contract: CONTRACT
-		} } = res;
+		const {
+			locals: { $DB: db, contract: CONTRACT },
+		} = res;
 
 		let type = req.query.type || 'downloads';
 
@@ -27,32 +28,46 @@ module.exports = exports = async (req, res, next) => {
 			throw new TypeError(`${MODULE_ID} InvalidExportTypeError => ${type}`);
 		}
 
-		res.attachment(`export_republishing_${type}_${(new Date()).toJSON()}.csv`);
+		res.attachment(`export_republishing_${type}_${new Date().toJSON()}.csv`);
 
-		const items = await db.run(`SELECT * FROM syndication.get_${type}_by_contract_id($text$${CONTRACT.contract_id}$text$)`);
+		const items = await db.run(
+			`SELECT * FROM syndication.get_${type}_by_contract_id($text$${
+				CONTRACT.contract_id
+			}$text$)`
+		);
 
 		const CSV = [];
 
-		CSV.push(Object.keys(EXPORT_HEADERS).map(key => EXPORT_HEADERS[key]).join(','));
+		CSV.push(
+			Object.keys(EXPORT_HEADERS)
+				.map(key => EXPORT_HEADERS[key])
+				.join(',')
+		);
 
-		CSV.push(...items.map(item => Object.keys(EXPORT_HEADERS).map(key => safe(item[key])).join(',')));
+		CSV.push(
+			...items.map(item =>
+				Object.keys(EXPORT_HEADERS)
+					.map(key => safe(item[key]))
+					.join(',')
+			)
+		);
 
 		res.send(Buffer.from(CSV.join('\n'), 'utf8'));
 
 		res.status(200);
 
-		log.debug(`${MODULE_ID} => exported ${CSV.length} items in ${Date.now() - START}ms`);
+		log.debug(
+			`${MODULE_ID} => exported ${CSV.length} items in ${Date.now() - START}ms`
+		);
 
 		next();
-	}
-	catch(error) {
+	} catch (error) {
 		log.error(`${MODULE_ID}`, {
-			error: error.stack
+			error: error.stack,
 		});
 
 		res.sendStatus(400);
 	}
-
 };
 
 function safe(value) {
@@ -63,7 +78,7 @@ function safe(value) {
 
 		case '[object Array]':
 		case '[object Object]':
-			value = JSON.stringify(value).replace(RE_QUOTES, '\"');
+			value = JSON.stringify(value).replace(RE_QUOTES, '"');
 			break;
 	}
 

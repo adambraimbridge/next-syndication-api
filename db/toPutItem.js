@@ -5,7 +5,7 @@ const { JS_TO_DB_TYPES } = require('config');
 module.exports = exports = (data, schema) => {
 	return {
 		Item: assignProperties(data, schema.AttributeDefinitions),
-		TableName: schema.TableName
+		TableName: schema.TableName,
 	};
 };
 
@@ -21,7 +21,7 @@ function assignProperties(data, schema, item = {}, simplify) {
 
 			if (val !== null) {
 				item[key] = {
-					[def.AttributeType]: val
+					[def.AttributeType]: val,
 				};
 			}
 		}
@@ -30,12 +30,15 @@ function assignProperties(data, schema, item = {}, simplify) {
 	}
 
 	schema.reduce((acc, def) => {
-		if (Object.prototype.hasOwnProperty.call(data, def.AttributeName) || Object.prototype.hasOwnProperty.call(data, def.AttributeAlias)) {
+		if (
+			Object.prototype.hasOwnProperty.call(data, def.AttributeName) ||
+			Object.prototype.hasOwnProperty.call(data, def.AttributeAlias)
+		) {
 			const ATTRIBUTE_ID = def.AttributeAlias || def.AttributeName;
 
 			let val = Object.prototype.hasOwnProperty.call(data, def.AttributeName)
-					? data[def.AttributeName]
-					: data[def.AttributeAlias];
+				? data[def.AttributeName]
+				: data[def.AttributeAlias];
 
 			acc[ATTRIBUTE_ID] = {};
 
@@ -48,34 +51,37 @@ function assignProperties(data, schema, item = {}, simplify) {
 
 						acc[ATTRIBUTE_ID][def.AttributeType] = val.map(raw => {
 							return {
-								M: assignProperties(raw, def.AttributeDefinitions)
+								M: assignProperties(raw, def.AttributeDefinitions),
 							};
 						});
 
 						break;
 					case 'M':
-						acc[ATTRIBUTE_ID][def.AttributeType] = assignProperties(val, def.AttributeDefinitions);
+						acc[ATTRIBUTE_ID][def.AttributeType] = assignProperties(
+							val,
+							def.AttributeDefinitions
+						);
 
 						break;
 				}
-			}
-			else if (def.AttributeType === 'L' && def.AttributeItemTypes) {
+			} else if (def.AttributeType === 'L' && def.AttributeItemTypes) {
 				acc[ATTRIBUTE_ID][def.AttributeType] = val.map(item => {
-					return { [def.AttributeItemTypes]: getValue(item, { AttributeType: def.AttributeItemTypes }) };
+					return {
+						[def.AttributeItemTypes]: getValue(item, {
+							AttributeType: def.AttributeItemTypes,
+						}),
+					};
 				});
-			}
-			else {
+			} else {
 				val = getValue(val, def);
 
 				if (val !== null) {
 					if (simplify === true) {
 						acc[ATTRIBUTE_ID] = val;
-					}
-					else {
+					} else {
 						if (def.AttributeType === 'M') {
 							acc[ATTRIBUTE_ID][def.AttributeType] = assignProperties(val);
-						}
-						else {
+						} else {
 							acc[ATTRIBUTE_ID][def.AttributeType] = val;
 						}
 					}
@@ -103,8 +109,7 @@ function getValue(val, def) {
 	if (val === null || typeof val === 'undefined') {
 		if (Object.prototype.hasOwnProperty.call(def, 'DefaultValue')) {
 			val = def.DefaultValue;
-		}
-		else {
+		} else {
 			return null;
 		}
 	}

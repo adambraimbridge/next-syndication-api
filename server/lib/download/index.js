@@ -5,9 +5,11 @@ const path = require('path');
 const MessageQueueEvent = require('../../../queue/message-queue-event');
 const moment = require('moment');
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
-module.exports = exports = (config) => {
+module.exports = exports = config => {
 	const { content, contract, lang, licence, req, user } = config;
 
 	if (content.content_type in exports) {
@@ -32,21 +34,25 @@ module.exports = exports = (config) => {
 					session: req.cookies.FTSession,
 					spoor_id: req.cookies['spoor-id'],
 					url: req.originalUrl,
-					user_agent: req.get('user-agent')
+					user_agent: req.get('user-agent'),
 				},
 				user: {
 					email: user.email,
 					first_name: user.first_name,
 					id: user.user_id,
-					surname: user.surname
-				}
-			}
+					surname: user.surname,
+				},
+			},
 		});
 
 		return new exports[content.content_type](config);
 	}
 
-	throw new TypeError(`${MODULE_ID} ${content.content_type} cannot be downloaded for content_id#${content.content_id}`);
+	throw new TypeError(
+		`${MODULE_ID} ${content.content_type} cannot be downloaded for content_id#${
+			content.content_id
+		}`
+	);
 };
 
 exports.article = require('./article');

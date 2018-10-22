@@ -1,6 +1,5 @@
 'use strict';
 
-
 const worker = require('../../index');
 const createKey = require('../../create-key');
 
@@ -15,7 +14,7 @@ createKey().then(() => {});
 module.exports = exports = worker({
 	autoAck: true,
 	callback: upsertHistory,
-	event_type
+	event_type,
 });
 
 exports.addCallback(spoorPublish);

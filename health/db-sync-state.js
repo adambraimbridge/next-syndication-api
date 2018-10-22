@@ -8,9 +8,11 @@ const { default: log } = require('@financial-times/n-logger');
 
 const pg = require('../db/pg');
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
-module.exports = exports = new (class DBSyncStateCheck extends nHealthCheck {
+module.exports = exports = new class DBSyncStateCheck extends nHealthCheck {
 	async tick() {
 		const START = Date.now();
 
@@ -37,10 +39,11 @@ module.exports = exports = new (class DBSyncStateCheck extends nHealthCheck {
 
 		return this.checkOutput;
 	}
-})({
-	businessImpact: 'The Syndication database\'s computed tables are not in-sync with the base table data and, as such, may be showing incorrect data to users.',
+}({
+	businessImpact:
+		"The Syndication database's computed tables are not in-sync with the base table data and, as such, may be showing incorrect data to users.",
 	name: 'Syndication database data integrity',
-/*eslint-disable*/
+	/*eslint-disable*/
 	panicGuide: `To force a reload of all the computed tables, run:
 
 \`\`\`
@@ -53,9 +56,10 @@ module.exports = exports = new (class DBSyncStateCheck extends nHealthCheck {
 \`\`\`
 
 Substituting the above \`\${PRODUCTION_DATABASE_*}\` placeholders with the correct values from vault.`,
-/*eslint-enable*/
+	/*eslint-enable*/
 	severity: 3,
-	technicalSummary: 'Checks the Syndication database\'s computed tables are correctly representing the base tables\' data.'
+	technicalSummary:
+		"Checks the Syndication database's computed tables are correctly representing the base tables' data.",
 });
 
 if (process.env.NODE_ENV !== 'test') {
@@ -63,13 +67,19 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 async function getHealthStatus(db) {
-	const [{ get_health_contracts: contracts }] = await db.syndication.get_health_contracts([]);
-	const [{ get_health_downloads: downloads }] = await db.syndication.get_health_downloads([]);
-	const [{ get_health_saved_items: saved_items }] = await db.syndication.get_health_saved_items([]);
+	const [
+		{ get_health_contracts: contracts },
+	] = await db.syndication.get_health_contracts([]);
+	const [
+		{ get_health_downloads: downloads },
+	] = await db.syndication.get_health_downloads([]);
+	const [
+		{ get_health_saved_items: saved_items },
+	] = await db.syndication.get_health_saved_items([]);
 
 	return Object.assign({}, contracts, downloads, saved_items);
 }
 
 function check(item) {
-	return Object.values(item).every(value => !(value > 0))
+	return Object.values(item).every(value => !(value > 0));
 }

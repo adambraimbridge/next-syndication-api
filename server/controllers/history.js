@@ -5,10 +5,12 @@ const path = require('path');
 const { default: log } = require('@financial-times/n-logger');
 
 const getContent = require('../lib/get-content');
-const getHistoryByContractID  = require('../lib/get-history-by-contract-id');
+const getHistoryByContractID = require('../lib/get-history-by-contract-id');
 const syndicate = require('../lib/syndicate-content');
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
 	const START = Date.now();
@@ -17,7 +19,7 @@ module.exports = exports = async (req, res, next) => {
 		const CONTRACT = res.locals.contract;
 
 		const options = {
-			contract_id: CONTRACT.contract_id
+			contract_id: CONTRACT.contract_id,
 		};
 
 		if (req.query.show === 'mine') {
@@ -46,16 +48,24 @@ module.exports = exports = async (req, res, next) => {
 
 		let history = await getHistoryByContractID(options);
 
-		const contentItemsMap = await getContent(history.items.map(({ id }) => id), true);
+		const contentItemsMap = await getContent(
+			history.items.map(({ id }) => id),
+			true
+		);
 
-		history.items = history.items.map(item => syndicate({
-			contract: CONTRACT,
-			includeBody: false,
-			item,
-			src: contentItemsMap[item.id] || contentItemsMap[item.content_id]
-		}));
+		history.items = history.items.map(item =>
+			syndicate({
+				contract: CONTRACT,
+				includeBody: false,
+				item,
+				src: contentItemsMap[item.id] || contentItemsMap[item.content_id],
+			})
+		);
 
-		log.debug(`${MODULE_ID} => Retrieved ${history.items.length} items in ${Date.now() - START}ms`);
+		log.debug(
+			`${MODULE_ID} => Retrieved ${history.items.length} items in ${Date.now() -
+				START}ms`
+		);
 
 		if (Array.isArray(history.items)) {
 			res.status(200);
@@ -63,19 +73,16 @@ module.exports = exports = async (req, res, next) => {
 			log.info(`${MODULE_ID} SUCCESS => `, history);
 
 			res.json(history);
-		}
-		else {
+		} else {
 			res.sendStatus(400);
 		}
 
 		next();
-	}
-	catch(error) {
+	} catch (error) {
 		log.error(`${MODULE_ID}`, {
-			error: error.stack
+			error: error.stack,
 		});
 
 		res.sendStatus(400);
 	}
-
 };

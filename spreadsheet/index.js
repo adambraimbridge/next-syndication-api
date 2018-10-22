@@ -16,7 +16,7 @@ const SPREADSHEET_FUNCTIONS = [
 	'makeFeedRequest',
 	'removeWorksheet',
 	'setAuth',
-	'useServiceAccountAuth'
+	'useServiceAccountAuth',
 ];
 
 const WORKSHEET_FUNCTIONS = [
@@ -28,15 +28,19 @@ const WORKSHEET_FUNCTIONS = [
 	'getRows',
 	'resize',
 	'setHeaderRow',
-	'setTitle'
+	'setTitle',
 ];
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
 module.exports = exports = async function SpreadSheet({ id, key, mappings }) {
 	const ss = new GoogleSpreadsheet(id);
 
-	SPREADSHEET_FUNCTIONS.forEach(fn => ss[`${fn}Async`] = util.promisify(ss[fn]));
+	SPREADSHEET_FUNCTIONS.forEach(
+		fn => (ss[`${fn}Async`] = util.promisify(ss[fn]))
+	);
 
 	if (typeof key === 'string') {
 		key = require(path.resolve(key));
@@ -50,35 +54,42 @@ module.exports = exports = async function SpreadSheet({ id, key, mappings }) {
 
 	log.info(`${MODULE_ID} => SpreadSheet#${id} Retrieved Info`);
 
-	const worksheets = info.worksheetsMap = ss.worksheetsMap = {};
+	const worksheets = (info.worksheetsMap = ss.worksheetsMap = {});
 
-	await Promise.all(info.worksheets.map(async item => {
-		worksheets[item.title] = worksheets[item.id] = item;
+	await Promise.all(
+		info.worksheets.map(async item => {
+			worksheets[item.title] = worksheets[item.id] = item;
 
-		WORKSHEET_FUNCTIONS.map(async fn =>
-			item[`${fn}Async`] = util.promisify(item[fn]));
+			WORKSHEET_FUNCTIONS.map(
+				async fn => (item[`${fn}Async`] = util.promisify(item[fn]))
+			);
 
-		item.rows = await item.getRowsAsync();
+			item.rows = await item.getRowsAsync();
 
-		if (Object.prototype.toString.call(mappings) === '[object Object]' && Object.prototype.toString.call(mappings[item.title]) === '[object Object]') {
-			const MAP = mappings[item.title];
+			if (
+				Object.prototype.toString.call(mappings) === '[object Object]' &&
+				Object.prototype.toString.call(mappings[item.title]) ===
+					'[object Object]'
+			) {
+				const MAP = mappings[item.title];
 
-			item.rows.forEach((row, i) => {
-				row.mapped = {
-					__index__: i,
-					__last_modified__: new Date(row['app:edited'])
-				};
+				item.rows.forEach((row, i) => {
+					row.mapped = {
+						__index__: i,
+						__last_modified__: new Date(row['app:edited']),
+					};
 
-				for (let [key, val] of Object.entries(MAP)) {
-					if (key in row) {
-						row.mapped[val] = row[key];
+					for (let [key, val] of Object.entries(MAP)) {
+						if (key in row) {
+							row.mapped[val] = row[key];
+						}
 					}
-				}
-			});
-		}
+				});
+			}
 
-		return item;
-	}));
+			return item;
+		})
+	);
 
 	log.info(`${MODULE_ID} => SpreadSheet#${id} Mapped Worksheets`);
 

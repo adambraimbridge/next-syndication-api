@@ -8,15 +8,17 @@ const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 
 const {
-	TEST: { FIXTURES_DIRECTORY }
+	TEST: { FIXTURES_DIRECTORY },
 } = require('config');
 
 const { expect } = chai;
 chai.use(sinonChai);
 
-const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(`${process.cwd()}/test`, module.id) ||
+	require(path.resolve('./package.json')).name;
 
-describe(MODULE_ID, function () {
+describe(MODULE_ID, function() {
 	let db;
 	let sandbox;
 	let mocks;
@@ -25,38 +27,39 @@ describe(MODULE_ID, function () {
 
 	const { initDB } = require(path.resolve(`${FIXTURES_DIRECTORY}/massive`))();
 
-	beforeEach(function () {
+	beforeEach(function() {
 		db = initDB();
 
 		underTest = proxyquire('../../../server/middleware/db', {
-			'../../db/pg': sinon.stub().resolves(db)
+			'../../db/pg': sinon.stub().resolves(db),
 		});
 
 		sandbox = sinon.sandbox.create();
 		mocks = {
 			req: {},
 			res: {
-				locals: {}
-			}
+				locals: {},
+			},
 		};
 		stubs = {
-			next: sandbox.stub()
+			next: sandbox.stub(),
 		};
 	});
 
-	afterEach(function () {
+	afterEach(function() {
 		sandbox.restore();
 	});
 
-	it('assigns a PostgreSQL DB instance to res.locals.$DB', async function () {
+	it('assigns a PostgreSQL DB instance to res.locals.$DB', async function() {
 		await underTest(mocks.req, mocks.res, stubs.next);
 
-		expect(mocks.res.locals).to.have.property('$DB')
+		expect(mocks.res.locals)
+			.to.have.property('$DB')
 			.and.to.be.an('object')
 			.and.to.equal(db);
 	});
 
-	it('calls next', async function () {
+	it('calls next', async function() {
 		await underTest(mocks.req, mocks.res, stubs.next);
 
 		expect(stubs.next).to.have.been.called;
@@ -71,7 +74,7 @@ describe(MODULE_ID, function () {
 			expect(mocks.res.locals).to.not.have.property('$DB');
 		});
 
-		it('calls next', async function () {
+		it('calls next', async function() {
 			mocks.res.locals.MAINTENANCE_MODE = true;
 
 			await underTest(mocks.req, mocks.res, stubs.next);

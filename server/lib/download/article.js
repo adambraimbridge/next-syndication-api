@@ -13,7 +13,9 @@ const articleToXML = require('../../views/article-to-xml');
 const convertArticle = require('../convert-article');
 const formatArticleXML = require('../format-article-xml');
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
 module.exports = exports = class ArticleDownload extends Archiver {
 	constructor({ content, contract, event, licence, req, user }) {
@@ -39,9 +41,11 @@ module.exports = exports = class ArticleDownload extends Archiver {
 
 	get bundled() {
 		if (this.downloadAsArchive === true) {
-			return this.articleAppended === true
-				&& this.captionsAppended === true
-				&& this.mediaAppended === true;
+			return (
+				this.articleAppended === true &&
+				this.captionsAppended === true &&
+				this.mediaAppended === true
+			);
 		}
 
 		return true;
@@ -52,19 +56,29 @@ module.exports = exports = class ArticleDownload extends Archiver {
 	}
 
 	get shouldFinalize() {
-		return this.bundled
-			&& this._state.finalize !== true
-			&& this._state.finalizing !== true;
+		return (
+			this.bundled &&
+			this._state.finalize !== true &&
+			this._state.finalizing !== true
+		);
 	}
 
 	cancel() {
-		if (typeof this.finalState !== 'undefined' || this.success === true || this.cancelled === true || this.endCalled === true) {
+		if (
+			typeof this.finalState !== 'undefined' ||
+			this.success === true ||
+			this.cancelled === true ||
+			this.endCalled === true
+		) {
 			return;
 		}
 
 		this.cancelled = true;
 
-		log.warn(`${MODULE_ID} => DownloadRequestCancelled => `, this.event.toJSON());
+		log.warn(
+			`${MODULE_ID} => DownloadRequestCancelled => `,
+			this.event.toJSON()
+		);
 
 		if (this.endCalled !== true) {
 			this.endCalled = true;
@@ -79,7 +93,7 @@ module.exports = exports = class ArticleDownload extends Archiver {
 		this.finalState = state;
 		this.httpStatus = status;
 
-		const event = this.endEvent = this.event.clone({ state });
+		const event = (this.endEvent = this.event.clone({ state }));
 
 		process.nextTick(async () => await event.publish());
 
@@ -97,27 +111,35 @@ module.exports = exports = class ArticleDownload extends Archiver {
 			if (format === 'xml') {
 				const xmlDoc = formatArticleXML(`<body>${content.bodyHTML}</body>`);
 
-				content.bodyXML__CLEAN = xmlDoc.getElementsByTagName('body')[0].toString();
-				content.bodyXML__CLEAN = content.bodyXML__CLEAN.substring(content.bodyXML__CLEAN.indexOf('>') + 1, content.bodyXML__CLEAN.lastIndexOf('<'));
+				content.bodyXML__CLEAN = xmlDoc
+					.getElementsByTagName('body')[0]
+					.toString();
+				content.bodyXML__CLEAN = content.bodyXML__CLEAN.substring(
+					content.bodyXML__CLEAN.indexOf('>') + 1,
+					content.bodyXML__CLEAN.lastIndexOf('<')
+				);
 
 				this.file = articleToXML(content);
-			}
-			else {
+			} else {
 				this.file = await convertArticle({
-					source: content[format === 'plain' ? 'bodyHTML__PLAIN' : 'bodyHTML__CLEAN'],
+					source:
+						content[format === 'plain' ? 'bodyHTML__PLAIN' : 'bodyHTML__CLEAN'],
 					sourceFormat: 'html',
-					targetFormat: format
+					targetFormat: format,
 				});
 			}
 
-			log.info(`${MODULE_ID} ArticleConversionSuccess => ${content.id} in ${Date.now() - this.START}ms`);
+			log.info(
+				`${MODULE_ID} ArticleConversionSuccess => ${
+					content.id
+				} in ${Date.now() - this.START}ms`
+			);
 
 			return this.file;
-		}
-		catch (e) {
+		} catch (e) {
 			log.error(`${MODULE_ID} ArticleConversionError => ${content.id}`, {
 				content,
-				error: e.stack
+				error: e.stack,
 			});
 		}
 	}

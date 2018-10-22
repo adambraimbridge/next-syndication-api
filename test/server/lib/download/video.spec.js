@@ -16,10 +16,7 @@ const { mkdir, rm } = require('shelljs');
 
 const {
 	DOWNLOAD_ARCHIVE_EXTENSION,
-	TEST: {
-		FIXTURES_DIRECTORY,
-		TEMP_FILES_DIRECTORY
-	}
+	TEST: { FIXTURES_DIRECTORY, TEMP_FILES_DIRECTORY },
 } = require('config');
 
 const MessageQueueEvent = require('../../../../queue/message-queue-event');
@@ -27,15 +24,21 @@ const enrich = require('../../../../server/lib/enrich');
 const sleep = require('../../../../server/helpers/sleep');
 const underTest = require('../../../../server/lib/download/video');
 
-const httpMocks = require(path.resolve(`${FIXTURES_DIRECTORY}/node-mocks-http`));
+const httpMocks = require(path.resolve(
+	`${FIXTURES_DIRECTORY}/node-mocks-http`
+));
 
-const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(`${process.cwd()}/test`, module.id) ||
+	require(path.resolve('./package.json')).name;
 
 mkdir('-p', path.resolve(TEMP_FILES_DIRECTORY));
 
-describe(MODULE_ID, function () {
+describe(MODULE_ID, function() {
 	const DEFAULT_FORMAT = 'docx';
-	const CONTRACT = require(path.resolve(`${FIXTURES_DIRECTORY}/contractResponse.json`));
+	const CONTRACT = require(path.resolve(
+		`${FIXTURES_DIRECTORY}/contractResponse.json`
+	));
 	const LICENCE = { id: 'xyz' };
 	const USER = require(path.resolve(`${FIXTURES_DIRECTORY}/userResponse.json`));
 
@@ -51,9 +54,14 @@ describe(MODULE_ID, function () {
 
 	const CONTENT_ID = 'b16fce7e-3c92-48a3-ace0-d1af3fce71af';
 
-	const content = enrich(require(path.resolve(`${FIXTURES_DIRECTORY}/content/${CONTENT_ID}.json`)), DEFAULT_FORMAT);
+	const content = enrich(
+		require(path.resolve(`${FIXTURES_DIRECTORY}/content/${CONTENT_ID}.json`)),
+		DEFAULT_FORMAT
+	);
 
-	const className = `${content.type.charAt(0).toUpperCase()}${content.type.substring(1)}Download`;
+	const className = `${content.type
+		.charAt(0)
+		.toUpperCase()}${content.type.substring(1)}Download`;
 
 	let event;
 	let extractDir;
@@ -64,59 +72,63 @@ describe(MODULE_ID, function () {
 	let res;
 
 	describe(`${className}`, function() {
-		beforeEach(function () {
+		beforeEach(function() {
 			now = Date.now();
 
 			extractDir = path.resolve(`${TEMP_FILES_DIRECTORY}/temp_${now}`);
 
-			filename = path.resolve(`${TEMP_FILES_DIRECTORY}/temp__${now}.${DOWNLOAD_ARCHIVE_EXTENSION}`);
+			filename = path.resolve(
+				`${TEMP_FILES_DIRECTORY}/temp__${now}.${DOWNLOAD_ARCHIVE_EXTENSION}`
+			);
 
 			mkdir('-p', extractDir);
 
 			req = httpMocks.createRequest({
-				'eventEmitter': EventEmitter,
-				'connection': new EventEmitter(),
-				'headers': {
+				eventEmitter: EventEmitter,
+				connection: new EventEmitter(),
+				headers: {
 					'ft-real-url': `https://www.ft.com/syndication/download/${CONTENT_ID}?format=docx`,
 					'ft-real-path': `/syndication/download/${CONTENT_ID}?format=docx`,
 					'ft-vanity-url': `/syndication/download/${CONTENT_ID}?format=docx`,
 					'ft-flags-next-flags': '',
 					'ft-flags': '-',
-					'cookie': 'FTSession;spoor-id',
+					cookie: 'FTSession;spoor-id',
 					'accept-language': 'en-GB,en-US;q=0.8,en;q=0.6',
 					'accept-encoding': 'gzip, deflate, sdch, br',
-					'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-					'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
+					accept:
+						'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+					'user-agent':
+						'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
 				},
-				'cookies': {
-					'FTSession': 'FTSession',
-					'spoor-id': 'spoor-id'
+				cookies: {
+					FTSession: 'FTSession',
+					'spoor-id': 'spoor-id',
 				},
-				'hostname': 'localhost',
-				'method': 'GET',
-				'originalUrl': `/syndication/download/${CONTENT_ID}?format=docx`,
-				'params': {},
-				'path': '/syndication/download',
-				'protocol': 'http',
-				'query': {
-					'format': 'docx'
+				hostname: 'localhost',
+				method: 'GET',
+				originalUrl: `/syndication/download/${CONTENT_ID}?format=docx`,
+				params: {},
+				path: '/syndication/download',
+				protocol: 'http',
+				query: {
+					format: 'docx',
 				},
-				'url': `/syndication/download/${CONTENT_ID}?format=docx`
+				url: `/syndication/download/${CONTENT_ID}?format=docx`,
 			});
 
 			res = httpMocks.createResponse({
 				req,
-				writableStream: WritableStream
+				writableStream: WritableStream,
 			});
 
 			res.locals = {
 				contract: CONTRACT,
 				licence: LICENCE,
 				syndication_contract: {
-					id: 'lmno'
+					id: 'lmno',
 				},
 				user: USER,
-				userUuid: 'abc'
+				userUuid: 'abc',
 			};
 
 			event = new MessageQueueEvent({
@@ -139,32 +151,44 @@ describe(MODULE_ID, function () {
 						session: req.cookies.FTSession,
 						spoor_id: req.cookies['spoor-id'],
 						url: req.originalUrl,
-						user_agent: req.get('user-agent')
+						user_agent: req.get('user-agent'),
 					},
 					user: {
 						email: USER.email,
 						first_name: USER.first_name,
 						id: USER.user_id,
-						surname: USER.surname
-					}
-				}
+						surname: USER.surname,
+					},
+				},
 			});
 
 			let uri = url.parse(content.download.url);
 
 			nock(`${uri.protocol}//${uri.host}`)
 				.head(uri.pathname)
-				.reply(200, {}, {
-					'content-length': fs.readFileSync(path.resolve(`${FIXTURES_DIRECTORY}/video-small.mp4`)).length
-				});
+				.reply(
+					200,
+					{},
+					{
+						'content-length': fs.readFileSync(
+							path.resolve(`${FIXTURES_DIRECTORY}/video-small.mp4`)
+						).length,
+					}
+				);
 
 			nock(`${uri.protocol}//${uri.host}`)
 				.get(uri.pathname)
-				.reply(200, () => fs.createReadStream(path.resolve(`${FIXTURES_DIRECTORY}/video-small.mp4`)), {});
-
+				.reply(
+					200,
+					() =>
+						fs.createReadStream(
+							path.resolve(`${FIXTURES_DIRECTORY}/video-small.mp4`)
+						),
+					{}
+				);
 		});
 
-		after(function () {
+		after(function() {
 			rm('-f', filename);
 			rm('-rf', extractDir);
 		});
@@ -176,7 +200,7 @@ describe(MODULE_ID, function () {
 				licence: LICENCE,
 				event,
 				req,
-				user: USER
+				user: USER,
 			});
 
 			await sleep(100);
@@ -191,7 +215,7 @@ describe(MODULE_ID, function () {
 				licence: LICENCE,
 				event,
 				req,
-				user: USER
+				user: USER,
 			});
 
 			expect(dl.downloadAsArchive).to.be.true;
@@ -204,7 +228,7 @@ describe(MODULE_ID, function () {
 				licence: LICENCE,
 				event,
 				req,
-				user: USER
+				user: USER,
 			});
 
 			expect(dl.cloneRequestHeaders()).to.eql({
@@ -212,10 +236,11 @@ describe(MODULE_ID, function () {
 				'ft-real-path': `/syndication/download/${CONTENT_ID}?format=docx`,
 				'ft-vanity-url': `/syndication/download/${CONTENT_ID}?format=docx`,
 				'ft-flags-next-flags': '',
-				'cookie': 'FTSession;spoor-id',
+				cookie: 'FTSession;spoor-id',
 				'accept-language': 'en-GB,en-US;q=0.8,en;q=0.6',
 				'accept-encoding': 'gzip, deflate, sdch, br',
-				'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
+				'user-agent':
+					'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
 			});
 		});
 
@@ -229,7 +254,7 @@ describe(MODULE_ID, function () {
 					licence: LICENCE,
 					event,
 					req,
-					user: USER
+					user: USER,
 				});
 
 				await dl.appendArticle();
@@ -242,16 +267,20 @@ describe(MODULE_ID, function () {
 			});
 
 			it('should have one entry', async function() {
-				expect(dl._entries.length).to.equal(1)
+				expect(dl._entries.length).to.equal(1);
 			});
 
-			it(`article entry's name should be: ${content.fileName}.${content.transcriptExtension}`, async function() {
+			it(`article entry's name should be: ${
+				content.fileName
+			}.${content.transcriptExtension}`, async function() {
 				const [article] = dl._entries;
 
-				expect(article.name).to.equals(`${content.fileName}.${content.transcriptExtension}`);
+				expect(article.name).to.equals(
+					`${content.fileName}.${content.transcriptExtension}`
+				);
 			});
 
-			it('article entry\'s source should be a buffer', async function() {
+			it("article entry's source should be a buffer", async function() {
 				const [article] = dl._entries;
 
 				expect(article.sourceType).to.equal('buffer');
@@ -268,7 +297,7 @@ describe(MODULE_ID, function () {
 					licence: LICENCE,
 					event,
 					req,
-					user: USER
+					user: USER,
 				});
 
 				await dl.appendCaptions();
@@ -281,16 +310,20 @@ describe(MODULE_ID, function () {
 			});
 
 			it('should have one entry', async function() {
-				expect(dl._entries.length).to.equal(1)
+				expect(dl._entries.length).to.equal(1);
 			});
 
-			it(`caption entry's name should be: ${path.basename(url.parse(content.captions[0].url).pathname)}`, async function() {
+			it(`caption entry's name should be: ${path.basename(
+				url.parse(content.captions[0].url).pathname
+			)}`, async function() {
 				const [captions] = dl._entries;
 
-				expect(captions.name).to.equals(`${path.basename(url.parse(content.captions[0].url).pathname)}`);
+				expect(captions.name).to.equals(
+					`${path.basename(url.parse(content.captions[0].url).pathname)}`
+				);
 			});
 
-			it('caption entry\'s source should be a buffer', async function() {
+			it("caption entry's source should be a buffer", async function() {
 				const [captions] = dl._entries;
 
 				expect(captions.sourceType).to.equal('buffer');
@@ -307,7 +340,7 @@ describe(MODULE_ID, function () {
 					licence: LICENCE,
 					event,
 					req,
-					user: USER
+					user: USER,
 				});
 
 				await dl.appendMedia();
@@ -320,16 +353,20 @@ describe(MODULE_ID, function () {
 			});
 
 			it('should have one entry', async function() {
-				expect(dl._entries.length).to.equal(1)
+				expect(dl._entries.length).to.equal(1);
 			});
 
-			it(`media entry's name should be: ${content.fileName}.${content.download.extension}`, async function() {
+			it(`media entry's name should be: ${
+				content.fileName
+			}.${content.download.extension}`, async function() {
 				const [media] = dl._entries;
 
-				expect(media.name).to.equals(`${content.fileName}.${content.download.extension}`);
+				expect(media.name).to.equals(
+					`${content.fileName}.${content.download.extension}`
+				);
 			});
 
-			it('media entry\'s source should be a stream', async function() {
+			it("media entry's source should be a stream", async function() {
 				const [media] = dl._entries;
 
 				expect(media.sourceType).to.equal('stream');
@@ -346,7 +383,7 @@ describe(MODULE_ID, function () {
 					licence: LICENCE,
 					event,
 					req,
-					user: USER
+					user: USER,
 				});
 
 				await dl.appendAll();
@@ -371,41 +408,69 @@ describe(MODULE_ID, function () {
 			});
 
 			it('should have three entries', async function() {
-				expect(dl._entries.length).to.equal(3)
+				expect(dl._entries.length).to.equal(3);
 			});
 
-			it(`article entry's name should be: ${content.fileName}.${content.transcriptExtension}`, async function() {
-				const article = dl._entries.find(item => item.name.endsWith(content.transcriptExtension));
+			it(`article entry's name should be: ${
+				content.fileName
+			}.${content.transcriptExtension}`, async function() {
+				const article = dl._entries.find(item =>
+					item.name.endsWith(content.transcriptExtension)
+				);
 
-				expect(article.name).to.equals(`${content.fileName}.${content.transcriptExtension}`);
+				expect(article.name).to.equals(
+					`${content.fileName}.${content.transcriptExtension}`
+				);
 			});
 
-			it('article entry\'s source should be a buffer', async function() {
-				const article = dl._entries.find(item => item.name.endsWith(content.transcriptExtension));
+			it("article entry's source should be a buffer", async function() {
+				const article = dl._entries.find(item =>
+					item.name.endsWith(content.transcriptExtension)
+				);
 
 				expect(article.sourceType).to.equal('buffer');
 			});
 
-			it(`caption entry's name should be: ${path.basename(url.parse(content.captions[0].url).pathname)}`, async function() {
-				const captions = dl._entries.find(item => item.name === path.basename(url.parse(content.captions[0].url).pathname));
+			it(`caption entry's name should be: ${path.basename(
+				url.parse(content.captions[0].url).pathname
+			)}`, async function() {
+				const captions = dl._entries.find(
+					item =>
+						item.name ===
+						path.basename(url.parse(content.captions[0].url).pathname)
+				);
 
-				expect(captions.name).to.equals(`${path.basename(url.parse(content.captions[0].url).pathname)}`);
+				expect(captions.name).to.equals(
+					`${path.basename(url.parse(content.captions[0].url).pathname)}`
+				);
 			});
 
-			it('caption entry\'s source should be a buffer', async function() {
-				const captions = dl._entries.find(item => item.name === path.basename(url.parse(content.captions[0].url).pathname));
+			it("caption entry's source should be a buffer", async function() {
+				const captions = dl._entries.find(
+					item =>
+						item.name ===
+						path.basename(url.parse(content.captions[0].url).pathname)
+				);
 
 				expect(captions.sourceType).to.equal('buffer');
 			});
 
-			it(`media entry's name should be: ${content.fileName}.${content.download.extension}`, async function() {
-				const media = dl._entries.find(item => item.name.endsWith(content.download.extension));
+			it(`media entry's name should be: ${
+				content.fileName
+			}.${content.download.extension}`, async function() {
+				const media = dl._entries.find(item =>
+					item.name.endsWith(content.download.extension)
+				);
 
-				expect(media.name).to.equals(`${content.fileName}.${content.download.extension}`);
+				expect(media.name).to.equals(
+					`${content.fileName}.${content.download.extension}`
+				);
 			});
 
-			it('media entry\'s source should be a stream', async function() {
-				const media = dl._entries.find(item => item.name.endsWith(content.download.extension));
+			it("media entry's source should be a stream", async function() {
+				const media = dl._entries.find(item =>
+					item.name.endsWith(content.download.extension)
+				);
 
 				expect(media.sourceType).to.equal('stream');
 			});
@@ -424,15 +489,23 @@ describe(MODULE_ID, function () {
 					licence: LICENCE,
 					event,
 					req,
-					user: USER
+					user: USER,
 				});
 
 				dl.on('end', async () => {
 					extractedFiles = await decompress(filename, extractDir);
 
-					article = extractedFiles.find(item => item.path.endsWith(content.transcriptExtension));
-					captions = extractedFiles.find(item => item.path === path.basename(url.parse(content.captions[0].url).pathname));
-					media = extractedFiles.find(item => item.path.endsWith(content.download.extension));
+					article = extractedFiles.find(item =>
+						item.path.endsWith(content.transcriptExtension)
+					);
+					captions = extractedFiles.find(
+						item =>
+							item.path ===
+							path.basename(url.parse(content.captions[0].url).pathname)
+					);
+					media = extractedFiles.find(item =>
+						item.path.endsWith(content.download.extension)
+					);
 
 					done();
 				});
@@ -443,15 +516,31 @@ describe(MODULE_ID, function () {
 			});
 
 			it('article', function() {
-				expect(article.data.equals(fs.readFileSync(path.resolve(`${FIXTURES_DIRECTORY}/article.${content.transcriptExtension}`)))).to.be.true;
+				expect(
+					article.data.equals(
+						fs.readFileSync(
+							path.resolve(
+								`${FIXTURES_DIRECTORY}/article.${content.transcriptExtension}`
+							)
+						)
+					)
+				).to.be.true;
 			});
 
 			it('captions', function() {
-				expect(captions.data.toString('utf8')).to.equal(dl.captionFiles[0].file);
+				expect(captions.data.toString('utf8')).to.equal(
+					dl.captionFiles[0].file
+				);
 			});
 
 			it('media', function() {
-				expect(media.data.equals(fs.readFileSync(path.resolve(`${FIXTURES_DIRECTORY}/video-small.mp4`)))).to.be.true;
+				expect(
+					media.data.equals(
+						fs.readFileSync(
+							path.resolve(`${FIXTURES_DIRECTORY}/video-small.mp4`)
+						)
+					)
+				).to.be.true;
 			});
 		});
 	});

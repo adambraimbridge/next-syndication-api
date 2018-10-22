@@ -10,15 +10,17 @@ const underTest = require('../../../../server/lib/enrich/index');
 
 const {
 	DOWNLOAD_FILENAME_PREFIX,
-	TEST: { FIXTURES_DIRECTORY }
+	TEST: { FIXTURES_DIRECTORY },
 } = require('config');
 
 const RE_BAD_CHARS = /[^A-Za-z0-9_]/gm;
 const RE_SPACE = /\s/gm;
 
-const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(`${process.cwd()}/test`, module.id) ||
+	require(path.resolve('./package.json')).name;
 
-describe(MODULE_ID, function () {
+describe(MODULE_ID, function() {
 	const DEFAULT_FORMAT = 'docx';
 
 	[
@@ -27,9 +29,11 @@ describe(MODULE_ID, function () {
 		'b16fce7e-3c92-48a3-ace0-d1af3fce71af',
 		'a1af0574-eafb-41bd-aa4f-59aa2cd084c2',
 		'98b46b5f-17d3-40c2-8eaa-082df70c5f01',
-		'93991a3c-0436-41bb-863e-61242e09859c'
+		'93991a3c-0436-41bb-863e-61242e09859c',
 	].forEach(content_id => {
-		const item = require(path.resolve(`${FIXTURES_DIRECTORY}/content/${content_id}.json`));
+		const item = require(path.resolve(
+			`${FIXTURES_DIRECTORY}/content/${content_id}.json`
+		));
 
 		underTest(item, DEFAULT_FORMAT);
 
@@ -43,7 +47,12 @@ describe(MODULE_ID, function () {
 			});
 
 			it('fileName', function() {
-				expect(item.fileName).to.equal(`${DOWNLOAD_FILENAME_PREFIX}${item.title.replace(RE_SPACE, '_').replace(RE_BAD_CHARS, '').substring(0, 12)}`);
+				expect(item.fileName).to.equal(
+					`${DOWNLOAD_FILENAME_PREFIX}${item.title
+						.replace(RE_SPACE, '_')
+						.replace(RE_BAD_CHARS, '')
+						.substring(0, 12)}`
+				);
 			});
 
 			if (item.bodyHTML) {
@@ -76,7 +85,9 @@ describe(MODULE_ID, function () {
 				});
 
 				it('download.extension', function() {
-					expect(item.download.extension).to.equal(mime.extension(item.download.mediaType));
+					expect(item.download.extension).to.equal(
+						mime.extension(item.download.mediaType)
+					);
 				});
 			}
 		});

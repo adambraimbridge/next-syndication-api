@@ -10,53 +10,59 @@ const flagIsOn = require('../helpers/flag-is-on');
 
 const PACKAGE = require(path.resolve('./package.json'));
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
 	try {
 		res.status(200);
 
-		const { locals: {
-			allowed,
-			contract,
-			flags,
-			isNewSyndicationUser,
-			licence,
-			syndication_contract,
-			user
-		} } = res;
-
-		const userStatus = Object.assign({
-			app: {
-				env: process.env.NODE_ENV,
-				name: PACKAGE.name,
-				version: PACKAGE.version
+		const {
+			locals: {
+				allowed,
+				contract,
+				flags,
+				isNewSyndicationUser,
+				licence,
+				syndication_contract,
+				user,
 			},
+		} = res;
 
-			features: FEATURE_FLAGS.reduce((acc, flag) => {
-				if (flagIsOn(flags[flag])) {
-					acc[flag] = true;
-				}
+		const userStatus = Object.assign(
+			{
+				app: {
+					env: process.env.NODE_ENV,
+					name: PACKAGE.name,
+					version: PACKAGE.version,
+				},
 
-				return acc;
-			}, {}),
+				features: FEATURE_FLAGS.reduce((acc, flag) => {
+					if (flagIsOn(flags[flag])) {
+						acc[flag] = true;
+					}
 
-			allowed,
-			contract_id:  syndication_contract.id,
-			contributor_content: contract.contributor_content,
-			licence_id: licence.id,
-			migrated: !!isNewSyndicationUser
-		}, user);
+					return acc;
+				}, {}),
+
+				allowed,
+				contract_id: syndication_contract.id,
+				contributor_content: contract.contributor_content,
+				licence_id: licence.id,
+				migrated: !!isNewSyndicationUser,
+			},
+			user
+		);
 
 		log.info(`${MODULE_ID} SUCCESS => `, userStatus);
 
 		res.json(userStatus);
 
 		next();
-	}
-	catch(error) {
+	} catch (error) {
 		log.error(`${MODULE_ID}`, {
-			error: error.stack
+			error: error.stack,
 		});
 
 		res.sendStatus(500);

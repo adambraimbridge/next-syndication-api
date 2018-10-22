@@ -13,10 +13,11 @@ const ArticleDownload = require('./article');
 
 const execAsync = util.promisify(exec);
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
 module.exports = exports = class VideoDownload extends ArticleDownload {
-
 	get [Symbol.toStringTag]() {
 		return 'VideoDownload';
 	}
@@ -29,7 +30,7 @@ module.exports = exports = class VideoDownload extends ArticleDownload {
 		await Promise.all([
 			this.appendArticle(),
 			this.appendCaptions(),
-			this.appendMedia()
+			this.appendMedia(),
 		]);
 	}
 
@@ -43,9 +44,14 @@ module.exports = exports = class VideoDownload extends ArticleDownload {
 		if (content.hasTranscript === true) {
 			const file = await this.convertArticle(content.transcriptExtension);
 
-			this.append(file, { name: `${content.fileName}.${content.transcriptExtension}` });
+			this.append(file, {
+				name: `${content.fileName}.${content.transcriptExtension}`,
+			});
 
-			log.info(`${MODULE_ID} TranscriptAppendSuccess => ${content.id} in ${Date.now() - this.START}ms`);
+			log.info(
+				`${MODULE_ID} TranscriptAppendSuccess => ${content.id} in ${Date.now() -
+					this.START}ms`
+			);
 		}
 
 		this.articleAppended = true;
@@ -65,23 +71,27 @@ module.exports = exports = class VideoDownload extends ArticleDownload {
 
 		if (Array.isArray(captions) && captions.length) {
 			try {
-				const captionFiles = await Promise.all(captions.map(async ({ url: uri }) => {
-					const { stdout: file } = await execAsync(`curl ${uri}`);
-					const name = path.basename(url.parse(uri).pathname);
+				const captionFiles = await Promise.all(
+					captions.map(async ({ url: uri }) => {
+						const { stdout: file } = await execAsync(`curl ${uri}`);
+						const name = path.basename(url.parse(uri).pathname);
 
-					return { file, name };
-				}));
+						return { file, name };
+					})
+				);
 
 				this.captionFiles = captionFiles;
 
 				captionFiles.forEach(({ file, name }) => this.append(file, { name }));
 
-				log.info(`${MODULE_ID} CaptionAppendSuccess => ${content.id} in ${Date.now() - this.START}ms`);
-			}
-			catch (e) {
+				log.info(
+					`${MODULE_ID} CaptionAppendSuccess => ${content.id} in ${Date.now() -
+						this.START}ms`
+				);
+			} catch (e) {
 				log.error(`${MODULE_ID} CaptionsAppendError => ${content.id}`, {
 					error: e.stack || e,
-					content
+					content,
 				});
 			}
 		}
@@ -105,11 +115,11 @@ module.exports = exports = class VideoDownload extends ArticleDownload {
 
 		const headRes = await fetch(download.url, {
 			method: 'HEAD',
-			headers: headers
+			headers: headers,
 		});
 
 		if (!headRes.ok) {
-			this.emit('error', (await headRes.text()), headRes.status);
+			this.emit('error', await headRes.text(), headRes.status);
 
 			return;
 		}
@@ -119,7 +129,9 @@ module.exports = exports = class VideoDownload extends ArticleDownload {
 
 		this.createMediaStream();
 
-		this.append(this.ptStream, { name: `${fileName}.${download.extension}` });
+		this.append(this.ptStream, {
+			name: `${fileName}.${download.extension}`,
+		});
 
 		fetch(download.url, { headers: headers }).then(mediaRes => {
 			mediaRes.body.pipe(this.ptStream);
@@ -129,13 +141,21 @@ module.exports = exports = class VideoDownload extends ArticleDownload {
 	}
 
 	cancel() {
-		if (typeof this.finalState !== 'undefined' || this.success === true || this.cancelled === true || this.endCalled === true) {
+		if (
+			typeof this.finalState !== 'undefined' ||
+			this.success === true ||
+			this.cancelled === true ||
+			this.endCalled === true
+		) {
 			return;
 		}
 
 		this.cancelled = true;
 
-		log.warn(`${MODULE_ID} => DownloadRequestCancelled => `, this.event.toJSON());
+		log.warn(
+			`${MODULE_ID} => DownloadRequestCancelled => `,
+			this.event.toJSON()
+		);
 
 		if (this.endCalled !== true) {
 			!this.mediaStream || this.mediaStream.end();
@@ -157,7 +177,9 @@ module.exports = exports = class VideoDownload extends ArticleDownload {
 
 		['accept', 'host'].forEach(name => delete headers[name]);
 
-		Object.keys(headers).forEach(name => headers[name] !== '-' || delete headers[name]);
+		Object.keys(headers).forEach(
+			name => headers[name] !== '-' || delete headers[name]
+		);
 
 		return headers;
 	}
@@ -165,15 +187,18 @@ module.exports = exports = class VideoDownload extends ArticleDownload {
 	createMediaStream() {
 		const { content } = this;
 
-		const stream = this.ptStream = new PassThrough();
+		const stream = (this.ptStream = new PassThrough());
 
 		stream.on('error', () => this.onEnd());
 		stream.on('close', () => this.onEnd());
 		stream.on('end', () => this.onEnd());
 
-		log.info(`${MODULE_ID} MediaAppendSuccess => ${content.id} in ${Date.now() - this.START}ms`);
+		log.info(
+			`${MODULE_ID} MediaAppendSuccess => ${content.id} in ${Date.now() -
+				this.START}ms`
+		);
 
-		stream.on('data', (chunk) => {
+		stream.on('data', chunk => {
 			if (this.cancelled === true) {
 				if (this.endCalled !== true) {
 					this.mediaStream.end();
@@ -203,7 +228,10 @@ module.exports = exports = class VideoDownload extends ArticleDownload {
 			let state = 'complete';
 			let status = 200;
 
-			if (this.downloadedMediaLength < this.MEDIA_LENGTH || this.cancelled === true) {
+			if (
+				this.downloadedMediaLength < this.MEDIA_LENGTH ||
+				this.cancelled === true
+			) {
 				state = 'interrupted';
 				status = 400;
 			}

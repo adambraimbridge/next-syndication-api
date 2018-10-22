@@ -8,22 +8,26 @@ const underTest = require('../../../../server/lib/enrich/article');
 
 const {
 	DOWNLOAD_FILENAME_PREFIX,
-	TEST: { FIXTURES_DIRECTORY }
+	TEST: { FIXTURES_DIRECTORY },
 } = require('config');
 
 const RE_BAD_CHARS = /[^A-Za-z0-9_]/gm;
 const RE_SPACE = /\s/gm;
 
-const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(`${process.cwd()}/test`, module.id) ||
+	require(path.resolve('./package.json')).name;
 
-describe(MODULE_ID, function () {
+describe(MODULE_ID, function() {
 	const DEFAULT_FORMAT = 'docx';
 
 	[
 		'42ad255a-99f9-11e7-b83c-9588e51488a0',
-		'ef4c49fe-980e-11e7-b83c-9588e51488a0'
+		'ef4c49fe-980e-11e7-b83c-9588e51488a0',
 	].forEach(content_id => {
-		const item = require(path.resolve(`${FIXTURES_DIRECTORY}/content/${content_id}.json`));
+		const item = require(path.resolve(
+			`${FIXTURES_DIRECTORY}/content/${content_id}.json`
+		));
 
 		underTest(item, DEFAULT_FORMAT);
 
@@ -41,7 +45,12 @@ describe(MODULE_ID, function () {
 			});
 
 			it('fileName', function() {
-				expect(item.fileName).to.equal(`${DOWNLOAD_FILENAME_PREFIX}${item.title.replace(RE_SPACE, '_').replace(RE_BAD_CHARS, '').substring(0, 12)}`);
+				expect(item.fileName).to.equal(
+					`${DOWNLOAD_FILENAME_PREFIX}${item.title
+						.replace(RE_SPACE, '_')
+						.replace(RE_BAD_CHARS, '')
+						.substring(0, 12)}`
+				);
 			});
 
 			it('document', function() {

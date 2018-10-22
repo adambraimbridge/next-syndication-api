@@ -9,7 +9,9 @@ const { db } = require('../db/connect');
 const Contracts = require('../db/tables/contracts');
 const History = require('../db/tables/history');
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
 (async () => {
 	const { TableNames } = await db.listTablesAsync();
@@ -30,8 +32,7 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 		let contractsTable = await db.createTableAsync(Contracts);
 
 		log.debug(`${MODULE_ID} CREATE_TABLE => `, contractsTable);
-	}
-	else {
+	} else {
 		log.debug(`${MODULE_ID} TABLE_EXISTS => `, Contracts);
 	}
 
@@ -39,8 +40,7 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 		let historyTable = await db.createTableAsync(History);
 
 		log.debug(`${MODULE_ID} CREATE_TABLE => `, historyTable);
-	}
-	else {
+	} else {
 		log.debug(`${MODULE_ID} TABLE_EXISTS => `, History);
 	}
 })();

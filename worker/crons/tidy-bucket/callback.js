@@ -11,16 +11,18 @@ const {
 	AWS_ACCESS_KEY,
 	AWS_SECRET_ACCESS_KEY,
 	DB,
-	REDSHIFT
+	REDSHIFT,
 } = require('config');
 
 const S3 = new AWS.S3({
 	accessKeyId: AWS_ACCESS_KEY,
 	region: 'eu-west-1',
-	secretAccessKey: AWS_SECRET_ACCESS_KEY
+	secretAccessKey: AWS_SECRET_ACCESS_KEY,
 });
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
 module.exports = exports = async () => {
 	try {
@@ -30,8 +32,7 @@ module.exports = exports = async () => {
 		await tidyRedshift();
 
 		log.info(`${MODULE_ID} | Finished tidy-bucket`);
-	}
-	catch (e) {
+	} catch (e) {
 		log.error(`${MODULE_ID} => `, e);
 	}
 };
@@ -45,16 +46,18 @@ async function tidyBackups() {
 	await _tidyBackups({
 		maxKeepHour,
 		maxKeepDay,
-		keys
+		keys,
 	});
 
 	if (keys.length) {
-		await Promise.all(keys.map(async item => {
-			return await S3.deleteObject({
-				Bucket: DB.BACKUP.bucket.id,
-				Key: item.Key
-			}).promise();
-		}));
+		await Promise.all(
+			keys.map(async item => {
+				return await S3.deleteObject({
+					Bucket: DB.BACKUP.bucket.id,
+					Key: item.Key,
+				}).promise();
+			})
+		);
 	}
 }
 
@@ -62,7 +65,7 @@ async function _tidyBackups({ maxKeepHour, maxKeepDay, continueFrom, keys }) {
 	const params = {
 		Bucket: DB.BACKUP.bucket.id,
 		MaxKeys: 1000,
-		Prefix: `${DB.BACKUP.bucket.directory}/${DB.BACKUP.schema}`
+		Prefix: `${DB.BACKUP.bucket.directory}/${DB.BACKUP.schema}`,
 	};
 
 	if (continueFrom) {
@@ -72,12 +75,14 @@ async function _tidyBackups({ maxKeepHour, maxKeepDay, continueFrom, keys }) {
 	const res = await S3.listObjectsV2(params).promise();
 
 	for (let [, item] of res.Contents.entries()) {
-		const date = moment(item.Key.substring(item.Key.indexOf('.') + 1, item.Key.lastIndexOf('.')), DB.BACKUP.date_format);
+		const date = moment(
+			item.Key.substring(item.Key.indexOf('.') + 1, item.Key.lastIndexOf('.')),
+			DB.BACKUP.date_format
+		);
 
 		if (date.isBefore(maxKeepDay)) {
 			keys.push({ Key: item.Key });
-		}
-		else if (date.isBefore(maxKeepHour)) {
+		} else if (date.isBefore(maxKeepHour)) {
 			if (date.hour() !== 0) {
 				keys.push({ Key: item.Key });
 			}
@@ -89,11 +94,10 @@ async function _tidyBackups({ maxKeepHour, maxKeepDay, continueFrom, keys }) {
 			maxKeepHour,
 			maxKeepDay,
 			continueFrom: res.Contents[res.Contents.length - 1].Key,
-			keys
+			keys,
 		});
 	}
 }
-
 
 async function tidyRedshift() {
 	const now = moment();
@@ -102,16 +106,18 @@ async function tidyRedshift() {
 
 	await _tidyRedshift({
 		maxKeepDay,
-		keys
+		keys,
 	});
 
 	if (keys.length) {
-		await Promise.all(keys.map(async item => {
-			return await S3.deleteObject({
-				Bucket: REDSHIFT.bucket.id,
-				Key: item.Key
-			}).promise();
-		}));
+		await Promise.all(
+			keys.map(async item => {
+				return await S3.deleteObject({
+					Bucket: REDSHIFT.bucket.id,
+					Key: item.Key,
+				}).promise();
+			})
+		);
 	}
 }
 
@@ -119,7 +125,7 @@ async function _tidyRedshift({ maxKeepDay, continueFrom, keys }) {
 	const params = {
 		Bucket: REDSHIFT.bucket.id,
 		MaxKeys: 1000,
-		Prefix: `${REDSHIFT.bucket.directory}`
+		Prefix: `${REDSHIFT.bucket.directory}`,
 	};
 
 	if (continueFrom) {
@@ -129,7 +135,10 @@ async function _tidyRedshift({ maxKeepDay, continueFrom, keys }) {
 	const res = await S3.listObjectsV2(params).promise();
 
 	for (let [, item] of res.Contents.entries()) {
-		const date = moment(item.Key.substring(item.Key.indexOf('.') + 1, item.Key.lastIndexOf('.')), DB.BACKUP.date_format);
+		const date = moment(
+			item.Key.substring(item.Key.indexOf('.') + 1, item.Key.lastIndexOf('.')),
+			DB.BACKUP.date_format
+		);
 
 		if (date.isBefore(maxKeepDay)) {
 			keys.push({ Key: item.Key });
@@ -140,7 +149,7 @@ async function _tidyRedshift({ maxKeepDay, continueFrom, keys }) {
 		await _tidyBackups({
 			maxKeepDay,
 			continueFrom: res.Contents[res.Contents.length - 1].Key,
-			keys
+			keys,
 		});
 	}
 }

@@ -13,16 +13,20 @@ const MessageQueueEvent = require('../../../../queue/message-queue-event');
 
 const {
 	CONTRIBUTOR_EMAIL,
-	TEST: { FIXTURES_DIRECTORY }
+	TEST: { FIXTURES_DIRECTORY },
 } = require('config');
 
 const { expect } = chai;
 chai.use(sinonChai);
 
-const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(`${process.cwd()}/test`, module.id) ||
+	require(path.resolve('./package.json')).name;
 
-describe(MODULE_ID, function () {
-	const contractResponse = require(path.resolve(`${FIXTURES_DIRECTORY}/contractResponse.json`));
+describe(MODULE_ID, function() {
+	const contractResponse = require(path.resolve(
+		`${FIXTURES_DIRECTORY}/contractResponse.json`
+	));
 	let underTest;
 	let db;
 	let event;
@@ -31,30 +35,31 @@ describe(MODULE_ID, function () {
 
 	const { initDB } = require(path.resolve(`${FIXTURES_DIRECTORY}/massive`))();
 
-	describe('no purchase recorded', function () {
-		afterEach(function () {
-		});
+	describe('no purchase recorded', function() {
+		afterEach(function() {});
 
-		beforeEach(function () {
+		beforeEach(function() {
 			db = initDB();
 
 			db.syndication.get_contract_data.resolves([contractResponse]);
 
-			db.syndication.get_contributor_purchase.resolves([{
-				_id: null,
-				asset_type: null,
-				content_id: null,
-				contract_id: null,
-				content_type: null,
-				email_sent: null,
-				last_modified: null,
-				time: null,
-				user_id: null
-			}]);
+			db.syndication.get_contributor_purchase.resolves([
+				{
+					_id: null,
+					asset_type: null,
+					content_id: null,
+					contract_id: null,
+					content_type: null,
+					email_sent: null,
+					last_modified: null,
+					time: null,
+					user_id: null,
+				},
+			]);
 
 			db.syndication.upsert.resolves(null);
 
-			event = (new MessageQueueEvent({
+			event = new MessageQueueEvent({
 				event: {
 					content_id: 'http://www.ft.com/thing/abc',
 					contract_id: 'syndication',
@@ -70,28 +75,32 @@ describe(MODULE_ID, function () {
 						session: 'session',
 						spoor_id: 'spoor-id',
 						url: '/republishing/contract',
-						user_agent: 'user-agent'
+						user_agent: 'user-agent',
 					},
 					user: {
 						email: 'foo@bar.com',
 						first_name: 'foo',
 						id: 'bar',
-						lastName: 'bar'
-					}
-				}
-			})).toJSON();
+						lastName: 'bar',
+					},
+				},
+			}).toJSON();
 
 			message = { data: event };
 
-			underTest = proxyquire('../../../../worker/sync/db-persist/mail-contributor', {
-				'../../../db/pg': sinon.stub().resolves(db)
-			});
+			underTest = proxyquire(
+				'../../../../worker/sync/db-persist/mail-contributor',
+				{
+					'../../../db/pg': sinon.stub().resolves(db),
+				}
+			);
 		});
 
-		it('sends an email', async function () {
+		it('sends an email', async function() {
 			const res = await underTest(event, message, {}, subscriber);
 
-			expect(res).to.be.an('object')
+			expect(res)
+				.to.be.an('object')
 				.and.to.have.property('message')
 				.and.to.be.a('string');
 
@@ -103,42 +112,48 @@ describe(MODULE_ID, function () {
 			expect(email.to[0].address).to.equal(CONTRIBUTOR_EMAIL.to);
 		});
 
-		it('records the contributor content purchase to the DB', async function () {
+		it('records the contributor content purchase to the DB', async function() {
 			await underTest(event, message, {}, subscriber);
 
-			expect(db.syndication.upsert).to.be.calledWith(['contributor_purchase', event, 'syndication']);
+			expect(db.syndication.upsert).to.be.calledWith([
+				'contributor_purchase',
+				event,
+				'syndication',
+			]);
 
 			expect(event.email_sent).to.be.a.instanceOf(Date);
 		});
 	});
 
-	describe('purchase already recorded', function () {
-		afterEach(function () {
+	describe('purchase already recorded', function() {
+		afterEach(function() {
 			NodeMailerJSONTransport.prototype.send.restore();
 		});
 
-		beforeEach(function () {
+		beforeEach(function() {
 			db = initDB();
 
 			sinon.stub(NodeMailerJSONTransport.prototype, 'send');
 
 			db.syndication.get_contract_data.resolves([contractResponse]);
 
-			db.syndication.get_contributor_purchase.resolves([{
-				_id: 'abc',
-				asset_type: 'FT Article',
-				content_id: 'http://www.ft.com/thing/abc',
-				contract_id: 'syndication',
-				content_type: 'article',
-				email_sent: new Date(),
-				last_modified: new Date(),
-				time: new Date(),
-				user_id: 'bar'
-			}]);
+			db.syndication.get_contributor_purchase.resolves([
+				{
+					_id: 'abc',
+					asset_type: 'FT Article',
+					content_id: 'http://www.ft.com/thing/abc',
+					contract_id: 'syndication',
+					content_type: 'article',
+					email_sent: new Date(),
+					last_modified: new Date(),
+					time: new Date(),
+					user_id: 'bar',
+				},
+			]);
 
 			db.syndication.upsert.resolves(null);
 
-			event = (new MessageQueueEvent({
+			event = new MessageQueueEvent({
 				event: {
 					content_id: 'http://www.ft.com/thing/abc',
 					contract_id: 'syndication',
@@ -153,25 +168,28 @@ describe(MODULE_ID, function () {
 						session: 'session',
 						spoor_id: 'spoor-id',
 						url: '/republishing/contract',
-						user_agent: 'user-agent'
+						user_agent: 'user-agent',
 					},
 					user: {
 						email: 'foo@bar.com',
 						first_name: 'foo',
 						id: 'bar',
-						lastName: 'bar'
-					}
-				}
-			})).toJSON();
+						lastName: 'bar',
+					},
+				},
+			}).toJSON();
 
 			message = { data: event };
 
-			underTest = proxyquire('../../../../worker/sync/db-persist/mail-contributor', {
-				'../../../db/pg': sinon.stub().resolves(db)
-			});
+			underTest = proxyquire(
+				'../../../../worker/sync/db-persist/mail-contributor',
+				{
+					'../../../db/pg': sinon.stub().resolves(db),
+				}
+			);
 		});
 
-		it('does not send an email', async function () {
+		it('does not send an email', async function() {
 			const res = await underTest(event, message, {}, subscriber);
 
 			expect(res).to.be.undefined;

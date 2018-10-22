@@ -5,7 +5,13 @@ const moment = require('moment');
 const pg = require('../../db/pg');
 const getAllExistingItemsForContract = require('./get-all-existing-items-for-contract');
 
-module.exports = exports = async ({ contract_id, limit, offset, type, user_id }) => {
+module.exports = exports = async ({
+	contract_id,
+	limit,
+	offset,
+	type,
+	user_id,
+}) => {
 	const db = await pg();
 
 	let query = 'SELECT * FROM syndication.';
@@ -47,11 +53,15 @@ module.exports = exports = async ({ contract_id, limit, offset, type, user_id })
 	const total = parseInt(totalRes.count, 10);
 	const allExisting = await getAllExistingItemsForContract(contract_id);
 
-	await items.filter(item => item.iso_lang_code === 'es').forEach(async item => {
-		const query = `SELECT * FROM syndication.get_content_es_by_id($text$${item.content_id}$text$)`;
-		const [content] = await db.run(query);
-		item.content_area = content.content_area;
-	});
+	await items
+		.filter(item => item.iso_lang_code === 'es')
+		.forEach(async item => {
+			const query = `SELECT * FROM syndication.get_content_es_by_id($text$${
+				item.content_id
+			}$text$)`;
+			const [content] = await db.run(query);
+			item.content_area = content.content_area;
+		});
 
 	items.forEach(item => {
 		const existing = allExisting[item.content_id];

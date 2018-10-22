@@ -5,7 +5,7 @@ const path = require('path');
 const { expect } = require('chai');
 
 const {
-	TEST: { FIXTURES_DIRECTORY }
+	TEST: { FIXTURES_DIRECTORY },
 } = require('config');
 
 const underTest = require('../../db/toPutItem');
@@ -15,14 +15,21 @@ const HistorySchema = require('../../db/table_schemas/history');
 
 const MessageQueueEvent = require('../../queue/message-queue-event');
 
-const contractFixture = require(path.resolve(`${FIXTURES_DIRECTORY}/contractProfile.json`));
+const contractFixture = require(path.resolve(
+	`${FIXTURES_DIRECTORY}/contractProfile.json`
+));
 
-const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(`${process.cwd()}/test`, module.id) ||
+	require(path.resolve('./package.json')).name;
 
-describe(MODULE_ID, function () {
-	describe('Contracts', function () {
-		it('returns an Object in a DynamodB friendly format', function () {
-			let item = underTest(JSON.parse(JSON.stringify(contractFixture)), ContractsSchema);
+describe(MODULE_ID, function() {
+	describe('Contracts', function() {
+		it('returns an Object in a DynamodB friendly format', function() {
+			let item = underTest(
+				JSON.parse(JSON.stringify(contractFixture)),
+				ContractsSchema
+			);
 
 			expect(item).to.eql({
 				TableName: ContractsSchema.TableName,
@@ -31,47 +38,63 @@ describe(MODULE_ID, function () {
 					contract_ends: { S: contractFixture.endDate },
 					contract_starts: { S: contractFixture.startDate },
 					contributor_content: { BOOL: contractFixture.contributor },
-					client_publications: { S: contractFixture.clientPublications },
+					client_publications: {
+						S: contractFixture.clientPublications,
+					},
 					client_website: { S: contractFixture.clientWebsite },
 					licencee_name: { S: contractFixture.licenceeName },
 					owner_name: { S: contractFixture.ownerName },
 					owner_email: { S: contractFixture.ownerEmail },
 					assets: {
 						L: contractFixture.assets.map(item => {
-							return { M: {
-								product: { S: item.productName },
-								print_usage_period: { S: item.maxPermittedPrintUsagePeriod },
-								print_usage_limit: { N: String(item.maxPermittedPrintUsage) },
-								online_usage_period: { S: item.maxPermittedOnlineUsagePeriod },
-								online_usage_limit: { N: String(item.maxPermittedOnlineUsage) },
-								embargo_period: { N: String(item.embargoPeriod) },
-								content: { S: item.contentSet },
-								asset: { S: item.assetName }
-							} };
-						})
-					}
-				}
+							return {
+								M: {
+									product: { S: item.productName },
+									print_usage_period: {
+										S: item.maxPermittedPrintUsagePeriod,
+									},
+									print_usage_limit: {
+										N: String(item.maxPermittedPrintUsage),
+									},
+									online_usage_period: {
+										S: item.maxPermittedOnlineUsagePeriod,
+									},
+									online_usage_limit: {
+										N: String(item.maxPermittedOnlineUsage),
+									},
+									embargo_period: {
+										N: String(item.embargoPeriod),
+									},
+									content: { S: item.contentSet },
+									asset: { S: item.assetName },
+								},
+							};
+						}),
+					},
+				},
 			});
 		});
 	});
 
-	describe('History', function () {
-		it('returns an Object in a DynamodB friendly format', function () {
-			let event = (new MessageQueueEvent({ event: {
-				content_id: 'http://www.ft.com/thing/abc',
-				content_type: 'article',
-				contract_id: 'syndication',
-				download_format: 'docx',
-				licence_id: 'foo',
-				state: 'saved',
-				time: new Date(),
-				user: {
-					email: 'foo@bar.com',
-					first_name: 'foo',
-					id: 'bar',
-					surname: 'bar'
-				}
-			}})).toJSON();
+	describe('History', function() {
+		it('returns an Object in a DynamodB friendly format', function() {
+			let event = new MessageQueueEvent({
+				event: {
+					content_id: 'http://www.ft.com/thing/abc',
+					content_type: 'article',
+					contract_id: 'syndication',
+					download_format: 'docx',
+					licence_id: 'foo',
+					state: 'saved',
+					time: new Date(),
+					user: {
+						email: 'foo@bar.com',
+						first_name: 'foo',
+						id: 'bar',
+						surname: 'bar',
+					},
+				},
+			}).toJSON();
 
 			let item = underTest(event, HistorySchema);
 
@@ -93,11 +116,11 @@ describe(MODULE_ID, function () {
 							email: { S: event.user.email },
 							first_name: { S: event.user.first_name },
 							id: { S: event.user.id },
-							surname: { S: event.user.surname }
-						}
+							surname: { S: event.user.surname },
+						},
 					},
-					version: { S: event.version }
-				}
+					version: { S: event.version },
+				},
 			});
 		});
 	});

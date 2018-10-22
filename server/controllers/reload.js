@@ -8,13 +8,17 @@ const ACL = {
 	user: false,
 	superuser: false,
 	superdooperuser: true,
-	superdooperstormtrooperuser: true
+	superdooperstormtrooperuser: true,
 };
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
-	const { locals: { $DB: db, user } } = res;
+	const {
+		locals: { $DB: db, user },
+	} = res;
 
 	try {
 		if (!user || ACL[user.role] !== true) {
@@ -28,10 +32,9 @@ module.exports = exports = async (req, res, next) => {
 		res.sendStatus(204);
 
 		next();
-	}
-	catch(error) {
+	} catch (error) {
 		log.error(`${MODULE_ID}`, {
-			error: error.stack
+			error: error.stack,
 		});
 
 		res.sendStatus(500);

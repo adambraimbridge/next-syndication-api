@@ -5,13 +5,13 @@ const path = require('path');
 
 const { default: log } = require('@financial-times/n-logger');
 
-const {
-	SYNDICATION_DOWNLOAD_SQS_URL: DEFAULT_QUEUE_URL
-} = require('config');
+const { SYNDICATION_DOWNLOAD_SQS_URL: DEFAULT_QUEUE_URL } = require('config');
 
 const sqs = require('./connect');
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
 module.exports = exports = class QueueSubscriber extends EventEmitter {
 	constructor({
@@ -19,7 +19,7 @@ module.exports = exports = class QueueSubscriber extends EventEmitter {
 		callback,
 		max_messages = 4,
 		queue_url = DEFAULT_QUEUE_URL,
-		type
+		type,
 	}) {
 		super();
 
@@ -37,7 +37,7 @@ module.exports = exports = class QueueSubscriber extends EventEmitter {
 	ack(message) {
 		return sqs.deleteMessageAsync({
 			QueueUrl: this.queue_url,
-			ReceiptHandle: message.ReceiptHandle
+			ReceiptHandle: message.ReceiptHandle,
 		});
 	}
 
@@ -52,7 +52,7 @@ module.exports = exports = class QueueSubscriber extends EventEmitter {
 
 		for (let [, message] of response.Messages.entries()) {
 			if (!this.type || message.data.type === this.type) {
-				this.emit('message', message.data,  message, response, this);
+				this.emit('message', message.data, message, response, this);
 
 				for (let [callback] of this.callbacks.entries()) {
 					const type = Object.prototype.toString.call(callback);
@@ -103,24 +103,30 @@ module.exports = exports = class QueueSubscriber extends EventEmitter {
 			process.nextTick(async () => {
 				const response = await sqs.receiveMessageAsync({
 					QueueUrl: this.queue_url,
-					AttributeNames: [
-						'All'
-					],
+					AttributeNames: ['All'],
 					MaxNumberOfMessages: this.max_messages,
 					VisibilityTimeout: 10,
-					WaitTimeSeconds: 20
+					WaitTimeSeconds: 20,
 				});
 
-				if (response && Array.isArray(response.Messages) && response.Messages.length) {
+				if (
+					response &&
+					Array.isArray(response.Messages) &&
+					response.Messages.length
+				) {
 					log.info(`${MODULE_ID} SyndicationSQSQueueSubscribeSuccess =>`, {
 						response,
-						count: response.Messages.length
+						count: response.Messages.length,
 					});
 
-					response.Messages.forEach(message => message.data = JSON.parse(message.Body));
+					response.Messages.forEach(
+						message => (message.data = JSON.parse(message.Body))
+					);
 
 					if (this.type) {
-						response.Messages = response.Messages.filter(message => message.data.type === this.type);
+						response.Messages = response.Messages.filter(
+							message => message.data.type === this.type
+						);
 					}
 
 					if (response.Messages.length) {
@@ -140,10 +146,9 @@ module.exports = exports = class QueueSubscriber extends EventEmitter {
 			});
 
 			return true;
-		}
-		catch (e) {
+		} catch (e) {
 			log.error(`${MODULE_ID} SyndicationSQSQueueSubscribeError =>`, {
-				error: e.stack
+				error: e.stack,
 			});
 
 			return false;
@@ -160,10 +165,11 @@ module.exports = exports = class QueueSubscriber extends EventEmitter {
 		const cbType = Object.prototype.toString.call(callback);
 
 		if (!cbType.endsWith('Function]')) {
-			throw new TypeError(`${MODULE_ID} expects callback to be a function and received \`${cbType}\` instead.`);
+			throw new TypeError(
+				`${MODULE_ID} expects callback to be a function and received \`${cbType}\` instead.`
+			);
 		}
 
 		return callback;
 	}
-
 };

@@ -6,17 +6,19 @@ const chai = require('chai');
 const nock = require('nock');
 
 const {
-	TEST: { FIXTURES_DIRECTORY }
+	TEST: { FIXTURES_DIRECTORY },
 } = require('config');
 
 const underTest = require('../../../server/lib/get-salesforce-contract-by-id');
 
 const { expect } = chai;
 
-const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(`${process.cwd()}/test`, module.id) ||
+	require(path.resolve('./package.json')).name;
 
-describe(MODULE_ID, function () {
-	before(async function () {
+describe(MODULE_ID, function() {
+	before(async function() {
 		nock('https://login.salesforce.com')
 			.post('/services/oauth2/token')
 			.reply(() => {
@@ -28,8 +30,8 @@ describe(MODULE_ID, function () {
 						id: 'https://login.salesforce.com/id/00D...MAM/005...IAO',
 						token_type: 'Bearer',
 						issued_at: '1500301959088',
-						signature: 'dL6R....rgA='
-					}
+						signature: 'dL6R....rgA=',
+					},
 				];
 			});
 
@@ -39,18 +41,20 @@ describe(MODULE_ID, function () {
 				return [
 					200,
 					require(path.resolve(`${FIXTURES_DIRECTORY}/contractProfile.json`)),
-					{}
+					{},
 				];
 			});
 	});
 
-	it('returns contract data', async function () {
+	it('returns contract data', async function() {
 		const item = await underTest('FTS-14046740');
 
-		expect(item).to.eql(require(path.resolve(`${FIXTURES_DIRECTORY}/contractProfile.json`)));
+		expect(item).to.eql(
+			require(path.resolve(`${FIXTURES_DIRECTORY}/contractProfile.json`))
+		);
 	});
 
-	it('returns stubbed data for stubbed contracts', async function () {
+	it('returns stubbed data for stubbed contracts', async function() {
 		const item = await underTest('CA-00001558');
 
 		expect(item).to.eql(require('../../../stubs/CA-00001558.json'));

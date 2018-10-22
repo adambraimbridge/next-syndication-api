@@ -5,8 +5,8 @@ const { default: log } = require('@financial-times/n-logger');
 const viewports = process.env.PA11Y_VIEWPORTS || [
 	{
 		width: 1440,
-		height: 1220
-	}
+		height: 1220,
+	},
 ];
 
 const smoke = require('./test/smoke.js');
@@ -29,25 +29,29 @@ const config = {
 	defaults: {
 		page: {
 			headers: {
-				'Cookie': DEFAULT_COOKIE,
-				'FT-Flags': DEFAULT_FLAGS
-			}
+				Cookie: DEFAULT_COOKIE,
+				'FT-Flags': DEFAULT_FLAGS,
+			},
 		},
 		timeout: 50000,
 		hideElements: 'iframe[src*=google],iframe[src*=proxy]',
-		rules: ['Principle1.Guideline1_3.1_3_1_AAA']
+		rules: ['Principle1.Guideline1_3.1_3_1_AAA'],
 	},
-	urls: []
+	urls: [],
 };
 
 // What routes returning 200 in smoke.js should we not test?
 // set per-project in PA11Y_ROUTE_EXCEPTIONS in config-vars
-const exceptions = process.env.PA11Y_ROUTE_EXCEPTIONS ? process.env.PA11Y_ROUTE_EXCEPTIONS.split(',') : [];
+const exceptions = process.env.PA11Y_ROUTE_EXCEPTIONS
+	? process.env.PA11Y_ROUTE_EXCEPTIONS.split(',')
+	: [];
 
 // What elements should we not run pa11y on (i.e. google ad iFrames)
 // set per-project in PA11Y_HIDE in config-vars
 // Use with caution. May break the experience for users.
-config.defaults.hideElements = process.env.PA11Y_HIDE ? `${process.env.PA11Y_HIDE},${config.defaults.hideElements}` : config.defaults.hideElements;
+config.defaults.hideElements = process.env.PA11Y_HIDE
+	? `${process.env.PA11Y_HIDE},${config.defaults.hideElements}`
+	: config.defaults.hideElements;
 
 log.info('PA11Y_ROUTE_EXCEPTIONS:', process.env.PA11Y_ROUTE_EXCEPTIONS);
 log.info('exceptions:', exceptions);
@@ -57,14 +61,14 @@ log.info('PA11Y_HIDE:', process.env.PA11Y_HIDE);
 log.info('config.defaults.hideElements:', config.defaults.hideElements);
 
 // Don't log.info headers once backend key is added to the object
-config.defaults.page.headers['FT-Next-Backend-Key'] = process.env.FT_NEXT_BACKEND_KEY;
+config.defaults.page.headers['FT-Next-Backend-Key'] =
+	process.env.FT_NEXT_BACKEND_KEY;
 
-smoke.forEach((smokeConfig) => {
+smoke.forEach(smokeConfig => {
 	for (let [url, expectedStatus] of smokeConfig.urls) {
-
 		let isException = false;
 
-		exceptions.forEach((path) => {
+		exceptions.forEach(path => {
 			isException = isException || url.indexOf(path) !== -1;
 		});
 
@@ -73,7 +77,7 @@ smoke.forEach((smokeConfig) => {
 		}
 
 		const thisUrl = {
-			url: process.env.TEST_URL + url
+			url: process.env.TEST_URL + url,
 		};
 
 		if (process.env.TEST_URL.includes('local')) {
@@ -85,7 +89,11 @@ smoke.forEach((smokeConfig) => {
 			thisUrl.page = {};
 
 			// Merge the headers
-			thisUrl.page.headers = Object.assign({}, config.defaults.page.headers, smokeConfig.headers);
+			thisUrl.page.headers = Object.assign(
+				{},
+				config.defaults.page.headers,
+				smokeConfig.headers
+			);
 
 			// concatenate any test-specific cookies
 			if (smokeConfig.headers.Cookie) {
@@ -93,11 +101,16 @@ smoke.forEach((smokeConfig) => {
 
 				// Keep flags out of the cookie for easier merging
 				if (smokeConfig.headers.Cookie.indexOf('flags') !== -1) {
-					throw Error('please don\'t set any flags inside the Cookie. Use the \'FT-Flags\' header');
+					throw Error(
+						"please don't set any flags inside the Cookie. Use the 'FT-Flags' header"
+					);
 				}
 
 				// Set the concatenated cookies
-				thisUrl.page.headers.Cookie = smokeConfig.headers.Cookie + '; ' + config.defaults.page.headers.Cookie;
+				thisUrl.page.headers.Cookie =
+					smokeConfig.headers.Cookie +
+					'; ' +
+					config.defaults.page.headers.Cookie;
 			}
 
 			// concatenate any test-specific flags
@@ -105,7 +118,10 @@ smoke.forEach((smokeConfig) => {
 				log.info('• merging flags...');
 
 				// Set the concatenated flags
-				thisUrl.page.headers['FT-Flags'] = smokeConfig.headers['FT-Flags'] + ',' + config.defaults.page.headers['FT-Flags'];
+				thisUrl.page.headers['FT-Flags'] =
+					smokeConfig.headers['FT-Flags'] +
+					',' +
+					config.defaults.page.headers['FT-Flags'];
 			}
 		}
 

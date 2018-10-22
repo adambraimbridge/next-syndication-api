@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = exports = (content) => {
+module.exports = exports = content => {
 	let xml = `<?xml version="1.0"?>
 <document>
 	<nitf>
@@ -19,8 +19,12 @@ module.exports = exports = (content) => {
 			<body.content>
 				<block>
 					${content.bodyXML__CLEAN}
-					<p>Copyright The Financial Times Limited ${(new Date(content.publishedDate)).getFullYear()}</p>
-					<p>&copy; ${(new Date(content.publishedDate)).getFullYear()} The Financial Times Ltd. All rights reserved. Please do not copy and paste FT articles and redistribute by email or post to the web.</p>
+					<p>Copyright The Financial Times Limited ${new Date(
+						content.publishedDate
+					).getFullYear()}</p>
+					<p>&copy; ${new Date(
+						content.publishedDate
+					).getFullYear()} The Financial Times Ltd. All rights reserved. Please do not copy and paste FT articles and redistribute by email or post to the web.</p>
 				</block>
 			</body.content>
 		</body>

@@ -13,14 +13,18 @@ chai.use(sinonChai);
 
 const {
 	SYNDICATION_PRODUCT_CODE,
-	TEST: { FIXTURES_DIRECTORY }
+	TEST: { FIXTURES_DIRECTORY },
 } = require('config');
 
-const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(`${process.cwd()}/test`, module.id) ||
+	require(path.resolve('./package.json')).name;
 
-describe(MODULE_ID, function () {
+describe(MODULE_ID, function() {
 	const { initDB } = require(path.resolve(`${FIXTURES_DIRECTORY}/massive`))();
-	const userResponse = require(path.resolve(`${FIXTURES_DIRECTORY}/userResponse.json`));
+	const userResponse = require(path.resolve(
+		`${FIXTURES_DIRECTORY}/userResponse.json`
+	));
 
 	let db;
 	let sandbox;
@@ -29,24 +33,24 @@ describe(MODULE_ID, function () {
 	let underTest;
 
 	describe('MAINTENANCE_MODE: false', function() {
-		beforeEach(function () {
+		beforeEach(function() {
 			db = initDB();
 			db.syndication.get_user.resolves([userResponse]);
 			sandbox = sinon.sandbox.create();
 			mocks = {
 				req: {
 					cookies: {
-						FTSession: '123'
+						FTSession: '123',
 					},
-					headers: {}
+					headers: {},
 				},
 				res: {
 					locals: {
 						$DB: db,
-						userUuid: 'abc'
+						userUuid: 'abc',
 					},
-					sendStatus: sandbox.stub()
-				}
+					sendStatus: sandbox.stub(),
+				},
 			};
 			stubs = {
 				logger: {
@@ -55,22 +59,22 @@ describe(MODULE_ID, function () {
 						error: sandbox.stub(),
 						fatal: sandbox.stub(),
 						info: sandbox.stub(),
-						warn: sandbox.stub()
-					}
+						warn: sandbox.stub(),
+					},
 				},
-				next: sandbox.stub()
+				next: sandbox.stub(),
 			};
 
 			underTest = proxyquire('../../../server/middleware/is-syndication-user', {
-				'@financial-times/n-logger': stubs.logger
+				'@financial-times/n-logger': stubs.logger,
 			});
 		});
 
-		afterEach(function () {
+		afterEach(function() {
 			sandbox.restore();
 		});
 
-		it('should send an unauthorised status code if the session service UUID does not match the session UUID', async function () {
+		it('should send an unauthorised status code if the session service UUID does not match the session UUID', async function() {
 			mocks.res.locals.userUuid = 'xyz';
 
 			nock('https://session-next.ft.com')
@@ -83,7 +87,7 @@ describe(MODULE_ID, function () {
 			expect(stubs.next).not.to.have.been.called;
 		});
 
-		it(`should continue on if the session service products does contain ${SYNDICATION_PRODUCT_CODE} and the session service UUID matches the session UUID`, async function () {
+		it(`should continue on if the session service products does contain ${SYNDICATION_PRODUCT_CODE} and the session service UUID matches the session UUID`, async function() {
 			mocks.res.locals.userUuid = 'abc';
 
 			nock('https://session-next.ft.com')
@@ -98,25 +102,25 @@ describe(MODULE_ID, function () {
 	});
 
 	describe('MAINTENANCE_MODE: true', function() {
-		beforeEach(function () {
+		beforeEach(function() {
 			db = initDB();
 			db.syndication.get_user.resolves([userResponse]);
 			sandbox = sinon.sandbox.create();
 			mocks = {
 				req: {
 					cookies: {
-						FTSession: '123'
+						FTSession: '123',
 					},
-					headers: {}
+					headers: {},
 				},
 				res: {
 					locals: {
 						$DB: db,
 						MAINTENANCE_MODE: true,
-						userUuid: 'abc'
+						userUuid: 'abc',
 					},
-					sendStatus: sandbox.stub()
-				}
+					sendStatus: sandbox.stub(),
+				},
 			};
 			stubs = {
 				logger: {
@@ -125,18 +129,18 @@ describe(MODULE_ID, function () {
 						error: sandbox.stub(),
 						fatal: sandbox.stub(),
 						info: sandbox.stub(),
-						warn: sandbox.stub()
-					}
+						warn: sandbox.stub(),
+					},
 				},
-				next: sandbox.stub()
+				next: sandbox.stub(),
 			};
 
 			underTest = proxyquire('../../../server/middleware/is-syndication-user', {
-				'@financial-times/n-logger': stubs.logger
+				'@financial-times/n-logger': stubs.logger,
 			});
 		});
 
-		afterEach(function () {
+		afterEach(function() {
 			sandbox.restore();
 		});
 

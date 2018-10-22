@@ -11,7 +11,7 @@ module.exports = exports = (val, prop, item, dbItem) => {
 	}
 
 	if (val.startsWith('http')) {
-		val = String(path.basename((url.parse(val)).pathname)).toLowerCase();
+		val = String(path.basename(url.parse(val).pathname)).toLowerCase();
 	}
 
 	return CONTENT_TYPE_ALIAS[val] || val;

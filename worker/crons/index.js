@@ -14,11 +14,13 @@ exports.tidyBucket = require('./tidy-bucket');
 
 createKey().then(() => {});
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
 process.on('unhandledRejection', (reason, promise) => {
 	log.warn(`${MODULE_ID} | UnhandledRejection =>`, {
 		error: reason.stack || reason,
-		promise
+		promise,
 	});
 });

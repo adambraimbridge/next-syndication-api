@@ -13,43 +13,56 @@ module.exports = exports = SFContract => {
 		client_website: SFContract.clientPublications,
 		owner_email: SFContract.ownerEmail,
 		owner_name: SFContract.ownerName,
-		assets: []
+		assets: [],
 	};
 
-	contract.assets = SFContract.assets.filter(({ assetType }) => assetType !== 'Addendum').map(item => {
-		const asset = formatAsset(item);
+	contract.assets = SFContract.assets
+		.filter(({ assetType }) => assetType !== 'Addendum')
+		.map(item => {
+			const asset = formatAsset(item);
 
-		asset.download_limit = SFContract[`${asset.content_type}Limit`];
+			asset.download_limit = SFContract[`${asset.content_type}Limit`];
 
-		return asset;
-	});
+			return asset;
+		});
 
-	SFContract.assets.filter(({ assetType }) => assetType === 'Addendum').forEach(item => {
-		const addendum = formatAsset(item);
+	SFContract.assets
+		.filter(({ assetType }) => assetType === 'Addendum')
+		.forEach(item => {
+			const addendum = formatAsset(item);
 
-		let asset = contract.assets.find(asset =>
-			asset.content_type === addendum.content_type
-			&& asset.content_set === addendum.content_set);
-
-		if (!asset) {
-			asset = contract.assets.find(asset =>
-				asset.content_type === addendum.content_type);
+			let asset = contract.assets.find(
+				asset =>
+					asset.content_type === addendum.content_type &&
+					asset.content_set === addendum.content_set
+			);
 
 			if (!asset) {
-				throw new ReferenceError(`Asset not found for Addendum: ${JSON.stringify(addendum)}`);
+				asset = contract.assets.find(
+					asset => asset.content_type === addendum.content_type
+				);
+
+				if (!asset) {
+					throw new ReferenceError(
+						`Asset not found for Addendum: ${JSON.stringify(addendum)}`
+					);
+				}
 			}
-		}
 
-		if (!Array.isArray(asset.addendums)) {
-			asset.addendums = [];
-		}
+			if (!Array.isArray(asset.addendums)) {
+				asset.addendums = [];
+			}
 
-		asset.addendums.push(cleanupAddendum(addendum));
+			asset.addendums.push(cleanupAddendum(addendum));
 
-		if (addendum.embargo_period && (!asset.embargo_period || addendum.embargo_period > asset.embargo_period)) {
-			asset.embargo_period = addendum.embargo_period;
-		}
-	});
+			if (
+				addendum.embargo_period &&
+				(!asset.embargo_period ||
+					addendum.embargo_period > asset.embargo_period)
+			) {
+				asset.embargo_period = addendum.embargo_period;
+			}
+		});
 
 	contract.assets.forEach(item => delete item.content_set);
 
@@ -69,8 +82,11 @@ function formatAsset(item) {
 		online_usage_limit: item.maxPermittedOnlineUsage,
 		embargo_period: item.embargoPeriod || 0,
 		content_set: item.contentSet,
-		content: typeof item.contentSet === 'string' ? item.contentSet.split(';').map(item => item.trim()) : [],
-		addendums: []
+		content:
+			typeof item.contentSet === 'string'
+				? item.contentSet.split(';').map(item => item.trim())
+				: [],
+		addendums: [],
 	};
 }
 

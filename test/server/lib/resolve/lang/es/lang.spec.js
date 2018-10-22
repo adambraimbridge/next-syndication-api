@@ -8,9 +8,11 @@ const { expect } = require('chai');
 
 const underTest = require('../../../../../../server/lib/resolve/lang/es/lang');
 
-const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(`${process.cwd()}/test`, module.id) ||
+	require(path.resolve('./package.json')).name;
 
-describe(MODULE_ID, function () {
+describe(MODULE_ID, function() {
 	it('returns `es`', function() {
 		expect(underTest('es')).to.equal('es');
 

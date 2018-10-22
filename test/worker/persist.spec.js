@@ -6,8 +6,7 @@ const chai = require('chai');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 
-const {
-} = require('config');
+const {} = require('config');
 
 const HistorySchema = require('../../db/table_schemas/history');
 const { db } = require('../../db/connect');
@@ -20,19 +19,21 @@ const underTest = require('../../worker/persist');
 const { expect } = chai;
 chai.use(sinonChai);
 
-const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(`${process.cwd()}/test`, module.id) ||
+	require(path.resolve('./package.json')).name;
 
-describe(MODULE_ID, function () {
-	afterEach(function () {
+describe(MODULE_ID, function() {
+	afterEach(function() {
 		db.putItemAsync.restore();
 	});
 
-	beforeEach(function () {
+	beforeEach(function() {
 		sinon.stub(db, 'putItemAsync').resolves({});
 	});
 
-	it('converts an SQS event into a DynamoDB friendly format and persits it', async function () {
-		const event = (new MessageQueueEvent({
+	it('converts an SQS event into a DynamoDB friendly format and persits it', async function() {
+		const event = new MessageQueueEvent({
 			event: {
 				content_id: 'http://www.ft.com/thing/abc',
 				contract_id: 'syndication',
@@ -44,10 +45,10 @@ describe(MODULE_ID, function () {
 					email: 'foo@bar.com',
 					firstName: 'foo',
 					id: 'abc',
-					lastName: 'bar'
-				}
-			}
-		})).toJSON();
+					lastName: 'bar',
+				},
+			},
+		}).toJSON();
 
 		await underTest(event, HistorySchema);
 

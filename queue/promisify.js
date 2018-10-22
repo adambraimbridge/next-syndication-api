@@ -4,9 +4,11 @@ const util = require('util');
 
 const aws = require('aws-sdk');
 
-const __proto__ = Object.getPrototypeOf(new aws.SQS({
-	region: 'eu-west-1'
-}));
+const __proto__ = Object.getPrototypeOf(
+	new aws.SQS({
+		region: 'eu-west-1',
+	})
+);
 
 if (exports.promisified !== true) {
 	[
@@ -19,9 +21,8 @@ if (exports.promisified !== true) {
 		'receiveMessage',
 		'sendMessage',
 		'sendMessageBatch',
-		'setQueueAttributes'
-	].forEach(fn =>
-		__proto__[`${fn}Async`] = util.promisify(__proto__[fn]));
+		'setQueueAttributes',
+	].forEach(fn => (__proto__[`${fn}Async`] = util.promisify(__proto__[fn])));
 }
 
 exports.promisified = true;

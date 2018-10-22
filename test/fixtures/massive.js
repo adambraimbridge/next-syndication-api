@@ -7,20 +7,22 @@ const pg = require('../../db/pg');
 
 pg().then(() => {});
 
-module.exports = exports = function () {
+module.exports = exports = function() {
 	const massiveDatabase = proxyquire('massive/lib/database', {
-		'pg-promise': sinon.stub().returns(sinon.stub().returns({
-			query: sinon.stub(),
-			$config: { promise: Promise }
-		})),
-		'@noCallThru': true
+		'pg-promise': sinon.stub().returns(
+			sinon.stub().returns({
+				query: sinon.stub(),
+				$config: { promise: Promise },
+			})
+		),
+		'@noCallThru': true,
 	});
 
 	const massiveDatabase__proto__ = massiveDatabase.prototype;
 
 	function initDB(runResolves) {
 		let db = Object.create(massiveDatabase__proto__);
-//		massiveDatabase__proto__.constructor.call(db);
+		//		massiveDatabase__proto__.constructor.call(db);
 
 		db.run = sinon.stub();
 
@@ -53,19 +55,19 @@ module.exports = exports = function () {
 			upsert_contract_users: sinon.stub(),
 			upsert_migrated_user: sinon.stub(),
 			upsert_history: sinon.stub(),
-			upsert_user: sinon.stub()
+			upsert_user: sinon.stub(),
 		};
 
 		return db;
 	}
 
-	beforeEach(function () {
+	beforeEach(function() {
 		sinon.stub(massiveDatabase__proto__, 'constructor').returns(initDB());
 		sinon.stub(massiveDatabase__proto__, 'query');
 		sinon.stub(massiveDatabase__proto__, 'run');
 	});
 
-	afterEach(function () {
+	afterEach(function() {
 		if (massiveDatabase__proto__.constructor.restore) {
 			massiveDatabase__proto__.constructor.restore();
 		}

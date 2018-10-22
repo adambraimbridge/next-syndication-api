@@ -1,5 +1,7 @@
-module.exports = [{
-	urls: {
-		'/__gtg': 200
-	}
-}];
+module.exports = [
+	{
+		urls: {
+			'/__gtg': 200,
+		},
+	},
+];

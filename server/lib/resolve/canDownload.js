@@ -8,7 +8,10 @@ module.exports = exports = (val, prop, item, existing, contract) => {
 		return 1;
 	}
 
-	let content_type = item.content_type || (existing || {}).content_type || type(item.type, 'type', item, existing, contract);
+	let content_type =
+		item.content_type ||
+		(existing || {}).content_type ||
+		type(item.type, 'type', item, existing, contract);
 
 	if (contract && contract.itemsMap) {
 		const asset = contract.itemsMap[content_type];
@@ -18,11 +21,11 @@ module.exports = exports = (val, prop, item, existing, contract) => {
 		}
 
 		if (asset.download_limit > -1) {
-			const downloaded_total = asset.current_downloads.total + (asset.legacy_download_count || 0)
+			const downloaded_total =
+				asset.current_downloads.total + (asset.legacy_download_count || 0);
 			if (asset.download_limit - downloaded_total > 0) {
 				return 1;
-			}
-			else {
+			} else {
 				return -1;
 			}
 		}

@@ -23,7 +23,14 @@ const RESOLVE_PROPERTIES_ES = Object.keys(resolveES);
                          the result from `syndication.get_content_state_for_contract(text, text).sql`.
 **/
 
-module.exports = exports = ({ contract, existing, includeBody = true, item, src, state }) => {
+module.exports = exports = ({
+	contract,
+	existing,
+	includeBody = true,
+	item,
+	src,
+	state,
+}) => {
 	if (typeof existing === 'undefined') {
 		existing = item;
 	}
@@ -36,13 +43,31 @@ module.exports = exports = ({ contract, existing, includeBody = true, item, src,
 
 	const allProperties = Object.assign({}, src, item);
 
-	RESOLVE_PROPERTIES.forEach(prop =>
-		item[prop] = resolve[prop](Object.prototype.hasOwnProperty.call(item, prop) ? item[prop] : src[prop], prop, allProperties, existing, contract));
+	RESOLVE_PROPERTIES.forEach(
+		prop =>
+			(item[prop] = resolve[prop](
+				Object.prototype.hasOwnProperty.call(item, prop)
+					? item[prop]
+					: src[prop],
+				prop,
+				allProperties,
+				existing,
+				contract
+			))
+	);
 
 	switch (item.lang) {
 		case 'es':
-			RESOLVE_PROPERTIES_ES.forEach(prop =>
-				item[prop] = resolveES[prop](item[prop], prop, item, existing, contract));
+			RESOLVE_PROPERTIES_ES.forEach(
+				prop =>
+					(item[prop] = resolveES[prop](
+						item[prop],
+						prop,
+						item,
+						existing,
+						contract
+					))
+			);
 
 			break;
 	}

@@ -1,6 +1,6 @@
 'use strict';
 
-const { createReadStream/*, stat*/, writeFile } = require('fs');
+const { createReadStream /*, stat*/, writeFile } = require('fs');
 const path = require('path');
 const util = require('util');
 
@@ -13,22 +13,20 @@ const { mkdir, rm } = require('shelljs');
 
 const pg = require('../../../db/pg');
 
-const {
-	AWS_ACCESS_KEY,
-	AWS_SECRET_ACCESS_KEY,
-	REDSHIFT
-} = require('config');
+const { AWS_ACCESS_KEY, AWS_SECRET_ACCESS_KEY, REDSHIFT } = require('config');
 
 const S3 = new AWS.S3({
 	accessKeyId: AWS_ACCESS_KEY,
 	region: 'eu-west-1',
-	secretAccessKey: AWS_SECRET_ACCESS_KEY
+	secretAccessKey: AWS_SECRET_ACCESS_KEY,
 });
 
 //const statAsync = util.promisify(stat);
 const writeFileAsync = util.promisify(writeFile);
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
 module.exports = exports = async () => {
 	const START = Date.now();
@@ -47,7 +45,7 @@ module.exports = exports = async () => {
 			headers: REDSHIFT.export_headers.contract_data,
 			items: await db.syndication.get_redshift_contract_data([]),
 			name: 'contract_data',
-			time
+			time,
 		});
 
 		const downloads = await writeCSV({
@@ -55,7 +53,7 @@ module.exports = exports = async () => {
 			headers: REDSHIFT.export_headers.downloads,
 			items: await db.syndication.get_redshift_downloads([]),
 			name: 'downloads',
-			time
+			time,
 		});
 
 		const saved_items = await writeCSV({
@@ -63,19 +61,17 @@ module.exports = exports = async () => {
 			headers: REDSHIFT.export_headers.saved_items,
 			items: await db.syndication.get_redshift_saved_items([]),
 			name: 'saved_items',
-			time
+			time,
 		});
 
-		await Promise.all([
-			contract_data,
-			downloads,
-			saved_items
-		].map(async item => await upload(item)));
+		await Promise.all(
+			[contract_data, downloads, saved_items].map(
+				async item => await upload(item)
+			)
+		);
 
 		log.info(`${MODULE_ID} | redshift backup uploaded to s3`);
-
-	}
-	catch (e) {
+	} catch (e) {
 		log.error(`${MODULE_ID} => `, e);
 	}
 
@@ -102,7 +98,7 @@ function safe(value) {
 		value = value.replace(/"/g, '');
 	}
 
-	const NEWLINES = /\n|\r/g
+	const NEWLINES = /\n|\r/g;
 	if (NEWLINES.test(String(value))) {
 		// remove any newlines or carriage returns in a string as it can
 		// mess up the csv formatting
@@ -126,7 +122,7 @@ function upload({ file, name }) {
 			Bucket: bucket.id,
 			ContentType: 'text/plain',
 			Key: `${bucket.directory}/${name}`,
-			ServerSideEncryption: bucket.encryption_type
+			ServerSideEncryption: bucket.encryption_type,
 		});
 
 		upload.on('error', err => reject(err));
@@ -136,7 +132,7 @@ function upload({ file, name }) {
 			resolve(res);
 		});
 
-//		upload.on('part', part => console.log(part));
+		//		upload.on('part', part => console.log(part));
 
 		return file.pipe(upload);
 	});
@@ -153,6 +149,6 @@ async function writeCSV({ items, directory, headers, name, time }) {
 
 	return {
 		file: createReadStream(file),
-		name: `${name}.${time}.txt`
+		name: `${name}.${time}.txt`,
 	};
 }

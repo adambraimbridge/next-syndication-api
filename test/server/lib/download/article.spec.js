@@ -11,10 +11,7 @@ const moment = require('moment');
 const { mkdir, rm } = require('shelljs');
 
 const {
-	TEST: {
-		FIXTURES_DIRECTORY,
-		TEMP_FILES_DIRECTORY
-	}
+	TEST: { FIXTURES_DIRECTORY, TEMP_FILES_DIRECTORY },
 } = require('config');
 
 const MessageQueueEvent = require('../../../../queue/message-queue-event');
@@ -22,15 +19,21 @@ const enrich = require('../../../../server/lib/enrich');
 const sleep = require('../../../../server/helpers/sleep');
 const underTest = require('../../../../server/lib/download/article');
 
-const httpMocks = require(path.resolve(`${FIXTURES_DIRECTORY}/node-mocks-http`));
+const httpMocks = require(path.resolve(
+	`${FIXTURES_DIRECTORY}/node-mocks-http`
+));
 
-const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(`${process.cwd()}/test`, module.id) ||
+	require(path.resolve('./package.json')).name;
 
 mkdir('-p', path.resolve(TEMP_FILES_DIRECTORY));
 
-describe(MODULE_ID, function () {
+describe(MODULE_ID, function() {
 	const DEFAULT_FORMAT = 'docx';
-	const CONTRACT = require(path.resolve(`${FIXTURES_DIRECTORY}/contractResponse.json`));
+	const CONTRACT = require(path.resolve(
+		`${FIXTURES_DIRECTORY}/contractResponse.json`
+	));
 	const LICENCE = { id: 'xyz' };
 	const USER = require(path.resolve(`${FIXTURES_DIRECTORY}/userResponse.json`));
 
@@ -46,60 +49,67 @@ describe(MODULE_ID, function () {
 
 	const CONTENT_ID = '42ad255a-99f9-11e7-b83c-9588e51488a0';
 
-	const content = enrich(require(path.resolve(`${FIXTURES_DIRECTORY}/content/${CONTENT_ID}.json`)), DEFAULT_FORMAT);
+	const content = enrich(
+		require(path.resolve(`${FIXTURES_DIRECTORY}/content/${CONTENT_ID}.json`)),
+		DEFAULT_FORMAT
+	);
 
-	const className = `${content.type.charAt(0).toUpperCase()}${content.type.substring(1)}Download`;
+	const className = `${content.type
+		.charAt(0)
+		.toUpperCase()}${content.type.substring(1)}Download`;
 
 	let event;
 	let req;
 	let res;
 
 	describe(`${className}`, function() {
-		beforeEach(function () {
+		beforeEach(function() {
 			req = httpMocks.createRequest({
-				'eventEmitter': EventEmitter,
-				'connection': new EventEmitter(),
-				'headers': {
+				eventEmitter: EventEmitter,
+				connection: new EventEmitter(),
+				headers: {
 					'ft-real-url': `https://www.ft.com/syndication/download/${CONTENT_ID}?format=docx`,
 					'ft-real-path': `/syndication/download/${CONTENT_ID}?format=docx`,
 					'ft-vanity-url': `/syndication/download/${CONTENT_ID}?format=docx`,
 					'ft-flags-next-flags': '',
 					'ft-flags': '-',
-					'cookie': 'FTSession;spoor-id',
+					cookie: 'FTSession;spoor-id',
 					'accept-language': 'en-GB,en-US;q=0.8,en;q=0.6',
 					'accept-encoding': 'gzip, deflate, sdch, br',
-					'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-					'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
+					accept:
+						'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+					'user-agent':
+						'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
 				},
-				'cookies': {
-					'FTSession': 'FTSession',
-					'spoor-id': 'spoor-id'
+				cookies: {
+					FTSession: 'FTSession',
+					'spoor-id': 'spoor-id',
 				},
-				'hostname': 'localhost',
-				'method': 'GET',
-				'originalUrl': `/syndication/download/${CONTENT_ID}?format=docx`,
-				'params': {},
-				'path': '/syndication/download',
-				'protocol': 'http',
-				'query': {
-					'format': 'docx'
+				hostname: 'localhost',
+				method: 'GET',
+				originalUrl: `/syndication/download/${CONTENT_ID}?format=docx`,
+				params: {},
+				path: '/syndication/download',
+				protocol: 'http',
+				query: {
+					format: 'docx',
 				},
-				'url': `/syndication/download/${CONTENT_ID}?format=docx`
+				url: `/syndication/download/${CONTENT_ID}?format=docx`,
 			});
 
 			res = httpMocks.createResponse({
 				req,
-				writableStream: WritableStream
+				writableStream: WritableStream,
 			});
 
 			res.locals = {
 				contract: CONTRACT,
 				licence: LICENCE,
 				syndication_contract: {
-					id: 'lmno'
+					id: 'lmno',
 				},
 				user: USER,
-				userUuid: 'abc'
+				userUuid: 'abc',
 			};
 
 			event = new MessageQueueEvent({
@@ -122,20 +132,19 @@ describe(MODULE_ID, function () {
 						session: req.cookies.FTSession,
 						spoor_id: req.cookies['spoor-id'],
 						url: req.originalUrl,
-						user_agent: req.get('user-agent')
+						user_agent: req.get('user-agent'),
 					},
 					user: {
 						email: USER.email,
 						first_name: USER.first_name,
 						id: USER.user_id,
-						surname: USER.surname
-					}
-				}
+						surname: USER.surname,
+					},
+				},
 			});
 		});
 
-		after(function () {
-		});
+		after(function() {});
 
 		it('initialises the download and publishes the start event', async function() {
 			const dl = new underTest({
@@ -144,7 +153,7 @@ describe(MODULE_ID, function () {
 				licence: LICENCE,
 				event,
 				req,
-				user: USER
+				user: USER,
 			});
 
 			await sleep(100);
@@ -159,7 +168,7 @@ describe(MODULE_ID, function () {
 				licence: LICENCE,
 				event,
 				req,
-				user: USER
+				user: USER,
 			});
 
 			expect(dl.downloadAsArchive).to.be.false;
@@ -172,7 +181,7 @@ describe(MODULE_ID, function () {
 				licence: LICENCE,
 				event,
 				req,
-				user: USER
+				user: USER,
 			});
 
 			let file = await dl.convertArticle();

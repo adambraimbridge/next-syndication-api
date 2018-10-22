@@ -13,7 +13,7 @@ const ajv = new AJV({
 	coerceTypes: true,
 	format: 'full',
 	useDefaults: true,
-	verbose: true
+	verbose: true,
 });
 
 const rack = hat.rack();
@@ -24,7 +24,11 @@ const PROPERTY_queue_url = Symbol('queue_url');
 
 module.exports = exports = class MessageQueueEvent {
 	constructor(config = {}) {
-		let { event, schema = SchemaMessageV1, queue_url = DEFAULT_QUEUE_URL } = config;
+		let {
+			event,
+			schema = SchemaMessageV1,
+			queue_url = DEFAULT_QUEUE_URL,
+		} = config;
 
 		switch (Object.prototype.toString.call(event)) {
 			case '[object MessageQueueEvent]':
@@ -42,7 +46,7 @@ module.exports = exports = class MessageQueueEvent {
 				this[PROPERTY_validate] = message[PROPERTY_validate];
 
 				break;
-			case '[object Object]' :
+			case '[object Object]':
 				// `JSON.parse(JSON.stringify(event))` allows us to do a VERY FAST deep copy onto
 				// `this` without using references to the passed `event:Object`
 				Object.assign(this, JSON.parse(JSON.stringify(event)));
@@ -51,7 +55,6 @@ module.exports = exports = class MessageQueueEvent {
 			default:
 				// in the case where no event is passed we still need to assign the internal `validate:Function`
 				this[PROPERTY_validate] = ajv.compile(schema);
-
 		}
 
 		this.__schema__ = schema;
@@ -70,7 +73,7 @@ module.exports = exports = class MessageQueueEvent {
 	}
 
 	set _id(id) {
-		return this.id = id;
+		return (this.id = id);
 	}
 
 	get id() {
@@ -101,7 +104,7 @@ module.exports = exports = class MessageQueueEvent {
 		let event = new MessageQueueEvent({
 			event: this,
 			queue_url: this.queue_url,
-			schema: this.__schema__
+			schema: this.__schema__,
 		});
 
 		if (Object.prototype.toString.call(overwrites) === '[object Object]') {
@@ -118,15 +121,17 @@ module.exports = exports = class MessageQueueEvent {
 	}
 
 	publish() {
-		return publish(this)
-			.then(success => success);
+		return publish(this).then(success => success);
 	}
 
 	toJSON() {
 		let json = {};
 
 		for (let [key, val] of Object.entries(this.__schema__.properties)) {
-			if (!(key in this) && Object.prototype.hasOwnProperty.call(val, 'default')) {
+			if (
+				!(key in this) &&
+				Object.prototype.hasOwnProperty.call(val, 'default')
+			) {
 				this[key] = JSON.parse(JSON.stringify(val.default));
 			}
 
@@ -149,7 +154,7 @@ module.exports = exports = class MessageQueueEvent {
 	toSQSTransport() {
 		return {
 			MessageBody: this.stringify(),
-			QueueUrl: this.queue_url
+			QueueUrl: this.queue_url,
 		};
 	}
 

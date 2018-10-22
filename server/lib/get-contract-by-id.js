@@ -7,9 +7,7 @@ const moment = require('moment');
 
 const {
 	ASSET_TYPE_TO_DISPLAY_TYPE,
-	SALESFORCE: {
-		REFRESH_CONTRACT_PERIOD: SALESFORCE_REFRESH_CONTRACT_PERIOD
-	}
+	SALESFORCE: { REFRESH_CONTRACT_PERIOD: SALESFORCE_REFRESH_CONTRACT_PERIOD },
 } = require('config');
 
 const contractsColumnMappings = require('../../db/pg/column_mappings/contracts');
@@ -18,21 +16,24 @@ const pg = require('../../db/pg');
 const getSalesforceContractByID = require('./get-salesforce-contract-by-id');
 const reformatSalesforceContract = require('./reformat-salesforce-contract');
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
 function decorateContract(contract) {
-	contract.contract_date = `${moment(contract.start_date).format('DD/MM/YY')} - ${moment(contract.end_date).format('DD/MM/YY')}`;
+	contract.contract_date = `${moment(contract.start_date).format(
+		'DD/MM/YY'
+	)} - ${moment(contract.end_date).format('DD/MM/YY')}`;
 
 	const contentAllowed = [];
 
 	if (Array.isArray(contract.assets)) {
 		contract.assetsMap = contract.assets.reduce((acc, asset) => {
-//			if (asset.download_limit > 0) {
-//				contentAllowed.push(ASSET_TYPE_TO_DISPLAY_TYPE[asset.asset_type]);
-//			}
+			//			if (asset.download_limit > 0) {
+			//				contentAllowed.push(ASSET_TYPE_TO_DISPLAY_TYPE[asset.asset_type]);
+			//			}
 
-			acc[asset.asset_type] =
-			acc[asset.content_type] = asset;
+			acc[asset.asset_type] = acc[asset.content_type] = asset;
 
 			if (Array.isArray(asset.content_areas)) {
 				asset.content = asset.content_areas.join('; ');
@@ -49,8 +50,7 @@ function decorateContract(contract) {
 
 		asset.hasAddendums = false;
 
-		acc[asset.asset_type] =
-		acc[asset.content_type] = asset;
+		acc[asset.asset_type] = acc[asset.content_type] = asset;
 
 		asset.assets.forEach(item => {
 			item.content = item.content_set.join('; ');
@@ -68,7 +68,9 @@ function decorateContract(contract) {
 			contract.content_allowed = `${contentAllowed[0]} only`;
 			break;
 		default:
-			contract.content_allowed = `${contentAllowed.slice(0, -1).join(', ')} & ${contentAllowed[contentAllowed.length - 1]}`;
+			contract.content_allowed = `${contentAllowed.slice(0, -1).join(', ')} & ${
+				contentAllowed[contentAllowed.length - 1]
+			}`;
 	}
 
 	return contract;
@@ -79,10 +81,17 @@ module.exports = exports = async (contractID, locals = {}) => {
 
 	let [contract_data] = await db.syndication.get_contract_data([contractID]);
 
-	if (locals.MASQUERADING !== true && contract_data && contract_data.contract_id !== null) {
+	if (
+		locals.MASQUERADING !== true &&
+		contract_data &&
+		contract_data.contract_id !== null
+	) {
 		let last_updated = Date.now() - +contract_data.last_updated;
 		if (last_updated < SALESFORCE_REFRESH_CONTRACT_PERIOD) {
-			log.info(`${MODULE_ID} | Using DB version of contract#${contractID}`, contract_data);
+			log.info(
+				`${MODULE_ID} | Using DB version of contract#${contractID}`,
+				contract_data
+			);
 
 			return decorateContract(contract_data);
 		}
@@ -101,11 +110,12 @@ module.exports = exports = async (contractID, locals = {}) => {
 		[contract_data] = await db.syndication.upsert_contract([contract]);
 		[contract_data] = await db.syndication.get_contract_data([contractID]);
 
-		log.info(`${MODULE_ID} | Persisted contract#${contractID} to DB`, { contract_data });
+		log.info(`${MODULE_ID} | Persisted contract#${contractID} to DB`, {
+			contract_data,
+		});
 
 		return decorateContract(contract_data);
-	}
-	else {
+	} else {
 		throw new Error(contract.errorMessage);
 	}
 };

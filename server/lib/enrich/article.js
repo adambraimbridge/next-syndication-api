@@ -10,7 +10,7 @@ const toPlainText = require('../to-plain-text');
 const {
 	CONTENT_TYPE_ALIAS,
 	DOWNLOAD_ARTICLE_FORMATS,
-	DOWNLOAD_FILENAME_PREFIX
+	DOWNLOAD_FILENAME_PREFIX,
 } = require('config');
 
 const RE_BAD_CHARS = /[^A-Za-z0-9_]/gm;
@@ -46,7 +46,12 @@ module.exports = exports = function article(content, format) {
 		content.bodyHTML__PLAIN = toPlainText(content.document.toString());
 	}
 
-	content.fileName = DOWNLOAD_FILENAME_PREFIX + content.title.replace(RE_SPACE, '_').replace(RE_BAD_CHARS, '').substring(0, 12);
+	content.fileName =
+		DOWNLOAD_FILENAME_PREFIX +
+		content.title
+			.replace(RE_SPACE, '_')
+			.replace(RE_BAD_CHARS, '')
+			.substring(0, 12);
 
 	return content;
 };

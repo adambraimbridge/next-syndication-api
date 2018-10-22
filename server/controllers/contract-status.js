@@ -6,13 +6,18 @@ const { default: log } = require('@financial-times/n-logger');
 
 const { DEFAULT_DOWNLOAD_FORMAT } = require('config');
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
 	try {
-		const { locals: { contract, user } } = res;
+		const {
+			locals: { contract, user },
+		} = res;
 
-		contract.MY_DOWNLOAD_FORMAT = user.download_format || DEFAULT_DOWNLOAD_FORMAT;
+		contract.MY_DOWNLOAD_FORMAT =
+			user.download_format || DEFAULT_DOWNLOAD_FORMAT;
 
 		res.status(200);
 
@@ -21,10 +26,9 @@ module.exports = exports = async (req, res, next) => {
 		res.json(contract);
 
 		next();
-	}
-	catch (error) {
+	} catch (error) {
 		log.error(`${MODULE_ID}`, {
-			error: error.stack
+			error: error.stack,
 		});
 
 		res.sendStatus(400);

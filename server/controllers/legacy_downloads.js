@@ -6,7 +6,9 @@ const util = require('util');
 
 const { default: log } = require('@financial-times/n-logger');
 
-const { THE_GOOGLE: { AUTH_FILE_NAME } } = require('config');
+const {
+	THE_GOOGLE: { AUTH_FILE_NAME },
+} = require('config');
 
 const statAsync = util.promisify(stat);
 
@@ -14,14 +16,18 @@ const ACL = {
 	user: false,
 	superuser: false,
 	superdooperuser: true,
-	superdooperstormtrooperuser: true
+	superdooperstormtrooperuser: true,
 };
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
 	try {
-		const { locals: { user } } = res;
+		const {
+			locals: { user },
+		} = res;
 
 		if (!user || ACL[user.role] !== true) {
 			res.sendStatus(401);
@@ -55,16 +61,14 @@ module.exports = exports = async (req, res, next) => {
 			res.status(200);
 
 			res.json(val);
-		}
-		else {
+		} else {
 			res.sendStatus(204);
 		}
 
 		next();
-	}
-	catch(error) {
+	} catch (error) {
 		log.error(`${MODULE_ID}`, {
-			error: error.stack
+			error: error.stack,
 		});
 
 		res.sendStatus(500);

@@ -6,7 +6,9 @@ const { default: log } = require('@financial-times/n-logger');
 
 const pg = require('../../../db/pg');
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (event, message, response, subscriber) => {
 	try {
@@ -15,9 +17,17 @@ module.exports = exports = async (event, message, response, subscriber) => {
 		log.info(`${MODULE_ID} RECEIVED => `, event);
 
 		if (event.state === 'deleted') {
-			const items = await db.syndication.delete_save_history_by_contract_id([event.contract_id, event.content_id]);
+			const items = await db.syndication.delete_save_history_by_contract_id([
+				event.contract_id,
+				event.content_id,
+			]);
 
-			log.info(`${MODULE_ID} => ${items.length} items deleted for contract#${event.contract_id}; content#${event.content_id};`, items);
+			log.info(
+				`${MODULE_ID} => ${items.length} items deleted for contract#${
+					event.contract_id
+				}; content#${event.content_id};`,
+				items
+			);
 
 			return;
 		}
@@ -39,8 +49,7 @@ module.exports = exports = async (event, message, response, subscriber) => {
 		log.info(`${MODULE_ID} PERSISTED`);
 
 		subscriber;
-	}
-	catch (e) {
+	} catch (e) {
 		log.error(`${MODULE_ID} => `, e);
 	}
 };

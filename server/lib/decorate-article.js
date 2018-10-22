@@ -10,8 +10,20 @@ const { DOMParser } = require('xmldom');
 const Handlebars = handlebars();
 
 const BASE_PATH = path.dirname(path.relative(process.cwd(), __dirname));
-const HD = Handlebars.compile(fs.readFileSync(path.resolve(BASE_PATH, './views/partial/article_metadata_hd.html.hbs'), 'utf8'), { noEscape: true });
-const FT = Handlebars.compile(fs.readFileSync(path.resolve(BASE_PATH, './views/partial/article_metadata_ft.html.hbs'), 'utf8'), { noEscape: true });
+const HD = Handlebars.compile(
+	fs.readFileSync(
+		path.resolve(BASE_PATH, './views/partial/article_metadata_hd.html.hbs'),
+		'utf8'
+	),
+	{ noEscape: true }
+);
+const FT = Handlebars.compile(
+	fs.readFileSync(
+		path.resolve(BASE_PATH, './views/partial/article_metadata_ft.html.hbs'),
+		'utf8'
+	),
+	{ noEscape: true }
+);
 
 module.exports = exports = (doc, content) => {
 	let publishedDate = moment(content.publishedDate);
@@ -22,12 +34,16 @@ module.exports = exports = (doc, content) => {
 		rich: content.extension !== 'plain',
 		title: content.title,
 		webUrl: content.url || content.webUrl,
-		wordCount: content.wordCount
+		wordCount: content.wordCount,
 	};
 
 	if (content.lang && content.lang !== 'en') {
-		dict.translatedDate = moment(content.translated_date).format('DD MMMM YYYY');
-		dict.translationUrl = `https://www.ft.com/republishing/spanish/${content.content_id}`;
+		dict.translatedDate = moment(content.translated_date).format(
+			'DD MMMM YYYY'
+		);
+		dict.translationUrl = `https://www.ft.com/republishing/spanish/${
+			content.content_id
+		}`;
 
 		switch (content.lang) {
 			case 'es':
@@ -39,7 +55,10 @@ module.exports = exports = (doc, content) => {
 	let hd = new DOMParser().parseFromString(HD(dict));
 	let ft = new DOMParser().parseFromString(FT(dict));
 
-	doc.documentElement.insertBefore(hd.documentElement, doc.documentElement.firstChild);
+	doc.documentElement.insertBefore(
+		hd.documentElement,
+		doc.documentElement.firstChild
+	);
 	doc.documentElement.appendChild(ft.documentElement);
 
 	return doc;

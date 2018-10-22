@@ -5,7 +5,7 @@ const { DOMParser } = require('xmldom');
 const {
 	FORMAT_ARTICLE_CLEAN_ELEMENTS,
 	FORMAT_ARTICLE_CONTENT_TYPE,
-	FORMAT_ARTICLE_STRIP_ELEMENTS
+	FORMAT_ARTICLE_STRIP_ELEMENTS,
 } = require('config');
 
 module.exports = exports = xml => {
@@ -27,7 +27,10 @@ exports.removeWhiteSpace = removeWhiteSpace;
 
 function removeElementsByTagName(doc, ...tagNames) {
 	tagNames.forEach(tagName =>
-		Array.from(doc.getElementsByTagName(tagName)).forEach(el => el.parentNode.removeChild(el)));
+		Array.from(doc.getElementsByTagName(tagName)).forEach(el =>
+			el.parentNode.removeChild(el)
+		)
+	);
 
 	return doc;
 }
@@ -43,9 +46,10 @@ function removeProprietaryXML(doc, ...tagNames) {
 				}
 
 				el.parentNode.removeChild(el);
-			}
-			else {
-				Array.from(el.childNodes).reverse().forEach(child => el.parentNode.insertBefore(child, el));
+			} else {
+				Array.from(el.childNodes)
+					.reverse()
+					.forEach(child => el.parentNode.insertBefore(child, el));
 
 				el.parentNode.removeChild(el);
 			}

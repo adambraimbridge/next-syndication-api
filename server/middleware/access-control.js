@@ -4,10 +4,16 @@ const path = require('path');
 
 const { default: log } = require('@financial-times/n-logger');
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
 const inSafeList = requestersOrigin => {
-	if (/^https:\/\/ft-next-syndication-(?:api|downloads).herokuapp\.com$/.test(requestersOrigin)) {
+	if (
+		/^https:\/\/ft-next-syndication-(?:api|downloads).herokuapp\.com$/.test(
+			requestersOrigin
+		)
+	) {
 		return true;
 	}
 
@@ -24,7 +30,7 @@ module.exports = exports = (req, res, next) => {
 	log.info(`${MODULE_ID}`, {
 		requestersOrigin,
 		isCorsRequest,
-		method: req.method
+		method: req.method,
 	});
 
 	if (isCorsRequest) {
@@ -37,8 +43,7 @@ module.exports = exports = (req, res, next) => {
 
 	if (isCorsRequest && req.method === 'OPTIONS') {
 		res.sendStatus(200);
-	}
-	else {
+	} else {
 		next();
 	}
 };

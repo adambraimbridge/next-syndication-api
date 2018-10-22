@@ -20,19 +20,19 @@ exports.createResponse = function createResponse(options) {
 
 	const pipes = [];
 
-// our stream goes missing in `node-mocks-http` and it doesn't handle streaming responses
-// so we need to fudge it.
-	response.pipe = function (stream) {
+	// our stream goes missing in `node-mocks-http` and it doesn't handle streaming responses
+	// so we need to fudge it.
+	response.pipe = function(stream) {
 		pipes.push(stream);
 
 		return typeof _pipe === 'function' ? _pipe.call(this, stream) : this;
 	};
-	response.end = function (...args) {
+	response.end = function(...args) {
 		pipes.forEach(pipe => pipe.end(...args));
 
 		return typeof _end === 'function' ? _end.apply(this, args) : this;
 	};
-	response.write = function (...args) {
+	response.write = function(...args) {
 		pipes.forEach(pipe => pipe.write(...args));
 
 		return typeof _write === 'function' ? _write.apply(this, args) : this;

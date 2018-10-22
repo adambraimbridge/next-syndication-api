@@ -13,32 +13,34 @@ chai.use(sinonChai);
 
 const {
 	BASE_URI_FT_API,
-	TEST: { FIXTURES_DIRECTORY }
+	TEST: { FIXTURES_DIRECTORY },
 } = require('config');
 
-const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(`${process.cwd()}/test`, module.id) ||
+	require(path.resolve('./package.json')).name;
 
-describe(MODULE_ID, function () {
+describe(MODULE_ID, function() {
 	let sandbox;
 	let mocks;
 	let stubs;
 	let underTest;
 
-	beforeEach(function () {
+	beforeEach(function() {
 		sandbox = sinon.sandbox.create();
 		mocks = {
 			req: {
 				cookies: {
-					FTSession: '123'
+					FTSession: '123',
 				},
-				headers: {}
+				headers: {},
 			},
 			res: {
 				locals: {
-					userUuid: 'abc'
+					userUuid: 'abc',
 				},
-				sendStatus: sandbox.stub()
-			}
+				sendStatus: sandbox.stub(),
+			},
 		};
 		stubs = {
 			logger: {
@@ -47,29 +49,32 @@ describe(MODULE_ID, function () {
 					error: sandbox.stub(),
 					fatal: sandbox.stub(),
 					info: sandbox.stub(),
-					warn: sandbox.stub()
-				}
+					warn: sandbox.stub(),
+				},
 			},
-			next: sandbox.stub()
+			next: sandbox.stub(),
 		};
 
-		underTest = proxyquire('../../../server/middleware/get-syndication-licence-for-user', {
-			'@financial-times/n-logger': stubs.logger
-		});
+		underTest = proxyquire(
+			'../../../server/middleware/get-syndication-licence-for-user',
+			{
+				'@financial-times/n-logger': stubs.logger,
+			}
+		);
 	});
 
-	afterEach(function () {
+	afterEach(function() {
 		sandbox.restore();
 	});
 
-	it('should assign the syndication licence to `res.locals.licence`', async function () {
+	it('should assign the syndication licence to `res.locals.licence`', async function() {
 		nock(BASE_URI_FT_API)
 			.get(`/licences?userid=${mocks.res.locals.userUuid}`)
 			.reply(() => {
 				return [
 					200,
 					require(path.resolve(`${FIXTURES_DIRECTORY}/licenceList.json`)),
-					{}
+					{},
 				];
 			});
 
@@ -77,13 +82,13 @@ describe(MODULE_ID, function () {
 
 		const { licence } = mocks.res.locals;
 
-		expect(licence).to.be.an('object')
+		expect(licence)
+			.to.be.an('object')
 			.and.have.property('products')
 			.and.to.be.an('array')
 			.and.to.deep.include({
 				code: 'S1',
-				name: 'Syndication'
+				name: 'Syndication',
 			});
 	});
-
 });

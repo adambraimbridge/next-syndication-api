@@ -20,12 +20,14 @@ chai.use(sinonChai);
 
 const __proto__ = Object.getPrototypeOf(new AWS.SQS({}));
 
-const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(`${process.cwd()}/test`, module.id) ||
+	require(path.resolve('./package.json')).name;
 
-describe(MODULE_ID, function () {
+describe(MODULE_ID, function() {
 	let stub;
 
-	afterEach(function () {
+	afterEach(function() {
 		if (stub) {
 			stub.restore();
 
@@ -33,8 +35,8 @@ describe(MODULE_ID, function () {
 		}
 	});
 
-	describe('new QueueSubscriber', function () {
-		it('default params', async function () {
+	describe('new QueueSubscriber', function() {
+		it('default params', async function() {
 			const item = new underTest({});
 
 			expect(item)
@@ -48,7 +50,7 @@ describe(MODULE_ID, function () {
 				.and.to.equal(0);
 		});
 
-		it('custom queue_url', async function () {
+		it('custom queue_url', async function() {
 			const QueueUrl = 'blah';
 			const item = new underTest({ queue_url: QueueUrl });
 
@@ -57,7 +59,7 @@ describe(MODULE_ID, function () {
 				.and.to.equal(QueueUrl);
 		});
 
-		it('onmessage callback', async function () {
+		it('onmessage callback', async function() {
 			const cb = () => {};
 			const item = new underTest({ callback: cb });
 
@@ -71,19 +73,21 @@ describe(MODULE_ID, function () {
 		});
 	});
 
-	it('#ack', async function () {
-		stub = sinon.stub(__proto__, 'deleteMessageAsync').callsFake(params => params);
+	it('#ack', async function() {
+		stub = sinon
+			.stub(__proto__, 'deleteMessageAsync')
+			.callsFake(params => params);
 		const item = new underTest({});
 
 		await item.ack({ ReceiptHandle: 'abc123' });
 
 		expect(stub).to.be.calledWith({
 			QueueUrl: item.queue_url,
-			ReceiptHandle: 'abc123'
+			ReceiptHandle: 'abc123',
 		});
 	});
 
-	it('#addCallback', async function () {
+	it('#addCallback', async function() {
 		const cb = () => {};
 		const item = new underTest({});
 
@@ -97,45 +101,55 @@ describe(MODULE_ID, function () {
 		expect(item.callbacks.has(cb)).to.be.true;
 	});
 
-	describe('#fire', function () {
-		it('calls callbacks', async function () {
+	describe('#fire', function() {
+		it('calls callbacks', async function() {
 			const cb = sinon.stub();
 			const cbAsync = sinon.stub().resolves({});
 			const item = new underTest({ callback: cb });
 
 			item.addCallback(cbAsync);
 
-			await item.fire({ Messages: [{
-				Body: '{ "foo": "bar" }',
-				data: { foo: 'bar' }
-			}, {
-				Body: '{ "bam": "bam" }',
-				data: { bam: 'bam' }
-			}]});
+			await item.fire({
+				Messages: [
+					{
+						Body: '{ "foo": "bar" }',
+						data: { foo: 'bar' },
+					},
+					{
+						Body: '{ "bam": "bam" }',
+						data: { bam: 'bam' },
+					},
+				],
+			});
 
 			expect(cb).to.have.callCount(2);
 			expect(cbAsync).to.have.callCount(2);
 		});
 
-		it('fires message events', async function () {
+		it('fires message events', async function() {
 			const cbListener = sinon.stub();
 			const item = new underTest({});
 
 			item.on('message', cbListener);
 
-			await item.fire({ Messages: [{
-				Body: '{ "foo": "bar" }',
-				data: { foo: 'bar' }
-			}, {
-				Body: '{ "bam": "bam" }',
-				data: { bam: 'bam' }
-			}]});
+			await item.fire({
+				Messages: [
+					{
+						Body: '{ "foo": "bar" }',
+						data: { foo: 'bar' },
+					},
+					{
+						Body: '{ "bam": "bam" }',
+						data: { bam: 'bam' },
+					},
+				],
+			});
 
 			expect(cbListener).to.have.callCount(2);
 		});
 	});
 
-	it('#removeCallback', async function () {
+	it('#removeCallback', async function() {
 		const cb = sinon.stub();
 		const item = new underTest({ callback: cb });
 
@@ -149,7 +163,7 @@ describe(MODULE_ID, function () {
 	});
 
 	describe('#start', function() {
-		it('no callback', async function () {
+		it('no callback', async function() {
 			const item = new underTest({});
 
 			stub = sinon.stub(item, 'onStart').callsFake(params => params);
@@ -158,12 +172,10 @@ describe(MODULE_ID, function () {
 
 			expect(stub).to.have.been.called;
 
-			expect(item)
-				.to.have.property('running')
-				.and.to.be.true;
+			expect(item).to.have.property('running').and.to.be.true;
 		});
 
-		it('with callback', async function () {
+		it('with callback', async function() {
 			const cb = sinon.stub();
 			const item = new underTest({});
 
@@ -179,19 +191,22 @@ describe(MODULE_ID, function () {
 				.and.to.have.property('size')
 				.and.to.equal(1);
 
-			expect(item)
-				.to.have.property('running')
-				.and.to.be.true;
+			expect(item).to.have.property('running').and.to.be.true;
 		});
 	});
 
-	describe('#onStart', function () {
-		it('parses message.Body as message.data', async function () {
-			const response = { Messages: [{
-				Body: '{"foo":"bar"}'
-			}, {
-				Body: '{"bam":"bam"}'
-			}]};
+	describe('#onStart', function() {
+		it('parses message.Body as message.data', async function() {
+			const response = {
+				Messages: [
+					{
+						Body: '{"foo":"bar"}',
+					},
+					{
+						Body: '{"bam":"bam"}',
+					},
+				],
+			};
 
 			stub = sinon.stub(__proto__, 'receiveMessageAsync').resolves(response);
 
@@ -205,12 +220,10 @@ describe(MODULE_ID, function () {
 
 			expect(stub).to.be.calledWith({
 				QueueUrl: item.queue_url,
-				AttributeNames: [
-					'All'
-				],
+				AttributeNames: ['All'],
 				MaxNumberOfMessages: item.max_messages,
 				VisibilityTimeout: 10,
-				WaitTimeSeconds: 20
+				WaitTimeSeconds: 20,
 			});
 
 			response.Messages.forEach(message => {
@@ -218,15 +231,20 @@ describe(MODULE_ID, function () {
 					.to.have.property('data')
 					.and.to.be.an('object')
 					.and.to.eql(JSON.parse(message.Body));
-			})
+			});
 		});
 
-		it('firing messages event', async function () {
-			stub = sinon.stub(__proto__, 'receiveMessageAsync').resolves({ Messages: [{
-				Body: '{"foo":"bar"}'
-			}, {
-				Body: '{"bam":"bam"}'
-			}]});
+		it('firing messages event', async function() {
+			stub = sinon.stub(__proto__, 'receiveMessageAsync').resolves({
+				Messages: [
+					{
+						Body: '{"foo":"bar"}',
+					},
+					{
+						Body: '{"bam":"bam"}',
+					},
+				],
+			});
 
 			const cbListenerMessages = sinon.stub();
 			const item = new underTest({});
@@ -242,12 +260,17 @@ describe(MODULE_ID, function () {
 			expect(cbListenerMessages).to.have.callCount(1);
 		});
 
-		it('calls #fire with response', async function () {
-			const response = { Messages: [{
-				Body: '{"foo":"bar"}'
-			}, {
-				Body: '{"bam":"bam"}'
-			}]};
+		it('calls #fire with response', async function() {
+			const response = {
+				Messages: [
+					{
+						Body: '{"foo":"bar"}',
+					},
+					{
+						Body: '{"bam":"bam"}',
+					},
+				],
+			};
 
 			stub = sinon.stub(__proto__, 'receiveMessageAsync').resolves(response);
 
@@ -266,12 +289,17 @@ describe(MODULE_ID, function () {
 		});
 	});
 
-	it('#stop', async function () {
-		const response = { Messages: [{
-			Body: '{"foo":"bar"}'
-		}, {
-			Body: '{"bam":"bam"}'
-		}]};
+	it('#stop', async function() {
+		const response = {
+			Messages: [
+				{
+					Body: '{"foo":"bar"}',
+				},
+				{
+					Body: '{"bam":"bam"}',
+				},
+			],
+		};
 
 		stub = sinon.stub(__proto__, 'receiveMessageAsync').resolves(response);
 
@@ -282,21 +310,17 @@ describe(MODULE_ID, function () {
 
 		await sleep(50);
 
-		expect(item)
-			.to.have.property('running')
-			.and.to.be.true;
+		expect(item).to.have.property('running').and.to.be.true;
 
 		item.stop();
 
 		stubFire.restore();
 
-		expect(item)
-			.to.have.property('running')
-			.and.to.be.false;
+		expect(item).to.have.property('running').and.to.be.false;
 	});
 
-	describe('#validateCallback', function () {
-		it('[object Function]', async function () {
+	describe('#validateCallback', function() {
+		it('[object Function]', async function() {
 			const item = new underTest({});
 
 			const cb = () => {};
@@ -304,7 +328,7 @@ describe(MODULE_ID, function () {
 			expect(item.validateCallback(cb)).to.equal(cb);
 		});
 
-		it('[object AsyncFunction]', async function () {
+		it('[object AsyncFunction]', async function() {
 			const item = new underTest({});
 
 			const cb = async () => {};
@@ -312,7 +336,7 @@ describe(MODULE_ID, function () {
 			expect(item.validateCallback(cb)).to.equal(cb);
 		});
 
-		it('not a function', async function () {
+		it('not a function', async function() {
 			const item = new underTest({});
 
 			expect(() => item.validateCallback({})).to.throw(TypeError);

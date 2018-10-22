@@ -4,7 +4,7 @@ const jsonpath = require('jsonpath');
 
 const RE_COMPLEX_PATH = /[^A-Za-z0-9_-]/g;
 
-module.exports = exports = function mapColumns (item, mapping, parent) {
+module.exports = exports = function mapColumns(item, mapping, parent) {
 	if (Array.isArray(mapping.items)) {
 		mapping.items.forEach(mapping => {
 			if (typeof mapping.condition === 'function') {
@@ -18,8 +18,7 @@ module.exports = exports = function mapColumns (item, mapping, parent) {
 			if (mapping.cite) {
 				if (parent && mapping.cite.startsWith('../')) {
 					val = jsonpath.value(parent, mapping.cite.substring(3));
-				}
-				else {
+				} else {
 					if (Array.isArray(mapping.items)) {
 						val = jsonpath.value(item, mapping.cite);
 
@@ -28,18 +27,24 @@ module.exports = exports = function mapColumns (item, mapping, parent) {
 						}
 
 						val = val.map(v => mapColumns(v, mapping, item));
-					}
-					else {
+					} else {
 						val = jsonpath.value(item, mapping.cite);
 					}
 
-					if (mapping.delete !== false && !RE_COMPLEX_PATH.test(mapping.cite) && mapping.cite !== mapping.id) {
+					if (
+						mapping.delete !== false &&
+						!RE_COMPLEX_PATH.test(mapping.cite) &&
+						mapping.cite !== mapping.id
+					) {
 						delete item[mapping.cite];
 					}
 				}
 			}
 
-			if ((typeof val === 'undefined' || val === null) && Object.prototype.hasOwnProperty.call(mapping, 'default')) {
+			if (
+				(typeof val === 'undefined' || val === null) &&
+				Object.prototype.hasOwnProperty.call(mapping, 'default')
+			) {
 				val = mapping.default;
 			}
 

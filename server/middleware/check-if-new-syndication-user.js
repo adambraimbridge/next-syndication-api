@@ -4,19 +4,23 @@ const path = require('path');
 
 const { default: log } = require('@financial-times/n-logger');
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
 	let isNewSyndicationUser = false;
 
-	const { locals: {
-		$DB: db,
-		EXPEDITED_USER_AUTH,
-		MAINTENANCE_MODE,
-		contract,
-		flags,
-		userUuid
-	} } = res;
+	const {
+		locals: {
+			$DB: db,
+			EXPEDITED_USER_AUTH,
+			MAINTENANCE_MODE,
+			contract,
+			flags,
+			userUuid,
+		},
+	} = res;
 
 	if (MAINTENANCE_MODE === true || EXPEDITED_USER_AUTH === true) {
 		next();
@@ -26,9 +30,11 @@ module.exports = exports = async (req, res, next) => {
 
 	if (flags.syndicationMigrationComplete) {
 		isNewSyndicationUser = true;
-	}
-	else {
-		const [mu] = await db.syndication.get_migrated_user([userUuid, contract.contract_id]);
+	} else {
+		const [mu] = await db.syndication.get_migrated_user([
+			userUuid,
+			contract.contract_id,
+		]);
 
 		if (mu && mu.user_id !== null) {
 			isNewSyndicationUser = true;
@@ -43,8 +49,7 @@ module.exports = exports = async (req, res, next) => {
 		res.locals.isNewSyndicationUser = isNewSyndicationUser;
 
 		next();
-	}
-	else {
+	} else {
 		res.sendStatus(401);
 	}
 };

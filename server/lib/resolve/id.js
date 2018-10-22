@@ -9,7 +9,7 @@ module.exports = exports = (val, prop, item, dbItem) => {
 	}
 
 	if (val.startsWith('http')) {
-		return path.basename((url.parse(val)).pathname);
+		return path.basename(url.parse(val).pathname);
 	}
 
 	return val;

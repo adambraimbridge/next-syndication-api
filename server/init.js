@@ -12,11 +12,13 @@ const app = require('./app');
 
 const PORT = process.env.PORT || CONFIG.PORT || 3255;
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
 process.on('uncaughtException', err => {
 	log.error(`${MODULE_ID} UncaughtException =>`, {
-		error: err.stack
+		error: err.stack,
 	});
 });
 
@@ -28,15 +30,19 @@ module.exports = app;
 
 process.on('unhandledRejection', (reason, promise) => {
 	log.warn(reason);
-	log.warn(`${MODULE_ID} UnhandledRejection =>`, {
-		error: reason.stack || reason,
-		promise
-	}, reason);
+	log.warn(
+		`${MODULE_ID} UnhandledRejection =>`,
+		{
+			error: reason.stack || reason,
+			promise,
+		},
+		reason
+	);
 });
 
 process.on('unhandledPromiseRejectionWarning', (reason, promise) => {
 	log.warn(`${MODULE_ID} UnhandledPromiseRejectionWarning =>`, {
 		error: reason.stack || reason,
-		promise
+		promise,
 	});
 });

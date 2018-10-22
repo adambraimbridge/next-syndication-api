@@ -9,7 +9,9 @@ const pg = require('../../db/pg');
 
 const enrich = require('./enrich');
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (content_id, format, lang) => {
 	const START = Date.now();
@@ -25,31 +27,34 @@ module.exports = exports = async (content_id, format, lang) => {
 			const contentEN = await esClient.get(content_id);
 
 			[
-				'id', 'canBeSyndicated',
-				'firstPublishedDate', 'publishedDate',
-				'url', 'webUrl'
-			].forEach(prop => content[prop] = contentEN[prop]);
+				'id',
+				'canBeSyndicated',
+				'firstPublishedDate',
+				'publishedDate',
+				'url',
+				'webUrl',
+			].forEach(prop => (content[prop] = contentEN[prop]));
 
 			content.lang = lang;
-		}
-		else {
+		} else {
 			content = await esClient.get(content_id);
 		}
-	}
-	catch (e) {
+	} catch (e) {
 		content = null;
 	}
 
 	if (!content) {
 		log.error(`${MODULE_ID} ContentNotFoundError => ${content_id}`);
-	}
-	else {
+	} else {
 		try {
 			content = enrich(content, format);
 
-			log.info(`${MODULE_ID} GetContentSuccess => ${content.content_id} in ${Date.now() - START}ms`);
-		}
-		catch (e) {
+			log.info(
+				`${MODULE_ID} GetContentSuccess => ${
+					content.content_id
+				} in ${Date.now() - START}ms`
+			);
+		} catch (e) {
 			log.error(`${MODULE_ID} ContentTypeNotSupportedError => ${content_id}`);
 
 			content = null;

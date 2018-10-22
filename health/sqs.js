@@ -13,7 +13,7 @@ const { default: log } = require('@financial-times/n-logger');
 
 const {
 	HEALTH_CHECK_HISTORY,
-	SYNDICATION_DOWNLOAD_SQS_URL: DEFAULT_QUEUE_URL
+	SYNDICATION_DOWNLOAD_SQS_URL: DEFAULT_QUEUE_URL,
 } = require('config');
 
 const sqs = require('../queue/connect');
@@ -22,18 +22,23 @@ const writeFileAsync = util.promisify(writeFile);
 
 const BLOATED_THRESHOLD = HEALTH_CHECK_HISTORY.bloated_threshold;
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
 const HISTORY_DIRECTORY = path.resolve(HEALTH_CHECK_HISTORY.directory, 'sqs');
 
-module.exports = exports = new (class SQSCheck extends nHealthCheck {
+module.exports = exports = new class SQSCheck extends nHealthCheck {
 	getHistory() {
 		mkdir('-p', HISTORY_DIRECTORY);
 
 		let results = ls(HISTORY_DIRECTORY);
 
 		if (results.length > HEALTH_CHECK_HISTORY.max_items) {
-			const clear = results.splice(0, results.length - HEALTH_CHECK_HISTORY.max_items);
+			const clear = results.splice(
+				0,
+				results.length - HEALTH_CHECK_HISTORY.max_items
+			);
 
 			clear.forEach(file => rm('-f', path.resolve(HISTORY_DIRECTORY, file)));
 		}
@@ -54,12 +59,12 @@ module.exports = exports = new (class SQSCheck extends nHealthCheck {
 
 		const AttrValues = [
 			'ApproximateNumberOfMessages',
-			'ApproximateNumberOfMessagesDelayed'
+			'ApproximateNumberOfMessagesDelayed',
 		];
 
 		const { Attributes } = await sqs.getQueueAttributesAsync({
 			AttributeNames: AttrValues,
-			QueueUrl: DEFAULT_QUEUE_URL
+			QueueUrl: DEFAULT_QUEUE_URL,
 		});
 
 		Attributes.total = 0;
@@ -70,12 +75,22 @@ module.exports = exports = new (class SQSCheck extends nHealthCheck {
 		});
 		// this will write lots of files to your hard drive and make the app constantly restart with nodemon if run locally
 		if (process.env.NODE_ENV !== 'development') {
-			await writeFileAsync(path.resolve(HISTORY_DIRECTORY, moment().format(HEALTH_CHECK_HISTORY.file_date_format)), JSON.stringify(Attributes, null, 4), 'utf8');
+			await writeFileAsync(
+				path.resolve(
+					HISTORY_DIRECTORY,
+					moment().format(HEALTH_CHECK_HISTORY.file_date_format)
+				),
+				JSON.stringify(Attributes, null, 4),
+				'utf8'
+			);
 		}
 
 		results.push(Attributes);
 
-		results = results.length <= HEALTH_CHECK_HISTORY.max_items ? results : results.slice(results.length - HEALTH_CHECK_HISTORY.max_items);
+		results =
+			results.length <= HEALTH_CHECK_HISTORY.max_items
+				? results
+				: results.slice(results.length - HEALTH_CHECK_HISTORY.max_items);
 
 		const checkOutput = results.reduce((acc, item, index) => {
 			if (index > 0) {
@@ -85,8 +100,8 @@ module.exports = exports = new (class SQSCheck extends nHealthCheck {
 
 				acc.push({
 					delta,
-					state: (delta > prevDelta ? 1 : delta < prevDelta ? -1 : 0),
-					total: item.total
+					state: delta > prevDelta ? 1 : delta < prevDelta ? -1 : 0,
+					total: item.total,
 				});
 			}
 
@@ -102,11 +117,9 @@ module.exports = exports = new (class SQSCheck extends nHealthCheck {
 				if (delta === 0) {
 					final = null;
 				}
-			}
-			else if (delta > 0 || total > BLOATED_THRESHOLD) {
+			} else if (delta > 0 || total > BLOATED_THRESHOLD) {
 				final = item;
-			}
-			else {
+			} else {
 				final = null;
 			}
 		});
@@ -125,10 +138,11 @@ module.exports = exports = new (class SQSCheck extends nHealthCheck {
 
 		return this.checkOutput;
 	}
-})({
-	businessImpact: 'Saved and downloaded items are not currently being processed by the Syndication API and, as such, are backing up in the Syndication SQS Queue.',
+}({
+	businessImpact:
+		'Saved and downloaded items are not currently being processed by the Syndication API and, as such, are backing up in the Syndication SQS Queue.',
 	name: 'Syndication SQS Queue message processing',
-/*eslint-disable*/
+	/*eslint-disable*/
 	panicGuide: `1. check SQS Queue (next-syndication-downloads-prod) on Infra Prod.
 2. check/tail the server/worker logs on Heroku:
 
@@ -141,9 +155,10 @@ module.exports = exports = new (class SQSCheck extends nHealthCheck {
 4. check the queue is now being processed correctly and repeat steps 2 & 3 until it is.
 5. publish the failing/erroring message(s) into the developmewnt SQS Queue (next-syndication-downloads-dev) on Infra Prod to so you can replicate and fix the issue.
 6. once the issue has been fixed, if it makes sense to — e.g. a download needs to be recorded — republish the failing/erroring message(s) to te production queue for processing.`,
-/*eslint-enable*/
+	/*eslint-enable*/
 	severity: 2,
-	technicalSummary: 'Checks if messages on the Syndication SQS Queue are being processed or if they are backing up.'
+	technicalSummary:
+		'Checks if messages on the Syndication SQS Queue are being processed or if they are backing up.',
 });
 
 if (process.env.NODE_ENV !== 'test') {

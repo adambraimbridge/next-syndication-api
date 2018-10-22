@@ -17,39 +17,47 @@ chai.use(sinonChai);
 
 const __proto__ = Object.getPrototypeOf(new AWS.SQS({}));
 
-const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(`${process.cwd()}/test`, module.id) ||
+	require(path.resolve('./package.json')).name;
 
-describe(MODULE_ID, function () {
+describe(MODULE_ID, function() {
 	let stub;
 
 	describe('success', function() {
-		beforeEach(function () {
-			stub = sinon.stub(__proto__, 'sendMessageAsync').callsFake(transport => transport);
+		beforeEach(function() {
+			stub = sinon
+				.stub(__proto__, 'sendMessageAsync')
+				.callsFake(transport => transport);
 		});
 
-		afterEach(function () {
+		afterEach(function() {
 			stub.restore();
 		});
 
-		it('should use the default `QueueUrl` when none is given', async function () {
+		it('should use the default `QueueUrl` when none is given', async function() {
 			let event = new MessageQueueEvent();
 
 			await underTest(event);
 
-			expect(__proto__.sendMessageAsync).to.be.calledWith(event.toSQSTransport());
+			expect(__proto__.sendMessageAsync).to.be.calledWith(
+				event.toSQSTransport()
+			);
 		});
 
-		it('should allow passing a different `QueueUrl`', async function () {
+		it('should allow passing a different `QueueUrl`', async function() {
 			let event = new MessageQueueEvent({
-				queue_url: 'https://i.dont.exist/queue'
+				queue_url: 'https://i.dont.exist/queue',
 			});
 
 			await underTest(event);
 
-			expect(__proto__.sendMessageAsync).to.be.calledWith(event.toSQSTransport());
+			expect(__proto__.sendMessageAsync).to.be.calledWith(
+				event.toSQSTransport()
+			);
 		});
 
-		it('should return true for a successful publish', async function () {
+		it('should return true for a successful publish', async function() {
 			let event = new MessageQueueEvent();
 
 			let success = await underTest(event);
@@ -59,17 +67,19 @@ describe(MODULE_ID, function () {
 	});
 
 	describe('fail', function() {
-		beforeEach(function () {
-			stub = sinon.stub(__proto__, 'sendMessageAsync').throws(new Error('I do not exist'));
+		beforeEach(function() {
+			stub = sinon
+				.stub(__proto__, 'sendMessageAsync')
+				.throws(new Error('I do not exist'));
 		});
 
-		afterEach(function () {
+		afterEach(function() {
 			stub.restore();
 		});
 
-		it('should return false for a failed publish', async function () {
+		it('should return false for a failed publish', async function() {
 			let event = new MessageQueueEvent({
-				queue_url: 'https://i.dont.exist/queue'
+				queue_url: 'https://i.dont.exist/queue',
 			});
 
 			let success = await underTest(event);
@@ -77,7 +87,7 @@ describe(MODULE_ID, function () {
 			expect(success).to.be.false;
 		});
 
-		it('should return false if a MessageQueueEvent is not passed', async function () {
+		it('should return false if a MessageQueueEvent is not passed', async function() {
 			let event = {
 				content_id: 'abc',
 				content_uri: 'https://ft.com/content/abc',
@@ -92,14 +102,14 @@ describe(MODULE_ID, function () {
 					session: 'session',
 					spoor_id: 'spoor-id',
 					url: '/republishing/contract',
-					user_agent: 'user-agent'
+					user_agent: 'user-agent',
 				},
 				user: {
 					email: 'foo@bar.com',
 					first_name: 'foo',
 					id: 'bar',
-					lastName: 'bar'
-				}
+					lastName: 'bar',
+				},
 			};
 
 			let success = await underTest(event);
@@ -107,5 +117,4 @@ describe(MODULE_ID, function () {
 			expect(success).to.be.false;
 		});
 	});
-
 });

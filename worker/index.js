@@ -4,19 +4,24 @@ const path = require('path');
 
 const { default: log } = require('@financial-times/n-logger');
 
-const {
-	SYNDICATION_DOWNLOAD_SQS_URL: DEFAULT_QUEUE_URL
-} = require('config');
+const { SYNDICATION_DOWNLOAD_SQS_URL: DEFAULT_QUEUE_URL } = require('config');
 
 const QueueSubscriber = require('../queue/subscriber');
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
-module.exports = exports = ({ autoAck, callback, event_type, queue_url = DEFAULT_QUEUE_URL }) => {
+module.exports = exports = ({
+	autoAck,
+	callback,
+	event_type,
+	queue_url = DEFAULT_QUEUE_URL,
+}) => {
 	let subscriber = new QueueSubscriber({
 		autoAck,
 		queue_url,
-		type: event_type
+		type: event_type,
 	});
 
 	subscriber.start(callback);
@@ -26,20 +31,20 @@ module.exports = exports = ({ autoAck, callback, event_type, queue_url = DEFAULT
 
 process.on('uncaughtException', err => {
 	log.error(`${MODULE_ID} UncaughtException =>`, {
-		error: err.stack
+		error: err.stack,
 	});
 });
 
 process.on('unhandledRejection', (reason, promise) => {
 	log.warn(`${MODULE_ID} UnhandledRejection =>`, {
 		error: reason.stack || reason,
-		promise
+		promise,
 	});
 });
 
 process.on('unhandledPromiseRejectionWarning', (reason, promise) => {
 	log.warn(`${MODULE_ID} UnhandledPromiseRejectionWarning =>`, {
 		error: reason.stack || reason,
-		promise
+		promise,
 	});
 });

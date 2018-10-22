@@ -5,21 +5,23 @@ const path = require('path');
 const { default: log } = require('@financial-times/n-logger');
 const fetch = require('n-eager-fetch');
 
-const {
-	DOWNLOAD_STATE_MAP
-} = require('config');
+const { DOWNLOAD_STATE_MAP } = require('config');
 
 const pg = require('../../../db/pg');
 const messageCode = require('../../../server/lib/resolve/messageCode');
 
 const PACKAGE = require(path.resolve('./package.json'));
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
-module.exports = exports = async (event) => {
+module.exports = exports = async event => {
 	try {
 		const db = await pg();
 
-		const [contract] = await db.syndication.get_contract_data([event.contract_id]);
+		const [contract] = await db.syndication.get_contract_data([
+			event.contract_id,
+		]);
 
 		log.info(`${MODULE_ID} RECEIVED => `, event);
 
@@ -49,23 +51,23 @@ module.exports = exports = async (event) => {
 				referrer: event.tracking.referrer,
 				route_id: event._id,
 				url: event.tracking.url,
-				syndication_content: event.content_type
+				syndication_content: event.content_type,
 			},
 			device: {
 				spoor_session_is_new: true,
 				ip: event.tracking.ip_address,
 				spoor_id: event.tracking.spoor_id,
-				spoor_session: event._id
+				spoor_session: event._id,
 			},
 			system: {
 				api_key: 'qUb9maKfKbtpRsdp0p2J7uWxRPGJEP',
 				product: 'Syndication',
 				source: PACKAGE.name,
-				version: PACKAGE.version
+				version: PACKAGE.version,
 			},
 			user: {
-				ft_session: event.tracking.session
-			}
+				ft_session: event.tracking.session,
+			},
 		};
 
 		if (event.download_format) {
@@ -77,10 +79,10 @@ module.exports = exports = async (event) => {
 		}
 
 		const headers = {
-			'accept': 'application/json',
+			accept: 'application/json',
 			'content-type': 'application/json',
 			'content-Length': new Buffer(JSON.stringify(data)).length,
-			'cookie': event.tracking.cookie,
+			cookie: event.tracking.cookie,
 			'spoor-id': event.tracking.spoor_id,
 			'spoor-ticket': event._id,
 			'user-agent': event.tracking.user_agent,
@@ -90,26 +92,22 @@ module.exports = exports = async (event) => {
 			let res = await fetch('https://spoor-api.ft.com/ingest', {
 				headers,
 				method: 'POST',
-				body: JSON.stringify(data)
+				body: JSON.stringify(data),
 			});
 
 			if (res.ok) {
 				let payload = await res.json();
 
-				log.info(`${MODULE_ID} PUBLISHED => ${JSON.stringify(data)} ` , payload);
-			}
-			else {
+				log.info(`${MODULE_ID} PUBLISHED => ${JSON.stringify(data)} `, payload);
+			} else {
 				let error = await res.text();
 
 				log.error(`${MODULE_ID} ERROR => `, error);
 			}
-
-		}
-		else {
+		} else {
 			log.info(`${MODULE_ID} NOT PUBLISHED => ${JSON.stringify(data)}`);
 		}
-	}
-	catch (e) {
+	} catch (e) {
 		log.error(`${MODULE_ID} ERROR => `, e);
 	}
 };
@@ -119,19 +117,16 @@ function getTrackingAction(state, referrer = '') {
 		case 'complete':
 			if (referrer.includes('/republishing/download')) {
 				return 'redownload-completion';
-			}
-			else if (referrer.includes('/republishing/save')) {
+			} else if (referrer.includes('/republishing/save')) {
 				return 'download-saved-items-completion';
-			}
-			else {
+			} else {
 				return 'download-completion';
 			}
 			break;
 		case 'deleted':
 			if (referrer.includes('/republishing/download')) {
 				return 'delete-saved-items-downloads-page';
-			}
-			else {
+			} else {
 				return 'delete-saved-items';
 			}
 
@@ -139,30 +134,25 @@ function getTrackingAction(state, referrer = '') {
 		case 'error':
 			if (referrer.includes('/republishing/download')) {
 				return 'redownload-error';
-			}
-			else if (referrer.includes('/republishing/save')) {
+			} else if (referrer.includes('/republishing/save')) {
 				return 'error-downloading-saved-items';
-			}
-			else {
+			} else {
 				return 'download-error';
 			}
 			break;
 		case 'interrupted':
 			if (referrer.includes('/republishing/download')) {
 				return 'redownload-interrupted';
-			}
-			else if (referrer.includes('/republishing/save')) {
+			} else if (referrer.includes('/republishing/save')) {
 				return 'download-saved-items-interrupted';
-			}
-			else {
+			} else {
 				return 'download-interrupted';
 			}
 			break;
 		case 'saved':
 			if (referrer.includes('/republishing/download')) {
 				return 'save-for-later-downloads-page';
-			}
-			else {
+			} else {
 				return 'save-for-later';
 			}
 
@@ -170,11 +160,9 @@ function getTrackingAction(state, referrer = '') {
 		case 'started':
 			if (referrer.includes('/republishing/download')) {
 				return 'redownload-initiation';
-			}
-			else if (referrer.includes('/republishing/save')) {
+			} else if (referrer.includes('/republishing/save')) {
 				return 'download-saved-items-initiation';
-			}
-			else {
+			} else {
 				return 'download-initiation';
 			}
 			break;

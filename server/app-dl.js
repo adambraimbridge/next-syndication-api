@@ -1,9 +1,9 @@
 'use strict';
 
 /**
-* IMPORTANT: THIS IS THE MAIN FILE RUN BY: dl.syndication.ft.com
-* IMPORTANT: SEE: https://github.com/Financial-Times/next-syndication-dl
-* **/
+ * IMPORTANT: THIS IS THE MAIN FILE RUN BY: dl.syndication.ft.com
+ * IMPORTANT: SEE: https://github.com/Financial-Times/next-syndication-dl
+ * **/
 
 process.env.TZ = 'UTC';
 
@@ -23,11 +23,11 @@ const getSyndicationLicenceForUser = require('./middleware/get-syndication-licen
 const getUserProfile = require('./middleware/get-user-profile');
 const routeMaintenanceMode = require('./middleware/route-maintenance-mode');
 
-const app = module.exports = express({
+const app = (module.exports = express({
 	systemCode: 'next-syndication-dl',
 	withBackendAuthentication: false,
-	withFlags: true
-});
+	withFlags: true,
+}));
 
 const middleware = [
 	accessControl,
@@ -42,10 +42,14 @@ const middleware = [
 	getUserProfile,
 	getContractByIdFromSession,
 	checkIfNewSyndicationUser,
-	routeMaintenanceMode
+	routeMaintenanceMode,
 ];
 
 app.get('/syndication/__gtg', (req, res) => res.sendStatus(200));
 
 // download a content item for a contract
-app.get('/syndication/download/:content_id', middleware, require('./controllers/download-by-content-id'));
+app.get(
+	'/syndication/download/:content_id',
+	middleware,
+	require('./controllers/download-by-content-id')
+);

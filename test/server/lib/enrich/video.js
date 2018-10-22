@@ -12,22 +12,26 @@ const {
 	DOWNLOAD_ARCHIVE_EXTENSION,
 	DOWNLOAD_FILENAME_PREFIX,
 	DOWNLOAD_MEDIA_TYPES,
-	TEST: { FIXTURES_DIRECTORY }
+	TEST: { FIXTURES_DIRECTORY },
 } = require('config');
 
 const RE_BAD_CHARS = /[^A-Za-z0-9_]/gm;
 const RE_SPACE = /\s/gm;
 
-const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(`${process.cwd()}/test`, module.id) ||
+	require(path.resolve('./package.json')).name;
 
-describe(MODULE_ID, function () {
+describe(MODULE_ID, function() {
 	const DEFAULT_FORMAT = 'docx';
 
 	[
 		'b16fce7e-3c92-48a3-ace0-d1af3fce71af',
-		'a1af0574-eafb-41bd-aa4f-59aa2cd084c2'
+		'a1af0574-eafb-41bd-aa4f-59aa2cd084c2',
 	].forEach(content_id => {
-		const item = require(path.resolve(`${FIXTURES_DIRECTORY}/content/${content_id}.json`));
+		const item = require(path.resolve(
+			`${FIXTURES_DIRECTORY}/content/${content_id}.json`
+		));
 
 		underTest(item, DEFAULT_FORMAT);
 
@@ -45,7 +49,12 @@ describe(MODULE_ID, function () {
 			});
 
 			it('fileName', function() {
-				expect(item.fileName).to.equal(`${DOWNLOAD_FILENAME_PREFIX}${item.title.replace(RE_SPACE, '_').replace(RE_BAD_CHARS, '').substring(0, 12)}`);
+				expect(item.fileName).to.equal(
+					`${DOWNLOAD_FILENAME_PREFIX}${item.title
+						.replace(RE_SPACE, '_')
+						.replace(RE_BAD_CHARS, '')
+						.substring(0, 12)}`
+				);
 			});
 
 			if (item.document) {
@@ -72,8 +81,7 @@ describe(MODULE_ID, function () {
 				it('bodyHTML__PLAIN', function() {
 					expect(item.bodyHTML__PLAIN).to.be.a('string');
 				});
-			}
-			else {
+			} else {
 				it('hasTranscript', function() {
 					expect(item.hasTranscript).to.be.a('boolean').and.be.false;
 				});
@@ -81,20 +89,23 @@ describe(MODULE_ID, function () {
 
 			describe('download', function() {
 				it('mediaType', function() {
-					expect(item.download).to.be.a('object')
+					expect(item.download)
+						.to.be.a('object')
 						.and.have.property('mediaType')
 						.and.to.be.a('string')
 						.and.to.equal(DOWNLOAD_MEDIA_TYPES.video);
 				});
 
 				it('url', function() {
-					expect(item.download).to.be.a('object')
+					expect(item.download)
+						.to.be.a('object')
 						.and.have.property('url')
 						.and.to.be.a('string');
 				});
 
 				it('extension', function() {
-					expect(item.download).to.be.a('object')
+					expect(item.download)
+						.to.be.a('object')
 						.and.have.property('extension')
 						.and.to.be.a('string')
 						.and.to.equal(mime.extension(item.download.mediaType));
@@ -104,29 +115,32 @@ describe(MODULE_ID, function () {
 			if (item.captions.length) {
 				describe('captions', function() {
 					it('captions', function() {
-						expect(item.captions).to.be.an('array')
+						expect(item.captions)
+							.to.be.an('array')
 							.and.have.property('length')
 							.and.to.be.at.least(1);
 					});
 
 					it('captions[0].mediatType', function() {
-						expect(item.captions[0]).to.be.a('object')
+						expect(item.captions[0])
+							.to.be.a('object')
 							.and.have.property('mediaType')
 							.and.to.be.a('string')
 							.and.to.equal(DOWNLOAD_MEDIA_TYPES.caption);
 					});
 
 					it('captions[0].url', function() {
-						expect(item.download).to.be.a('object')
+						expect(item.download)
+							.to.be.a('object')
 							.and.have.property('url')
 							.and.to.be.a('string');
 					});
 				});
-			}
-			else {
+			} else {
 				describe('captions', function() {
 					it('captions', function() {
-						expect(item.captions).to.be.an('array')
+						expect(item.captions)
+							.to.be.an('array')
 							.and.have.property('length')
 							.and.to.equal(0);
 					});

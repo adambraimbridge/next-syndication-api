@@ -7,15 +7,18 @@ const { default: log } = require('@financial-times/n-logger');
 
 const { CONVERT_FORMAT_COMMAND } = require('config');
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
-module.exports = exports = ({ source, sourceFormat = 'html', targetFormat = 'docx' }) => {
+module.exports = exports = ({
+	source,
+	sourceFormat = 'html',
+	targetFormat = 'docx',
+}) => {
 	const sourceBuffer = Buffer.from(source, 'utf8');
 
-	let args = [
-		'--from', sourceFormat,
-		'--to', targetFormat
-	];
+	let args = ['--from', sourceFormat, '--to', targetFormat];
 
 	if (targetFormat === 'plain') {
 		args.push('--wrap', 'none');
@@ -29,16 +32,18 @@ module.exports = exports = ({ source, sourceFormat = 'html', targetFormat = 'doc
 
 		cmd.on('error', err => {
 			log.error(`${MODULE_ID} ${CONVERT_FORMAT_COMMAND} ConversionError`, {
-				error: err.stack
+				error: err.stack,
 			});
 
 			reject(err);
 		});
 
-		cmd.stdout.on('data', chunk =>
-			targetBuffer = Buffer.concat([targetBuffer, chunk]));
+		cmd.stdout.on(
+			'data',
+			chunk => (targetBuffer = Buffer.concat([targetBuffer, chunk]))
+		);
 
-		cmd.stderr.on('data', chunk => error += chunk);
+		cmd.stderr.on('data', chunk => (error += chunk));
 
 		cmd.on('close', code => {
 			if (code !== 0) {
@@ -47,9 +52,10 @@ module.exports = exports = ({ source, sourceFormat = 'html', targetFormat = 'doc
 				log.error(ERROR);
 
 				reject(new Error(ERROR));
-			}
-			else {
-				log.debug(`${MODULE_ID} ${CONVERT_FORMAT_COMMAND} ConversionCompletionSuccess`);
+			} else {
+				log.debug(
+					`${MODULE_ID} ${CONVERT_FORMAT_COMMAND} ConversionCompletionSuccess`
+				);
 
 				resolve(targetBuffer);
 			}

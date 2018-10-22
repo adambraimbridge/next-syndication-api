@@ -5,20 +5,17 @@ const path = require('path');
 const { default: log } = require('@financial-times/n-logger');
 const fetch = require('n-eager-fetch');
 
-const {
-	SYNDICATION_PRODUCT_CODE
-} = require('config');
+const { SYNDICATION_PRODUCT_CODE } = require('config');
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
 	try {
-		const { locals: {
-			$DB: db,
-			EXPEDITED_USER_AUTH,
-			MAINTENANCE_MODE,
-			userUuid
-		} } = res;
+		const {
+			locals: { $DB: db, EXPEDITED_USER_AUTH, MAINTENANCE_MODE, userUuid },
+		} = res;
 
 		let isSyndicationUser = false;
 
@@ -36,7 +33,7 @@ module.exports = exports = async (req, res, next) => {
 
 				if (isSyndicationUser === true) {
 					log.info(`${MODULE_ID} IsSyndicationUserSuccess`, {
-						isSyndicationUser
+						isSyndicationUser,
 					});
 
 					next();
@@ -47,18 +44,21 @@ module.exports = exports = async (req, res, next) => {
 		}
 
 		const headers = { cookie: req.headers.cookie };
-		const sessionRes = await fetch('https://session-next.ft.com/products', { headers });
+		const sessionRes = await fetch('https://session-next.ft.com/products', {
+			headers,
+		});
 
 		if (sessionRes.ok) {
 			const session = await sessionRes.json();
 
-			isSyndicationUser = session.uuid === userUuid
-								&& session.products.split(',').includes(SYNDICATION_PRODUCT_CODE);
+			isSyndicationUser =
+				session.uuid === userUuid &&
+				session.products.split(',').includes(SYNDICATION_PRODUCT_CODE);
 
 			if (isSyndicationUser === true) {
 				log.info(`${MODULE_ID} IsSyndicationUserSuccess`, {
 					isSyndicationUser,
-					session
+					session,
 				});
 
 				next();
@@ -80,15 +80,14 @@ module.exports = exports = async (req, res, next) => {
 			log.error(`${MODULE_ID} IsSyndicationUserFail =>`, {
 				isSyndicationUser,
 				error,
-				httpStatus: sessionRes.status
+				httpStatus: sessionRes.status,
 			});
 		}
 
 		res.sendStatus(401);
-	}
-	catch (err) {
+	} catch (err) {
 		log.error(`${MODULE_ID} IsSyndicationUserError =>`, {
-			error: err.stack
+			error: err.stack,
 		});
 
 		res.sendStatus(503);

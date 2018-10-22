@@ -17,7 +17,9 @@ const convertArticle = require('./convert-article');
 
 const execAsync = util.promisify(exec);
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
 module.exports = exports = (req, res, next) => {
 	const START = Date.now();
@@ -36,13 +38,15 @@ module.exports = exports = (req, res, next) => {
 		publishEndEvent(res, 'error');
 
 		log.error(`${MODULE_ID} ArchiveError => ${content.id}`, {
-			error: err.stack || err
+			error: err.stack || err,
 		});
 
 		res.status(500).end();
 	});
 	archive.on('end', () => {
-		log.debug(`${MODULE_ID} ArchiveEnd => ${content.id} in ${Date.now() - START}ms`);
+		log.debug(
+			`${MODULE_ID} ArchiveEnd => ${content.id} in ${Date.now() - START}ms`
+		);
 
 		if (req.__download_cancelled__ !== true) {
 			req.__download_successful__ = true;
@@ -57,35 +61,51 @@ module.exports = exports = (req, res, next) => {
 
 	if (content.transcript) {
 		convertArticle({
-			source: content[content.extension === 'plain' ? 'transcript__PLAIN' : 'transcript__CLEAN'],
+			source:
+				content[
+					content.extension === 'plain'
+						? 'transcript__PLAIN'
+						: 'transcript__CLEAN'
+				],
 			sourceFormat: 'html',
-			targetFormat: content.transcriptExtension
+			targetFormat: content.transcriptExtension,
 		})
-		.then(file => {
-			archive.append(file, { name: `${content.fileName}.${content.transcriptExtension}` });
+			.then(file => {
+				archive.append(file, {
+					name: `${content.fileName}.${content.transcriptExtension}`,
+				});
 
-			log.debug(`${MODULE_ID} TranscriptAppendSuccess => ${content.id} in ${Date.now() - START}ms`);
+				log.debug(
+					`${MODULE_ID} TranscriptAppendSuccess => ${
+						content.id
+					} in ${Date.now() - START}ms`
+				);
 
-			transcriptAppended = true;
+				transcriptAppended = true;
 
-			if (captionsAppended === true && mediaAppended === true && archive._state.finalize !== true && archive._state.finalizing !== true) {
-				archive.finalize();
-			}
-		})
-		.catch(err => {
-			log.error(`${MODULE_ID} TranscriptAppendError => ${content.id}`, {
-				error: err.stack || err,
-				content
+				if (
+					captionsAppended === true &&
+					mediaAppended === true &&
+					archive._state.finalize !== true &&
+					archive._state.finalizing !== true
+				) {
+					archive.finalize();
+				}
+			})
+			.catch(err => {
+				log.error(`${MODULE_ID} TranscriptAppendError => ${content.id}`, {
+					error: err.stack || err,
+					content,
+				});
 			});
-		});
-	}
-	else {
+	} else {
 		transcriptAppended = true;
 	}
 
 	if (Array.isArray(content.captions) && content.captions.length) {
-		Promise
-			.all(content.captions.map(({ url: uri }) => execAsync(`curl ${uri}`)))
+		Promise.all(
+			content.captions.map(({ url: uri }) => execAsync(`curl ${uri}`))
+		)
 			.then(all => {
 				all.forEach(({ stdout }, i) => {
 					let name = path.basename(url.parse(content.captions[i].url).pathname);
@@ -93,28 +113,35 @@ module.exports = exports = (req, res, next) => {
 					archive.append(stdout, { name });
 				});
 
-				log.debug(`${MODULE_ID} CaptionAppendSuccess => ${content.id} in ${Date.now() - START}ms`);
+				log.debug(
+					`${MODULE_ID} CaptionAppendSuccess => ${content.id} in ${Date.now() -
+						START}ms`
+				);
 
 				captionsAppended = true;
 
-				if (mediaAppended === true && transcriptAppended === true && archive._state.finalize !== true && archive._state.finalizing !== true) {
+				if (
+					mediaAppended === true &&
+					transcriptAppended === true &&
+					archive._state.finalize !== true &&
+					archive._state.finalizing !== true
+				) {
 					archive.finalize();
 				}
 			})
 			.catch(err => {
 				log.error(`${MODULE_ID} CaptionsAppendError => ${content.id}`, {
 					error: err.stack || err,
-					content
+					content,
 				});
 			});
-	}
-	else {
+	} else {
 		captionsAppended = true;
 	}
 
 	const URI = content.download.binaryUrl;
 
-	fetch(URI, { method: 'HEAD', headers: headers }).then((uriRes) => {
+	fetch(URI, { method: 'HEAD', headers: headers }).then(uriRes => {
 		const stream = new PassThrough();
 
 		if (!uriRes.ok) {
@@ -128,7 +155,10 @@ module.exports = exports = (req, res, next) => {
 				return;
 			}
 
-			log.warn(`${MODULE_ID} => DownloadRequestCancelled => `, res.locals.__event.toJSON());
+			log.warn(
+				`${MODULE_ID} => DownloadRequestCancelled => `,
+				res.locals.__event.toJSON()
+			);
 
 			req.__download_cancelled__ = true;
 
@@ -173,11 +203,16 @@ module.exports = exports = (req, res, next) => {
 		stream.on('close', onend);
 		stream.on('end', onend);
 
-		log.debug(`${MODULE_ID} MediaAppendSuccess => ${content.id} in ${Date.now() - START}ms`);
+		log.debug(
+			`${MODULE_ID} MediaAppendSuccess => ${content.id} in ${Date.now() -
+				START}ms`
+		);
 
-		archive.append(stream, { name: `${content.fileName}.${content.download.extension}` });
+		archive.append(stream, {
+			name: `${content.fileName}.${content.download.extension}`,
+		});
 
-		stream.on('data', (chunk) => {
+		stream.on('data', chunk => {
 			if (req.__download_cancelled__ === true) {
 				if (req.__end_called__ !== true) {
 					uriStream.end();
@@ -194,14 +229,19 @@ module.exports = exports = (req, res, next) => {
 
 			mediaAppended = true;
 
-			if (captionsAppended === true && transcriptAppended === true && archive._state.finalize !== true && archive._state.finalizing !== true) {
+			if (
+				captionsAppended === true &&
+				transcriptAppended === true &&
+				archive._state.finalize !== true &&
+				archive._state.finalizing !== true
+			) {
 				archive.finalize();
 			}
 
 			length += chunk.length;
 		});
 
-		fetch(URI, { headers: headers }).then((uriRes) => {
+		fetch(URI, { headers: headers }).then(uriRes => {
 			if (req.__download_cancelled__ === true) {
 				archive.end();
 
@@ -222,7 +262,9 @@ function cloneRequestHeaders(req) {
 
 	['accept', 'host'].forEach(name => delete headers[name]);
 
-	Object.keys(headers).forEach(name => headers[name] !== '-' || delete headers[name]);
+	Object.keys(headers).forEach(
+		name => headers[name] !== '-' || delete headers[name]
+	);
 
 	return headers;
 }
@@ -234,7 +276,7 @@ function publishEndEvent(res, state) {
 	}
 
 	res.locals.__eventEnd = res.locals.__event.clone({
-		state
+		state,
 	});
 
 	process.nextTick(async () => await res.locals.__eventEnd.publish());

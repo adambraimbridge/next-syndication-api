@@ -6,20 +6,18 @@ const qs = require('querystring');
 const { default: log } = require('@financial-times/n-logger');
 const fetch = require('n-eager-fetch');
 
-const {
-	AUTH_API_CLIENT_ID,
-	BASE_URI_FT_API
-} = require('config');
+const { AUTH_API_CLIENT_ID, BASE_URI_FT_API } = require('config');
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
-
 	const querystring = qs.stringify({
-		'client_id': AUTH_API_CLIENT_ID,
-		'redirect_uri': 'https://www.ft.com',
-		'response_type': 'token',
-		'scope': 'licence_data',
+		client_id: AUTH_API_CLIENT_ID,
+		redirect_uri: 'https://www.ft.com',
+		response_type: 'token',
+		scope: 'licence_data',
 	});
 
 	const URI = `${BASE_URI_FT_API}/authorize?${querystring}`;
@@ -27,10 +25,10 @@ module.exports = exports = async (req, res, next) => {
 	try {
 		const authRes = await fetch(URI, {
 			headers: {
-				'cookie': req.headers.cookie,
-				'content-type': 'application/json'
+				cookie: req.headers.cookie,
+				'content-type': 'application/json',
 			},
-			method: 'get'
+			method: 'get',
 		});
 
 		const authQuery = qs.parse(authRes.url.split('#').pop());
@@ -44,11 +42,10 @@ module.exports = exports = async (req, res, next) => {
 		res.locals.ACCESS_TOKEN_LICENCE = authQuery.access_token;
 
 		next();
-	}
-	catch (err) {
+	} catch (err) {
 		log.error(`${MODULE_ID} LicenceAccessTokenError`, {
 			error: err.stack,
-			URI
+			URI,
 		});
 
 		res.sendStatus(401);

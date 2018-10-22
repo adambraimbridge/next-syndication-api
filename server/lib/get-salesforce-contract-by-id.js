@@ -17,17 +17,21 @@ const {
 		ENVIRONMENT: SALESFORCE_ENVIRONMENT,
 		PASSWORD: SALESFORCE_PASSWORD,
 		STUB_CONTRACTS: SALESFORCE_STUB_CONTRACTS,
-		USERNAME: SALESFORCE_USERNAME
-	}
+		USERNAME: SALESFORCE_USERNAME,
+	},
 } = require('config');
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const MODULE_ID =
+	path.relative(process.cwd(), module.id) ||
+	require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (contractID, dontThrow) => {
 	try {
-
 		if (SALESFORCE_STUB_CONTRACTS.includes(contractID)) {
-			log.info(`${MODULE_ID} | SALESFORCE DATA STUBBED FOR CONTRACT => `, contractID);
+			log.info(
+				`${MODULE_ID} | SALESFORCE DATA STUBBED FOR CONTRACT => `,
+				contractID
+			);
 			return require(path.resolve(`./stubs/${contractID}.json`));
 		}
 
@@ -38,22 +42,25 @@ module.exports = exports = async (contractID, dontThrow) => {
 			clientSecret: SALESFORCE_CLIENT_SECRET,
 			environment: SALESFORCE_ENVIRONMENT,
 			mode: SALESFORCE_CONNECTION_MODE,
-			redirectUri: SALESFORCE_CALLBACK_URI
+			redirectUri: SALESFORCE_CALLBACK_URI,
 		});
 
 		const oauth = await org.authenticate({
 			username: SALESFORCE_USERNAME,
-			password: SALESFORCE_PASSWORD
+			password: SALESFORCE_PASSWORD,
 		});
 
 		log.info(`${MODULE_ID} | SALESFORCE OAUTH => `, oauth);
 
-		log.info(`${MODULE_ID} | SALESFORCE CONTRACT URI => `, `${SALESFORCE_URI}/${contractID}`);
+		log.info(
+			`${MODULE_ID} | SALESFORCE CONTRACT URI => `,
+			`${SALESFORCE_URI}/${contractID}`
+		);
 
 		let apexRes = await org.apexRest({
 			uri: `${SALESFORCE_URI}/${contractID}`,
 			method: 'GET',
-			oauth: oauth
+			oauth: oauth,
 		});
 
 		log.info(`${MODULE_ID} | APEX RESPONSE => `, apexRes);
@@ -69,10 +76,9 @@ module.exports = exports = async (contractID, dontThrow) => {
 		}
 
 		throw new Error(`${MODULE_ID} => NullApexResponse`);
-	}
-	catch (error) {
+	} catch (error) {
 		log.error(`${MODULE_ID}`, {
-			error: error.stack
+			error: error.stack,
 		});
 
 		if (dontThrow === true) {
