@@ -1,17 +1,22 @@
-'use strict';
-
-const config = {
+module.exports = {
 	env: {
-		browser: true,
 		es6: true,
-		mocha: true,
 		node: true,
+		browser: true,
+		mocha: true,
 	},
+	globals: {
+		fetch: true,
+		requireText: true,
+	},
+	extends: [],
 	parserOptions: {
-		ecmaVersion: 2017,
+		ecmaVersion: 2018,
 		sourceType: 'module',
 	},
+	plugins: ['prettier'],
 	rules: {
+		'prettier/prettier': 'error',
 		eqeqeq: 2,
 		'guard-for-in': 2,
 		'new-cap': 0,
@@ -26,17 +31,7 @@ const config = {
 		'no-unused-vars': 2,
 		'no-var': 2,
 		'one-var': [2, 'never'],
-		quotes: [2, 'single'],
 		'space-before-function-paren': [0, 'never'],
 		'wrap-iife': 2,
-		'prettier/prettier': 'warn',
 	},
-	globals: {
-		fetch: true,
-		requireText: true,
-	},
-	plugins: ['prettier'],
-	extends: [],
 };
-
-module.exports = config;
