@@ -7,14 +7,14 @@ root = true
 #trim_trailing_whitespace = true
 #charset = utf-8
 
-[**{Makefile,.js,.scss,.html,.mustache,.vcl}]
+[**{Makefile,.js,.scss,.html,.mustache,.vcl,.json}]
 indent_style = tab
 indent_size = 4
 insert_final_newline = true
 trim_trailing_whitespace = true
 charset = utf-8
 
-[**{.json,.yaml,.yml}]
+[**{.yaml,.yml}]
 indent_style = space
 indent_size = 2
 insert_final_newline = true
