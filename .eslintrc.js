@@ -1,18 +1,18 @@
 'use strict';
 
 const config = {
-	'env': {
-		'browser': true,
-		'es6': true,
-		'mocha': true,
-		'node': true
+	env: {
+		browser: true,
+		es6: true,
+		mocha: true,
+		node: true,
 	},
-	'parserOptions': {
-		'ecmaVersion': 2017,
-		'sourceType': 'module'
+	parserOptions: {
+		ecmaVersion: 2017,
+		sourceType: 'module',
 	},
-	'rules': {
-		'eqeqeq': 2,
+	rules: {
+		eqeqeq: 2,
 		'guard-for-in': 2,
 		'new-cap': 0,
 		'no-caller': 2,
@@ -26,33 +26,17 @@ const config = {
 		'no-unused-vars': 2,
 		'no-var': 2,
 		'one-var': [2, 'never'],
-		'quotes': [2, 'single'],
+		quotes: [2, 'single'],
 		'space-before-function-paren': [0, 'never'],
-		'wrap-iife': 2
+		'wrap-iife': 2,
+		'prettier/prettier': 'warn',
 	},
-	'globals': {
-		'fetch': true,
-		'requireText': true
+	globals: {
+		fetch: true,
+		requireText: true,
 	},
-	'plugins': [],
-	'extends': []
+	plugins: ['prettier'],
+	extends: [],
 };
-
-const packageJson = require('./package.json');
-
-if (
-	(packageJson.dependencies && (packageJson.dependencies.react || packageJson.dependencies.preact)) ||
-	(packageJson.devDependencies && (packageJson.devDependencies.react || packageJson.devDependencies.preact))
-) {
-	config.plugins.push('react');
-	config.extends.push('plugin:react/recommended');
-
-	Object.assign(config.rules, {
-		'react/display-name': 0,
-		'react/prop-types': 0,
-		'react/no-danger': 0,
-		'react/no-render-return-value': 0
-	});
-}
 
 module.exports = config;
