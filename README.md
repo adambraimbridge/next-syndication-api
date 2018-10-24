@@ -26,7 +26,7 @@ In development mode you should be using the FT Staff contract, which is stubbed 
 
 ### Setting yourself up on a contract
 
-In order to see the syndication icons, you need to belong to a licence with a syndication contract. Email customer support and ask to be added to a staff syndication licence.
+In order to see the syndication icons, you need to belong to a licence with a syndication contract. Email customer support at `help@ft.com` and ask to be added to a staff syndication licence.
 
 ## Run locally
 
