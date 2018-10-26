@@ -2,7 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/Financial-Times/next-syndication-api.svg?style=svg)](https://circleci.com/gh/Financial-Times/next-syndication-api)
 [![Coverage Status](https://coveralls.io/repos/github/Financial-Times/next-syndication-api/badge.svg?branch=master)](https://coveralls.io/github/Financial-Times/next-syndication-api?branch=master)
-[![Splunk Logs](https://img.shields.io/badge/splunk-logs-brightgreen.svg)](https://financialtimes.splunkcloud.com/en-US/app/search/search?q=search%20source%3D%22%2Fvar%2Flog%2Fapps%2Fheroku%2Fft-next-syndication-api.log%22%20message!%3D%22*Sorry%2C%20the%20file%20you%20have%20requested%20has%20been%20deleted*%22&display.page.search.mode=verbose&dispatch.sample_ratio=1&earliest=-6d&latest=now&sid=1533553215.15335907)
+[![Splunk Logs](https://img.shields.io/badge/splunk-logs-brightgreen.svg)](https://financialtimes.splunkcloud.com/en-US/app/search/search?q=search%20source%3D%22%2Fvar%2Flog%2Fapps%2Fheroku%2Fft-next-syndication-api.log%22%20index%3D%22heroku%22&display.page.search.mode=verbose&dispatch.sample_ratio=1&earliest=-6d&latest=now&sid=1533553215.15335907)
 
 The API behind the new FT.com/republishing tool.
 
