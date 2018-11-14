@@ -62,7 +62,6 @@ module.exports = exports = function () {
 	beforeEach(function () {
 		sinon.stub(massiveDatabase__proto__, 'constructor').returns(initDB());
 		sinon.stub(massiveDatabase__proto__, 'query');
-		sinon.stub(massiveDatabase__proto__, 'run');
 	});
 
 	afterEach(function () {
