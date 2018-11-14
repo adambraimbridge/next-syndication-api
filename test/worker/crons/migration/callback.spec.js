@@ -67,6 +67,10 @@ describe(MODULE_ID, function () {
 			user_id: user_id
 		}]);
 
+		// Needed because it is stubbed elsewhere for some reason
+		if (Slack.prototype.send.restore) {
+			Slack.prototype.send.restore();
+		}
 		slackStub = sinon.stub(Slack.prototype, 'send').resolves({ body: 'ok' });
 		spreadsheetStub = sinon.stub().resolves(spreadsheetResponse);
 
