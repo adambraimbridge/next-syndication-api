@@ -19,14 +19,10 @@ const MODULE_ID = path.relative(`${process.cwd()}/test`, module.id) || require(p
 describe(MODULE_ID, function () {
 	let res;
 
-	before(function () {
+	beforeEach(function () {
 		res = {
 			attachment: sinon.spy()
 		};
-	});
-
-	afterEach(function () {
-		res.attachment.reset();
 	});
 
 	it('uses the configured override when `content.extension` is not a valid extension type', function () {
