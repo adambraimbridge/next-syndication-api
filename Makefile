@@ -4,9 +4,9 @@ node_modules/@financial-times/n-gage/index.mk:
 
 -include node_modules/@financial-times/n-gage/index.mk
 
-APP_NAME := ft-next-syndication-api
-
-TEST_APP := "${APP_NAME}-${CIRCLE_BUILD_NUM}"
+VAULT_NAME=ft-next-syndication-api
+HEROKU_APP_STAGING=ft-next-syndication-api-stag
+HEROKU_APP_EU=ft-next-syndication-api
 
 IGNORE_A11Y := true
 
@@ -14,10 +14,6 @@ coverage-report:
 	@rm -rf ./coverage ./nyc_output
 	@nyc --all --reporter=lcovonly --reporter=text make unit-test
 	@$(DONE)
-
-deploy:
-	nht configure
-	nht deploy
 
 install-clean:
 # delete the package-lock.json here so n-gage can install correctly
@@ -27,9 +23,6 @@ install-clean:
 kill-all:
 	./node_modules/.bin/pm2 stop all
 	./node_modules/.bin/pm2 kill
-
-provision:
-	nht float --master --no-destroy --skip-gtg --testapp ${TEST_APP} --vault
 
 run:
 	nht run --https
@@ -54,9 +47,6 @@ ifeq ($(CIRCLECI),true)
 else
 	@make coverage-report
 endif
-
-tidy:
-	nht destroy ${TEST_APP}
 
 unit-test:
 	@export IGNORE_A11Y=true
