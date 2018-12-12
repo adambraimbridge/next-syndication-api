@@ -10,7 +10,6 @@ const {
 
 const contractsColumnMappings = require('../../../db/pg/column_mappings/contracts');
 const historyColumnMappings = require('../../../db/pg/column_mappings/history');
-const usersColumnMappings = require('../../../db/pg/column_mappings/users');
 
 const underTest = require('../../../db/pg/map-columns');
 
@@ -108,35 +107,6 @@ describe(MODULE_ID, function () {
 				'time': '2017-07-19T15:08:50.786Z',
 				'version': 'v1',
 				'contributor_content': false
-			});
-		});
-	});
-
-	describe('users', function() {
-		const { user: userProfile } = require(path.resolve(`${FIXTURES_DIRECTORY}/userProfile.json`));
-
-		it('assigns existing properties to their respective DB column names', async function () {
-			const res = underTest(JSON.parse(JSON.stringify(userProfile)), usersColumnMappings);
-
-			expect(res).to.eql({
-				'user_id': '8ef593a8-eef6-448c-8560-9ca8cdca80a5',
-				'email': 'christos.constandinou@ft.com',
-				'title': null,
-				'first_name': 'christos',
-				'surname': 'constandinou',
-				'primaryTelephone': null,
-				'homeAddress': {
-					'line1': null,
-					'line2': null,
-					'townCity': null,
-					'state': null,
-					'postcode': null,
-					'country': null
-				},
-				'marketing': { 'ftByEmail': false, 'ftByPost': false },
-				'demographics': { 'industry': null, 'position': null, 'responsibility': null },
-				'jobTitle': null,
-				'href': '/users/8ef593a8-eef6-448c-8560-9ca8cdca80a5'
 			});
 		});
 	});

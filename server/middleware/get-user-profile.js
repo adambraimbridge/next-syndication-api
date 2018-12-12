@@ -5,9 +5,6 @@ const path = require('path');
 const { default: log } = require('@financial-times/n-logger');
 const fetch = require('n-eager-fetch');
 
-const usersColumnMappings = require('../../db/pg/column_mappings/users');
-const pgMapColumns = require('../../db/pg/map-columns');
-
 const {
 	ALS_API_KEY,
 	BASE_URI_FT_API
@@ -30,7 +27,7 @@ module.exports = exports = async (req, res, next) => {
 		return;
 	}
 
-	const URI = `${BASE_URI_FT_API}/users/${userUuid}/profile`;
+	const URI = `${BASE_URI_FT_API}/users/${userUuid}/profile/basic`;
 
 	const headers = {
 		'authorization': `Bearer ${ACCESS_TOKEN_USER || ACCESS_TOKEN_LICENCE}`,
@@ -51,9 +48,15 @@ module.exports = exports = async (req, res, next) => {
 			throw new Error(userProfile.message || `${userProfile.errors[0].message}: ${userProfile.errors[0].errorCode}`);
 		}
 
-		log.info(`${MODULE_ID} GetUserProfileSuccess => ${URI}`, userProfile.user);
+		log.info(`${MODULE_ID} GetUserProfileSuccess => ${URI}`, userProfile);
 
-		const user = pgMapColumns(JSON.parse(JSON.stringify(userProfile.user)), usersColumnMappings);
+		// The `upsert_user` SQL function expects the id, firstName, and lastName to be the names of the DB columns
+		const user = {
+			user_id: userUuid,
+			first_name: userProfile.firstName,
+			surname: userProfile.lastName,
+			email: userProfile.email
+		};
 
 		if (MAINTENANCE_MODE !== true) {
 			const { $DB: db } = res.locals;

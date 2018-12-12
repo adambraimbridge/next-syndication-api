@@ -1,15 +1,7 @@
 {
-  "user": {
-    "id": "8ef593a8-eef6-448c-8560-9ca8cdca80a5",
-    "email": "christos.constandinou@ft.com",
-    "title": null,
-    "firstName": "christos",
-    "lastName": "constandinou",
-    "primaryTelephone": null,
-    "homeAddress": { "line1": null, "line2": null, "townCity": null, "state": null, "postcode": null, "country": null },
-    "marketing": { "ftByEmail": false, "ftByPost": false },
-    "demographics": { "industry": null, "position": null, "responsibility": null },
-    "jobTitle": null,
-    "href": "/users/8ef593a8-eef6-448c-8560-9ca8cdca80a5"
-  }
+  "email": "christos.constandinou@ft.com",
+  "title": null,
+  "firstName": "christos",
+  "lastName": "constandinou",
+  "country": null
 }
