@@ -45,6 +45,8 @@ const middleware = [
 	routeMaintenanceMode
 ];
 
+app.get('/__gtg', (req, res) => res.sendStatus(200));
+
 app.get('/syndication/__gtg', (req, res) => res.sendStatus(200));
 
 // download a content item for a contract
