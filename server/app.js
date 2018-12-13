@@ -57,8 +57,6 @@ const middleware = [
 
 app.get('/__gtg', (req, res) => res.sendStatus(200));
 
-app.get('/syndication/__gtg', (req, res) => res.sendStatus(200));
-
 // this is here to stop weird error logs, we can't find what exactly is pinging this endpoint
 // so this keeps everyone happy... :P
 app.get('/syndication/admin/save', (req, res) => res.sendStatus(204));
