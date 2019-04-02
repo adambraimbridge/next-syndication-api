@@ -35,13 +35,11 @@ describe(MODULE_ID, function () {
 		};
 		stubs = {
 			logger: {
-				default: {
-					debug: sandbox.stub(),
-					error: sandbox.stub(),
-					fatal: sandbox.stub(),
-					info: sandbox.stub(),
-					warn: sandbox.stub()
-				}
+				debug: sandbox.stub(),
+				error: sandbox.stub(),
+				fatal: sandbox.stub(),
+				info: sandbox.stub(),
+				warn: sandbox.stub()
 			},
 			sessionDecoderClass: sandbox.stub(),
 			decode: sandbox.stub(),
@@ -49,7 +47,7 @@ describe(MODULE_ID, function () {
 		};
 		stubs.sessionDecoderClass.returns({ decode: stubs.decode });
 		decodeSessionMiddleware = proxyquire('../../../server/middleware/decode-session', {
-			'@financial-times/n-logger': stubs.logger,
+			'../lib/logger': stubs.logger,
 			'@financial-times/session-decoder-js': stubs.sessionDecoderClass
 		});
 	});

@@ -6,7 +6,7 @@ const { PassThrough } = require('stream');
 const util = require('util');
 const url = require('url');
 
-const { default: log } = require('@financial-times/n-logger');
+const log = require('../logger');
 const fetch = require('n-eager-fetch');
 
 const ArticleDownload = require('./article');

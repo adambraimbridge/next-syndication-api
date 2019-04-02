@@ -58,12 +58,10 @@ describe(MODULE_ID, function () {
 		getContentStub = sinon.stub().resolves(content);
 
 		underTest = proxyquire('../../../../worker/sync/content-es/upsert-content', {
-			'@financial-times/n-logger': {
-				default: {
-					error: () => {},
-					info: () => {},
-					warn: () => {}
-				}
+			'../../../server/lib/logger': {
+				error: () => {},
+				info: () => {},
+				warn: () => {}
 			},
 			'../../../db/pg': sinon.stub().resolves(db),
 			'../../../server/lib/get-content-by-id': getContentStub

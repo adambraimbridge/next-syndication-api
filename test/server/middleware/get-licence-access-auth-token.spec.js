@@ -43,19 +43,17 @@ describe(MODULE_ID, function () {
 				url: `${BASE_URI_FT_API}/authorize#access_token=abc.123.xyz&scope=licence_data`
 			}),
 			logger: {
-				default: {
-					debug: sandbox.stub(),
-					error: sandbox.stub(),
-					fatal: sandbox.stub(),
-					info: sandbox.stub(),
-					warn: sandbox.stub()
-				}
+				debug: sandbox.stub(),
+				error: sandbox.stub(),
+				fatal: sandbox.stub(),
+				info: sandbox.stub(),
+				warn: sandbox.stub()
 			},
 			next: sandbox.stub()
 		};
 
 		underTest = proxyquire('../../../server/middleware/get-licence-access-auth-token', {
-			'@financial-times/n-logger': stubs.logger,
+			'../lib/logger': stubs.logger,
 			'n-eager-fetch': stubs.fetch
 		});
 	});

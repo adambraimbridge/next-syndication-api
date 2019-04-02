@@ -9,7 +9,7 @@ const { mkdir, ls, rm } = require('shelljs');
 
 const nHealthCheck = require('n-health/src/checks/check');
 const nHealthStatus = require('n-health/src/checks/status');
-const { default: log } = require('@financial-times/n-logger');
+const log = require('../server/lib/logger');
 
 const {
 	HEALTH_CHECK_HISTORY,
