@@ -56,20 +56,18 @@ describe(MODULE_ID, function () {
 		};
 		stubs = {
 			logger: {
-				default: {
-					debug: sandbox.stub(),
-					error: sandbox.stub(),
-					fatal: sandbox.stub(),
-					info: sandbox.stub(),
-					warn: sandbox.stub()
-				}
+				debug: sandbox.stub(),
+				error: sandbox.stub(),
+				fatal: sandbox.stub(),
+				info: sandbox.stub(),
+				warn: sandbox.stub()
 			},
 			skipChecks: sandbox.stub().returns(true),
 			decode: sandbox.stub(),
 			next: sandbox.stub()
 		};
 		underTest = proxyquire('../../../server/middleware/check-if-new-syndication-user', {
-			'@financial-times/n-logger': stubs.logger,
+			'../lib/logger': stubs.logger,
 			'../helpers/flag-is-on': stubs.skipChecks
 		});
 	});

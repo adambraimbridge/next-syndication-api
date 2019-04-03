@@ -17,13 +17,11 @@ describe(MODULE_ID, function () {
 		sandbox = sinon.sandbox.create();
 		stubs = {
 			logger: {
-				default: {
-					info: sandbox.stub()
-				}
+				info: sandbox.stub()
 			}
 		};
 		validateBody = proxyquire('../../../server/lib/validate-body', {
-			'@financial-times/n-logger': stubs.logger
+			'./logger': stubs.logger
 		});
 	});
 

@@ -3,7 +3,7 @@
 const path = require('path');
 
 const esClient = require('@financial-times/n-es-client');
-const { default: log } = require('@financial-times/n-logger');
+const log = require('./logger');
 
 const pg = require('../../db/pg');
 

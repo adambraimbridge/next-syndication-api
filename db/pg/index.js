@@ -2,7 +2,7 @@
 
 const path = require('path');
 
-const { default: log } = require('@financial-times/n-logger');
+const log = require('../../server/lib/logger');
 
 const massive = require('massive');
 const pgConn = require('pg-connection-string');

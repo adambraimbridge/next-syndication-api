@@ -1,6 +1,6 @@
 'use strict';
 
-const {default: logger} = require('@financial-times/n-logger');
+const log = require('./logger');
 const {ASSET_TYPE_TO_CONTENT_TYPE} = require('config');
 
 module.exports = exports = SFContract => {
@@ -32,7 +32,7 @@ module.exports = exports = SFContract => {
 			const asset = findMatchingAsset(addendum, contract);
 
 			if (!asset) {
-				logger.error(new ReferenceError(`Asset not found for Addendum: ${JSON.stringify(addendum)}`));
+				log.error(new ReferenceError(`Asset not found for Addendum: ${JSON.stringify(addendum)}`));
 				return;
 			}
 

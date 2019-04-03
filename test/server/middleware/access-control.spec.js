@@ -31,18 +31,16 @@ describe(MODULE_ID, function () {
 		};
 		stubs = {
 			logger: {
-				default: {
-					debug: sandbox.stub(),
-					error: sandbox.stub(),
-					fatal: sandbox.stub(),
-					info: sandbox.stub(),
-					warn: sandbox.stub()
-				}
+				debug: sandbox.stub(),
+				error: sandbox.stub(),
+				fatal: sandbox.stub(),
+				info: sandbox.stub(),
+				warn: sandbox.stub()
 			},
 			next: sandbox.stub()
 		};
 		accessControl = proxyquire('../../../server/middleware/access-control', {
-			'@financial-times/n-logger': stubs.logger
+			'../lib/logger': stubs.logger
 		});
 	});
 

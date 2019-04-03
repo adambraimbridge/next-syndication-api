@@ -2,7 +2,7 @@
 
 const path = require('path');
 
-const { default: log } = require('@financial-times/n-logger');
+const log = require('../lib/logger');
 
 const getContentById = require('../lib/get-content-by-id');
 const prepareDownloadResponse = require('../lib/prepare-download-response');

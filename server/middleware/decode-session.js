@@ -2,7 +2,7 @@
 
 const path = require('path');
 
-const { default: log } = require('@financial-times/n-logger');
+const log = require('../lib/logger');
 const Decoder = require('@financial-times/session-decoder-js');
 
 const decoder = new Decoder(process.env.SESSION_PUBLIC_KEY);

@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const { handlebars } = require('@financial-times/n-handlebars');
-const { default: log } = require('@financial-times/n-logger');
+const log = require('../../../server/lib/logger');
 
 //const moment = require('moment');
 const moment = require('moment-timezone');

@@ -4,7 +4,7 @@ const { stat } = require('fs');
 const path = require('path');
 const util = require('util');
 
-const { default: log } = require('@financial-times/n-logger');
+const log = require('../lib/logger');
 
 const { THE_GOOGLE: { AUTH_FILE_NAME } } = require('config');
 

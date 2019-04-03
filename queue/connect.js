@@ -4,7 +4,7 @@ const path = require('path');
 
 require('./promisify');
 
-const { default: log } = require('@financial-times/n-logger');
+const log = require('../server/lib/logger');
 
 const AWS = require('aws-sdk');
 

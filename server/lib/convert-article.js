@@ -3,7 +3,7 @@
 const { spawn } = require('child_process');
 const path = require('path');
 
-const { default: log } = require('@financial-times/n-logger');
+const log = require('./logger');
 
 const { CONVERT_FORMAT_COMMAND } = require('config');
 

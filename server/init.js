@@ -4,7 +4,7 @@ const path = require('path');
 
 require('../queue/connect');
 
-const { default: log } = require('@financial-times/n-logger');
+const log = require('./lib/logger');
 
 const CONFIG = require('config');
 

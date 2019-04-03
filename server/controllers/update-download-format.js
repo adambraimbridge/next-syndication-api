@@ -2,7 +2,7 @@
 
 const path = require('path');
 
-const { default: log } = require('@financial-times/n-logger');
+const log = require('../lib/logger');
 
 const { DOWNLOAD_ARTICLE_FORMATS } = require('config');
 
