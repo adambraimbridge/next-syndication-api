@@ -16,36 +16,20 @@ module.exports = exports = async (req, res, next) => {
 	const { locals: {
 		$DB: db,
 		MAINTENANCE_MODE,
-		flags,
 		userUuid
 	} } = res;
 
 	if (MAINTENANCE_MODE !== true) {
 		try {
-			let expedite = false;
+			const [user] = await db.syndication.get_user([userUuid]);
 
-			if (flags.syndicationMigrationComplete) {
-				expedite = true;
-			}
-			else {
-				const [mu] = await db.run(`SELECT * FROM syndication.get_migrated_user($text$${userUuid}$text$);`);
+			if (Date.now() - user.last_modified < SALESFORCE_REFRESH_CONTRACT_PERIOD) {
+				res.locals.user = user;
 
-				if (mu && mu.user_id !== null) {
-					expedite = true;
-				}
-			}
+				res.locals.isNewSyndicationUser = true;
+				res.locals.EXPEDITED_USER_AUTH = true;
 
-			if (expedite === true) {
-				const [user] = await db.syndication.get_user([userUuid]);
-
-				if (Date.now() - user.last_modified < SALESFORCE_REFRESH_CONTRACT_PERIOD) {
-					res.locals.user = user;
-
-					res.locals.isNewSyndicationUser = true;
-					res.locals.EXPEDITED_USER_AUTH = true;
-
-					log.info(`${MODULE_ID} => true`);
-				}
+				log.info(`${MODULE_ID} => true`);
 			}
 		}
 		catch (err) {}
