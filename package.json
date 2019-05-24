@@ -39,6 +39,7 @@
   "devDependencies": {
     "@financial-times/n-gage": "^3.0.0-beta.8",
     "@financial-times/n-heroku-tools": "^8.0.0-beta.4",
+    "@financial-times/n-test": "^1.13.2",
     "chai": "^4.0.2",
     "coveralls": "^2.13.1",
     "decompress": "^4.2.0",
@@ -54,7 +55,7 @@
     "proxyquire": "^1.7.4",
     "sinon": "^6.0.0",
     "sinon-chai": "^3.2.0",
-    "@financial-times/n-test": "^1.13.2"
+    "snyk": "^1.167.0"
   },
   "nyc": {
     "exclude": [
@@ -108,7 +109,8 @@
     "prepush": "make verify -j3",
     "commit": "commit-wizard",
     "commitmsg": "node_modules/.bin/secret-squirrel-commitmsg",
-    "heroku-postbuild": "make heroku-postbuild"
+    "heroku-postbuild": "make heroku-postbuild",
+    "prepare": "npx snyk protect || npx snyk protect -d || true"
   },
   "config": {}
 }
