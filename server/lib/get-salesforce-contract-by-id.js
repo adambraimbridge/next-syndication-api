@@ -21,14 +21,15 @@ const {
 	}
 } = require('config');
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
-
-module.exports = exports = async (contractID, dontThrow) => {
+module.exports = exports = async (contractId, dontThrow) => {
 	try {
 
-		if (SALESFORCE_STUB_CONTRACTS.includes(contractID)) {
-			log.info(`${MODULE_ID} | SALESFORCE DATA STUBBED FOR CONTRACT => `, contractID);
-			return require(path.resolve(`./stubs/${contractID}.json`));
+		if (SALESFORCE_STUB_CONTRACTS.includes(contractId)) {
+			log.info({
+				event: 'SALESFORCE_DATA_STUBBED_FOR_CONTRACT',
+				contractId
+			});
+			return require(path.resolve(`./stubs/${contractId}.json`));
 		}
 
 		const org = nforce.createConnection({
@@ -46,17 +47,11 @@ module.exports = exports = async (contractID, dontThrow) => {
 			password: SALESFORCE_PASSWORD
 		});
 
-		log.info(`${MODULE_ID} | SALESFORCE OAUTH => `, oauth);
-
-		log.info(`${MODULE_ID} | SALESFORCE CONTRACT URI => `, `${SALESFORCE_URI}/${contractID}`);
-
 		let apexRes = await org.apexRest({
-			uri: `${SALESFORCE_URI}/${contractID}`,
+			uri: `${SALESFORCE_URI}/${contractId}`,
 			method: 'GET',
 			oauth: oauth
 		});
-
-		log.info(`${MODULE_ID} | APEX RESPONSE => `, apexRes);
 
 		if (apexRes) {
 			if (apexRes.success === true) {
@@ -68,12 +63,10 @@ module.exports = exports = async (contractID, dontThrow) => {
 			return null;
 		}
 
-		throw new Error(`${MODULE_ID} => NullApexResponse`);
+		throw new Error('NullApexResponse');
 	}
 	catch (error) {
-		log.error(`${MODULE_ID}`, {
-			error: error.stack
-		});
+		log.error(error);
 
 		if (dontThrow === true) {
 			return null;

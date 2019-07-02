@@ -1,13 +1,12 @@
 'use strict';
 
 const { stat } = require('fs');
-const path = require('path');
 const util = require('util');
 
 const log = require('../lib/logger');
-
+const createKey = require('../../worker/create-key');
 const { THE_GOOGLE: { AUTH_FILE_NAME } } = require('config');
-
+const legacy_downloads = require('../../worker/crons/legacy_downloads/callback');
 const statAsync = util.promisify(stat);
 
 const ACL = {
@@ -16,8 +15,6 @@ const ACL = {
 	superdooperuser: true,
 	superdooperstormtrooperuser: true
 };
-
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
 	try {
@@ -42,12 +39,11 @@ module.exports = exports = async (req, res, next) => {
 		}
 
 		if (createAuthKey === true) {
-			const createKey = require('../../worker/create-key');
+
 
 			await createKey();
 		}
 
-		const legacy_downloads = require('../../worker/crons/legacy_downloads/callback');
 
 		const val = await legacy_downloads(true);
 
@@ -63,9 +59,7 @@ module.exports = exports = async (req, res, next) => {
 		next();
 	}
 	catch(error) {
-		log.error(`${MODULE_ID}`, {
-			error: error.stack
-		});
+		log.error({error});
 
 		res.sendStatus(500);
 	}

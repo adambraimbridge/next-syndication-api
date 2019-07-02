@@ -10,8 +10,6 @@ const flagIsOn = require('../helpers/flag-is-on');
 
 const PACKAGE = require(path.resolve('./package.json'));
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
-
 module.exports = exports = async (req, res, next) => {
 	try {
 		res.status(200);
@@ -48,16 +46,12 @@ module.exports = exports = async (req, res, next) => {
 			migrated: !!isNewSyndicationUser
 		}, user);
 
-		log.info(`${MODULE_ID} SUCCESS => `, userStatus);
-
 		res.json(userStatus);
 
 		next();
 	}
 	catch(error) {
-		log.error(`${MODULE_ID}`, {
-			error: error.stack
-		});
+		log.error({error});
 
 		res.sendStatus(500);
 	}

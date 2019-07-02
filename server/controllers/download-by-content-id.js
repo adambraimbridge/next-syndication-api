@@ -1,7 +1,5 @@
 'use strict';
 
-const path = require('path');
-
 const log = require('../lib/logger');
 
 const getContentById = require('../lib/get-content-by-id');
@@ -13,8 +11,6 @@ const {
 	DEFAULT_DOWNLOAD_FORMAT,
 	DEFAULT_DOWNLOAD_LANGUAGE
 } = require('config');
-
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
 	const {
@@ -37,7 +33,6 @@ module.exports = exports = async (req, res, next) => {
 	const content = await getContentById(req.params.content_id, format, lang);
 
 	if (Object.prototype.toString.call(content) !== '[object Object]') {
-		log.error(`${MODULE_ID} ContentNotFoundError => ${req.params.content_id}`);
 
 		res.sendStatus(404);
 
@@ -63,7 +58,8 @@ module.exports = exports = async (req, res, next) => {
 
 	if (dl.downloadAsArchive) {
 		dl.on('error', (err, httpStatus) => {
-			log.error(`${MODULE_ID} DownloadArchiveError => ${content.id}`, {
+			log.error({
+				event: 'DOWNLOAD_ARCHIVE_ERROR',
 				error: err.stack || err
 			});
 
@@ -71,7 +67,7 @@ module.exports = exports = async (req, res, next) => {
 		});
 
 		dl.on('end', () => {
-			log.debug(`${MODULE_ID} DownloadArchiveEnd => ${content.id} in ${Date.now() - dl.START}ms`);
+			log.debug(`DownloadArchiveEnd => ${content.id} in ${Date.now() - dl.START}ms`);
 
 			if (dl.cancelled !== true) {
 				res.end();

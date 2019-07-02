@@ -1,9 +1,5 @@
 'use strict';
 
-const path = require('path');
-
-const log = require('../lib/logger');
-
 const {
 	DEFAULT_DOWNLOAD_FORMAT,
 	DEFAULT_DOWNLOAD_LANGUAGE
@@ -11,8 +7,6 @@ const {
 
 const syndicate = require('../lib/syndicate-content');
 const getContentById = require('../lib/get-content-by-id');
-
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
 
@@ -27,17 +21,6 @@ module.exports = exports = async (req, res, next) => {
 
 	let content = await getContentById(req.params.content_id, format, lang);
 
-//	switch (lang) {
-//		case 'es':
-//			const content_area = content.content_area.toLowerCase().split(' ').join('_');
-//
-//			if (allowed[content_area] !== true) {
-//				res.sendStatus(403);
-//
-//				return;
-//			}
-//	}
-
 	const [{ get_content_state_for_contract: state }] = await db.syndication.get_content_state_for_contract([contract.contract_id, req.params.content_id]);
 
 	if (content) {
@@ -49,8 +32,6 @@ module.exports = exports = async (req, res, next) => {
 		});
 
 		res.status(200);
-
-		log.info(`${MODULE_ID} SUCCESS => `, content);
 
 		res.json(content);
 

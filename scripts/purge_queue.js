@@ -18,7 +18,7 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 			QueueUrl: DEFAULT_QUEUE_URL
 		});
 
-		log.debug(`${MODULE_ID} SyndicationSQSQueuePurgeSuccess =>`, {
+		log.debug('SyndicationSQSQueuePurgeSuccess =>', {
 			QueueUrl: DEFAULT_QUEUE_URL,
 			res
 		});

@@ -15,7 +15,7 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 	try {
 		let res = await db.deleteTableAsync({ TableName: Contracts.TableName });
 
-		log.debug(`${MODULE_ID} | ${Contracts.TableName} => `, { res: JSON.stringify(res, null, 4) });
+		log.debug(`| ${Contracts.TableName} => `, { res: JSON.stringify(res, null, 4) });
 	}
 	catch (e) {
 		log.error(`${MODULE_ID} | ${Contracts.TableName} => `, { error: e.stack });
@@ -24,7 +24,7 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 	try {
 		let res = await db.deleteTableAsync({ TableName: History.TableName });
 
-		log.debug(`${MODULE_ID} | ${History.TableName} => `, { res: JSON.stringify(res, null, 4) });
+		log.debug(`| ${History.TableName} => `, { res: JSON.stringify(res, null, 4) });
 	}
 	catch (e) {
 		log.error(`${MODULE_ID} | ${History.TableName} => `, { error: e.stack });

@@ -1,16 +1,11 @@
 'use strict';
 
-const path = require('path');
-
-const log = require('../lib/logger');
-
 const {
 	SALESFORCE: {
 		REFRESH_CONTRACT_PERIOD: SALESFORCE_REFRESH_CONTRACT_PERIOD
 	}
 } = require('config');
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
 	const { locals: {
@@ -28,8 +23,6 @@ module.exports = exports = async (req, res, next) => {
 
 				res.locals.isNewSyndicationUser = true;
 				res.locals.EXPEDITED_USER_AUTH = true;
-
-				log.info(`${MODULE_ID} => true`);
 			}
 		}
 		catch (err) {}

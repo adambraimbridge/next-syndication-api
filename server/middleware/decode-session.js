@@ -1,19 +1,14 @@
 'use strict';
 
-const path = require('path');
-
 const log = require('../lib/logger');
 const Decoder = require('@financial-times/session-decoder-js');
 
 const decoder = new Decoder(process.env.SESSION_PUBLIC_KEY);
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = (req, res, next) => {
 	const sessionToken = req.cookies.FTSession;
 	const sessionSecureToken = req.cookies.FTSession_s;
-
-	log.info(`${MODULE_ID}`, { gotSessionToken: !!sessionToken });
 
 	if (!sessionToken || !sessionSecureToken) {
 		res.redirect(`https://accounts.ft.com/login?location=${req.originalUrl}`);
@@ -22,17 +17,14 @@ module.exports = exports = (req, res, next) => {
 	}
 
 	try {
-		const userUuid = decoder.decode(sessionToken);
-
-		res.locals.userUuid = userUuid;
-
-		log.info(`${MODULE_ID} DecodeSessionSuccess`, { gotUserUuid: !!userUuid });
+		res.locals.userUuid = decoder.decode(sessionToken);
 
 		next();
 	}
 	catch (err) {
-		log.error(`${MODULE_ID} DecodeSessionError`, {
-			error: err.stack
+		log.error({
+			event: 'DECODE_SESSION_ERROR',
+			error: err,
 		});
 
 		// Dodgy session token provided

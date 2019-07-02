@@ -1,11 +1,7 @@
 'use strict';
 
-const path = require('path');
-
 const MessageQueueEvent = require('../../../queue/message-queue-event');
 const moment = require('moment');
-
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = (config) => {
 	const { content, contract, lang, licence, req, user } = config;
@@ -46,7 +42,7 @@ module.exports = exports = (config) => {
 		return new exports[content.content_type](config);
 	}
 
-	throw new TypeError(`${MODULE_ID} ${content.content_type} cannot be downloaded for content_id#${content.content_id}`);
+	throw new TypeError(`${content.content_type} cannot be downloaded for content_id#${content.content_id}`);
 };
 
 exports.article = require('./article');

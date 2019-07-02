@@ -110,14 +110,12 @@ module.exports = exports = class ArticleDownload extends Archiver {
 				});
 			}
 
-			log.info(`${MODULE_ID} ArticleConversionSuccess => ${content.id} in ${Date.now() - this.START}ms`);
-
 			return this.file;
 		}
-		catch (e) {
-			log.error(`${MODULE_ID} ArticleConversionError => ${content.id}`, {
-				content,
-				error: e.stack
+		catch (error) {
+			log.error({
+				contentId: content.id,
+				error
 			});
 		}
 	}

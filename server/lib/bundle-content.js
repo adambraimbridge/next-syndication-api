@@ -17,8 +17,6 @@ const convertArticle = require('./convert-article');
 
 const execAsync = util.promisify(exec);
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
-
 module.exports = exports = (req, res, next) => {
 	const START = Date.now();
 
@@ -32,17 +30,18 @@ module.exports = exports = (req, res, next) => {
 
 	let archive = archiver(DOWNLOAD_ARCHIVE_EXTENSION);
 
-	archive.on('error', err => {
+	archive.on('error', error => {
 		publishEndEvent(res, 'error');
 
-		log.error(`${MODULE_ID} ArchiveError => ${content.id}`, {
-			error: err.stack || err
+		log.error({
+			error,
+			contentId: content.id
 		});
 
 		res.status(500).end();
 	});
 	archive.on('end', () => {
-		log.debug(`${MODULE_ID} ArchiveEnd => ${content.id} in ${Date.now() - START}ms`);
+		log.debug(`ArchiveEnd => ${content.id} in ${Date.now() - START}ms`);
 
 		if (req.__download_cancelled__ !== true) {
 			req.__download_successful__ = true;
@@ -64,7 +63,7 @@ module.exports = exports = (req, res, next) => {
 		.then(file => {
 			archive.append(file, { name: `${content.fileName}.${content.transcriptExtension}` });
 
-			log.debug(`${MODULE_ID} TranscriptAppendSuccess => ${content.id} in ${Date.now() - START}ms`);
+			log.debug(`TranscriptAppendSuccess => ${content.id} in ${Date.now() - START}ms`);
 
 			transcriptAppended = true;
 
@@ -72,10 +71,11 @@ module.exports = exports = (req, res, next) => {
 				archive.finalize();
 			}
 		})
-		.catch(err => {
-			log.error(`${MODULE_ID} TranscriptAppendError => ${content.id}`, {
-				error: err.stack || err,
-				content
+		.catch(error => {
+			log.error({
+				event: 'TRANSCRIPT_APPEND_ERROR',
+				error,
+				contentId: content.id
 			});
 		});
 	}
@@ -93,7 +93,7 @@ module.exports = exports = (req, res, next) => {
 					archive.append(stdout, { name });
 				});
 
-				log.debug(`${MODULE_ID} CaptionAppendSuccess => ${content.id} in ${Date.now() - START}ms`);
+				log.debug(`CaptionAppendSuccess => ${content.id} in ${Date.now() - START}ms`);
 
 				captionsAppended = true;
 
@@ -101,10 +101,11 @@ module.exports = exports = (req, res, next) => {
 					archive.finalize();
 				}
 			})
-			.catch(err => {
-				log.error(`${MODULE_ID} CaptionsAppendError => ${content.id}`, {
-					error: err.stack || err,
-					content
+			.catch(error => {
+				log.error({
+					event: 'CAPTIONS_APPEND_ERROR',
+					error,
+					contentId: content.id
 				});
 			});
 	}
@@ -127,8 +128,6 @@ module.exports = exports = (req, res, next) => {
 			if (req.__download_successful__ === true) {
 				return;
 			}
-
-			log.warn(`${MODULE_ID} => DownloadRequestCancelled => `, res.locals.__event.toJSON());
 
 			req.__download_cancelled__ = true;
 
@@ -173,7 +172,7 @@ module.exports = exports = (req, res, next) => {
 		stream.on('close', onend);
 		stream.on('end', onend);
 
-		log.debug(`${MODULE_ID} MediaAppendSuccess => ${content.id} in ${Date.now() - START}ms`);
+		log.debug(`MediaAppendSuccess => ${content.id} in ${Date.now() - START}ms`);
 
 		archive.append(stream, { name: `${content.fileName}.${content.download.extension}` });
 
