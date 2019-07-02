@@ -1,6 +1,5 @@
 'use strict';
 
-const path = require('path');
 
 const log = require('../lib/logger');
 const fetch = require('n-eager-fetch');
@@ -10,7 +9,6 @@ const {
 	BASE_URI_FT_API
 } = require('config');
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
 	const URI = `${BASE_URI_FT_API}/licence-seat-holders/${res.locals.licence.id}`;
@@ -38,10 +36,13 @@ module.exports = exports = async (req, res, next) => {
 					return acc;
 				}, {});
 
-				log.info(`${MODULE_ID} => Found ${seatHolders.length} users for licence#${res.locals.licence.id}; contract#${res.locals.syndication_contract.id}`);
 			}
 			else {
-				log.warn(`${MODULE_ID} => Found NO users for licence#${res.locals.licence.id}; contract#${res.locals.syndication_contract.id}`);
+				log.warn({
+					event: 'NO_USERS_FOUND_FOR_LICENCE',
+					licenseId: res.locals.licence.id,
+					contractId: res.locals.syndication_contract.id
+				});
 			}
 		}
 		else {
@@ -50,9 +51,10 @@ module.exports = exports = async (req, res, next) => {
 			throw new Error(`${message}: ${errorCode}`);
 		}
 	}
-	catch (err) {
-		log.error(`${MODULE_ID} LicenceFoundError =>`, {
-			error: err.stack,
+	catch (error) {
+		log.error({
+			event: 'LICENCE_FOUND_ERROR',
+			error: error,
 			URI,
 			headers,
 			user: res.locals.userUuid,

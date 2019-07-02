@@ -49,7 +49,7 @@ module.exports = exports = async (event) => {
 
 		event.contract = contract;
 
-		log.debug(`${MODULE_ID} RECEIVED => `, event);
+		log.debug('RECEIVED => ', event);
 
 		event.displayDate = moment.tz(event.time, CONTRIBUTOR_EMAIL.timezone).format(CONTRIBUTOR_EMAIL.date_display_format);
 

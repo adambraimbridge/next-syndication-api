@@ -1,7 +1,5 @@
 'use strict';
 
-const path = require('path');
-
 const log = require('../lib/logger');
 
 const moment = require('moment');
@@ -14,8 +12,6 @@ const {
 	DEFAULT_DOWNLOAD_FORMAT,
 	DEFAULT_DOWNLOAD_LANGUAGE
 } = require('config');
-
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
 	try {
@@ -38,7 +34,6 @@ module.exports = exports = async (req, res, next) => {
 		const content = await getContentById(req.params.content_id, format, lang);
 
 		if (Object.prototype.toString.call(content) !== '[object Object]') {
-			log.error(`${MODULE_ID} ContentNotFoundError => ${req.params.content_id}`);
 
 			res.sendStatus(404);
 
@@ -78,15 +73,15 @@ module.exports = exports = async (req, res, next) => {
 
 		await res.locals.__event.publish();
 
-		log.debug(`${MODULE_ID} ContentFoundSuccess => ${content.id}`);
-
 		res.sendStatus(204);
 
 		next();
 	}
 	catch(error) {
-		log.error(`${MODULE_ID} ContentNotFoundError => ${req.params.content_id})`, {
-			error: error.stack
+		log.error({
+			event: 'CONTENT_NOT_FOUND_ERROR',
+			contentId: req.params.content_id,
+			error
 		});
 
 		res.sendStatus(500);

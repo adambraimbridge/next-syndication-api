@@ -56,10 +56,6 @@ module.exports = exports = async (req, res, next) => {
 								&& session.products.split(',').includes(SYNDICATION_PRODUCT_CODE);
 
 			if (isSyndicationUser === true) {
-				log.info(`${MODULE_ID} IsSyndicationUserSuccess`, {
-					isSyndicationUser,
-					session
-				});
 
 				next();
 
@@ -86,13 +82,14 @@ module.exports = exports = async (req, res, next) => {
 
 		res.sendStatus(401);
 	}
-	catch (err) {
-		log.error(`${MODULE_ID} IsSyndicationUserError =>`, {
-			error: err.stack
+	catch (error) {
+		log.error({
+			event: 'IS_SYNDICATION_USER_ERROR',
+			error
 		});
 
 		res.sendStatus(503);
 
-		throw err;
+		throw error;
 	}
 };

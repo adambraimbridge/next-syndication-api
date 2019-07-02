@@ -1,14 +1,10 @@
 'use strict';
 
-const path = require('path');
-
 const log = require('../lib/logger');
 
 const { EXPORT } = require('config');
 
 const RE_QUOTES = /"/gm;
-
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
 	const START = Date.now();
@@ -24,7 +20,7 @@ module.exports = exports = async (req, res, next) => {
 		const EXPORT_HEADERS = EXPORT[type];
 
 		if (!EXPORT_HEADERS) {
-			throw new TypeError(`${MODULE_ID} InvalidExportTypeError => ${type}`);
+			throw new TypeError(`Invalid Export Type: '${type}'`);
 		}
 
 		res.attachment(`export_republishing_${type}_${(new Date()).toJSON()}.csv`);
@@ -41,14 +37,12 @@ module.exports = exports = async (req, res, next) => {
 
 		res.status(200);
 
-		log.debug(`${MODULE_ID} => exported ${CSV.length} items in ${Date.now() - START}ms`);
+		log.debug(`exported ${CSV.length} items in ${Date.now() - START}ms`);
 
 		next();
 	}
 	catch(error) {
-		log.error(`${MODULE_ID}`, {
-			error: error.stack
-		});
+		log.error({error});
 
 		res.sendStatus(400);
 	}

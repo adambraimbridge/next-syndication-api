@@ -48,8 +48,6 @@ module.exports = exports = async (req, res, next) => {
 			throw new Error(userProfile.message || `${userProfile.errors[0].message}: ${userProfile.errors[0].errorCode}`);
 		}
 
-		log.info(`${MODULE_ID} GetUserProfileSuccess => ${URI}`, userProfile);
-
 		// The `upsert_user` SQL function expects the id, firstName, and lastName to be the names of the DB columns
 		const user = {
 			user_id: userUuid,
@@ -73,9 +71,10 @@ module.exports = exports = async (req, res, next) => {
 
 		next();
 	}
-	catch (err) {
-		log.error(`${MODULE_ID} GetUserProfileError =>`, {
-			error: err.stack,
+	catch (error) {
+		log.error({
+			event: 'GET_USER_PROFILE_ERROR',
+			error,
 			URI,
 			headers,
 			user: userUuid
@@ -83,6 +82,6 @@ module.exports = exports = async (req, res, next) => {
 
 		res.sendStatus(401);
 
-		throw err;
+		throw error;
 	}
 };

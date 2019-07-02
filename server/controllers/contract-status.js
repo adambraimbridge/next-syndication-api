@@ -1,12 +1,8 @@
 'use strict';
 
-const path = require('path');
-
 const log = require('../lib/logger');
 
 const { DEFAULT_DOWNLOAD_FORMAT } = require('config');
-
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
 	try {
@@ -16,16 +12,13 @@ module.exports = exports = async (req, res, next) => {
 
 		res.status(200);
 
-		log.info(`${MODULE_ID} SUCCESS => `, contract);
 
 		res.json(contract);
 
 		next();
 	}
 	catch (error) {
-		log.error(`${MODULE_ID}`, {
-			error: error.stack
-		});
+		log.error({error});
 
 		res.sendStatus(400);
 	}

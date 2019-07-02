@@ -1,8 +1,5 @@
 'use strict';
 
-const path = require('path');
-//const util = require('util');
-
 const log = require('../lib/logger');
 
 const {
@@ -17,8 +14,6 @@ const pg = require('../../db/pg');
 
 const getSalesforceContractByID = require('../lib/get-salesforce-contract-by-id');
 const reformatSalesforceContract = require('../lib/reformat-salesforce-contract');
-
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
 	try {
@@ -38,8 +33,6 @@ module.exports = exports = async (req, res, next) => {
 
 		if (contract.success === true) {
 			res.status(200);
-
-			log.info(`${MODULE_ID} SUCCESS => `, contract);
 
 			if (req.query.save !== '0') {
 				let contract_data = reformatSalesforceContract(JSON.parse(JSON.stringify(contract)));
@@ -69,9 +62,7 @@ module.exports = exports = async (req, res, next) => {
 		}
 	}
 	catch (error) {
-		log.error(`${MODULE_ID}`, {
-			error: error.stack
-		});
+		log.error({error});
 
 		res.sendStatus(500);
 	}
