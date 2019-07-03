@@ -25,7 +25,10 @@ module.exports = exports = async (req, res, next) => {
 		next();
 	}
 	catch(error) {
-		log.error({error});
+		log.error({
+			event: 'RELOAD_ERROR',
+			error
+		});
 
 		res.sendStatus(500);
 	}

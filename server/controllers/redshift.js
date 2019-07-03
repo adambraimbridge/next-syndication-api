@@ -28,7 +28,10 @@ module.exports = exports = async (req, res, next) => {
 	}
 	catch(error) {
 
-		log.error({error});
+		log.error({
+			event: 'REDSHIFT_ENDPOINT_ERROR',
+			error
+		});
 
 		res.sendStatus(500);
 	}

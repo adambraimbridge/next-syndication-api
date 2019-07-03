@@ -57,12 +57,16 @@ module.exports = exports = async (req, res, next) => {
 		else {
 			res.status(400);
 			res.json({
+				event: 'GET_CONTRACT_BY_ID_ERROR',
 				error: contract.errorMessage
 			});
 		}
 	}
 	catch (error) {
-		log.error({error});
+		log.error({
+			route: req.route.path,
+			error
+		});
 
 		res.sendStatus(500);
 	}
