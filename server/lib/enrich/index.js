@@ -7,7 +7,7 @@ module.exports = exports = function enrich(content, format) {
 		content.type = content.content_type;
 	}
 
-	if (content instanceof Object && !(content instanceof Error) && content.type in exports) {
+	if (content.constructor.name === 'Object' && !(content instanceof Error) && content.type in exports) {
 		const START = Date.now();
 
 		content = exports[content.type](content, format);
