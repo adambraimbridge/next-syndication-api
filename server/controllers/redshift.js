@@ -7,8 +7,7 @@ const backup = require('../../worker/crons/redshift/callback');
 const ACL = {
 	user: false,
 	superuser: false,
-	superdooperuser: true,
-	superdooperstormtrooperuser: true
+	superdooperuser: true
 };
 
 module.exports = exports = async (req, res, next) => {

@@ -5,8 +5,7 @@ const log = require('../lib/logger');
 const ACL = {
 	user: false,
 	superuser: false,
-	superdooperuser: true,
-	superdooperstormtrooperuser: true
+	superdooperuser: true
 };
 
 module.exports = exports = async (req, res, next) => {
