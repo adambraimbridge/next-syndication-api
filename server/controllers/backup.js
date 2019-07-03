@@ -42,7 +42,10 @@ module.exports = exports = async (req, res, next) => {
 		});
 	}
 	catch(error) {
-		log.error({error});
+		log.error({
+			event: 'BACKUP_ERROR',
+			error
+		});
 
 		res.sendStatus(500);
 	}

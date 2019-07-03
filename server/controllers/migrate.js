@@ -60,7 +60,10 @@ module.exports = exports = async (req, res, next) => {
 		next();
 	}
 	catch(error) {
-		log.error({error});
+		log.error({
+			event: 'MIGRATE_ERROR',
+			error
+		});
 
 		res.sendStatus(500);
 	}

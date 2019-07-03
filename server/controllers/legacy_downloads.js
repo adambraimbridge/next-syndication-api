@@ -59,7 +59,10 @@ module.exports = exports = async (req, res, next) => {
 		next();
 	}
 	catch(error) {
-		log.error({error});
+		log.error({
+			event: 'LEGACY_DOWNLOADS_ERROR',
+			error
+		});
 
 		res.sendStatus(500);
 	}

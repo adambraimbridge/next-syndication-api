@@ -41,7 +41,10 @@ module.exports = exports = async (req, res, next) => {
 		next();
 	}
 	catch(error) {
-		log.error({error});
+		log.error({
+			event: 'UPDATE_DOWNLOAD_FORMAT_ERROR',
+			error
+		});
 
 		res.sendStatus(500);
 	}
