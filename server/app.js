@@ -38,7 +38,7 @@ const middleware = [
 	cookieParser(),
 	bodyParser.text(),
 	bodyParser.json(),
-	bodyParser.urlencoded({ extended: true }),
+	bodyParser.urlencoded({extended: true}),
 	accessControl,
 	cache,
 	flagMaintenanceMode,
@@ -91,19 +91,14 @@ app.get('/syndication/export', middleware, require('./controllers/export'));
 // updates a user's preferred download format
 app.post('/syndication/download-format', middleware, require('./controllers/update-download-format'));
 
-
-{
-	const middleware = [
-		cookieParser(),
-		bodyParser.text(),
-		bodyParser.json(),
-		accessControl,
-		cache,
-		apiKey
-	];
-	app.post('/syndication/contracts/:contract_id/resolve', middleware, getContractByIdFromParam, require('./controllers/resolve'));
-	app.get('/syndication/contracts/:contract_id', middleware, require('./controllers/get-contract-by-id'));
-
-//	app.post('/syndication/contracts', middleware, require('./controllers/get-contracts-by-id'));
-//	app.get('/syndication/purge', middleware, require('./controllers/purge'));
-}
+// Accessible ONLY via API KEY for internal usage
+const internalEndpointMiddleware = [
+	cookieParser(),
+	bodyParser.text(),
+	bodyParser.json(),
+	accessControl,
+	cache,
+	apiKey
+];
+app.post('/syndication/contracts/:contract_id/resolve', internalEndpointMiddleware, getContractByIdFromParam, require('./controllers/resolve'));
+app.get('/syndication/contracts/:contract_id', internalEndpointMiddleware, require('./controllers/get-contract-by-id'));
