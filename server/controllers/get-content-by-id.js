@@ -4,40 +4,47 @@ const {
 	DEFAULT_DOWNLOAD_FORMAT,
 	DEFAULT_DOWNLOAD_LANGUAGE
 } = require('config');
-
+const log = require('../lib/logger');
 const syndicate = require('../lib/syndicate-content');
 const getContentById = require('../lib/get-content-by-id');
 
 module.exports = exports = async (req, res, next) => {
+	try {
 
-	const { locals: { $DB: db, /*allowed,*/ contract, user } } = res;
-	const { download_format } = user;
 
-	const format = req.query.format
-				|| download_format
-				|| DEFAULT_DOWNLOAD_FORMAT;
+		const {locals: {$DB: db, /*allowed,*/ contract, user}} = res;
+		const {download_format} = user;
 
-	const lang = String(req.query.lang || DEFAULT_DOWNLOAD_LANGUAGE).toLowerCase();
+		const format = req.query.format
+			|| download_format
+			|| DEFAULT_DOWNLOAD_FORMAT;
 
-	let content = await getContentById(req.params.content_id, format, lang);
+		const lang = String(req.query.lang || DEFAULT_DOWNLOAD_LANGUAGE).toLowerCase();
 
-	const [{ get_content_state_for_contract: state }] = await db.syndication.get_content_state_for_contract([contract.contract_id, req.params.content_id]);
+		let content = await getContentById(req.params.content_id, format, lang);
 
-	if (content) {
-		content = syndicate({
-			contract,
-			item: content,
-			src: content,
-			state
-		});
+		const [{get_content_state_for_contract: state}] = await db.syndication.get_content_state_for_contract([contract.contract_id, req.params.content_id]);
 
-		res.status(200);
+		if (content) {
+			content = syndicate({
+				contract,
+				item: content,
+				src: content,
+				state
+			});
 
-		res.json(content);
+			res.status(200);
 
-		next();
-	}
-	else {
-		res.sendStatus(404);
+			res.json(content);
+
+			next();
+		} else {
+			res.sendStatus(404);
+		}
+	} catch (error) {
+		log.error({
+			event: 'FAILED_TO_GET_CONTENT_BY_ID',
+			error
+		})
 	}
 };
