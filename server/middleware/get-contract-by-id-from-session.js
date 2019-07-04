@@ -42,6 +42,7 @@ module.exports = exports = async (req, res, next) => {
 	}
 	catch (error) {
 		log.error({
+			event: 'GET_CONTRACT_ID_FROM_SESSION_ERROR',
 			error: error,
 			contractId: syndication_contract.id,
 			userId: user.user_id,
