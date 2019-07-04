@@ -26,17 +26,16 @@ app.listen(PORT, () => {
 
 module.exports = app;
 
-process.on('unhandledRejection', (reason, promise) => {
-	log.warn(`${MODULE_ID} UnhandledRejection =>`, {
-		stack: reason.stack,
-		promise,
+process.on('unhandledRejection', (reason) => {
+	log.error({
+		event: 'UNHANDLED_PROMISE_REJECTION',
 		reason
 	});
 });
 
-process.on('unhandledPromiseRejectionWarning', (reason, promise) => {
-	log.warn(`${MODULE_ID} UnhandledPromiseRejectionWarning =>`, {
-		error: reason.stack || reason,
-		promise
+process.on('unhandledPromiseRejectionWarning', (reason) => {
+	log.warn({
+		event: 'UNHANDLED_PROMISE_REJECTION_WARNING',
+		error: reason
 	});
 });
