@@ -33,7 +33,13 @@ module.exports = exports = async (contentId, format, lang) => {
 			content = await esClient.get(contentId);
 		}
 	}
-	catch (e) {
+	catch (error) {
+		log.error({
+			event: 'GET_CONTENT_FAILED',
+			contentId,
+			lang,
+			error
+		});
 		content = null;
 	}
 
@@ -48,6 +54,7 @@ module.exports = exports = async (contentId, format, lang) => {
 		}
 		catch (error) {
 			log.error({
+				event: 'ENRICHING_CONTENT_FAILED',
 				contentId,
 				error
 			});
