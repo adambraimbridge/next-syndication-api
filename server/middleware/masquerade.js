@@ -2,7 +2,8 @@
 
 const ACL = {
 	user: false,
-	superuser: true
+	superuser: true,
+	superdooperuser: true
 };
 
 module.exports = exports = (req, res, next) => {
