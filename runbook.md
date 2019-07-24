@@ -1,50 +1,30 @@
 # syndication-api
 
-API for various FT syndication features
+API for FT syndication features
 
 ## Primary URL
 
-👩‍💻 The following was found in BizOps. Please check it and then remove the backticks. 
-
-```
 http://ft-next-syndication-api.herokuapp.com
-```
 
 
 ## Service Tier
 
-👩‍💻 The following was found in BizOps. Please check it and then remove the backticks. 
-
-```
 Bronze
-```
 
 
 ## Lifecycle Stage
 
-👩‍💻 The following was found in BizOps. Please check it and then remove the backticks. 
-
-```
 Production
-```
 
 
 ## Delivered By
 
-👩‍💻 The following was found in BizOps. Please check it and then remove the backticks. 
-
-```
-syndikatteam
-```
+next
 
 
 ## Supported By
 
-👩‍💻 The following was found in BizOps. Please check it and then remove the backticks. 
-
-```
 next
-```
 
 
 ## Technical Owner
@@ -53,13 +33,8 @@ next
 
 ## Known About By
 
-👩‍💻 The following was found in BizOps. Please check it and then remove the backticks. 
-
-```
-- emily.quinn
+- max.bladen-clark
 - simon.legg
-
-```
 
 
 ## Contains Personal Data
@@ -83,19 +58,11 @@ next
 
 ## Monitoring
 
-👩‍💻 The following was found in BizOps. Please check it and then remove the backticks. 
-
-```
-<p><a href="https://ft-next-syndication-api.herokuapp.com/__health" target="_blank">https://ft-next-syndication-api.herokuapp.com/__health</a><br></p>
-<p><a href="http://grafana.ft.com/d/P1fH18Kiz/ft-com-heroku-apps?orgId=1&var-app=syndication-api">Grafana</a></p>
-```
-
-
 [General information about monitoring and troubleshooting FT.com systems (wiki)](https://customer-products.in.ft.com/wiki/Monitoring-and-Troubleshooting-systems)
 
 
 ### Grafana
-✏️ Fill me in!
+[Syndication API Dashboard](http://grafana.ft.com/d/P1fH18Kiz/ft-com-heroku-apps?orgId=1&var-app=syndication-api)
 
 ### Pingdom
 ✏️ Fill me in!
@@ -111,13 +78,8 @@ next
 
 ## Healthchecks
 
-👩‍💻 The following was found in BizOps. Please check it and then remove the backticks. 
-
-```
 - ft-next-syndication-api.herokuapp.com-https
 - ft-next-syndication-api-https
-
-```
 
 
 ## Failover Architecture Type
@@ -182,6 +144,3 @@ Fully Automated | PartiallyAutomated | Manual | Not applicable | None
 
 👋 This section expects a list
 
-## Replaces
-
-## More Information
