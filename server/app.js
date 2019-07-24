@@ -103,18 +103,14 @@ if (process.env.NODE_ENV !== 'production') {
 	app.get('/syndication/redshift', middleware, require('./controllers/redshift'));
 }
 
-{
-	const middleware = [
-		cookieParser(),
-		bodyParser.text(),
-		bodyParser.json(),
-		accessControl,
-		cache,
-		apiKey
-	];
-	app.post('/syndication/contracts/:contract_id/resolve', middleware, getContractByIdFromParam, require('./controllers/resolve'));
-	app.get('/syndication/contracts/:contract_id', middleware, require('./controllers/get-contract-by-id'));
+const contractsMiddleware = [
+	cookieParser(),
+	bodyParser.text(),
+	bodyParser.json(),
+	accessControl,
+	cache,
+	apiKey
+];
 
-//	app.post('/syndication/contracts', middleware, require('./controllers/get-contracts-by-id'));
-//	app.get('/syndication/purge', middleware, require('./controllers/purge'));
-}
+app.post('/syndication/contracts/:contract_id/resolve', contractsMiddleware, getContractByIdFromParam, require('./controllers/resolve'));
+app.get('/syndication/contracts/:contract_id', contractsMiddleware, require('./controllers/get-contract-by-id'));
