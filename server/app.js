@@ -25,6 +25,7 @@ const routeMaintenanceMode = require('./middleware/route-maintenance-mode');
 
 const app = module.exports = express({
 	systemCode: 'next-syndication-api',
+	graphiteName: 'syndication-api',
 	withFlags: true,
 	healthChecks: [
 		require('../health/db-backups'),
