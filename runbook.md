@@ -42,7 +42,11 @@ next
 
 ## Contains Personal Data
 
+True
+
 ## Contains Sensitive Data
+
+False
 
 ## Host Platform
 
