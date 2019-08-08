@@ -31,6 +31,9 @@ next
 
 ## Stakeholders
 
+- simon.lord
+- caspar.debono
+
 ## Known About By
 
 - max.bladen-clark
