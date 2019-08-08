@@ -1,4 +1,4 @@
-# syndication-api
+# Syndication Api
 
 API for FT syndication features
 
@@ -50,11 +50,23 @@ False
 
 ## Host Platform
 
-## Architecture Diagram
+Heroku
+
+## Architecture
 
 ## First Line Troubleshooting
 
+### The app is erroring
+This app is a standard Heroku app, so try all the normal things here (bounce the dynos etc). For localised errors, check the user trying to access the application is actually on a syndication licence.
+
+### People can't see their syndication icons
+This would happen if a user is not on a licence or they have been removed, or the licence hasn;t been synced with salesforce, which it has an upstream dependency on.
+
 ## Second Line Troubleshooting
+
+- You can see the details of a specific contract by calling `GET https://www.ft.com/syndication/contracts/:contract_id` with a valid api key.
+- `POST` call to `https://www.ft.com/syndication/contracts/:contract_id/resolve` with a valid api key and a json body which is an array of content ids will return the syndication permissions for each article
+
 
 ### General tips for troubleshooting Customer Products Systems
 
@@ -72,16 +84,11 @@ False
 [Syndication API Dashboard](http://grafana.ft.com/d/P1fH18Kiz/ft-com-heroku-apps?orgId=1&var-app=syndication-api)
 
 ### Pingdom
-✏️ Fill me in!
-
-### Healthchecks
-✏️ Fill me in!
+- [next-syndication-api--eu-gtg](https://my.pingdom.com/reports/responsetime#daterange=7days&tab=uptime_tab&check=4897636)
 
 ### Splunk searches
-✏️ Fill me in!
 
-### Sentry
-✏️ Fill me in!
+- [index=heroku source="*syndication-api*"](https://financialtimes.splunkcloud.com/en-US/app/search/search?q=search%20index%3Dheroku%20source%3D%22*syndication-api*%22&display.page.search.mode=smart&dispatch.sample_ratio=1&earliest=-1h&latest=now&sid=1565272294.5309696)
 
 ## Healthchecks
 
@@ -91,63 +98,53 @@ False
 
 ## Failover Architecture Type
 
-✏️ This section will be one of the following. Delete as appropriate.
-
-ActiveActive | ActivePassive | None
+None
 
 ## Failover Process Type
 
-✏️ This section will be one of the following. Delete as appropriate.
-
-Don’t Know | Fully Automated | PartiallyAutomated | Manual | Not applicable
+Not applicable
 
 ## Failback Process Type
 
-✏️ This section will be one of the following. Delete as appropriate.
-
-Don’t Know | Fully Automated | PartiallyAutomated | Manual | Not applicable
-None
+Not applicable
 
 ## Failover Details
 
 ## Data Recovery Process Type
 
-✏️ This section will be one of the following. Delete as appropriate.
-
-Fully Automated | PartiallyAutomated | Manual | Not applicable | None
+Manual
 
 ## Data Recovery Details
 
+https://github.com/Financial-Times/next-syndication-db-schema#restoring-on-production-from-backup
+
 ## Release Process Type
 
-✏️ This section will be one of the following. Delete as appropriate.
-
-Fully Automated | PartiallyAutomated | Manual | Not applicable | None
+Fully Automated
 
 ## Rollback Process Type
 
-✏️ This section will be one of the following. Delete as appropriate.
-
-Don’t Know | Fully Automated | PartiallyAutomated | Manual | Not applicable
-None
+Manual
 
 ## Release Details
 
 ## Heroku Pipeline Name
 
+- ft-next-syndication-api
+
 ## Key Management Process Type
 
-✏️ This section will be one of the following. Delete as appropriate.
-
-Fully Automated | PartiallyAutomated | Manual | Not applicable | None
+PartiallyAutomated
 
 ## Key Management Details
 
+You can read about how to rotate an AWS key [over on the Customer Products Wiki](https://customer-products.in.ft.com/wiki/Rotating-AWS-Keys)
+See the Customer Products [key management and troubleshooting wiki page](https://customer-products.in.ft.com/wiki/Key-Management-and-Troubleshooting)
+
 ## Dependencies
 
-👋 This section expects a list
+- Salesforce
+- content-api 
+- next-es-interface
 
-## Installs Packages
-
-👋 This section expects a list
 
