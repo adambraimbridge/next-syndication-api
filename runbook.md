@@ -57,15 +57,33 @@ Heroku
 ## First Line Troubleshooting
 
 ### The app is erroring
-This app is a standard Heroku app, so try all the normal things here (bounce the dynos etc). For localised errors, check the user trying to access the application is actually on a syndication licence.
+
+This is a standard Heroku app, so try all the normal things here (bounce the dynos etc). For localised errors, check the user trying to access the application is actually on a syndication licence.
 
 ### People can't see their syndication icons
-This would happen if a user is not on a licence or they have been removed, or the licence hasn;t been synced with salesforce, which it has an upstream dependency on.
+
+If syndication icons are not appearing for an idividual user (as opposed to all users) then it is likely this user is not on a licence or has been removed from a licence.
+This system has an upstream dependency on Salesforce, so it is worth investigating the user's licence status there too.
+
+If *nobody* can see their icons, then this is a more serious problem and should be pushed to Second Line.
 
 ## Second Line Troubleshooting
 
 - You can see the details of a specific contract by calling `GET https://www.ft.com/syndication/contracts/:contract_id` with a valid api key.
 - `POST` call to `https://www.ft.com/syndication/contracts/:contract_id/resolve` with a valid api key and a json body which is an array of content ids will return the syndication permissions for each article
+
+### People can't see their syndication icons
+
+If this is a problem for an individual, it is likely to be an issue with their contract (have they been removed by accident?)
+
+If this is a problem for all Syndication users it could be:
+
+* A problem with the front end applications ([n-front-page](https://github.com/Financial-Times/next-front-page), [next-article](https://github.com/Financial-Times/next-article))
+* A problem with o-teaser (which is the Origami component that displays syndication icons)
+* A problem with x-teaser (https://github.com/Financial-Times/x-dash)
+* A problem with this application
+* A problem with Salesforce (all contracts live in Salesforce)
+* A problem with [next-syn-list](https://github.com/Financial-Times/next-syn-list)
 
 
 ### General tips for troubleshooting Customer Products Systems
@@ -81,9 +99,11 @@ This would happen if a user is not on a licence or they have been removed, or th
 
 
 ### Grafana
+
 [Syndication API Dashboard](http://grafana.ft.com/d/P1fH18Kiz/ft-com-heroku-apps?orgId=1&var-app=syndication-api)
 
 ### Pingdom
+
 - [next-syndication-api--eu-gtg](https://my.pingdom.com/reports/responsetime#daterange=7days&tab=uptime_tab&check=4897636)
 
 ### Splunk searches
@@ -110,6 +130,8 @@ Not applicable
 
 ## Failover Details
 
+This is a single region application so no failover is possible
+
 ## Data Recovery Process Type
 
 Manual
@@ -127,6 +149,9 @@ Fully Automated
 Manual
 
 ## Release Details
+
+This app is hosted on Heroku and released using Circle CI.
+Rollback is done manually on Heroku or Github. See [the guide on the wiki](https://customer-products.in.ft.com/wiki/How-does-deploying-our-Heroku-apps-work%3F) for instructions on how to deploy or roll back changes on Heroku.
 
 ## Heroku Pipeline Name
 
