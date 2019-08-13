@@ -28,7 +28,7 @@ run:
 	nht run --https
 
 run-coveralls: coverage-report
-	@cat ./coverage/lcov.info | coveralls
+	@cat ./coverage/lcov.info | coveralls | true
 	@$(DONE)
 
 run-list:
