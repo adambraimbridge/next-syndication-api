@@ -136,8 +136,10 @@ This is a single region application so no failover is possible
 
 Manual
 
+
 ## Data Recovery Details
 
+A database backup happens every hour at 7 minutes past the hour, and the result outputted to s3 (arn:aws:s3:::next-syndication-db-backups).
 https://github.com/Financial-Times/next-syndication-db-schema#restoring-on-production-from-backup
 
 ## Release Process Type
