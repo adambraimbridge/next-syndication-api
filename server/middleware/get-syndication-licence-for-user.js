@@ -1,8 +1,6 @@
 'use strict';
 
-const path = require('path');
-
-const { default: log } = require('@financial-times/n-logger');
+const log = require('../lib/logger');
 const fetch = require('n-eager-fetch');
 
 const {
@@ -14,8 +12,6 @@ const {
 		SKIP_SYNDICATION_CONTRACT_ID
 	}
 } = require('config');
-
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
 	const URI = `${BASE_URI_FT_API}/licences?userid=${res.locals.userUuid}`;
@@ -62,14 +58,13 @@ module.exports = exports = async (req, res, next) => {
 			res.locals.syndication_contract = syndicationLicence.links[0];
 		}
 
-		log.info(`${MODULE_ID} LicenceFoundSuccess => ${URI}`, syndicationLicence);
-
 		next();
 	}
-	catch (err) {
+	catch (error) {
 // todo: if user is in out system and no longer has an syndication contract, remove them from DB
-		log.error(`${MODULE_ID} LicenceFoundError =>`, {
-			error: err.stack,
+		log.error({
+			event: 'LICENCE_FOUND_ERROR',
+			error,
 			URI,
 			headers,
 			user: res.locals.userUuid
@@ -77,6 +72,6 @@ module.exports = exports = async (req, res, next) => {
 
 		res.sendStatus(401);
 
-		throw err;
+		throw error;
 	}
 };

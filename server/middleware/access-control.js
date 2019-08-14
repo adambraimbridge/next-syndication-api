@@ -1,10 +1,6 @@
 'use strict';
 
-const path = require('path');
-
-const { default: log } = require('@financial-times/n-logger');
-
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const log = require('../lib/logger');
 
 const inSafeList = requestersOrigin => {
 	if (/^https:\/\/ft-next-syndication-(?:api|downloads).herokuapp\.com$/.test(requestersOrigin)) {
@@ -21,7 +17,7 @@ module.exports = exports = (req, res, next) => {
 	const requestersOrigin = req.get('origin');
 	const isCorsRequest = !!(requestersOrigin && inSafeList(requestersOrigin));
 
-	log.info(`${MODULE_ID}`, {
+	log.info({
 		requestersOrigin,
 		isCorsRequest,
 		method: req.method

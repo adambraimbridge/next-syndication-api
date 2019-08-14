@@ -58,19 +58,17 @@ describe(MODULE_ID, function () {
 	//				url: `${BASE_URI_FT_API}/authorize#access_token=abc.123.xyz&scope=profile_min`
 	//			}),
 				logger: {
-					default: {
-						debug: sandbox.stub(),
-						error: sandbox.stub(),
-						fatal: sandbox.stub(),
-						info: sandbox.stub(),
-						warn: sandbox.stub()
-					}
+					debug: sandbox.stub(),
+					error: sandbox.stub(),
+					fatal: sandbox.stub(),
+					info: sandbox.stub(),
+					warn: sandbox.stub()
 				},
 				next: sandbox.stub()
 			};
 
 			underTest = proxyquire('../../../server/middleware/get-user-profile', {
-				'@financial-times/n-logger': stubs.logger/*,
+				'../lib/logger': stubs.logger/*,
 				'n-eager-fetch': stubs.fetch*/
 			});
 		});
@@ -81,7 +79,7 @@ describe(MODULE_ID, function () {
 
 		it('should assign the returned user profile to `res.locals.user`', async function () {
 			nock(BASE_URI_FT_API)
-				.get(`/users/${mocks.res.locals.userUuid}/profile`)
+				.get(`/users/${mocks.res.locals.userUuid}/profile/basic`)
 				.reply(() => {
 					return [
 						200,
@@ -94,6 +92,15 @@ describe(MODULE_ID, function () {
 			await underTest(mocks.req, mocks.res, stubs.next);
 
 			const { user } = mocks.res.locals;
+
+			expect(db.syndication.upsert_user).to.have.been.calledWithExactly([
+				{
+					user_id: 'abc',
+					first_name: 'christos',
+					surname: 'constandinou',
+					email: 'christos.constandinou@ft.com'
+				}
+			])
 
 			expect(user).to.be.an('object')
 				.and.to.eql(userResponse);
@@ -130,19 +137,17 @@ describe(MODULE_ID, function () {
 	//				url: `${BASE_URI_FT_API}/authorize#access_token=abc.123.xyz&scope=profile_min`
 	//			}),
 				logger: {
-					default: {
-						debug: sandbox.stub(),
-						error: sandbox.stub(),
-						fatal: sandbox.stub(),
-						info: sandbox.stub(),
-						warn: sandbox.stub()
-					}
+					debug: sandbox.stub(),
+					error: sandbox.stub(),
+					fatal: sandbox.stub(),
+					info: sandbox.stub(),
+					warn: sandbox.stub()
 				},
 				next: sandbox.stub()
 			};
 
 			underTest = proxyquire('../../../server/middleware/get-user-profile', {
-				'@financial-times/n-logger': stubs.logger/*,
+				'../lib/logger': stubs.logger/*,
 				'n-eager-fetch': stubs.fetch*/
 			});
 		});
@@ -153,7 +158,7 @@ describe(MODULE_ID, function () {
 
 		it('does not try to persist the user to the database', async function() {
 			nock(BASE_URI_FT_API)
-				.get(`/users/${mocks.res.locals.userUuid}/profile`)
+				.get(`/users/${mocks.res.locals.userUuid}/profile/basic`)
 				.reply(() => {
 					return [
 						200,

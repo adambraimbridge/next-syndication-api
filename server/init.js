@@ -4,7 +4,7 @@ const path = require('path');
 
 require('../queue/connect');
 
-const { default: log } = require('@financial-times/n-logger');
+const log = require('./lib/logger');
 
 const CONFIG = require('config');
 
@@ -26,16 +26,16 @@ app.listen(PORT, () => {
 
 module.exports = app;
 
-process.on('unhandledRejection', (reason, promise) => {
-	log.warn(`${MODULE_ID} UnhandledRejection =>`, {
-		error: reason.stack || reason,
-		promise
+process.on('unhandledRejection', (reason) => {
+	log.error({
+		event: 'UNHANDLED_PROMISE_REJECTION',
+		reason
 	});
 });
 
-process.on('unhandledPromiseRejectionWarning', (reason, promise) => {
-	log.warn(`${MODULE_ID} UnhandledPromiseRejectionWarning =>`, {
-		error: reason.stack || reason,
-		promise
+process.on('unhandledPromiseRejectionWarning', (reason) => {
+	log.warn({
+		event: 'UNHANDLED_PROMISE_REJECTION_WARNING',
+		error: reason
 	});
 });

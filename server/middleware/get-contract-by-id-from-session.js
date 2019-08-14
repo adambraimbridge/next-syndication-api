@@ -1,24 +1,21 @@
 'use strict';
 
-const path = require('path');
-
-const { default: log } = require('@financial-times/n-logger');
+const log = require('../lib/logger');
 
 const getContractByID = require('../lib/get-contract-by-id');
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
-
 module.exports = exports = async (req, res, next) => {
-	try {
-		const { locals } = res;
-		const {
-			$DB: db,
-			MAINTENANCE_MODE,
-			MASQUERADING,
-			syndication_contract,
-			user
-		} = locals;
+	const { locals } = res;
+	const {
+		$DB: db,
+		MAINTENANCE_MODE,
+		MASQUERADING,
+		syndication_contract,
+		user,
+		licence,
+	} = locals;
 
+	try {
 		if (MAINTENANCE_MODE !== true) {
 			const contract = locals.contract = await getContractByID(syndication_contract.id, locals);
 
@@ -44,8 +41,11 @@ module.exports = exports = async (req, res, next) => {
 		next();
 	}
 	catch (error) {
-		log.error(`${MODULE_ID}`, {
-			error: error.stack
+		log.error({
+			error: error,
+			contractId: syndication_contract.id,
+			userId: user.user_id,
+			licenceId: licence.id,
 		});
 
 		res.sendStatus(400);

@@ -56,32 +56,24 @@ describe(MODULE_ID, function () {
 		};
 		stubs = {
 			logger: {
-				default: {
-					debug: sandbox.stub(),
-					error: sandbox.stub(),
-					fatal: sandbox.stub(),
-					info: sandbox.stub(),
-					warn: sandbox.stub()
-				}
+				debug: sandbox.stub(),
+				error: sandbox.stub(),
+				fatal: sandbox.stub(),
+				info: sandbox.stub(),
+				warn: sandbox.stub()
 			},
 			skipChecks: sandbox.stub().returns(true),
 			decode: sandbox.stub(),
 			next: sandbox.stub()
 		};
 		underTest = proxyquire('../../../server/middleware/check-if-new-syndication-user', {
-			'@financial-times/n-logger': stubs.logger,
+			'../lib/logger': stubs.logger,
 			'../helpers/flag-is-on': stubs.skipChecks
 		});
 	});
 
 	afterEach(function () {
 		sandbox.restore();
-	});
-
-	it('should call the get_migrated_user to check the user is migrated', async function () {
-		await underTest(mocks.req, mocks.res, stubs.next);
-
-		expect(db.syndication.get_migrated_user).to.have.been.calledWith([user_id, contractResponse.contract_id]);
 	});
 
 	it('should set an FT-New-Syndication-User header if the user is migrated', async function () {

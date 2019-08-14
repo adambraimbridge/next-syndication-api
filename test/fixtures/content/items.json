@@ -359,13 +359,7 @@
                 ],
                 "url": "https://www.ft.com/topics/organisations/Amazon",
                 "preposition": "on",
-                "relativeUrl": "/topics/organisations/Amazon",
-                "attributes": [
-                    {
-                        "key": "FIGI",
-                        "value": "BBG000BVQ4Z3"
-                    }
-                ]
+                "relativeUrl": "/topics/organisations/Amazon"
             },
             {
                 "apiUrl": "http://api.ft.com/things/df5190e2-20f9-379b-9054-06ecfbdcb3a0",

@@ -2,7 +2,7 @@
 
 const path = require('path');
 
-const { default: log } = require('@financial-times/n-logger');
+const log = require('../server/lib/logger');
 
 const {
 	SYNDICATION_DOWNLOAD_SQS_URL: DEFAULT_QUEUE_URL
@@ -18,7 +18,7 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 			QueueUrl: DEFAULT_QUEUE_URL
 		});
 
-		log.debug(`${MODULE_ID} SyndicationSQSQueuePurgeSuccess =>`, {
+		log.debug('SyndicationSQSQueuePurgeSuccess =>', {
 			QueueUrl: DEFAULT_QUEUE_URL,
 			res
 		});

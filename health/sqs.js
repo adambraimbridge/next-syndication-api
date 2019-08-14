@@ -9,7 +9,7 @@ const { mkdir, ls, rm } = require('shelljs');
 
 const nHealthCheck = require('n-health/src/checks/check');
 const nHealthStatus = require('n-health/src/checks/status');
-const { default: log } = require('@financial-times/n-logger');
+const log = require('../server/lib/logger');
 
 const {
 	HEALTH_CHECK_HISTORY,
@@ -68,8 +68,10 @@ module.exports = exports = new (class SQSCheck extends nHealthCheck {
 			Attributes[item] = parseInt(Attributes[item], 10);
 			Attributes.total += Attributes[item];
 		});
-
-		await writeFileAsync(path.resolve(HISTORY_DIRECTORY, moment().format(HEALTH_CHECK_HISTORY.file_date_format)), JSON.stringify(Attributes, null, 4), 'utf8');
+		// this will write lots of files to your hard drive and make the app constantly restart with nodemon if run locally
+		if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
+			await writeFileAsync(path.resolve(HISTORY_DIRECTORY, moment().format(HEALTH_CHECK_HISTORY.file_date_format)), JSON.stringify(Attributes, null, 4), 'utf8');
+		}
 
 		results.push(Attributes);
 

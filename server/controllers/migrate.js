@@ -1,10 +1,9 @@
 'use strict';
 
 const { stat } = require('fs');
-const path = require('path');
 const util = require('util');
 
-const { default: log } = require('@financial-times/n-logger');
+const log = require('../lib/logger');
 
 const { THE_GOOGLE: { AUTH_FILE_NAME } } = require('config');
 
@@ -13,11 +12,8 @@ const statAsync = util.promisify(stat);
 const ACL = {
 	user: false,
 	superuser: false,
-	superdooperuser: true,
-	superdooperstormtrooperuser: true
+	superdooperuser: true
 };
-
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
 	try {
@@ -63,8 +59,9 @@ module.exports = exports = async (req, res, next) => {
 		next();
 	}
 	catch(error) {
-		log.error(`${MODULE_ID}`, {
-			error: error.stack
+		log.error({
+			event: 'MIGRATE_ERROR',
+			error
 		});
 
 		res.sendStatus(500);

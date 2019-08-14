@@ -1,13 +1,10 @@
 'use strict';
 
 const { spawn } = require('child_process');
-const path = require('path');
 
-const { default: log } = require('@financial-times/n-logger');
+const log = require('./logger');
 
 const { CONVERT_FORMAT_COMMAND } = require('config');
-
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = ({ source, sourceFormat = 'html', targetFormat = 'docx' }) => {
 	const sourceBuffer = Buffer.from(source, 'utf8');
@@ -25,31 +22,42 @@ module.exports = exports = ({ source, sourceFormat = 'html', targetFormat = 'doc
 		let cmd = spawn(CONVERT_FORMAT_COMMAND, args);
 
 		let targetBuffer = Buffer.from('', 'utf8');
-		let error = '';
+		let stderr = '';
 
-		cmd.on('error', err => {
-			log.error(`${MODULE_ID} ${CONVERT_FORMAT_COMMAND} ConversionError`, {
-				error: err.stack
+		cmd.on('error', error => {
+			log.error({
+				cmd: CONVERT_FORMAT_COMMAND,
+				event: 'CONVERSION_ERROR',
+				error
 			});
 
-			reject(err);
+			reject(error);
 		});
 
-		cmd.stdout.on('data', chunk =>
-			targetBuffer = Buffer.concat([targetBuffer, chunk]));
+		cmd.stdout.on('data', chunk => {
+			targetBuffer = Buffer.concat([targetBuffer, chunk])
+		});
 
-		cmd.stderr.on('data', chunk => error += chunk);
+		cmd.stderr.on('data', chunk => {
+			stderr += chunk
+		});
 
 		cmd.on('close', code => {
 			if (code !== 0) {
-				const ERROR = `${MODULE_ID} ${CONVERT_FORMAT_COMMAND} ConversionCompletionError (${code}) => ${error}`;
+				const error = new Error(`Command '${CONVERT_FORMAT_COMMAND}' exited with code ${code}`);
 
-				log.error(ERROR);
+				log.error({
+					event: 'CONVERSION_COMPLETION_ERROR',
+					cmd: CONVERT_FORMAT_COMMAND,
+					code,
+					stderr,
+					error
+				});
 
-				reject(new Error(ERROR));
+				reject(error)
 			}
 			else {
-				log.debug(`${MODULE_ID} ${CONVERT_FORMAT_COMMAND} ConversionCompletionSuccess`);
+				log.debug(`${CONVERT_FORMAT_COMMAND} ConversionCompletionSuccess`);
 
 				resolve(targetBuffer);
 			}

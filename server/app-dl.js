@@ -17,7 +17,7 @@ const db = require('./middleware/db');
 const decodeSession = require('./middleware/decode-session');
 const expediteUserAuth = require('./middleware/expedite-user-auth');
 const flagMaintenanceMode = require('./middleware/flag-maintenance-mode');
-const getContractById = require('./middleware/get-contract-by-id');
+const getContractByIdFromSession = require('./middleware/get-contract-by-id-from-session');
 const getUserAccessAuthToken = require('./middleware/get-user-access-auth-token');
 const getSyndicationLicenceForUser = require('./middleware/get-syndication-licence-for-user');
 const getUserProfile = require('./middleware/get-user-profile');
@@ -25,6 +25,7 @@ const routeMaintenanceMode = require('./middleware/route-maintenance-mode');
 
 const app = module.exports = express({
 	systemCode: 'next-syndication-dl',
+	graphiteName: 'syndication-dl',
 	withBackendAuthentication: false,
 	withFlags: true
 });
@@ -40,12 +41,12 @@ const middleware = [
 	getSyndicationLicenceForUser,
 	getUserAccessAuthToken,
 	getUserProfile,
-	getContractById,
+	getContractByIdFromSession,
 	checkIfNewSyndicationUser,
 	routeMaintenanceMode
 ];
 
-app.get('/syndication/__gtg', (req, res) => res.sendStatus(200));
+app.get('/__gtg', (req, res) => res.sendStatus(200));
 
 // download a content item for a contract
 app.get('/syndication/download/:content_id', middleware, require('./controllers/download-by-content-id'));

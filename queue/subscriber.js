@@ -3,7 +3,7 @@
 const { EventEmitter } = require('events');
 const path = require('path');
 
-const { default: log } = require('@financial-times/n-logger');
+const log = require('../server/lib/logger');
 
 const {
 	SYNDICATION_DOWNLOAD_SQS_URL: DEFAULT_QUEUE_URL

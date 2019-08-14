@@ -53,19 +53,17 @@ describe(MODULE_ID, function () {
 		};
 		stubs = {
 			logger: {
-				default: {
-					debug: sandbox.stub(),
-					error: sandbox.stub(),
-					fatal: sandbox.stub(),
-					info: sandbox.stub(),
-					warn: sandbox.stub()
-				}
+				debug: sandbox.stub(),
+				error: sandbox.stub(),
+				fatal: sandbox.stub(),
+				info: sandbox.stub(),
+				warn: sandbox.stub()
 			},
 			next: sandbox.stub()
 		};
 
 		underTest = proxyquire('../../../server/middleware/expedite-user-auth', {
-			'@financial-times/n-logger': stubs.logger
+			'../lib/logger': stubs.logger
 		});
 	});
 

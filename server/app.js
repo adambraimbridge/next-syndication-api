@@ -14,7 +14,8 @@ const db = require('./middleware/db');
 const decodeSession = require('./middleware/decode-session');
 const expediteUserAuth = require('./middleware/expedite-user-auth');
 const flagMaintenanceMode = require('./middleware/flag-maintenance-mode');
-const getContractById = require('./middleware/get-contract-by-id');
+const getContractByIdFromSession = require('./middleware/get-contract-by-id-from-session');
+const getContractByIdFromParam = require('./middleware/get-contract-by-id-from-param');
 const getUserAccessAuthToken = require('./middleware/get-user-access-auth-token');
 const getSyndicationLicenceForUser = require('./middleware/get-syndication-licence-for-user');
 const getUserProfile = require('./middleware/get-user-profile');
@@ -24,6 +25,7 @@ const routeMaintenanceMode = require('./middleware/route-maintenance-mode');
 
 const app = module.exports = express({
 	systemCode: 'next-syndication-api',
+	graphiteName: 'syndication-api',
 	withFlags: true,
 	healthChecks: [
 		require('../health/db-backups'),
@@ -50,14 +52,12 @@ const middleware = [
 	getSyndicationLicenceForUser,
 	getUserAccessAuthToken,
 	getUserProfile,
-	getContractById,
+	getContractByIdFromSession,
 	checkIfNewSyndicationUser,
 	routeMaintenanceMode
 ];
 
 app.get('/__gtg', (req, res) => res.sendStatus(200));
-
-app.get('/syndication/__gtg', (req, res) => res.sendStatus(200));
 
 // this is here to stop weird error logs, we can't find what exactly is pinging this endpoint
 // so this keeps everyone happy... :P
@@ -117,17 +117,14 @@ if (process.env.NODE_ENV !== 'production') {
 	app.get('/syndication/redshift', middleware, require('./controllers/redshift'));
 }
 
-{
-	const middleware = [
-		cookieParser(),
-		bodyParser.text(),
-		bodyParser.json(),
-		accessControl,
-		cache,
-		apiKey
-	];
+const contractsMiddleware = [
+	cookieParser(),
+	bodyParser.text(),
+	bodyParser.json(),
+	accessControl,
+	cache,
+	apiKey
+];
 
-	app.get('/syndication/contracts/:contract_id', middleware, require('./controllers/get-contract-by-id'));
-//	app.post('/syndication/contracts', middleware, require('./controllers/get-contracts-by-id'));
-//	app.get('/syndication/purge', middleware, require('./controllers/purge'));
-}
+app.post('/syndication/contracts/:contract_id/resolve', contractsMiddleware, getContractByIdFromParam, require('./controllers/resolve'));
+app.get('/syndication/contracts/:contract_id', contractsMiddleware, require('./controllers/get-contract-by-id'));

@@ -1,10 +1,6 @@
 'use strict';
 
-const path = require('path');
-
-const { default: log } = require('@financial-times/n-logger');
-
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const log = require('../logger');
 
 module.exports = exports = function enrich(content, format) {
 	if (!content.type && content.content_type) {
@@ -16,7 +12,7 @@ module.exports = exports = function enrich(content, format) {
 
 		content = exports[content.type](content, format);
 
-		log.debug(`${MODULE_ID} Enrich ${content.type} in ${Date.now() - START}ms`);
+		log.debug(`Enrich ${content.type} in ${Date.now() - START}ms`);
 
 		return content;
 	}

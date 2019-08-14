@@ -1,18 +1,15 @@
 'use strict';
 
-const path = require('path');
 
 const esClient = require('@financial-times/n-es-client');
-const { default: log } = require('@financial-times/n-logger');
+const log = require('./logger');
 
 const pg = require('../../db/pg');
 
 const enrich = require('./enrich');
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
-module.exports = exports = async (content_id, format, lang) => {
-	const START = Date.now();
+module.exports = exports = async (contentId, format, lang) => {
 
 	let content;
 
@@ -20,9 +17,9 @@ module.exports = exports = async (content_id, format, lang) => {
 		if (lang === 'es') {
 			const db = await pg();
 
-			[content] = await db.syndication.get_content_es_by_id([content_id]);
+			[content] = await db.syndication.get_content_es_by_id([contentId]);
 
-			const contentEN = await esClient.get(content_id);
+			const contentEN = await esClient.get(contentId);
 
 			[
 				'id', 'canBeSyndicated',
@@ -33,24 +30,34 @@ module.exports = exports = async (content_id, format, lang) => {
 			content.lang = lang;
 		}
 		else {
-			content = await esClient.get(content_id);
+			content = await esClient.get(contentId);
 		}
 	}
-	catch (e) {
+	catch (error) {
+		log.error({
+			event: 'GET_CONTENT_FAILED',
+			contentId,
+			lang,
+			error
+		});
 		content = null;
 	}
 
-	if (!content) {
-		log.error(`${MODULE_ID} ContentNotFoundError => ${content_id}`);
-	}
-	else {
+	if (content) {
 		try {
 			content = enrich(content, format);
 
-			log.info(`${MODULE_ID} GetContentSuccess => ${content.content_id} in ${Date.now() - START}ms`);
+			log.info({
+				event: 'GET_CONTENT_SUCCESS',
+				contentId
+			})
 		}
-		catch (e) {
-			log.error(`${MODULE_ID} ContentTypeNotSupportedError => ${content_id}`);
+		catch (error) {
+			log.error({
+				event: 'ENRICHING_CONTENT_FAILED',
+				contentId,
+				error
+			});
 
 			content = null;
 		}

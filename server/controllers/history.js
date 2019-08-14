@@ -1,14 +1,10 @@
 'use strict';
 
-const path = require('path');
-
-const { default: log } = require('@financial-times/n-logger');
+const log = require('../lib/logger');
 
 const getContent = require('../lib/get-content');
 const getHistoryByContractID  = require('../lib/get-history-by-contract-id');
 const syndicate = require('../lib/syndicate-content');
-
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
 	const START = Date.now();
@@ -55,12 +51,10 @@ module.exports = exports = async (req, res, next) => {
 			src: contentItemsMap[item.id] || contentItemsMap[item.content_id]
 		}));
 
-		log.debug(`${MODULE_ID} => Retrieved ${history.items.length} items in ${Date.now() - START}ms`);
+		log.debug(`Retrieved ${history.items.length} items in ${Date.now() - START}ms`);
 
 		if (Array.isArray(history.items)) {
 			res.status(200);
-
-			log.info(`${MODULE_ID} SUCCESS => `, history);
 
 			res.json(history);
 		}
@@ -71,8 +65,9 @@ module.exports = exports = async (req, res, next) => {
 		next();
 	}
 	catch(error) {
-		log.error(`${MODULE_ID}`, {
-			error: error.stack
+		log.error({
+			event: 'HISTORY_ERROR',
+			error
 		});
 
 		res.sendStatus(400);

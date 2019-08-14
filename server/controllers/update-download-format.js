@@ -1,8 +1,6 @@
 'use strict';
 
-const path = require('path');
-
-const { default: log } = require('@financial-times/n-logger');
+const log = require('../lib/logger');
 
 const { DOWNLOAD_ARTICLE_FORMATS } = require('config');
 
@@ -11,8 +9,6 @@ const ALLOWED_FORMATS = Object.values(DOWNLOAD_ARTICLE_FORMATS).reduce((acc, val
 
 	return acc;
 }, {});
-
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
 	if (!(req.body.format in ALLOWED_FORMATS)) {
@@ -28,7 +24,7 @@ module.exports = exports = async (req, res, next) => {
 
 		res.locals.user = user;
 
-		log.debug(`${MODULE_ID} | Persisted user#${user.user_id} to DB`, { user });
+		log.debug(`Persisted user#${user.user_id} to DB`);
 
 		const referrer = String(req.get('referrer'));
 		const requestedWith = String(req.get('x-requested-with')).toLowerCase();
@@ -45,8 +41,9 @@ module.exports = exports = async (req, res, next) => {
 		next();
 	}
 	catch(error) {
-		log.error(`${MODULE_ID}`, {
-			error: error.stack
+		log.error({
+			event: 'UPDATE_DOWNLOAD_FORMAT_ERROR',
+			error
 		});
 
 		res.sendStatus(500);

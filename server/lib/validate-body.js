@@ -1,10 +1,6 @@
 'use strict';
 
-const path = require('path');
-
-const { default: log } = require('@financial-times/n-logger');
-
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
+const log = require('./logger');
 
 const validateBody = body => {
 	try {
@@ -25,10 +21,10 @@ const validateBody = body => {
 		const error = new Error('Expected a JSON-parseable object containing an array property called `content`');
 		error.statusCode = 400;
 
-		log.info(`${MODULE_ID} ValidateBodyError`, {
+		log.info({
+			event: 'VALIDATE_BODY_ERROR',
 			actualError: err.stack,
 			error: error,
-			body
 		});
 
 		return Promise.reject(error);

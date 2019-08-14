@@ -2,15 +2,13 @@
 
 const path = require('path');
 
-const { default: log } = require('@financial-times/n-logger');
+const log = require('../lib/logger');
 
 const { FEATURE_FLAGS } = require('config');
 
 const flagIsOn = require('../helpers/flag-is-on');
 
 const PACKAGE = require(path.resolve('./package.json'));
-
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
 	try {
@@ -48,15 +46,14 @@ module.exports = exports = async (req, res, next) => {
 			migrated: !!isNewSyndicationUser
 		}, user);
 
-		log.info(`${MODULE_ID} SUCCESS => `, userStatus);
-
 		res.json(userStatus);
 
 		next();
 	}
 	catch(error) {
-		log.error(`${MODULE_ID}`, {
-			error: error.stack
+		log.error({
+			event: 'USER_STATUS_ERROR',
+			error
 		});
 
 		res.sendStatus(500);

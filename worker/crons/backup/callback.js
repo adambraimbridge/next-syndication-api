@@ -5,7 +5,7 @@ const { createReadStream/*, stat*/ } = require('fs');
 const path = require('path');
 const util = require('util');
 
-const { default: log } = require('@financial-times/n-logger');
+const log = require('../../../server/lib/logger');
 
 const archiver = require('archiver');
 const AWS = require('aws-sdk');

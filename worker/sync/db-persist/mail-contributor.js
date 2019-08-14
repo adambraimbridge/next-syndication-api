@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const { handlebars } = require('@financial-times/n-handlebars');
-const { default: log } = require('@financial-times/n-logger');
+const log = require('../../../server/lib/logger');
 
 //const moment = require('moment');
 const moment = require('moment-timezone');
@@ -49,7 +49,7 @@ module.exports = exports = async (event) => {
 
 		event.contract = contract;
 
-		log.debug(`${MODULE_ID} RECEIVED => `, event);
+		log.debug('RECEIVED => ', event);
 
 		event.displayDate = moment.tz(event.time, CONTRIBUTOR_EMAIL.timezone).format(CONTRIBUTOR_EMAIL.date_display_format);
 

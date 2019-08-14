@@ -3,7 +3,7 @@
 const path = require('path');
 const util = require('util');
 
-const { default: log } = require('@financial-times/n-logger');
+const log = require('../server/lib/logger');
 
 const GoogleSpreadsheet = require('google-spreadsheet');
 

@@ -1,8 +1,6 @@
 'use strict';
 
-const path = require('path');
-
-const { default: log } = require('@financial-times/n-logger');
+const log = require('../lib/logger');
 
 const moment = require('moment');
 
@@ -15,8 +13,6 @@ const {
 	DEFAULT_DOWNLOAD_LANGUAGE
 } = require('config');
 
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
-
 module.exports = exports = async (req, res, next) => {
 	try {
 		const referrer = String(req.get('referrer'));
@@ -26,7 +22,6 @@ module.exports = exports = async (req, res, next) => {
 		const content = await getContentById(req.params.content_id, DEFAULT_DOWNLOAD_FORMAT, lang);
 
 		if (Object.prototype.toString.call(content) !== '[object Object]') {
-			log.error(`${MODULE_ID} ContentNotFoundError => ${req.params.content_id}`);
 
 			res.sendStatus(404);
 
@@ -66,13 +61,9 @@ module.exports = exports = async (req, res, next) => {
 
 		await res.locals.__event.publish();
 
-		log.debug(`${MODULE_ID} ContentFoundSuccess => ${content.id}`);
-
 		const { locals: { $DB: db, syndication_contract } } = res;
 
-		const items = await db.syndication.delete_save_history_by_contract_id([syndication_contract.id, content.id]);
-
-		log.info(`${MODULE_ID} => ${items.length} items deleted for contract#${syndication_contract.id}; content#${content.id};`, items);
+		await db.syndication.delete_save_history_by_contract_id([syndication_contract.id, content.id]);
 
 		const requestedWith = String(req.get('x-requested-with')).toLowerCase();
 
@@ -88,8 +79,10 @@ module.exports = exports = async (req, res, next) => {
 		next();
 	}
 	catch (error) {
-		log.error(`${MODULE_ID} ContentNotFoundError => ${req.params.content_id})`, {
-			error: error.stack
+		log.error({
+			event: 'CONTENT_NOT_FOUND_ERROR',
+			contentId: req.params.content_id,
+			error
 		});
 
 		res.sendStatus(500);

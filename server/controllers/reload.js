@@ -1,17 +1,12 @@
 'use strict';
 
-const path = require('path');
-
-const { default: log } = require('@financial-times/n-logger');
+const log = require('../lib/logger');
 
 const ACL = {
 	user: false,
 	superuser: false,
-	superdooperuser: true,
-	superdooperstormtrooperuser: true
+	superdooperuser: true
 };
-
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
 	const { locals: { $DB: db, user } } = res;
@@ -30,8 +25,9 @@ module.exports = exports = async (req, res, next) => {
 		next();
 	}
 	catch(error) {
-		log.error(`${MODULE_ID}`, {
-			error: error.stack
+		log.error({
+			event: 'RELOAD_ERROR',
+			error
 		});
 
 		res.sendStatus(500);

@@ -6,14 +6,12 @@ const { PassThrough } = require('stream');
 const util = require('util');
 const url = require('url');
 
-const { default: log } = require('@financial-times/n-logger');
+const log = require('../logger');
 const fetch = require('n-eager-fetch');
 
 const ArticleDownload = require('./article');
 
 const execAsync = util.promisify(exec);
-
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = class VideoDownload extends ArticleDownload {
 
@@ -45,7 +43,6 @@ module.exports = exports = class VideoDownload extends ArticleDownload {
 
 			this.append(file, { name: `${content.fileName}.${content.transcriptExtension}` });
 
-			log.info(`${MODULE_ID} TranscriptAppendSuccess => ${content.id} in ${Date.now() - this.START}ms`);
 		}
 
 		this.articleAppended = true;
@@ -76,12 +73,11 @@ module.exports = exports = class VideoDownload extends ArticleDownload {
 
 				captionFiles.forEach(({ file, name }) => this.append(file, { name }));
 
-				log.info(`${MODULE_ID} CaptionAppendSuccess => ${content.id} in ${Date.now() - this.START}ms`);
 			}
-			catch (e) {
-				log.error(`${MODULE_ID} CaptionsAppendError => ${content.id}`, {
-					error: e.stack || e,
-					content
+			catch (error) {
+				log.error({
+					error,
+					contentId: content.id
 				});
 			}
 		}
@@ -135,8 +131,6 @@ module.exports = exports = class VideoDownload extends ArticleDownload {
 
 		this.cancelled = true;
 
-		log.warn(`${MODULE_ID} => DownloadRequestCancelled => `, this.event.toJSON());
-
 		if (this.endCalled !== true) {
 			!this.mediaStream || this.mediaStream.end();
 
@@ -163,15 +157,12 @@ module.exports = exports = class VideoDownload extends ArticleDownload {
 	}
 
 	createMediaStream() {
-		const { content } = this;
 
 		const stream = this.ptStream = new PassThrough();
 
 		stream.on('error', () => this.onEnd());
 		stream.on('close', () => this.onEnd());
 		stream.on('end', () => this.onEnd());
-
-		log.info(`${MODULE_ID} MediaAppendSuccess => ${content.id} in ${Date.now() - this.START}ms`);
 
 		stream.on('data', (chunk) => {
 			if (this.cancelled === true) {

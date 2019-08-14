@@ -1,6 +1,7 @@
 'use strict';
 
-const { ASSET_TYPE_TO_CONTENT_TYPE } = require('config');
+const log = require('./logger');
+const {ASSET_TYPE_TO_CONTENT_TYPE} = require('config');
 
 module.exports = exports = SFContract => {
 	const contract = {
@@ -16,45 +17,41 @@ module.exports = exports = SFContract => {
 		assets: []
 	};
 
-	contract.assets = SFContract.assets.filter(({ assetType }) => assetType !== 'Addendum').map(item => {
-		const asset = formatAsset(item);
+	contract.assets = SFContract.assets
+		.filter(({assetType}) => assetType !== 'Addendum')
+		.map(formatAsset)
+		.map(asset => {
+			asset.download_limit = SFContract[`${asset.content_type}Limit`];
+			return asset;
+		});
 
-		asset.download_limit = SFContract[`${asset.content_type}Limit`];
-
-		return asset;
-	});
-
-	SFContract.assets.filter(({ assetType }) => assetType === 'Addendum').forEach(item => {
-		const addendum = formatAsset(item);
-
-		let asset = contract.assets.find(asset =>
-			asset.content_type === addendum.content_type
-			&& asset.content_set === addendum.content_set);
-
-		if (!asset) {
-			asset = contract.assets.find(asset =>
-				asset.content_type === addendum.content_type);
+	SFContract.assets
+		.filter(({assetType}) => assetType === 'Addendum')
+		.map(formatAsset)
+		.forEach(addendum => {
+			const asset = findMatchingAsset(addendum, contract);
 
 			if (!asset) {
-				throw new ReferenceError(`Asset not found for Addendum: ${JSON.stringify(addendum)}`);
+				log.error({
+					event: 'Asset not found for Addendum',
+					addendum
+				});
+				return;
 			}
-		}
 
-		if (!Array.isArray(asset.addendums)) {
-			asset.addendums = [];
-		}
+			asset.addendums = Array.isArray(asset.addendums) ? asset.addendums : [];
+			asset.addendums.push(cleanupAddendum(addendum));
 
-		asset.addendums.push(cleanupAddendum(addendum));
-
-		if (addendum.embargo_period && (!asset.embargo_period || addendum.embargo_period > asset.embargo_period)) {
-			asset.embargo_period = addendum.embargo_period;
-		}
-	});
+			if (addendum.embargo_period && (!asset.embargo_period || addendum.embargo_period > asset.embargo_period)) {
+				asset.embargo_period = addendum.embargo_period;
+			}
+		});
 
 	contract.assets.forEach(item => delete item.content_set);
 
 	return contract;
 };
+
 
 function formatAsset(item) {
 	return {
@@ -72,6 +69,14 @@ function formatAsset(item) {
 		content: typeof item.contentSet === 'string' ? item.contentSet.split(';').map(item => item.trim()) : [],
 		addendums: []
 	};
+}
+
+function findMatchingAsset(addendum, contract) {
+	let asset = contract.assets.find(asset => asset.content_type === addendum.content_type && asset.content_set === addendum.content_set);
+	if (!asset) {
+		asset = contract.assets.find(asset => asset.content_type === addendum.content_type);
+	}
+	return asset
 }
 
 function cleanupAddendum(item) {

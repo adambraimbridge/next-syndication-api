@@ -1,15 +1,12 @@
 'use strict';
 
-const path = require('path');
 
-const { default: log } = require('@financial-times/n-logger');
+const log = require('../server/lib/logger');
 
 const { db } = require('../db/connect');
 
 const Contracts = require('../db/tables/contracts');
 const History = require('../db/tables/history');
-
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 (async () => {
 	const { TableNames } = await db.listTablesAsync();
@@ -29,18 +26,18 @@ const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolv
 	if (createContracts) {
 		let contractsTable = await db.createTableAsync(Contracts);
 
-		log.debug(`${MODULE_ID} CREATE_TABLE => `, contractsTable);
+		log.debug('CREATE_TABLE => ', contractsTable);
 	}
 	else {
-		log.debug(`${MODULE_ID} TABLE_EXISTS => `, Contracts);
+		log.debug('TABLE_EXISTS => ', Contracts);
 	}
 
 	if (createHistory) {
 		let historyTable = await db.createTableAsync(History);
 
-		log.debug(`${MODULE_ID} CREATE_TABLE => `, historyTable);
+		log.debug('CREATE_TABLE => ', historyTable);
 	}
 	else {
-		log.debug(`${MODULE_ID} TABLE_EXISTS => `, History);
+		log.debug('TABLE_EXISTS => ', History);
 	}
 })();

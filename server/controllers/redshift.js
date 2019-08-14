@@ -1,17 +1,14 @@
 'use strict';
 
-const path = require('path');
+const log = require('../lib/logger');
 
-const { default: log } = require('@financial-times/n-logger');
+const backup = require('../../worker/crons/redshift/callback');
 
 const ACL = {
 	user: false,
 	superuser: false,
-	superdooperuser: true,
-	superdooperstormtrooperuser: true
+	superdooperuser: true
 };
-
-const MODULE_ID = path.relative(process.cwd(), module.id) || require(path.resolve('./package.json')).name;
 
 module.exports = exports = async (req, res, next) => {
 	try {
@@ -23,8 +20,6 @@ module.exports = exports = async (req, res, next) => {
 			return;
 		}
 
-		const backup = require('../../worker/crons/redshift/callback');
-
 		await backup(true);
 
 		res.sendStatus(204);
@@ -32,8 +27,10 @@ module.exports = exports = async (req, res, next) => {
 		next();
 	}
 	catch(error) {
-		log.error(`${MODULE_ID}`, {
-			error: error.stack
+
+		log.error({
+			event: 'REDSHIFT_ENDPOINT_ERROR',
+			error
 		});
 
 		res.sendStatus(500);
