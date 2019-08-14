@@ -46,51 +46,49 @@ module.exports = async (req, res, next) => {
 
 	log.info({ operation, requestedBy, erasureEmails, erasureUuids });
 
+	const uuids = erasureUuids === '' ? [] : erasureUuids.split(/\r?\n/);
+	const emails = erasureEmails === '' ? [] : erasureEmails.split(/\r?\n/);
+	const invalidUuids = getInvalidUuids(uuids);
+	const invalidEmails = getInvalidEmails(emails);
+
+	if (invalidEmails.length > 0 || invalidUuids.length > 0) {
+		const viewModel = {
+			uuids,
+			emails,
+			erasureEmails,
+			erasureUuids,
+			invalidEmails,
+			invalidUuids
+		};
+
+		return res.status(400).render('erasure', { viewModel });
+	}
+
 	try {
-		const uuids = erasureUuids === '' ? [] : erasureUuids.split(/\r?\n/);
-		const emails = erasureEmails === '' ? [] : erasureEmails.split(/\r?\n/);
-		const invalidUuids = getInvalidUuids(uuids);
-		const invalidEmails = getInvalidEmails(emails);
+		const uuidSearchResults = [];
+		const emailSearchResults = [];
 
-		if (invalidEmails.length > 0 || invalidUuids.length > 0) {
-			const viewModel = {
-				uuids,
-				emails,
-				erasureEmails,
-				erasureUuids,
-				invalidEmails,
-				invalidUuids
-			};
-
-			res.render('erasure', { viewModel });
-
-		} else {
-			const uuidSearchResults = [];
-			const emailSearchResults = [];
-
-			if (erasureUuids) {
-				await Promise.all(uuids.map(async (uuid) => {
-					const userTableResults = await searchUserTableByUuid(db, uuid, requestedBy);
-					const migratedUserTableResults = await searchMigratedUsersTableByUuid(db, uuid, requestedBy);
-					uuidSearchResults.push(userTableResults, migratedUserTableResults);
-				}));
-			}
-
-			if (erasureEmails) {
-				await Promise.all(emails.map(async (email) => {
-					const userTableResults = await searchUserTableByEmail(db, email, requestedBy);
-					emailSearchResults.push(userTableResults);
-				}));
-			}
-
-			const viewModel = {
-				uuidSearchResults,
-				emailSearchResults
-			};
-
-			res.render('erasure-search-results', { viewModel });
+		if (erasureUuids) {
+			await Promise.all(uuids.map(async (uuid) => {
+				const userTableResults = await searchUserTableByUuid(db, uuid, requestedBy);
+				const migratedUserTableResults = await searchMigratedUsersTableByUuid(db, uuid, requestedBy);
+				uuidSearchResults.push(userTableResults, migratedUserTableResults);
+			}));
 		}
 
+		if (erasureEmails) {
+			await Promise.all(emails.map(async (email) => {
+				const userTableResults = await searchUserTableByEmail(db, email, requestedBy);
+				emailSearchResults.push(userTableResults);
+			}));
+		}
+
+		const viewModel = {
+			uuidSearchResults,
+			emailSearchResults
+		};
+
+		res.render('erasure-search-results', { viewModel });
 	} catch (error) {
 		next(error);
 	}
