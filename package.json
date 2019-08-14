@@ -99,7 +99,7 @@
     ]
   },
   "engines": {
-    "node": "10.16.0"
+    "node": "10.16.2"
   },
   "scripts": {
     "precommit": "node_modules/.bin/secret-squirrel",
