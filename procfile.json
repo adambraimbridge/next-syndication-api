@@ -6,7 +6,7 @@
     "exec_mode": "cluster",
     "instance_var": "SYNDICATION_API_ID",
     "instances": 8,
-    "interpreter_args": "--harmony --preserve-symlinks --require ./server/env.js --trace-deprecation --trace-warnings --zero-fill-buffers",
+    "interpreter_args": "--harmony --preserve-symlinks --trace-deprecation --trace-warnings --zero-fill-buffers",
     "name": "syndication-web",
     "script": "./server/init.js"
   }, {
@@ -14,7 +14,7 @@
     "exec_mode": "cluster",
     "instance_var": "SYNDICATION_WORKER_SYNC_ID",
     "instances": 2,
-    "interpreter_args": "--harmony --preserve-symlinks --require ./server/env.js --trace-deprecation --trace-warnings --zero-fill-buffers",
+    "interpreter_args": "--harmony --preserve-symlinks --trace-deprecation --trace-warnings --zero-fill-buffers",
     "name": "syndication-sync",
     "script": "./worker/sync/index.js"
   }, {
@@ -22,7 +22,7 @@
     "exec_mode": "cluster",
     "instance_var": "SYNDICATION_WORKER_CRONS_ID",
     "instances": 1,
-    "interpreter_args": "--harmony --preserve-symlinks --require ./server/env.js --trace-deprecation --trace-warnings --zero-fill-buffers",
+    "interpreter_args": "--harmony --preserve-symlinks --trace-deprecation --trace-warnings --zero-fill-buffers",
     "name": "crons",
     "script": "./worker/crons/index.js"
   } ]
