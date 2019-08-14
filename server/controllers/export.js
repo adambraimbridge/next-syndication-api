@@ -25,7 +25,7 @@ module.exports = exports = async (req, res, next) => {
 
 		res.attachment(`export_republishing_${type}_${(new Date()).toJSON()}.csv`);
 
-		const items = await db.run(`SELECT * FROM syndication.get_${type}_by_contract_id($text$${CONTRACT.contract_id}$text$)`);
+		const items = await db.query(`SELECT * FROM syndication.get_${type}_by_contract_id($text$${CONTRACT.contract_id}$text$)`);
 
 		const CSV = [];
 

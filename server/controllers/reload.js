@@ -18,7 +18,7 @@ module.exports = exports = async (req, res, next) => {
 			return;
 		}
 
-		await db.run('SELECT syndication.reload_all()');
+		await db.query('SELECT syndication.reload_all()');
 
 		res.sendStatus(204);
 
