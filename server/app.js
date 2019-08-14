@@ -110,6 +110,7 @@ const erasureMiddleware = [
 	db
 ];
 app.get('/syndication/erasure', erasureMiddleware, require('./controllers/erasure'));
+app.post('/syndication/erasure', erasureMiddleware);
 app.post('/syndication/erasure-search', erasureMiddleware, require('./controllers/erasure-search'));
 
 if (process.env.NODE_ENV !== 'production') {
