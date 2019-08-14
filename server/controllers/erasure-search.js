@@ -3,7 +3,7 @@ const operation = 'erasure-search';
 
 async function searchUserTableByUuid (db, uuid, requestedBy) {
 	try {
-		const userTableResults = await db.run(`SELECT * FROM syndication.users WHERE user_id = '${uuid}';`);
+		const userTableResults = await db.run('SELECT * FROM syndication.users WHERE user_id = $1;', [uuid]);
 		log.info({ operation, subOp: 'search-user-table-by-uuid', requestedBy, uuid, userTableResults});
 		return { uuid, table: 'users', recordsFound: userTableResults.length };
 	} catch (error) {
@@ -13,7 +13,7 @@ async function searchUserTableByUuid (db, uuid, requestedBy) {
 
 async function searchUserTableByEmail (db, email, requestedBy) {
 	try {
-		const userTableResults = await db.run(`SELECT * FROM syndication.users WHERE email = '${email}';`);
+		const userTableResults = await db.run('SELECT * FROM syndication.users WHERE email = $1;', [email]);
 		log.info({ operation, subOp: 'search-user-table-by-email', requestedBy, email, userTableResults});
 		return { email, table: 'users', recordsFound: userTableResults.length };
 	} catch (error) {
@@ -23,7 +23,7 @@ async function searchUserTableByEmail (db, email, requestedBy) {
 
 async function searchMigratedUsersTableByUuid (db, uuid, requestedBy) {
 	try {
-		const migratedUserTableResults = await db.run(`SELECT * FROM syndication.migrated_users WHERE user_id = '${uuid}';`);
+		const migratedUserTableResults = await db.run('SELECT * FROM syndication.migrated_users WHERE user_id = $1;', [uuid]);
 		log.info({ operation, subOp: 'search-migrated-user-table-by-uuid', requestedBy, uuid, migratedUserTableResults});
 		return { uuid, table: 'migrated_users', recordsFound: migratedUserTableResults.length };
 	} catch (error) {
