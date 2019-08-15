@@ -109,7 +109,7 @@ const erasureMiddleware = [
 	flagMaintenanceMode,
 	db
 ];
-app.get('/syndication/erasure', erasureMiddleware, require('./controllers/erasure'));
+app.get('/syndication/erasure', erasureMiddleware, (req, res) => res.render('erasure'));
 app.post('/syndication/erasure', erasureMiddleware);
 app.post('/syndication/erasure-search', erasureMiddleware, require('./controllers/erasure-search'));
 
