@@ -44,6 +44,9 @@ module.exports = async (req, res, next) => {
 	const db = res.locals.$DB;
 	const { erasureEmails, erasureUuids } = req.body;
 
+	const { FT_NO_CACHE_PRIVATE } = res;
+	res.set('Cache-Control', FT_NO_CACHE_PRIVATE);
+
 	log.info({ operation, requestedBy, erasureEmails, erasureUuids });
 
 	const uuids = erasureUuids === '' ? [] : erasureUuids.split(/\r?\n/);
