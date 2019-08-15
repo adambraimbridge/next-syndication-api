@@ -7,6 +7,7 @@ async function searchUserTableByUuid (db, uuid, requestedBy) {
 		log.info({ operation, subOp: 'search-user-table-by-uuid', requestedBy, uuid, userTableResults});
 		return { uuid, table: 'users', recordsFound: userTableResults.length };
 	} catch (error) {
+		log.error({ operation, subOp: 'search-user-table-by-uuid', requestedBy, uuid, error: error.message});
 		throw error;
 	}
 }
@@ -17,6 +18,7 @@ async function searchUserTableByEmail (db, email, requestedBy) {
 		log.info({ operation, subOp: 'search-user-table-by-email', requestedBy, email, userTableResults});
 		return { email, table: 'users', recordsFound: userTableResults.length };
 	} catch (error) {
+		log.error({ operation, subOp: 'search-user-table-by-email', requestedBy, email, error: error.message});
 		throw error;
 	}
 }
@@ -27,6 +29,7 @@ async function searchMigratedUsersTableByUuid (db, uuid, requestedBy) {
 		log.info({ operation, subOp: 'search-migrated-user-table-by-uuid', requestedBy, uuid, migratedUserTableResults});
 		return { uuid, table: 'migrated_users', recordsFound: migratedUserTableResults.length };
 	} catch (error) {
+		log.error({ operation, subOp: 'search-migrated-user-table-by-uuid', requestedBy, uuid, error: error.message});
 		throw error;
 	}
 }
