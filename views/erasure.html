@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Process Erasure Requests</title>
+	<style>
+		h1 {
+			text-align: center;
+		}
+
+		textarea {
+			height: 300px;
+			width: 100%;
+		}
+
+		.errors {
+			margin: 0 auto;
+			width: 42rem;
+		}
+
+		.erasure-form {
+			display: grid;
+			grid-column-gap: 2rem;
+			grid-row-gap: 1rem;
+			grid-template-columns: [emails] 20rem [uuids] 20rem [end];
+			grid-template-rows: auto auto;
+			justify-content: center;
+		}
+
+		.erasure-form__emails-field {
+			grid-column: emails / uuids;
+			grid-row: 1 / 2;
+		}
+
+		.erasure-form__uuids-field {
+			grid-column: uuids / end;
+			grid-row: 1 / 2;
+		}
+
+		.erasure-form__buttons {
+			grid-column: emails / end;
+			grid-row: 2 / 3;
+			text-align: center;
+		}
+
+		.erasure-form__submit {
+			font-size: 1rem;
+			padding: 2rem .5rem;
+			width: 10rem;
+		}
+	</style>
+</head>
+<body>
+	<h1>Process Erasure Requests</h1>
+
+	{{#if viewModel.invalidUuids}}
+		<div class="errors">
+			<h2>The following are invalid uuids:</h2>
+			<ul>
+				{{#each viewModel.invalidUuids}}
+					<li>{{this}}</li>
+				{{/each}}
+			</ul>
+		</div>
+	{{/if}}
+
+	{{#if viewModel.invalidEmails}}
+		<div class="errors">
+			<h2>The following are invalid emails:</h2>
+			<ul>
+				{{#each viewModel.invalidEmails}}
+					<li>{{this}}</li>
+				{{/each}}
+			</ul>
+		</div>
+	{{/if}}
+
+	<form class="erasure-form" action="erasure-search" method="POST">
+		<div class="erasure-form__emails-field">
+			<label for="erasure-emails">Email(s):</label>
+			<textarea name="erasureEmails" id="erasure-emails">{{viewModel.erasureEmails}}</textarea>
+		</div>
+		<div class="erasure-form__uuids-field">
+			<label for="erasure-uuids">UUID(s):</label>
+			<textarea name="erasureUuids" id="erasure-uuids">{{viewModel.erasureUuids}}</textarea>
+		</div>
+		<div class="erasure-form__buttons">
+			<input class="erasure-form__submit" type="submit" />
+		</div>
+	</form>
+</body>
+</html>

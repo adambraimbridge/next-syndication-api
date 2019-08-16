@@ -2,7 +2,7 @@
 
 process.env.TZ = 'UTC';
 
-const express = require('@financial-times/n-express');
+const express = require('@financial-times/n-internal-tool');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
@@ -32,7 +32,8 @@ const app = module.exports = express({
 		require('../health/db-sync-state'),
 		require('../health/sqs'),
 		require('../health/error-spikes'),
-	]
+	],
+	s3o: false
 });
 
 const middleware = [
@@ -98,6 +99,19 @@ app.get('/syndication/migrate', middleware, require('./controllers/migrate'));
 app.get('/syndication/reload', middleware, require('./controllers/reload'));
 // force ingest of legacy_downloads
 app.get('/syndication/legacy_downloads', middleware, require('./controllers/legacy_downloads'));
+
+
+// Page for handling erasure requests
+const erasureMiddleware = [
+	express.authS3O,
+	cookieParser(),
+	bodyParser.urlencoded({ extended: true }),
+	flagMaintenanceMode,
+	db
+];
+app.get('/syndication/erasure', erasureMiddleware, (req, res) => res.render('erasure'));
+app.post('/syndication/erasure', erasureMiddleware);
+app.post('/syndication/erasure-search', erasureMiddleware, require('./controllers/erasure-search'));
 
 if (process.env.NODE_ENV !== 'production') {
 	app.get('/syndication/backup', middleware, require('./controllers/backup'));
