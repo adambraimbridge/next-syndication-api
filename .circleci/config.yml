@@ -134,6 +134,12 @@ jobs:
       - run:
           name: Deploy to production
           command: make deploy
+      - run:
+          name: Notify the Change API
+          command: |
+            URL='https://api.ft.com/change-log/v1/create'
+            REQUEST_PAYLOAD="{\"user\":{\"githubName\":\"$CIRCLE_USERNAME\"},\"systemCode\":\"next-syndication-api\",\"environment\":\"prod\",\"gitRepositoryName\":\"$CIRCLE_PROJECT_REPONAME\",\"changeMadeBySystem\":\"circleci\",\"commit\":\"$CIRCLE_SHA1\"}"
+            curl $URL -H "x-api-key:$CHANGE_API_KEY" -H "Content-Type:application/json" -d "$REQUEST_PAYLOAD"
 
 workflows:
 
