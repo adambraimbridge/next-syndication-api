@@ -26,19 +26,9 @@ next
 
 next
 
-
-## Technical Owner
-
-## Stakeholders
-
-- simon.lord
-- caspar.debono
-
 ## Known About By
 
-- max.bladen-clark
-- simon.legg
-
+- max.bladenclark
 
 ## Contains Personal Data
 
@@ -51,8 +41,6 @@ False
 ## Host Platform
 
 Heroku
-
-## Architecture
 
 ## First Line Troubleshooting
 
@@ -157,7 +145,7 @@ Rollback is done manually on Heroku or Github. See [the guide on the wiki](https
 
 ## Heroku Pipeline Name
 
-- ft-next-syndication-api
+ft-next-syndication-api
 
 ## Key Management Process Type
 
@@ -170,8 +158,8 @@ See the Customer Products [key management and troubleshooting wiki page](https:/
 
 ## Dependencies
 
-- Salesforce
-- content-api 
-- next-es-interface
+- salesforce
+- up-ica
+- next-esinterface
 
 
