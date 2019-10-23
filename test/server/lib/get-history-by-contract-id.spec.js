@@ -108,7 +108,7 @@ describe(MODULE_ID, function () {
 				contract_id: 'CA-00001558'
 			});
 
-			expect(db.run).to.be.calledWith(`SELECT * FROM syndication.get_downloads_by_contract_id($text$${contract_id}$text$::text);`);
+			expect(db.query).to.be.calledWith(`SELECT * FROM syndication.get_downloads_by_contract_id($text$${contract_id}$text$::text);`);
 		});
 
 
@@ -151,7 +151,7 @@ describe(MODULE_ID, function () {
 				user_id
 			});
 
-			expect(db.run).to.be.calledWith(`SELECT * FROM syndication.get_downloads_by_contract_id($text$${contract_id}$text$::text, $text$${user_id}$text$::text);`);
+			expect(db.query).to.be.calledWith(`SELECT * FROM syndication.get_downloads_by_contract_id($text$${contract_id}$text$::text, $text$${user_id}$text$::text);`);
 		});
 
 		it('result', async function () {
@@ -191,7 +191,7 @@ describe(MODULE_ID, function () {
 				type: 'saved'
 			});
 
-			expect(db.run).to.be.calledWith(`SELECT * FROM syndication.get_saved_items_by_contract_id($text$${contract_id}$text$::text);`);
+			expect(db.query).to.be.calledWith(`SELECT * FROM syndication.get_saved_items_by_contract_id($text$${contract_id}$text$::text);`);
 		});
 
 		it('result', async function () {
@@ -231,7 +231,7 @@ describe(MODULE_ID, function () {
 				type: 'downloads'
 			});
 
-			expect(db.run).to.be.calledWith(`SELECT * FROM syndication.get_downloads_by_contract_id($text$${contract_id}$text$::text);`);
+			expect(db.query).to.be.calledWith(`SELECT * FROM syndication.get_downloads_by_contract_id($text$${contract_id}$text$::text);`);
 		});
 
 		it('result', async function () {

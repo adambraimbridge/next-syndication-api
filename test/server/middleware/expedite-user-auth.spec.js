@@ -98,7 +98,7 @@ describe(MODULE_ID, function () {
 
 			await underTest(mocks.req, mocks.res, stubs.next);
 
-			expect(db.run).to.not.have.been.called;
+			expect(db.query).to.not.have.been.called;
 			expect(db.syndication.get_user).to.not.have.been.called;
 		});
 	});
