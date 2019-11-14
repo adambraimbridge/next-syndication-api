@@ -18,16 +18,27 @@ The API behind the new FT.com/republishing tool.
 
 ```
 
+----
+## Deployment
+
+**Important!**
+
+Syndication deviates from our standard deployment process please refer to the steps detailed [Deploying the download server](https://github.com/Financial-Times/next-syndication-dl#deploying-the-download-server) if you are making a release on this app.
+
+---
+
 ## Salesforce dependency
 
 If you need to test a specific contract, since all contracts live in the production salesforce environment, in order to test certain contracts locally you will need to use the production `SALESFORCE_*` environment variables rather than the development ones (see Vault).
 
 In development mode you should be using the FT Staff contract, which is stubbed in `stubs/CA-00001558.json`
 
+
 ### Setting yourself up on a contract
 
 In order to see the syndication icons, you need to belong to a licence with a syndication contract. Email customer support at `help@ft.com` and ask to be added to a staff syndication licence.
 
+---
 ## Run locally
 
 You WILL need:
@@ -48,13 +59,13 @@ If you are using postgres in Docker, you will need to edit your `.env` file to s
 Once you have set up the projects you want to work on, and want to run all projects easily, you can do so from within the `next-syndication-api`, you will need to:
 
 - update your local [next-router](https://github.com/Financial-Times/next-router)'s `.env` file to include the following:
-  
+
   ```properties
-     
+
      syndication-api=3255
      syn-contract=3984
      syn-list=3566
-     
+
   ```
 - This API doesn't run the router, so you will need to start that manually with `cd` into `next-router` and `make run-https` unless you are also running another app like next-syn-list
 - `cd` into `next-syndication-api` and `make run-local`
@@ -68,35 +79,37 @@ This will start the `next-syndication-api` the associated worker processes and t
 
 You can also run `make run-monit` to bring up the [PM2 process monitor](https://www.npmjs.com/package/pm2#cpu--memory-monitoring).
 
+---
+
 ## Configuration
 
 This project and the [next-syndication-dL](https://github.com/Financial-Times/next-syndication-dl) project both use standard next environment variables for storing secrets in vault.
 
 Though a lot of config for these projects is not secret, so rather than pollute vault with generic configuration, a layer has been added on top of the standard environment variables.
 
-Both projects use a library called [config](https://www.npmjs.com/package/config) for which you define a `config/default.yaml` file which can be overlaid by other config files based on naming conventions like `config/${NODE_ENV}.yaml` and/or `config/${require('os').hostname()}.yaml` see the [config module documentation for File Load Order](https://github.com/lorenwest/node-config/wiki/Configuration-Files#file-load-order) for more information. 
+Both projects use a library called [config](https://www.npmjs.com/package/config) for which you define a `config/default.yaml` file which can be overlaid by other config files based on naming conventions like `config/${NODE_ENV}.yaml` and/or `config/${require('os').hostname()}.yaml` see the [config module documentation for File Load Order](https://github.com/lorenwest/node-config/wiki/Configuration-Files#file-load-order) for more information.
 
-All secrets are added to the [generic config](https://github.com/Financial-Times/next-syndication-api/tree/master/config) using the [Custom Environment Variables](https://github.com/lorenwest/node-config/wiki/Environment-Variables#custom-environment-variables) feature provided by the config library, so as to keep in line with `next`'s architecture and maintain no leaking of secrets throughout environments. 
+All secrets are added to the [generic config](https://github.com/Financial-Times/next-syndication-api/tree/master/config) using the [Custom Environment Variables](https://github.com/lorenwest/node-config/wiki/Environment-Variables#custom-environment-variables) feature provided by the config library, so as to keep in line with `next`'s architecture and maintain no leaking of secrets throughout environments.
 
 #### next-syndication-dl
 
-You will notice that [next-syndication-dl](https://github.com/Financial-Times/next-syndication-dl) does not have its own `config` directory. 
+You will notice that [next-syndication-dl](https://github.com/Financial-Times/next-syndication-dl) does not have its own `config` directory.
 
 Don't worry, this is by design: the `config` directory and the `pandoc-dpkg` directories are both symlinked to the root of the project by the `make install` task.
 
-### pandoc-dpkg ... or What the hell is this? 
+### pandoc-dpkg ... or What the hell is this?
 
 [pandoc](https://pandoc.org/MANUAL.html) is the command line program that we use to turn our article from HTML into either plain text (`.txt`) or an open office document (`.docx`).
 
-Considering its small file size: including the program as part of the project was much simpler than having to go through the rigmarole of trying to automate deployments of a heroku app with a custom add-on. 
+Considering its small file size: including the program as part of the project was much simpler than having to go through the rigmarole of trying to automate deployments of a heroku app with a custom add-on.
 
-The original proof of concept version of the `next-syndication-api` used a separate stand-alone heroku app with the `pandoc` add-on. 
+The original proof of concept version of the `next-syndication-api` used a separate stand-alone heroku app with the `pandoc` add-on.
 
-While there is nothing wrong with this approach, it makes things less confusing and more "performant" now that we can run the program on each dyno running the `next-syndication-api`; rather than a single dyno running any and all calls to the `pandoc` program.  
+While there is nothing wrong with this approach, it makes things less confusing and more "performant" now that we can run the program on each dyno running the `next-syndication-api`; rather than a single dyno running any and all calls to the `pandoc` program.
 
 ### Emails
 
-Emails are sent by the `db-persist` worker using nodemailer and gmail. 
+Emails are sent by the `db-persist` worker using nodemailer and gmail.
 
 If you are getting an `ETIMEDOUT` errors, this is probably because the connection is being blocked by the FT firewall.
 
