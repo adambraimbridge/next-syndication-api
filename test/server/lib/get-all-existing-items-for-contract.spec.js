@@ -147,8 +147,8 @@ describe(MODULE_ID, function () {
 
 	beforeEach(function () {
 		db = initDB([]);
-		db.run.onCall(0).resolves(downloadedItems);
-		db.run.onCall(1).resolves(savedItems);
+		db.query.onCall(0).resolves(downloadedItems);
+		db.query.onCall(1).resolves(savedItems);
 
 		underTest = proxyquire('../../../server/lib/get-all-existing-items-for-contract', {
 			'../../db/pg': sinon.stub().resolves(db),

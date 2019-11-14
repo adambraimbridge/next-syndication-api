@@ -246,10 +246,10 @@ describe(MODULE_ID, function () {
 //			}
 		});
 
-		it('db.run called to get syndication.content_es', async function () {
+		it('db.query called to get syndication.content_es', async function () {
 			await underTest(req, res, next);
 
-			const call = db.run.getCall(0);
+			const call = db.query.getCall(0);
 
 			const query = call.args[0];
 
@@ -259,10 +259,10 @@ describe(MODULE_ID, function () {
 			expect(query).to.include('_limit => 50');
 		});
 
-		it('db.run called to get total number of syndication.content_es items', async function () {
+		it('db.query called to get total number of syndication.content_es items', async function () {
 			await underTest(req, res, next);
 
-			const call = db.run.getCall(1);
+			const call = db.query.getCall(1);
 
 			const query = call.args[0];
 
@@ -404,10 +404,10 @@ describe(MODULE_ID, function () {
 //			}
 		});
 
-		it('db.run called to get syndication.content_es', async function () {
+		it('db.query called to get syndication.content_es', async function () {
 			await underTest(req, res, next);
 
-			const call = db.run.getCall(0);
+			const call = db.query.getCall(0);
 
 			const query = call.args[0];
 
@@ -417,10 +417,10 @@ describe(MODULE_ID, function () {
 			expect(query).to.include(`_limit => ${req.query.limit}`);
 		});
 
-		it('db.run called to get total number of syndication.content_es items', async function () {
+		it('db.query called to get total number of syndication.content_es items', async function () {
 			await underTest(req, res, next);
 
-			const call = db.run.getCall(1);
+			const call = db.query.getCall(1);
 
 			const query = call.args[0];
 
@@ -564,10 +564,10 @@ describe(MODULE_ID, function () {
 //			}
 		});
 
-		it('db.run called to get syndication.content_es', async function () {
+		it('db.query called to get syndication.content_es', async function () {
 			await underTest(req, res, next);
 
-			const call = db.run.getCall(0);
+			const call = db.query.getCall(0);
 
 			const query = call.args[0];
 
@@ -577,10 +577,10 @@ describe(MODULE_ID, function () {
 			expect(query).to.include(`_limit => ${req.query.limit}`);
 		});
 
-		it('db.run called to get total number of syndication.content_es items', async function () {
+		it('db.query called to get total number of syndication.content_es items', async function () {
 			await underTest(req, res, next);
 
-			const call = db.run.getCall(1);
+			const call = db.query.getCall(1);
 
 			const query = call.args[0];
 
@@ -722,10 +722,10 @@ describe(MODULE_ID, function () {
 //			}
 		});
 
-		it('db.run called to get syndication.content_es', async function () {
+		it('db.query called to get syndication.content_es', async function () {
 			await underTest(req, res, next);
 
-			const call = db.run.getCall(0);
+			const call = db.query.getCall(0);
 
 			const query = call.args[0];
 
@@ -738,10 +738,10 @@ describe(MODULE_ID, function () {
 			expect(query).to.include('_limit => 50');
 		});
 
-		it('db.run called to get total number of syndication.content_es items', async function () {
+		it('db.query called to get total number of syndication.content_es items', async function () {
 			await underTest(req, res, next);
 
-			const call = db.run.getCall(1);
+			const call = db.query.getCall(1);
 
 			const query = call.args[0];
 
@@ -886,10 +886,10 @@ describe(MODULE_ID, function () {
 //			}
 		});
 
-		it('db.run called to get syndication.content_es', async function () {
+		it('db.query called to get syndication.content_es', async function () {
 			await underTest(req, res, next);
 
-			const call = db.run.getCall(0);
+			const call = db.query.getCall(0);
 
 			const query = call.args[0];
 
@@ -901,10 +901,10 @@ describe(MODULE_ID, function () {
 			expect(query).to.include('_limit => 50');
 		});
 
-		it('db.run called to get total number of syndication.content_es items', async function () {
+		it('db.query called to get total number of syndication.content_es items', async function () {
 			await underTest(req, res, next);
 
-			const call = db.run.getCall(1);
+			const call = db.query.getCall(1);
 
 			const query = call.args[0];
 

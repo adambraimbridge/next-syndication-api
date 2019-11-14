@@ -5,9 +5,9 @@ const pg = require('../../db/pg');
 module.exports = exports = async (contract_id) => {
 	const db = await pg();
 
-	const alreadyDownloaded = await db.run(`SELECT * FROM syndication.get_downloads_by_contract_id($text$${contract_id}$text$::text)`);
+	const alreadyDownloaded = await db.query(`SELECT * FROM syndication.get_downloads_by_contract_id($text$${contract_id}$text$::text)`);
 
-	const alreadySaved = await db.run(`SELECT * FROM syndication.get_saved_items_by_contract_id($text$${contract_id}$text$::text)`);
+	const alreadySaved = await db.query(`SELECT * FROM syndication.get_saved_items_by_contract_id($text$${contract_id}$text$::text)`);
 
 	let items = alreadyDownloaded.reduce((acc, item) => {
 		acc[item.content_id] = item;

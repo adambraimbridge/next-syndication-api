@@ -22,10 +22,10 @@ module.exports = exports = function () {
 		let db = Object.create(massiveDatabase__proto__);
 //		massiveDatabase__proto__.constructor.call(db);
 
-		db.run = sinon.stub();
+		db.query = sinon.stub();
 
 		if (typeof runResolves !== 'undefined') {
-			db.run.resolves(runResolves);
+			db.query.resolves(runResolves);
 		}
 
 		db.syndication = {

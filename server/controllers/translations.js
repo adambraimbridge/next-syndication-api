@@ -110,9 +110,9 @@ module.exports = exports = async (req, res, next) => {
 _offset => ${offset}::integer,
 _limit => ${limit}::integer`;
 
-				const items = await db.run(`SELECT * FROM syndication.search_content_es(${getQuery})`);
+				const items = await db.query(`SELECT * FROM syndication.search_content_es(${getQuery})`);
 
-				const [{ search_content_total_es }] = await db.run(`SELECT * FROM syndication.search_content_total_es(${getTotalQuery})`);
+				const [{ search_content_total_es }] = await db.query(`SELECT * FROM syndication.search_content_total_es(${getTotalQuery})`);
 				const total = parseInt(search_content_total_es, 10);
 
 				items.forEach(item => {

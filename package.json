@@ -1,7 +1,7 @@
 {
   "name": "ft-next-syndication-api",
   "description": "Next Syndication API",
-  "version": "0.27.1",
+  "version": "0.30.0",
   "private": true,
   "dependencies": {
     "@financial-times/n-es-client": "1.7.0",
@@ -20,7 +20,7 @@
     "hat": "^0.0.3",
     "js-yaml": "^3.8.4",
     "jsonpath": "^1.0.0",
-    "massive": "^3.1.0",
+    "massive": "^6.1.1",
     "mime-types": "^2.1.5",
     "moment": "^2.18.1",
     "moment-timezone": "^0.5.13",
