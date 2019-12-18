@@ -101,8 +101,6 @@ If this is a problem for all Syndication users it could be:
 ## Healthchecks
 
 - ft-next-syndication-api.herokuapp.com-https
-- ft-next-syndication-api-https
-
 
 ## Failover Architecture Type
 
@@ -161,5 +159,3 @@ See the Customer Products [key management and troubleshooting wiki page](https:/
 - salesforce
 - up-ica
 - next-esinterface
-
-
