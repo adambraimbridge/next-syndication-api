@@ -4,7 +4,7 @@ const log = require('./logger');
 const fetch = require('n-eager-fetch');
 
 const {
-	apikey: API_KEY,
+	apikey,
 	BASE_URI_FT_API
 } = require('config');
 
@@ -19,7 +19,7 @@ module.exports = exports = async content_id => {
 		const res = await fetch(ARTICLE_URI, {
 			timeout: 10000,
 			headers: {
-				'X-Api-Key': API_KEY
+				'X-Api-Key': apikey
 			}
 		});
 
