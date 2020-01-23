@@ -152,3 +152,21 @@ Conversely, turn it off again to turn maintenance mode off.
 
 ## Shell script
 There was a [shell script](https://github.com/constantology/n-dev-mode/blob/master/project/syndication) but this is out of date and not maintained
+
+---
+
+## canBeSyndicated
+
+Articles acquired from CAPI (Content API) or Elasticsearch contain the property `canBeSyndicated`. Its value will be one of the following:
+
+- `yes`: Yes, the article can be republished by a syndication subscriber.
+- `no`: No, the article cannot be republished by a syndication subscriber (or indeed anyone).
+- `withContributorPayment`: The article can be republished subject to payment and certain terms in the syndication subscriber's contract.
+- `verify`: The article can potentially be republished, depending on certain factors, e.g. the syndication subscriber's account being part of a B2B contract which has a wider deal that grants syndication rights.
+
+The response the API provides for the same article can vary depending on the specific account (enabling the front-end to display an account-specific permission status icon), e.g. an article with `canBeSyndicated: verify` would respond accordingly:
+
+- FT (syndication subscriber) account: `messageCode: 'MSG_2200'` (i.e. requires enquiry with FT for details of syndication rights).
+- Account of company that has a deal in place to republish the article: `messageCode: 'MSG_2100'` (i.e. article can be downloaded for republishing).
+
+N.B. To be a syndication subscriber requires having `S1` in your [products list](https://session-next.ft.com/products). To find out how to get this, contact syndhelp@ft.com.
