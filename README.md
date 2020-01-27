@@ -169,4 +169,4 @@ The response the API provides for the same article can vary depending on the spe
 - FT (syndication subscriber) account: `messageCode: 'MSG_2200'` (i.e. requires enquiry with FT for details of syndication rights).
 - Account of company that has a deal in place to republish the article: `messageCode: 'MSG_2100'` (i.e. article can be downloaded for republishing).
 
-N.B. To be a syndication subscriber requires having `S1` in your [products list](https://session-next.ft.com/products). To find out how to get this, contact syndhelp@ft.com.
+N.B. To be a syndication subscriber requires having `S1` in your [products list](https://session-next.ft.com/products), which should be the default case for all FT developer accounts, but if not then contact syndhelp@ft.com.
