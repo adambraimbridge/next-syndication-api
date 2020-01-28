@@ -162,7 +162,7 @@ Articles acquired from CAPI (Content API) or Elasticsearch contain the property 
 - `yes`: Yes, the article can be republished by a syndication subscriber.
 - `no`: No, the article cannot be republished by a syndication subscriber (or indeed anyone).
 - `withContributorPayment`: The article can be republished subject to payment and certain terms in the syndication subscriber's contract.
-- `verify`: The article can potentially be republished, depending on certain factors, e.g. the syndication subscriber's account being part of a B2B contract which has a wider deal that grants syndication rights.
+- `verify`: The article can potentially be republished, depending on certain factors, e.g. the syndication subscriber's account being part of a B2B contract which has a wider deal that grants syndication rights; agreement with the author to allow syndication of their work.
 
 The response the API provides for the same article can vary depending on the specific account (enabling the front-end to display an account-specific permission status icon), e.g. an article with `canBeSyndicated: verify` would respond accordingly:
 
