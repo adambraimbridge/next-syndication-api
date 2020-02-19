@@ -51,7 +51,7 @@ This is a standard Heroku app, so try all the normal things here (bounce the dyn
 ### People can't see their syndication icons
 
 If syndication icons are not appearing for an idividual user (as opposed to all users) then it is likely this user is not on a licence or has been removed from a licence.
-This system has an upstream dependency on Salesforce, so it is worth investigating the user's licence status there too.
+This system has an upstream dependency on Salesforce, so it is worth investigating the user's licence status there too. If the licence was recently renewed / set up, it is worth checking if they have been given the correct assets. As an example the incident in February 2020 occured because an FTB Article asset added by the account manager instead of FT Article. 
 
 If *nobody* can see their icons, then this is a more serious problem and should be pushed to Second Line.
 
