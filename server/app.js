@@ -23,16 +23,17 @@ const isSyndicationUser = require('./middleware/is-syndication-user');
 const masquerade = require('./middleware/masquerade');
 const routeMaintenanceMode = require('./middleware/route-maintenance-mode');
 
-const checks = require("../health/middlewares");
-
-// Starts polling checks on startup
-checks.init();
-
 const app = module.exports = express({
 	systemCode: 'next-syndication-api',
 	graphiteName: 'syndication-api',
 	withFlags: true,
-	healthChecks: checks.checks,
+	healthChecks: [
+		require('../health/db-backups'),
+		require('../health/db-backups'),
+		require('../health/middlewares'),
+		require('../health/sqs'),
+		require('../health/error-spikes'),
+	],
 	s3o: false
 });
 

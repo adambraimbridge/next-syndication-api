@@ -1,8 +1,9 @@
 'use strict';
 
+const qs = require('querystring');
 const log = require('../lib/logger');
 const fetch = require('n-eager-fetch');
-const createAuthorizationQueryString = require("../helpers/create-authorization-query-string");
+const createAuthorizationQueryString = require('../helpers/create-authorization-query-string');
 
 const { BASE_URI_FT_API } = require('config');
 
