@@ -37,7 +37,6 @@
   "devDependencies": {
     "@financial-times/n-gage": "^3.0.0-beta.8",
     "@financial-times/n-heroku-tools": "^8.0.0-beta.4",
-    "@financial-times/n-membership-sdk": "^13.1.0",
     "@financial-times/n-test": "^1.13.2",
     "chai": "^4.0.2",
     "coveralls": "^2.13.1",
