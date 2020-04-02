@@ -30,10 +30,11 @@ const app = module.exports = express({
 	healthChecks: [
 		require('../health/db-backups'),
 		require('../health/db-backups'),
-		require('../health/middlewares'),
 		require('../health/sqs'),
 		require('../health/error-spikes'),
-	],
+	].concat(
+		require('../health/middlewares')
+	),
 	s3o: false
 });
 
