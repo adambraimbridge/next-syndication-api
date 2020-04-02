@@ -8,7 +8,7 @@ const services = [
 		type: 'pingdom',
 		checkId: '4897678',
 		type: 'pingdom',
-		name: 'Syndication US user rights reachable',
+		name: 'User Rights US Service reachable',
 		url: 'http://ft-next-session-us.herokuapp.com/__gtg',
 		technicalSummary:
 			'Endpoint to check that a logged in user has a valid syndication licence.'
@@ -16,7 +16,7 @@ const services = [
 	{
 		type: 'pingdom',
 		checkId: '4897600',
-		name: 'Syndication EU user rights reachable',
+		name: 'User Rights EU Service reachable',
 		url: 'http://ft-next-session-eu.herokuapp.com/__gtg',
 		technicalSummary:
 			'Endpoint to check that a logged in user has a valid syndication licence.'
@@ -24,7 +24,7 @@ const services = [
 	{
 		type: 'pingdom',
 		checkId: '2014224',
-		name: 'Syndication licence reachable',
+		name: 'Licence Service reachable',
 		url: 'https://acc-licence-svc.memb.ft.com/__gtg',
 		technicalSummary:
 			'Endpoint to get the syndication licence details by passing in a unique User ID.'
@@ -42,14 +42,6 @@ const services = [
 		checkId: '2018406',
 		name: 'User Profile Service EU reachable',
 		url: 'user-profile-svc-at-lb-eu-west-1.memb.ft.com/__health',
-		technicalSummary:
-			'Endpoint to get the user profile details by passing a unique User ID.'
-	},
-	{
-		type: 'pingdom',
-		checkId: '2026757',
-		name: 'User Profile Service US reachable',
-		url: 'user-profile-svc-lb-us-east-1-prod.memb.ft.com/__gtg',
 		technicalSummary:
 			'Endpoint to get the user profile details by passing a unique User ID.'
 	},
