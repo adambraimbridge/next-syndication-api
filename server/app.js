@@ -29,7 +29,7 @@ const app = module.exports = express({
 	withFlags: true,
 	healthChecks: [
 		require('../health/db-backups'),
-		require('../health/db-backups'),
+		require('../health/db-sync-state'),
 		require('../health/sqs'),
 		require('../health/error-spikes'),
 	].concat(
