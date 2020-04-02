@@ -1,34 +1,72 @@
 const nHealth = require('n-health');
 
-const { HEALTCHECK_DUMMY_USER_UUID } = require('config');
-
 const panicGuide = 'Contact the FT Accounts team #ft-accounts-team.';
 const businessImpact = 'Users will be unable to use the Syndication apps';
 
 const services = [
 	{
-		name: 'Syndication user rights reachable',
-		url: 'https://session-next.ft.com/products',
+		type: 'pingdom',
+		checkId: '4897678',
+		type: 'pingdom',
+		name: 'Syndication US user rights reachable',
+		url: 'http://ft-next-session-us.herokuapp.com/__gtg',
 		technicalSummary:
-			'This middleware tests that a user has a valid syndication licence by logging in a dummy user.'
+			'Endpoint to check that a logged in user has a valid syndication licence.'
 	},
 	{
+		type: 'pingdom',
+		checkId: '4897600',
+		name: 'Syndication EU user rights reachable',
+		url: 'http://ft-next-session-eu.herokuapp.com/__gtg',
+		technicalSummary:
+			'Endpoint to check that a logged in user has a valid syndication licence.'
+	},
+	{
+		type: 'pingdom',
+		checkId: '2014224',
 		name: 'Syndication licence reachable',
-		url: `https://api.ft.com/licences?userid=${HEALTCHECK_DUMMY_USER_UUID}`,
+		url: 'https://acc-licence-svc.memb.ft.com/__gtg',
 		technicalSummary:
-			'Endpoint the syndication licence details by passing in a unique User ID.'
+			'Endpoint to get the syndication licence details by passing in a unique User ID.'
 	},
 	{
-		name: 'User profile reachable',
-		url: `https://api.ft.com/users/${HEALTCHECK_DUMMY_USER_UUID}/profile/basic`,
+		type: 'pingdom',
+		checkId: '2026757',
+		name: 'User Profile Service US reachable',
+		url: 'user-profile-svc-lb-us-east-1-prod.memb.ft.com/__gtg',
 		technicalSummary:
 			'Endpoint to get the user profile details by passing a unique User ID.'
 	},
 	{
-		name: 'User authentication reachable',
-		url: 'https://api.ft.com/authorize',
+		type: 'pingdom',
+		checkId: '2018406',
+		name: 'User Profile Service EU reachable',
+		url: 'user-profile-svc-at-lb-eu-west-1.memb.ft.com/__health',
 		technicalSummary:
-			'Endpoint to get token required to view a user\'s profile details.'
+			'Endpoint to get the user profile details by passing a unique User ID.'
+	},
+	{
+		type: 'pingdom',
+		checkId: '2026757',
+		name: 'User Profile Service US reachable',
+		url: 'user-profile-svc-lb-us-east-1-prod.memb.ft.com/__gtg',
+		technicalSummary:
+			'Endpoint to get the user profile details by passing a unique User ID.'
+	},
+	{
+		type: 'pingdom',
+		checkId: '2127222',
+		name: 'Auth Service US reachable',
+		url: 'https://api-authz-svc-us-prod.memb.ft.com/__health',
+		technicalSummary:
+			"Endpoint to get token required to view a user's profile details."
+	},
+	{
+		checkId: '2014224',
+		name: 'Auth Service EU reachable',
+		url: 'https://api-authz-svc-eu-prod.memb.ft.com/__health',
+		technicalSummary:
+			"Endpoint to get token required to view a user's profile details."
 	}
 ];
 
