@@ -21,3 +21,5 @@ tmp/*
 health/history/
 
 next-syndication-api-*.json
+
+package-lock.json
