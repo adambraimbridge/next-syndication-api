@@ -133,7 +133,7 @@
     - pull-quote
 
   HEALTH_CHECK_HISTORY:
-    bloated_threshold: 50
+    bloated_threshold: 70
     directory: ./health/history
     file_date_format: YYYY-MM-DD[T]HH-mm-ss[.json]
     max_items: 10
