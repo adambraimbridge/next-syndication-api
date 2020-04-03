@@ -1,11 +1,11 @@
 const nHealth = require('n-health');
 const statusCode = 401;
-const threshold = 0.33;
+const threshold = 0.04;
 const samplePeriod = 60; // minutes
 
 module.exports = nHealth.runCheck({
 	type: 'graphiteThreshold',
-	metric: `divideSeries(sumSeries(next.heroku.syndication-api.web_*.express.default_route_GET.res.status.${statusCode}.count),sumSeries(next.heroku.syndication-api.web_*.express.default_route_GET.res.status.*.count))`,
+	metric: `asPercent(summarize(sumSeries(next.heroku.syndication-api.web_*.express.default_route_GET.res.status.${statusCode}.count), "${samplePeriod}min", "sum", true), summarize(sumSeries(next.heroku.syndication-api.web_*.express.default_route_GET.res.status.*.count), "${samplePeriod}min", "sum", true))`,
 	threshold,
 	samplePeriod: `${samplePeriod}min`,
 	name: `${statusCode} rate for articles is acceptable`,
