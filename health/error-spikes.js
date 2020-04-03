@@ -1,6 +1,6 @@
 const nHealth = require('n-health');
 const statusCode = 401;
-const threshold = 0.04;
+const threshold = 2;
 const samplePeriod = 60; // minutes
 
 module.exports = nHealth.runCheck({
