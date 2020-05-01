@@ -600,27 +600,6 @@ This endpoint returns a `204` when successfully updated.
 
 The endpoints defined here are only able to be run in production by `christos constandinou`'s UUID. Since he was the only developer on this project from start till his leaving date and since there was never any requirements for the below. __You will definitely want to replace his UUID__ with your own and/or whoever is supporting production. At the same time, __it would definitely be worth implementing an *actual solution*!__.
 
-### GET /syndication/migrate
-
-This endpoint can be deprecated once the migration is complete and exists as a way of arbitrarily executing the migration cron task. E.g. If you made a mistake with a contract's legacy download count and you want to fix it immediately, you could update the spreadsheet and then call this endpoint to have the change propagated immediately.
-
-#### Example Request
-
-```shell
-
-    curl -X GET \
-        https://www.ft.com/syndication/migrate \
-        -H 'content-type: application/json' \
-        -H 'cookie: $USERS_COOKIE_GOES_HERE';
-
-```
-
-#### Example Response
-
-This endpoint returns a:
-`200` and will update the `syndication-migration` slack channel when data was successfully mnigrated.
-`204` when run without error but no changes were detected.
-
 ### GET /syndication/reload
 
 Reloads all computed tables. I.e. calls the `syndication.reload_all()` stored procedure.
@@ -658,25 +637,6 @@ Runs the DB backup and uploads it to S3.
 
     curl -X GET \
         https://www.ft.com/syndication/backup \
-        -H 'content-type: application/json' \
-        -H 'cookie: $USERS_COOKIE_GOES_HERE';
-
-```
-
-#### Example Response
-
-This endpoint returns a `204` when successfully complete.
-
-### GET /syndication/legacy_downloads
-
-Ingests the legacy downloads from the legacy downloads google sheet.
-
-#### Example Request
-
-```shell
-
-    curl -X GET \
-        https://www.ft.com/syndication/legacy_downloads \
         -H 'content-type: application/json' \
         -H 'cookie: $USERS_COOKIE_GOES_HERE';
 

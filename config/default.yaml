@@ -40,8 +40,6 @@
   CRON:
     backup_database: "0 7 * * * *"
     backup_redshift: "0 0 7 * * *"
-    legacy_downloads: "0 0 */6 * * *"
-    migration: "0 */15 * * * *"
     tidy_bucket: "0 0 2 * * *"
 
   DB:
@@ -242,25 +240,6 @@
     TEST_CONTRACT: FTS-14046740
     STUB_CONTRACTS:
       - CA-00001558
-
-  SPREADSHEET_MAPPINGS:
-    contracts:
-      licenceename: licencee_name
-      contractid: contract_id
-      contenttype: content_type
-      legacydownloadcount: legacy_download_count
-      lastupdated: last_updated
-    users:
-      licenceename: licencee_name
-      contractid: contract_id
-      userid: user_id
-      lastupdated: last_updated
-    legacy_download_history:
-      contractid: contract_id
-      useremail: user_email
-      time: time
-      publisheddate: published_date
-      title: title
 
   SYNDICATION_PRODUCT_CODE: S1
 

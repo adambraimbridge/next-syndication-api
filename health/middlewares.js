@@ -51,14 +51,14 @@ const services = [
 		name: 'Auth Service US reachable',
 		url: 'https://api-authz-svc-us-prod.memb.ft.com/__health',
 		technicalSummary:
-			"Endpoint to get token required to view a user's profile details."
+			'Endpoint to get token required to view a user\'s profile details.'
 	},
 	{
 		checkId: '2014224',
 		name: 'Auth Service EU reachable',
 		url: 'https://api-authz-svc-eu-prod.memb.ft.com/__health',
 		technicalSummary:
-			"Endpoint to get token required to view a user's profile details."
+			'Endpoint to get token required to view a user\'s profile details.'
 	}
 ];
 

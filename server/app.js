@@ -95,13 +95,8 @@ app.get('/syndication/export', middleware, require('./controllers/export'));
 // updates a user's preferred download format
 app.post('/syndication/download-format', middleware, require('./controllers/update-download-format'));
 
-// force run migration cron
-app.get('/syndication/migrate', middleware, require('./controllers/migrate'));
 // force reload all computed tables in the DB
 app.get('/syndication/reload', middleware, require('./controllers/reload'));
-// force ingest of legacy_downloads
-app.get('/syndication/legacy_downloads', middleware, require('./controllers/legacy_downloads'));
-
 
 // Page for handling erasure requests
 const erasureMiddleware = [
