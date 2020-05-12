@@ -12,13 +12,11 @@ module.exports = exports = (req, res, next) => {
 
 	if (!sessionToken || !sessionSecureToken) {
 		res.redirect(`https://accounts.ft.com/login?location=${req.originalUrl}`);
-
 		return;
 	}
 
 	try {
 		res.locals.userUuid = decoder.decode(sessionToken);
-
 		next();
 	}
 	catch (err) {

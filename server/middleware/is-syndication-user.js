@@ -24,6 +24,7 @@ module.exports = exports = async (req, res, next) => {
 
 		if (MAINTENANCE_MODE !== true) {
 			if (EXPEDITED_USER_AUTH === true) {
+				log.info('expediting-syndication-user-check', { uuid: userUuid });
 				next();
 
 				return;
@@ -55,10 +56,9 @@ module.exports = exports = async (req, res, next) => {
 			isSyndicationUser = session.uuid === userUuid
 								&& session.products.split(',').includes(SYNDICATION_PRODUCT_CODE);
 
+			log.info('no-syndication-database-user-result', { uuid: userUuid, isSyndicationUser, maintenance: MAINTENANCE_MODE });
 			if (isSyndicationUser === true) {
-
 				next();
-
 				return;
 			}
 		}
@@ -80,6 +80,7 @@ module.exports = exports = async (req, res, next) => {
 			});
 		}
 
+		log.error('no-syndication-user', { uuid: userUuid });
 		res.sendStatus(401);
 	}
 	catch (error) {

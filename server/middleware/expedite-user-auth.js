@@ -1,4 +1,4 @@
-'use strict';
+const log = require('../lib/logger');
 
 const {
 	SALESFORCE: {
@@ -14,6 +14,8 @@ module.exports = exports = async (req, res, next) => {
 		userUuid
 	} } = res;
 
+	log.info('expedite-user-auth', { uuid: userUuid, maintenance: MAINTENANCE_MODE })
+
 	if (MAINTENANCE_MODE !== true) {
 		try {
 			const [user] = await db.syndication.get_user([userUuid]);
@@ -25,7 +27,9 @@ module.exports = exports = async (req, res, next) => {
 				res.locals.EXPEDITED_USER_AUTH = true;
 			}
 		}
-		catch (err) {}
+		catch (err) {
+			log.error('expedite-user-error', { uuid: userUuid });
+		}
 	}
 
 	next();
