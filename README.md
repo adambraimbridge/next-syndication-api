@@ -6,6 +6,10 @@
 
 The API behind the new FT.com/republishing tool.
 
+## What is Syndication and how does it work
+
+For an explanation, including a Slides deck which explains the infrastructure, please see [the Wiki page](https://github.com/Financial-Times/next/wiki/Syndication)
+
 ## Installation
 
 ```shell
