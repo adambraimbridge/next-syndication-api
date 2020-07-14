@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const { handlebars } = require('@financial-times/n-handlebars');
+const handlebars  = require('./handlebars');
 const moment = require('moment');
 const { DOMParser } = require('xmldom');
 

@@ -1,12 +1,11 @@
 {
   "name": "ft-next-syndication-api",
   "description": "Next Syndication API",
-  "version": "0.31.1",
+  "version": "0.31.2",
   "private": true,
   "dependencies": {
     "@financial-times/n-es-client": "1.8.0",
     "@financial-times/n-express": "19.22.12",
-    "@financial-times/n-handlebars": "2.0.0",
     "@financial-times/n-internal-tool": "3.0.0",
     "@financial-times/n-mask-logger": "3.2.0",
     "@financial-times/session-decoder-js": "1.2.1",
@@ -16,6 +15,7 @@
     "body-parser": "^1.17.1",
     "config": "^1.26.1",
     "cookie-parser": "^1.4.3",
+    "handlebars": "^4.7.6",
     "hat": "^0.0.3",
     "js-yaml": "^3.8.4",
     "jsonpath": "^1.0.0",

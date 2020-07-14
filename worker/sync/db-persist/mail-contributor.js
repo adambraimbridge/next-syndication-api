@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const { handlebars } = require('@financial-times/n-handlebars');
+const handlebars = require('../../../server/lib/handlebars');
 const log = require('../../../server/lib/logger');
 
 //const moment = require('moment');
