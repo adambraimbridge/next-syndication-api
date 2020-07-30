@@ -42,6 +42,10 @@ False
 
 Heroku
 
+## Architecture
+Here is a diagram for the high level architecture of Syndication
+https://app.lucidchart.com/documents/edit/4d31c9e5-eafe-4639-bba0-24d7a488b08f/0_0
+
 ## First Line Troubleshooting
 
 ### The app is erroring
